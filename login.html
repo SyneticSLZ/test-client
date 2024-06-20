@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Email</title>
+    <script>
+        async function sendEmailSMTP() {
+            const to = document.getElementById('to-smtp').value;
+            const subject = document.getElementById('subject-smtp').value;
+            const body = document.getElementById('body-smtp').value;
+
+            const response = await fetch('/send-email-smtp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ to, subject, body })
+            });
+
+            if (response.ok) {
+                alert('Email sent successfully');
+            } else {
+                alert('Failed to send email');
+            }
+        }
+
+        async function sendEmailGmail() {
+            const to = document.getElementById('to-gmail').value;
+            const subject = document.getElementById('subject-gmail').value;
+            const body = document.getElementById('body-gmail').value;
+
+            const response = await fetch('/send-email-gmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ to, subject, body })
+            });
+
+            if (response.ok) {
+                alert('Email sent successfully');
+            } else {
+                alert('Failed to send email');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Send Email (SMTP)</h2>
+    <input type="email" id="to-smtp" placeholder="Recipient Email"><br>
+    <input type="text" id="subject-smtp" placeholder="Subject"><br>
+    <textarea id="body-smtp" placeholder="Body"></textarea><br>
+    <button onclick="sendEmailSMTP()">Send Email</button>
+    <h2>Send Email (Gmail API)</h2>
+    <input type="email" id="to-gmail" placeholder="Recipient Email"><br>
+    <input type="text" id="subject-gmail" placeholder="Subject"><br>
+    <textarea id="body-gmail" placeholder="Body"></textarea><br>
+    <button onclick="sendEmailGmail()">Send Email</button>
+</body>
+</html>
