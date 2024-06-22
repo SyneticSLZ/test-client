@@ -13,6 +13,7 @@ initialize();
 
 
 function initialize() {
+    const planElement = document.getElementById('selected-plan');
     const params = new URLSearchParams(window.location.search);
     const loggedin = decodeURIComponent(params.get('loggedin') || '');
     const plan = decodeURIComponent(params.get('plan') || '');
@@ -23,13 +24,15 @@ function initialize() {
         let email = decodeURIComponent(params.get('email') || '');
         let password = decodeURIComponent(params.get('password') || '');
         const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
-        if (plan === "f") {
+        if (plan === "f") {   
+            planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
             if (email) {
                 FreeEmail(email, password);
             } else {
                 FreeToken(token);
             }
         } else {
+            planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
             if (email) {
                 PremiumEmail(email, password);
             } else {
@@ -37,6 +40,12 @@ function initialize() {
             }
         }
     } else {
+        if (plan === "f") { 
+            planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
+        }
+        else{
+            planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
+        }
         document.getElementById('accountTick').style.display = "none";
         document.getElementById('accountContainer').style.display = "block";
     }
@@ -323,7 +332,8 @@ async function FreeToken(token) {
     </div>
     <div class="content">
         <h2>You’re almost there! Complete your order</h2>
-        <p>Selected Plan: <b>Premium</b></p>
+        <p id="selected-plan">Selected Plan:  <b>Premium</b></p>
+
         <h2>1. Create an Account <i class="fi fi-ss-hexagon-check" id="accountTick"></i></h2>
         <div class="container">
             <div class="social-login">
