@@ -28,17 +28,18 @@ function initialize() {
         const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
         if (plan === "f") {   
             planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
-            if (email) {
-                FreeEmail(email, password);
-            } else {
+            if (email == null) {
+                
                 FreeToken(token);
+            } else {
+                FreeEmail(email, password);
             }
         } else {
             planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
-            if (email) {
-                PremiumEmail(email, password);
-            } else {
+            if (email == null) {
                 PremiumToken(token);
+            } else {
+                PremiumEmail(email, password);
             }
         }
     } else {
