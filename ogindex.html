@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Sender</title>
+    <script>
+        async function sendEmail() {
+            const email = document.getElementById('email').value;
+            try {
+                const response = await fetch('https://volt-server.onrender.com/send-email-smtp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ to: email, subject: 'Test Subject', body: 'Test Body' }),
+                    credentials: 'include' // Include credentials for CORS
+                });
+                const result = await response.text();
+                console.log(result);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function count() {
+            try {
+                const response = await fetch('https://volt-server.onrender.com/count', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({}),
+                    credentials: 'include' // Include credentials for CORS
+                });
+                const result = await response.text();
+                console.log(result);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function sendEmailGmail() {
+            const to = document.getElementById('to-gmail').value;
+            const subject = document.getElementById('subject-gmail').value;
+            const body = document.getElementById('body-gmail').value;
+            const token = localStorage.getItem('authToken');
+
+            try {
+                const response = await fetch('https://volt-server.onrender.com/send-email-gmail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ to, subject, body }),
+                    credentials: 'include' // Include credentials for CORS
+                });
+
+                if (response.ok) {
+                    alert('Email sent successfully');
+                } else if (response.status === 401) {
+                    loginWithGoogle();
+                } else {
+                    alert('Failed to send email');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+
+
+
+        function loginWithGoogle() {
+            window.location.href = 'https://volt-server.onrender.com/auth/google';
+        }
+
+        async function getUserEmail() {
+            try {
+                const response = await fetch('https://volt-server.onrender.com/get-user-email', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include' // Include credentials for CORS
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('user-email').textContent = data.email;
+                } else {
+                    document.getElementById('user-email').textContent = 'Not signed in';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function getTokenFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('token');
+}
+
+function parseJWT(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    
+    return JSON.parse(jsonPayload);
+}
+
+window.onload = function() {
+    const token = getTokenFromUrl();
+    if (token) {
+        const userData = parseJWT(token);
+        console.log('User Data:', userData);
+        document.getElementById('user-email').textContent = `GOOGLE ACCOUNT SIGNED IN: ${userData.email}`;
+        // Store the token in localStorage or use it directly for sending emails
+        localStorage.setItem('authToken', token);
+    }
+}
+    </script>
+</head>
+<body>
+    <button onclick="loginWithGoogle()">Login with Google</button>
+    <input type="email" id="to-gmail" placeholder="Recipient Email"><br>
+    <input type="text" id="subject-gmail" placeholder="Subject"><br>
+    <textarea id="body-gmail" placeholder="Body"></textarea><br>
+    <button onclick="sendEmailGmail()">Send Email with Gmail</button>
+    <input type="email" id="email" placeholder="Enter email">
+    <button onclick="sendEmail()">Send Email</button>
+    <button onclick="count()">Count</button>
+    <div id="user-email">GOOGLE ACCOUNT SIGNED IN: Not signed in</div>
+</body>
+</html>
