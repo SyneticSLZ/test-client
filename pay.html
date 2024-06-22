@@ -16,14 +16,13 @@ function initialize() {
     const params = new URLSearchParams(window.location.search);
     const loggedin = decodeURIComponent(params.get('loggedin') || '');
     const plan = decodeURIComponent(params.get('plan') || '');
-    const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
-
+    
     if (loggedin === "true") {
         document.getElementById('accountTick').style.display = "block";
         document.getElementById('accountContainer').style.display = "none";
         let email = decodeURIComponent(params.get('email') || '');
         let password = decodeURIComponent(params.get('password') || '');
-
+        const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
         if (plan === "f") {
             if (email) {
                 FreeEmail(email, password);

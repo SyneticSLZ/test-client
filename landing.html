@@ -1850,6 +1850,15 @@ margin-inline-end: 1em;
 
 </style>
 <script>
+
+function Starter(){
+    window.location.href = `https://syneticslz.github.io/test-client/payment.html?loggedin=false&plan=f`;               
+};
+
+function Premium(){
+    window.location.href = `https://syneticslz.github.io/test-client/payment.html?loggedin=false&plan=p`;                
+};
+
     const businessPlans = [
     { name: 'Starter', price: '$9', features: ['Feature 1', 'Feature 2', 'Feature 3'] },
     { name: 'Professional', price: '$49', features: ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4'] },
@@ -2295,7 +2304,7 @@ async function addCustomer() {
                   <div class="bottom">
         
                     <a class="btn" href="#">
-                    <div class="btn-shine" onclick="window.location.href='/OldLogin.html'"  >Start Now</div>
+                    <div class="btn-shine" onclick="Starter()"  >Start Now</div>
                     </a>
 
                   </div>
@@ -2353,7 +2362,7 @@ async function addCustomer() {
                   </div>
                   <div class="bottom-l">
         
-                    <a class="btn-l" href="#" onclick="window.location.href='/OldLogin.html'"  >Start Now</a>
+                    <a class="btn-l" href="#" onclick="Premium()"  >Start Now</a>
                   </div>
                 </div>
                 </div>
