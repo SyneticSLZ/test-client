@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-straight/css/uicons-bold-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-straight/css/uicons-bold-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>    
+<script>
+    
+const submittedData = [];
+let generatedData = [];
+
+function getEmailTokenFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('token');
+}
+
+function decodeEmailJWT(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+}
+
+function fetchUserData() {
+    const token = getEmailTokenFromUrl();
+    if (token) {
+        const decoded = decodeEmailJWT(token);
+        const email = decoded.email;
+
+        fetch('https://volt-server.onrender.com/user-data', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error fetching user data:', data.error);
+            } else {
+                // Customize the page using user data
+                // document.getElementById('userEmail').textContent = data.email;
+                console.log(data.email)
+                // Add more customization based on user data
+            }
+        })
+        .catch(error => {
+            console.error('An error occurred:', error);
+        });
+    } else {
+        console.error('Token not found in URL');
+    }
+}
+
+// Call fetchUserData on page load
+window.onload = fetchUserData;
+// document.getElementById('openPopup').addEventListener('click', () => {
+//             document.getElementById('popup').classList.remove('hidden');
+//         });
+
+        // document.getElementById('closePopup').addEventListener('click', () => {
+        //     document.getElementById('popup').classList.add('hidden');
+        // });
+
+        // document.getElementById('profileTab').addEventListener('click', () => {
+        //     showContent('profileContent');
+        // });
+
+        // document.getElementById('workspacesTab').addEventListener('click', () => {
+        //     showContent('workspacesContent');
+        // });
+
+        // document.getElementById('sessionsTab').addEventListener('click', () => {
+        //     showContent('sessionsContent');
+        // });
+
+        // function showContent(contentId) {
+        //     const contents = document.querySelectorAll('.content');
+        //     contents.forEach(content => {
+        //         content.classList.remove('active');
+        //     });
+        //     document.getElementById(contentId).classList.add('active');
+
+        //     const tabs = document.querySelectorAll('.sidebar-item');
+        //     tabs.forEach(tab => {
+        //         tab.classList.remove('active');
+        //     });
+        //     document.querySelector(`#${contentId}Tab`).classList.add('active');
+        // }
+
+
+
+// CSV LOGIC
+
+function ShowCsv(){
+    const csvBTN = document.getElementById('csvBTN');
+    const input = document.getElementById('csvFile');
+
+    csvBTN.style.display = 'none';
+    input.style.display = 'block';
+    console.log("switched")
+}
+
+
+function detectColumnType(sample) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const namePattern = /^[A-Za-z ,.'-]+$/;
+    const websitePattern = /^(https?:\/\/)?([\w-]+)\.([a-z]{2,6})(\.[a-z]{2,6})?(\/[\w\-.]*)*\/?$/;
+
+    if (emailPattern.test(sample)) return 'email';
+    if (namePattern.test(sample)) return 'name';
+    if (websitePattern.test(sample)) return 'website';
+
+    return null;
+}
+
+        function handleFileSelect(input) {
+            let center = document.getElementById('center');
+            center.style.display = 'none'
+            const file = input.files[0];
+            processCSV(file);
+        }
+
+        function processCSV(file, hasHeaders) {
+    if (!file) {
+        alert('Please upload a CSV file.');
+        return;
+    }
+
+    Papa.parse(file, {
+        header: hasHeaders,
+        dynamicTyping: true,
+        complete: function(results) {
+            const data = results.data;
+            if (data.length === 0) {
+                console.log('Empty CSV file.');
+                return;
+            }
+
+            let columns;
+            if (hasHeaders) {
+                columns = Object.keys(data[0]);
+            } else {
+                // Generate default column names
+                columns = data[0].map((_, index) => `Column${index + 1}`);
+                data.forEach((row, rowIndex) => {
+                    data[rowIndex] = row.reduce((acc, value, index) => {
+                        acc[columns[index]] = value;
+                        return acc;
+                    }, {});
+                });
+            }
+
+            let emailCol, nameCol, websiteCol;
+
+            for (let col of columns) {
+                const sampleValue = data[0][col];
+                const colType = detectColumnType(sampleValue);
+
+                if (colType === 'email') emailCol = col;
+                if (colType === 'name') nameCol = col;
+                if (colType === 'website') websiteCol = col;
+            }
+
+            if (!emailCol || !nameCol || !websiteCol) {
+                console.log('Could not detect all necessary columns.');
+                return;
+            }
+
+            data.forEach(row => {
+                const formData = {
+                    email: row[emailCol],
+                    website: row[websiteCol],
+                    name: row[nameCol]
+                };
+                submittedData.push(formData);
+                updateTable();
+            });
+
+            console.log(JSON.stringify(submittedData, null, 2));
+        }
+    });
+}
+
+function togglePopupManual() {
+      const overlay = document.getElementById('manual-popup-overlay');
+      overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+    }
+function Manual() {
+          const emailInput = document.getElementById('email');
+        const websiteInput = document.getElementById('website');
+        const nameInput = document.getElementById('name');
+        
+        const email = emailInput.value;
+        let website = websiteInput.value;
+        const name = nameInput.value;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const websiteRegex = /^https:\/\/.+$/;
+
+    // Prepend "https://" if not included
+    if (!/^https:\/\//i.test(website)) {
+        website = 'https://' + website;
+    }
+
+        if (!emailRegex.test(email)) {
+            manualError.textContent = "Invalid email format.";
+            return;
+        } else if (!websiteRegex.test(website)) {
+            manualError.textContent = "Invalid website format. Must start with https://";
+            return;
+        } else {
+            manualError.textContent = "";
+        }
+
+        const formData = {
+            email: email,
+            website: website,
+            name: name
+        };
+
+        submittedData.push(formData);
+        console.log(updateTable());
+         // Clear input fields manually
+        emailInput.value = "";
+        websiteInput.value = "";
+        nameInput.value = "";
+        console.log("cleared")
+        togglePopupManual()
+}
+
+function updateTable() {
+            const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            // const thead = document.getElementById('thead');
+            let center = document.getElementById('center');
+            center.style.display = 'none'
+            // thead.style.display = 'block'
+            dataTable.innerHTML = ''; // Clear the existing table rows
+            console.log("working: ", submittedData)
+            const hrow = dataTable.insertRow();
+            const hemailCell = hrow.insertCell(); // Insert a new cell into the row
+            hemailCell.textContent = "Email";
+            const hwebsiteCell = hrow.insertCell();
+            hwebsiteCell.textContent = "Website";
+            const hnameCell = hrow.insertCell();
+            hnameCell.textContent = "Name";
+
+            submittedData.forEach((data, index) => {
+            const row = dataTable.insertRow();
+            const emailCell = row.insertCell(0);
+            const websiteCell = row.insertCell(1);
+            const nameCell = row.insertCell(2);
+
+            emailCell.textContent = data.email;
+            websiteCell.textContent = data.website;
+            nameCell.textContent = data.name;
+            row.setAttribute('data-index', index);
+        });
+        return true 
+    }
+
+
+// SUBMIT THE DATA 
+
+function checkbox() {
+            const checkbox = document.getElementById('cbx-46');
+            const text = document.getElementById('autosend-text');
+            if (checkbox.checked) {
+                text.innerHTML = 'Autosend is <b>ON</b>';
+            } else {
+                text.innerHTML = 'Autosend is <b>OFF</b>';
+            }
+        }
+
+function IsAutoSend() {
+            const checkbox = document.getElementById('cbx-46');
+            return checkbox.checked;
+        }
+
+function Submitandcheckautosend(){
+          if (submittedData.length === 0) {
+              // The array is empty
+              console.log('The array is empty');
+              showNotification(`Please submit data`);
+          } 
+          else {
+            // The array is not empty
+            console.log('The array is not empty');
+            const userPitch = document.getElementById('userPitch').value;
+
+            if (userPitch.trim() === '') {
+                // The value is empty or only contains whitespace
+                console.log('No value provided');
+                showNotification(`Please submit a pitch`);
+            } else {
+                // The value is not empty
+                console.log('Value provided:', userPitch);
+                if (IsAutoSend()){
+                  Autosend();
+                }else{
+                  manualSend();
+            }
+            }
+          }
+        }
+// SENDING THE EMAILS AUTOMATED (TAB CAN BE CLOSED)
+// async function Autosend() {
+//   const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+//   // get the pitch and create a thread
+//   const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
+//   const button = document.getElementById('submit');
+//   button.innerHTML=`<button class="btn"><div class="loader"></div> </button>`
+//   const threadResponse = await fetch('/create-thread', { method: 'POST' });
+
+//   const threadData = await threadResponse.json();
+//   const threadID = threadData.thread_id;
+//   console.log(threadID)
+//   SENT_EMAILS = 0
+//   // iterate through each item in the submitted data and send to its respective email address 
+//   for (let index = 0; index < submittedData.length; index++) {
+//         const data = submittedData[index];
+//         console.log('starting send to ', data.email);
+
+//         try {
+//           updateRowStatus(index, 'Retrieving message');
+//             // Get the website content
+//             const descriptionResponse = await fetch('/get-site-description', {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({ url: data.website })
+//             });
+
+//             const descriptionData = await descriptionResponse.json();
+//             const website_content = descriptionData.description;
+//             const Uname = '{{ name }}'
+//             const To = data.name
+//             console.log(data.email, website_content,Uname, To );
+
+//             updateRowStatus(index, 'Personalizing message');
+//             // Add messages to the thread
+//             const emailContentResponse = await fetch('/add-messages-to-thread', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({
+//                     thread_id: threadID,
+//                     website_content: website_content,
+//                     user_pitch: userPitch,
+//                     To: To,
+//                     Me: Uname
+//                 })
+//             });
+
+//             const emailContentData = await emailContentResponse.json();
+//             const email_content = emailContentData.email_content;
+//             const lines = email_content.split('\n');
+//             const subject_line = lines[0].replace('Subject: ', '');
+//             const main_message = lines.slice(1).join('\n').trim();
+//             console.log(data.email, "returned email sub : ", subject_line);
+//             console.log(data.email, " email content : ", main_message);
+
+//             updateRowStatus(index, 'Sending');
+//             // Send the emails
+//             const result = await sendMessage('me', data.email, subject_line, main_message);
+//             console.log('Message to ', data.email, ' successfully sent:', result);
+//             showNotification(`Message to ${data.email} successfully sent`)
+//             updateRowStatus(index, 'Sent');
+//             SENT_EMAILS = SENT_EMAILS + 1;
+//         } catch (error) {
+//             console.error('Error processing email for', data.email, ':', error);
+//             showNotification(`Error processing email for ${data.email}`)
+//             updateRowStatus(index, 'Error');
+//             // add to error row data, give user option to attempt to resend all error data at the end.
+//             // Optionally handle resend logic here
+//         }
+//     }
+//   console.log('all emails sent');
+//   showNotification('All Emails Sent !')
+//   button.innerHTML=`<button class="button" onclick="Restart()">
+//                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+//                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+//                         </svg>
+//                        Send More
+//                       </button>
+//                       <h3>Sent!</h3>`
+//   useEmails(SENT_EMAILS);
+
+
+// }
+
+
+async function Autosend() {
+  const button = document.getElementById('submit');
+  button.innerHTML = `<button class="btn"><div class="loader"></div> </button>`;
+
+  const userPitch = document.getElementById('userPitch').value; 
+//   const submittedData = getSubmittedData(); // Replace with your method of retrieving the submitted data
+
+  const response = await fetch('/start-email-task', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ submittedData, userPitch })
+  });
+
+  const responseData = await response.json();
+  const taskId = responseData.task_id;
+
+  checkTaskStatus(taskId);
+}
+
+async function checkTaskStatus(taskId) {
+  const response = await fetch(`/task-status/${taskId}`);
+  const data = await response.json();
+
+  if (data.state === 'PENDING' || data.state === 'PROGRESS') {
+    setTimeout(() => checkTaskStatus(taskId), 1000);
+  } else if (data.state === 'SUCCESS') {
+    showNotification('All Emails Sent!');
+    document.getElementById('submit').innerHTML = `<button class="button" onclick="Restart()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                       Send More
+                      </button>
+                      <h3>Sent!</h3>`;
+  } else {
+    showNotification(`Error: ${data.status}`);
+    document.getElementById('submit').innerHTML = `<button class="button" onclick="Restart()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                       Retry
+                      </button>
+                      <h3>Error</h3>`;
+  }
+}
+
+
+
+function updateRowStatus(index, string){
+    console.log(index,string)
+}
+async function Restart() {
+  submittedData = [];
+  generatedData = [];
+  document.getElementById('currentContent').style.display = 'block';
+  document.getElementById('newContent').style.display = 'none';
+  document.getElementById('togglewoggle').style.display = 'flex';
+  dataTable = document.getElementById('dataTable');
+  dataTable.innerHTML=``;
+  button.innerHTML=`<button class="button" onclick="SendEmails()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                       Generate
+                      </button>`
+}
+// SENDING EMAILS MANUALLY
+
+
+
+function showNewHtml() {
+    document.getElementById('currentContent').style.display = 'none';
+    document.getElementById('newContent').style.display = 'block';
+    populateEmailTable();
+}
+
+function toggleDetails(index) {
+    const detailsRow = document.getElementById(`details-${index}`);
+    const arrowIcon = document.getElementById(`arrow-${index}`);
+    if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+        detailsRow.style.display = 'table-row';
+        detailsRow.style.height = '0px';
+        arrowIcon.innerHTML = '↑';
+        setTimeout(() => {
+            detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+            detailsRow.style.height = detailsRow.scrollHeight + 'px';
+            detailsRow.style.opacity = '1';
+        }, 0);
+    } else {
+        detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+        detailsRow.style.height = '0px';
+        detailsRow.style.opacity = '0';
+        arrowIcon.innerHTML = '↓';
+        setTimeout(() => {
+            detailsRow.style.display = 'none';
+        }, 300);
+    }
+}
+
+async function manualSend() {
+    const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
+    document.getElementById('customLoader').style.display = 'flex';
+    // document.getElementById('togglewoggle').style.display = 'none';
+    const button = document.getElementById('submit');
+    showNewHtml();
+    button.innerHTML = `
+                    <button class="button" onclick="sendAllEmails()">
+                        <img width="30" height="30" src="https://img.icons8.com/nolan/64/new-post.png" alt="new-post"/>
+                        Send All
+                    </button>
+                `;
+    const threadResponse = await fetch('/create-thread', { method: 'POST' });
+
+    const threadData = await threadResponse.json();
+    const threadID = threadData.thread_id;
+
+    generatedData = [];
+    for (let index = 0; index < submittedData.length; index++) {
+        const data = submittedData[index];
+        try {
+            const descriptionResponse = await fetch('/get-site-description', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: data.website })
+            });
+            const descriptionData = await descriptionResponse.json();
+            const website_content = descriptionData.description;
+            const Uname = '{{ name }}';
+            const To = data.name;
+
+            updateRowStatus(index, 'Personalizing message');
+            // Add messages to the thread
+            const emailContentResponse = await fetch('/add-messages-to-thread', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    thread_id: threadID,
+                    website_content: website_content,
+                    user_pitch: userPitch,
+                    To: To,
+                    Me: Uname
+                })
+            });
+
+            const emailContentData = await emailContentResponse.json();
+            const email_content = emailContentData.email_content;
+            const lines = email_content.split('\n');
+            const subject_line = lines[0].replace('Subject: ', '');
+            const main_message = lines.slice(1).join('\n').trim();
+
+            generatedData.push({
+                email: data.email,
+                subject: subject_line,
+                content: main_message
+            });
+
+            document.getElementById('loaderText').innerText = `Generating email for ${data.email}...`;
+            await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
+            populateEmailTable();
+
+        } catch (error) {
+            console.error('Error generating email for', data.email, ':', error);
+            showNotification(`Error generating email for ${data.email}`);
+        }
+    }
+    document.getElementById('customLoader').style.display = 'none';
+    populateEmailTable();
+}
+
+async function sendEmailindex(index) {
+    const data = generatedData[index];
+    const subjectElement = document.getElementById(`subject-${index}`);
+    const contentElement = document.getElementById(`content-${index}`);
+
+    if (!subjectElement || !contentElement) {
+        console.error(`Element(s) not found for index ${index}`);
+        showNotification(`Error: Could not find elements to send email for index ${index}`);
+        return;
+    }
+
+    const subject = subjectElement.value;
+    const content = contentElement.value;
+    // Implement send logic here
+    try {
+        updateRowStatus(index, 'Sending');
+        const result = await sendMessage('me', data.email, subject, content);
+        console.log('Message to ', data.email, ' successfully sent:', result);
+        showNotification(`Message to ${data.email} successfully sent`);
+        removeRow(index);
+    } catch (error) {
+        console.error('Error sending email to', data.email, ':', error);
+        showNotification(`Error sending email to ${data.email}`);
+    }
+}
+
+async function sendAllEmails() {
+    const promises = generatedData.map((_, index) => sendEmailindex(index));
+
+    try {
+        await Promise.all(promises);
+        showNotification('All emails sent successfully');
+        initialize()
+    } catch (error) {
+        console.error('Error sending one or more emails:', error);
+        showNotification('Error sending one or more emails');
+    }
+}
+
+
+function populateEmailTable() {
+    const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
+
+    tbody.innerHTML = "";
+    generatedData.forEach((data, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${data.email}</td>
+            <td class="action-buttons">
+                <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
+                <div class="tooltip">
+                    <button onclick="toggleDetails(${index})" class="button-icon" id="arrow-${index}">↓</button>
+                    <span class="tooltiptext">Show/Hide Details</span>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
+
+        const detailsRow = document.createElement('tr');
+        detailsRow.style.display = 'none';
+        detailsRow.id = `details-${index}`;
+        detailsRow.innerHTML = `
+            <td colspan="2">
+                <div class="details">
+                    <label>Subject: 
+                        <input type="text" id="subject-${index}" value="${data.subject}" class="editable">
+                        <span class="pencil-icon" id="subject-pencil-${index}" onclick="makeEditable('subject', ${index})">✏️</span>
+                    </label><br>
+                    <label>Content: 
+                        <textarea id="content-${index}" class="editable">${data.content}</textarea>
+                        <span class="pencil-icon" id="content-pencil-${index}" onclick="makeEditable('content', ${index})">✏️</span>
+                    </label><br>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(detailsRow);
+    });
+}
+
+function makeEditable(field, index) {
+    const displayElement = document.getElementById(`${field}-display-${index}`);
+    const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
+    const value = displayElement.innerText;
+    if (field === 'content') {
+        displayElement.innerHTML = `<textarea id="${field}-${index}" rows="4">${value}</textarea>`;
+    } else {
+        displayElement.innerHTML = `<input type="text" id="${field}-${index}" value="${value}">`;
+    }
+    pencilIcon.innerText = '✔️';
+    pencilIcon.onclick = function() { saveChanges(field, index); };
+}
+
+function saveChanges(field, index) {
+    const inputElement = document.getElementById(`${field}-${index}`);
+    const displayElement = document.getElementById(`${field}-display-${index}`);
+    const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
+    if (inputElement) {
+        displayElement.innerHTML = inputElement.value.replace(/\n/g, '<br>');
+        generatedData[index][field] = inputElement.value;
+    }
+    pencilIcon.innerText = '✏️';
+    pencilIcon.onclick = function() { makeEditable(field, index); };
+}
+
+function removeRow(index) {
+    const row = document.getElementById(`details-${index}`).previousElementSibling;
+    row.remove();
+    document.getElementById(`details-${index}`).remove();
+    generatedData.splice(index, 1);
+}
+
+function regenerateAllEmails() {
+    manualSend();
+}
+
+async function CallThisWhenAutosend() {
+    document.getElementById('sendAllBtn').innerHTML = `<div class="loader"></div>`;
+    for (let index = 0; index < generatedData.length; index++) {
+        const data = generatedData[index];
+        try {
+            updateRowStatus(index, 'Sending');
+            const result = await sendMessage('me', data.email, data.subject, data.content);
+            console.log('Message to ', data.email, ' successfully sent:', result);
+            showNotification(`Message to ${data.email} successfully sent`);
+            removeRow(index);
+        } catch (error) {
+            console.error('Error sending email to', data.email, ':', error);
+            showNotification(`Error sending email to ${data.email}`);
+        }
+    }
+    // document.getElementById('sendAllBtn').innerHTML = 'Send All';
+}
+
+// document.getElementById('sendAllBtn').addEventListener('click', CallThisWhenAutosend);
+document.getElementById('regenerateAllBtn').addEventListener('click', regenerateAllEmails);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+async function sendMessage(sender, to, subject, messageText) {
+    const response = await fetch('/snd_msg', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sender: sender, to: to, subject: subject, message_text: messageText })
+    });
+
+    if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+    }
+
+    const result = await response.json();
+    console.log('Message sent, ID:', result.id);
+    return result;
+}
+
+      async function useEmails(numUsedUp) {
+            // const email = document.getElementById('emailInput').value;
+            // const emailsToUse = parseInt(document.getElementById('emailsToUseInput').value);
+
+            const response = await fetch('/use_email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: '{{email}}', emails_to_use: numUsedUp })
+            });
+
+            const result = await response.json();
+            // alert(result.message);
+            showNotification(`${result.message}`)
+        }
+
+      function sendEmails(SENT_EMAILS) {
+        OutputsData.forEach(data => {
+          const service = '{{ service }}'
+          const message = create_message('me', data.email, data.subject, data.content)
+          send_message(service, 'me', message)
+          console.log('Email sent successfully!')
+        })
+        console.log('Emails sent successfully!')
+        button.innerHTML=`Sent`
+        useEmails(SENT_EMAILS);
+      }
+
+
+//// MAIN STUFF
+function billing(){
+// mainContent.innerHTML = document.getElementById('billing').innerHTML;
+const url = 'https://billing.stripe.com/p/login/bIY15e8DBdSv8SY6oo';
+                    window.open(url, '_blank'); 
+        }
+
+function initialize() {
+    let button = document.getElementById('submit')
+            total_emails = '{{ total_emails }}'
+            plan = '{{ plan_emails}}'
+            name = '{{ name }}'
+            console.log(total_emails, '{{ name }}')
+
+            if (total_emails == 0) {
+                button.innerHTML=`                    <button class="button" onClick="billing()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Unlock Pro
+                      </button>`
+            }
+            else {
+                button.innerHTML=`<!-- <button class="btn">
+                        <svg height="24" width="24" fill="#FFFFFF" viewBox="0 0 24 24" data-name="Layer 1" id="Layer_1" class="sparkle">
+                            <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
+                        </svg>
+                    
+                        <span class="text">Generate</span>
+                    </button> -->
+                    
+                    <button class="button" onclick="Submitandcheckautosend()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Generate
+                      </button>`
+            }
+            showNotification(`Welcome, ${name}`)
+        }
+        initialize();
+
+function showNotification(message) {
+              const name = "{{ name }}";
+                const container = document.getElementById('notification-container-pop');
+                const notification = document.createElement('div');
+                notification.className = 'notification-pop';
+                
+                const closeButton = document.createElement('span');
+                closeButton.className = 'close-button';
+                closeButton.textContent = '×';
+                closeButton.onclick = () => notification.remove();
+
+                notification.appendChild(closeButton);
+                notification.appendChild(document.createTextNode(message));
+
+                container.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.opacity = 0;
+                    notification.style.transform = 'translateY(-20px)';
+                    notification.addEventListener('transitionend', () => notification.remove());
+                }, 5000);
+            };
+
+            
+    </script>
+</head>
+<body>
+   <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <div class="sidebar">
+                <div class="sidebar-item active" id="profileTab">Profile</div>
+                <div class="sidebar-item" id="workspacesTab">Workspaces</div>
+                <div class="sidebar-item" id="sessionsTab">Sessions</div>
+            </div>
+            <div class="main-content">
+                <div id="profileContent" class="content active">
+                    <h2>Account</h2>
+                    <form>
+                        <div class="profile-picture">
+                            <img src="placeholder.png" alt="Profile Picture">
+                        </div>
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" value="Synetic">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" value="X">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="syneticslz@gmail.com">
+                        <p>This email address is associated with your Framer account.</p>
+                        <p>To update your billing email, go to Workspace Settings → Plans.</p>
+                        <div class="button-group">
+                            <button type="button" id="signOut">Sign Out</button>
+                            <button type="button" id="deleteAccount">Delete Account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button id="closePopup" class="close-popup">X</button>
+        </div>
+    </div> 
+
+    <div class="manual-popup-overlay" id="manual-popup-overlay">
+        <div class="container">
+            <div class="heading">Add an Email</div>
+            <!-- <form class="form" action=""> -->
+              <div class="input-field">
+                <input
+                  required=""
+                  autocomplete="off"
+                  type="text"
+                  name="text"
+                  id="name"
+                />
+                <label for="username">Name</label>
+              </div>
+              <div class="input-field">
+                <input
+                  required=""
+                  autocomplete="off"
+                  type="text"
+                  name="email"
+                  id="email"
+                />
+                <label for="email">Email</label>
+              </div>
+              <div class="input-field">
+                <input
+                  required=""
+                  autocomplete="off"
+                  type="text"
+                  name="text"
+                  id="website"
+                  value="https://"
+                />
+                <label for="username">Website</label>
+              </div>
+          
+              <div class="btn-container">
+                <button class="btn" onclick="Manual()">Submit</button>
+                <div class="acc-text">
+                  
+                  <span style="color : #ff0000; cursor : pointer;"  id="manualError"></span>
+                </div>
+              </div>
+            <!-- </form> -->
+          </div>
+          
+      </div>
+
+    <div class="sidebar">
+        <div class="div">
+        <div class="logo">
+            <!-- <img src="Volt.png" alt="Logo"> -->
+            <img  src='vmb.png' alt="google" style="width: 170px; height: 90px;">
+            <!-- <div>Voltmailer</div> -->
+        </div>
+        <div class="menu">
+            <!-- <div class="menu-item">Menu</div> -->
+            <div class="menu-item active" id="1"><i class="fi fi-br-house-blank"></i>Home</div>
+            <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
+            <div class="menu-item" id="3"> <i class="fi fi-rr-credit-card"></i> Billing</div>
+            <div class="menu-item tools">Tools</div>
+            <div class="menu-item" id="openPopup"><i class="fi fi-rr-user-pen"></i>Account</div>
+            <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div>
+        </div>
+    </div>
+        <!-- upsell ?? -->
+        <!-- <div class="upsell">
+            <div class="upsell-content">
+                <div class="upsell-close">
+                    <span>&times;</span>
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="bottom3"> -->
+
+            <!-- #help -->
+            <!-- #setting -->
+            <!-- #signout -->
+        <!-- </div> -->
+        <div class="menu-item logout" id="5"><i class="fi fi-rs-sign-out-alt"></i>Logout</div>
+    </div>
+    <div class="dashboard">
+        <div class="navtop" id="mobile-nav">
+            <img src="Volt.png" alt="Logo">
+            
+        <div class="burger">
+            <img src="google.png" alt="google">
+        </div>
+            
+        </div>
+
+        <div class="top" id="maintop">
+            <div class="plan">Free plan Subscriber</div>
+            <div class="google">
+                <!-- <img  src='../static/google.png' alt="google"> -->
+                <!-- {{ email }} -->
+            </div>
+        </div>
+
+        <div class="contentf" id="main">
+            <div class="welcome-content-row">
+            <div class="welcome">
+            <p>Welcome, </p>
+            <h2>{{ name }}</h2>
+            </div>
+            <div class="buttons">
+                <button class="button-man" onclick="togglePopupManual()">Manual Entry</button>
+                <button class="button-csv" onclick="ShowCsv()" id="csvBTN">Upload Csv</button>
+                <input name="text" type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(this)" style="display: none;"/>
+            </div>
+            </div>
+            <div class="pitch-row">
+                <div class="content-row">
+                    <div id="newContent" style="display: none;">
+                        <h1>Your Emails</h1>
+                        <table id="emailTable">
+                            <thead >
+                                <tr>
+                                    <th>Recipient Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be populated here -->
+                            </tbody>
+                        </table>
+                        <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
+                        <button onclick="Restart()" >Reset</button>
+                        <div class="custom-loader" id="customLoader" style="display: none;">
+                            <div class="load-inner load-one"></div>
+                            <div class="load-inner load-two"></div>
+                            <div class="load-inner load-three"></div>
+                            <span class="text" id="loaderText"></span>
+                        </div>
+                    </div>
+<div id="currentContent">
+                    <table id="dataTable" >
+                        <div class="center" id="center">
+                        <label class="custum-file-upload" for="file">
+                            <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+                            </div>
+                            <div class="text">
+                               <span>Click to upload Csv</span>
+                               </div>
+                               <input type="file" id="file" accept=".csv" onchange="handleFileSelect(this)">
+                            </label>
+                            <span class="text" onclick="Manual()">Or Enter Manualy</span>
+                        </div>  
+                        <!-- <thead id="thead" style="display: none;">
+                            <tr>
+                                <th>Email</th>
+                                <th>Website</th>
+                                <th>Recipient Name</th>
+                            </tr>
+                        </thead>  -->
+                        <tbody>
+                            <!-- Rows will be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+                <div class="pitch">  
+                    <!-- <div class=""></div> -->
+                    <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
+                    <button class="button" onclick="Submitandcheckautosend()" id="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Generate
+                    </button>
+                    <div class="nobg-submit">
+                        <div class="checkbox-wrapper-46">
+                          <input type="checkbox" id="cbx-46" class="inp-cbx" onchange="checkbox()" />
+                          <label for="cbx-46" class="cbx"
+                            ><span>
+                              <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span
+                            ><span> <div id="autosend-text">Autosend is <b>OFF</b></div> </span>
+                          </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="myAccount-content" style="display: none;">
+          <div class="dashboard-usage">
+              <h1>Dashboard</h1>
+              <h4>A detailed overview of your metrics, usage, plan and more</h4>
+              <div class="metrics">
+                <!--  <div class="metric">
+
+                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Potential Clients</p>
+                      <h2 class="metric-value">11</h2>
+                  </div>
+                  <div class="metric">
+
+                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Pipeline Value</p>
+                      <h2 class="metric-value">$847</h2>
+                  </div>
+                  <div class="metric">
+
+                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Appointments</p>
+                      <h2 class="metric-value">5</h2>
+                  </div>
+                  <div class="metric">
+                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Sales</p>
+                      <h2 class="metric-value">$148.94</h2>
+                  </div>
+              </div> -->
+              <!-- <div class="row-2"> -->
+              <div class="plan-usage">
+                  <p class="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p>
+                  <div class="progress-text">
+                    <p>Current: 2</p>
+                    <p>Total: 1000</p>
+                  </div>
+                  <div class="progress-bar">
+                      <div id="progress" style="width: 57.3%;"></div>
+                  </div>
+                  <button class="actual-buttons" id="subscription">Upgrade</button>
+              </div>
+            </div>
+    </div>
+
+    <div id="notification-container-pop"></div>
+    <script>
+        
+        // Function to handle tab switching
+        function switchTab(event) {
+            // Remove active class from all menu items
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+
+            // Add active class to the clicked menu item
+            event.currentTarget.classList.add('active');
+
+            // Get the content div
+            const contentDiv = document.querySelector('.content');
+
+
+            // Clear current content
+            contentDiv.innerHTML = '';
+
+            // Get the id of the clicked menu item
+            const id = event.currentTarget.id;
+            console.log(id)
+
+            // Switch content based on the clicked menu item
+            switch (id) {
+                case '1':
+                    console.log('1')
+                    document.getElementById('myAccount-content').style.display = 'none';
+                    document.getElementById('main').style.display = 'block';
+                    document.getElementById('maintop').style.display = 'flex';
+                    contentDiv.innerHTML = '<h2>Home Content</h2><p>This is the home page content.</p>';
+                    break;
+                case '2':
+                console.log('2')
+                    document.getElementById('myAccount-content').style.display = 'flex';
+                    document.getElementById('main').style.display = 'none';
+                    document.getElementById('maintop').style.display = 'none';
+                    contentDiv.innerHTML = '<h2>Usage Content</h2><p>This is the usage page content.</p>';
+                    break;
+                case '3':
+                    contentDiv.innerHTML = '<h2>Billing Content</h2><p>This is the billing page content.</p>';
+                    break;
+                case '4':
+                    contentDiv.innerHTML = '<h2>Account Content</h2><p>This is the account page content.</p>';
+                    break;
+                case '5':
+                    contentDiv.innerHTML = '<h2>Help Content</h2><p>This is the help page content.</p>';
+                    break;
+                default:
+                    contentDiv.innerHTML = '<h2>Home Content</h2><p>This is the default home page content.</p>';
+            }
+        }
+
+        // Attach event listeners to menu items
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', switchTab);
+        });
+
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
