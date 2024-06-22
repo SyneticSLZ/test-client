@@ -31,15 +31,19 @@ function initialize() {
             if (email == null) {
                 
                 FreeToken(token);
+                console.log(" no email, f")
             } else {
                 FreeEmail(email, password);
+                console.log(" email, f")
             }
         } else {
             planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
             if (email == null) {
                 PremiumToken(token);
+                console.log(" no email, p")
             } else {
                 PremiumEmail(email, password);
+                console.log(" email, p")
             }
         }
     } else {
