@@ -72,6 +72,7 @@ function parseJWT(token) {
 
 // Create a Checkout Session
 async function PremiumEmail(emailx, password) {
+    console.log("running premium email")
             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
             const fetchClientSecret = async (email) => {
                 const response = await fetch('https://volt-server.onrender.com/create-checkout-session', {
@@ -99,6 +100,7 @@ async function PremiumEmail(emailx, password) {
 };
 
 async function PremiumToken(token) {
+    console.log("running premium email with token")
             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
             const userData = parseJWT(token);
             const fetchClientSecret = async (email) => {
@@ -128,6 +130,7 @@ async function PremiumToken(token) {
 
 
 async function FreeEmail(emailx, password) {
+    console.log("running free email")
             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
             const fetchClientSecret = async (email) => {
                 const response = await fetch('https://volt-server.onrender.com/create-checkout-session-free', {
@@ -155,6 +158,7 @@ async function FreeEmail(emailx, password) {
 };
 
 async function FreeToken(token) {
+    console.log("running free token email")
             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
             const userData = parseJWT(token);
             const fetchClientSecret = async (email) => {
