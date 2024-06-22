@@ -944,13 +944,15 @@ function Starter(){
             
             if (token) {
                 let url = `https://syneticslz.github.io/test-client/payment.html?token=${encodeURIComponent(token)}&loggedin=true&plan=f`;
+                window.location.href = url;
             }
             if (email) {
                 let url = `https://syneticslz.github.io/test-client/payment.html?loggedin=true&plan=f`;
                     url += `&email=${encodeURIComponent(email)}`;
                     url += `&password=${encodeURIComponent(password)}`;
+                    window.location.href = url;
             }
-                window.location.href = url;
+               
 };
 
 function Premium(){
@@ -959,13 +961,15 @@ function Premium(){
             
             if (token) {
                 let url = `https://syneticslz.github.io/test-client/payment.html?token=${encodeURIComponent(token)}&loggedin=true&plan=p`;
+                window.location.href = url;
             }
             if (email) {
                 let url = `https://syneticslz.github.io/test-client/payment.html?loggedin=true&plan=p`;
                     url += `&email=${encodeURIComponent(email)}`;
                     url += `&password=${encodeURIComponent(password)}`;
+                    window.location.href = url;
             }
-                window.location.href = url;
+             
 };
 
 // Initial render
