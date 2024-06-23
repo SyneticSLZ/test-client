@@ -1011,7 +1011,7 @@
                             name: name,
                             plan_emails: plan_emails
                         };
-        
+                        console.log(customerData)
                         // Send customer data to your backend to add to the database
                         const addCustomerResponse = await fetch('https://volt-server.onrender.com/add-customer-to-db', {
                             method: 'POST',
@@ -1022,7 +1022,7 @@
                         });
         
                         const addCustomerResult = await addCustomerResponse.json();
-        
+                        console.log(addCustomerResult)
                         // Redirect to dashboard with token
                         if (addCustomerResult.redirectUrl) {
                             window.location.href = addCustomerResult.redirectUrl;
