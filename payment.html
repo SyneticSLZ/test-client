@@ -985,7 +985,7 @@
             let password = decodeURIComponent(params.get('password'));
             let name =  params.get('name');
             let sessionId = params.get('session_id')
-            let plan = params.get('plan')
+            // let plan = params.get('plan')
         try {
                 // Fetch session details from your backend using the session ID
             const sessionResponse = await fetch(`https://volt-server.onrender.com/get-session-details?session_id=${sessionId}`);
