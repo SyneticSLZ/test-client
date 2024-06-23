@@ -985,6 +985,7 @@
             let password = decodeURIComponent(params.get('password'));
             let name =  params.get('name');
             let sessionId = params.get('session_id')
+            let planChar = params.get('plan')
         try {
                 // Fetch session details from your backend using the session ID
             const sessionResponse = await fetch(`https://volt-server.onrender.com/get-session-details?session_id=${sessionId}`);
@@ -992,7 +993,7 @@
         
                         // Determine plan and total_emails based on price ID
                         let plan, plan_emails;
-                        if (sessionData.line_items[0].price.id === 'price_1PKf2PKJeZAyw8f418JphiK0') {
+                        if (planChar === "p") {
                             plan = 'premium';
                             plan_emails = 1000;
                         } else {
