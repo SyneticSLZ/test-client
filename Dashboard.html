@@ -130,8 +130,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     var token  = urlParams.get('token');        
             if (token) {
+                console.log("noraml running")
                 fetchUserData();
             } else {
+                console.log("google running")
                 googleAuth();
             }
         });
