@@ -85,7 +85,7 @@ async function googleAuth() {
     const urlParams = new URLSearchParams(window.location.search);
     const googleToken = urlParams.get('googletokentoken');
     if (googleToken) {
-        const userData = parseJWT(token);
+        const userData = parseJWT(googleToken);
         console.log('User Data:', userData);
         document.getElementById('user-email').textContent = `GOOGLE ACCOUNT SIGNED IN: ${userData.email}`;
         
