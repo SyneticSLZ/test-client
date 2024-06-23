@@ -10,398 +10,7 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <script src="https://js.stripe.com/v3/"></script>
-    <script>
-
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    const AccountIcon = document.getElementbyId('Account')
-const SenderNameIcon = document.getElementbyId('SenderName')
-const CheckoutIcon = document.getElementbyId('PaymentIcon')
-            initialize();
-
-        });
-
-        
-
-function Checkout(){
-    let name = document.getElementById('name').value;
-    if (name) {
-
-    
-    AccountIcon.innerHTML = `
-
-<h2>1. Create an Account </h2>
-
-
-<i class="fi fi-ss-hexagon-check" id="accountTick"></i>
-
-`;
-SenderNameIcon.innerHTML = `
-
-        <h2>2. Your Sender Name</h2>
-
-       
-        <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
-
-
-`;
-CheckoutIcon.innerHTML = `
-
-        <h2>3. Select Payment</h2>
-
-         <i class="fi fi-rr-circle" id="down"></i>
-
-`;
-document.getElementById('accountContainer').style.display = "none";
-document.getElementById('InputNameBox').style.display = "none";
-document.getElementById('Checkout-full').style.border = "none";
-document.getElementById('full-Name').style.border = "2px solid black";
-
-    
-    let email = decodeURIComponent(params.get('email') || '');
-    let password = decodeURIComponent(params.get('password') || '');
-        // const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
-        if (plan === "f") {  
-            FreeEmail(email, password, name);
-            // if (password == null) {
-                
-            //     FreeToken(email, name);
-            //     console.log(" no pwrd, f")
-            // } else {
-            //     FreeEmail(email, password, name);
-            //     console.log(" email, f", email)
-                
-            // }
-
-        } else {
-            PremiumEmail(email, password, name);
-            // if (password == null) {
-            //     PremiumToken(email, name);
-            //     console.log(" no email, p")
-            // } else {
-            //     PremiumEmail(email, password, name);
-            //     console.log(" email, p")
-            // }
-        }
-
-    }
-    else {
-        alert("must input a senders name")
-    }
-}
-
-async function addCustomer(){
-
-    const params = new URLSearchParams(window.location.search);
-    let email = params.get('email');
-    let password = decodeURIComponent(params.get('password'));
-    let name =  params.get('name');
-try {
-        // Fetch session details from your backend using the session ID
-    const sessionResponse = await fetch(`https://volt-server.onrender.com/get-session-details?session_id=${sessionId}`);
-                const sessionData = await sessionResponse.json();
-
-                // Determine plan and total_emails based on price ID
-                let plan, plan_emails;
-                if (sessionData.line_items[0].price.id === 'price_1PKf2PKJeZAyw8f418JphiK0') {
-                    plan = 'premium';
-                    plan_emails = 1000;
-                } else {
-                    plan = 'free';
-                    plan_emails = 20;
-                }
-
-                const customerData = {
-                    stripeID: sessionData.customer,
-                    email: email,
-                    plan: plan,
-                    total_emails: 0,
-                    priceID: sessionData.line_items[0].price.id,
-                    password: password,
-                    name: name,
-                    plan_emails: plan_emails
-                };
-
-                // Send customer data to your backend to add to the database
-                const addCustomerResponse = await fetch('/add-customer-to-db', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(customerData)
-                });
-
-                const addCustomerResult = await addCustomerResponse.json();
-
-                // Redirect to dashboard with token
-                if (addCustomerResult.redirectUrl) {
-                    window.location.href = addCustomerResult.redirectUrl;
-                }
-
-                // Optionally, show success message or redirect to another page
-                document.getElementById('accountTick').style.display = "block";
-            } catch (error) {
-                console.error('Error handling checkout session:', error);
-            }
-
-}
-
-
-async function initialize() {
-    const planElement = document.getElementById('selected-plan');
-    const params = new URLSearchParams(window.location.search);
-    const loggedin = decodeURIComponent(params.get('loggedin') || '');
-    const plan = decodeURIComponent(params.get('plan') || '');
-    const session = params.get('session_id')
-    if (session){
-
-// handle the html 
-
-        document.getElementById('above-checkout').style.display = "none"
-        document.getElementById('checkout').style.display = "none"
-        document.getElementById('loading').style.display = "flex"
-        const response = await fetch(`https://volt-server.onrender.com/session-status?session_id=${session}`);
-            const session = await response.json();
-            const success = document.getElementById('success')
-            if (session.status === 'complete') {
-                document.getElementById('processing').classList.remove('active');
-                document.getElementById('processing').classList.add('hidden');
-                document.getElementById('success').classList.remove('hidden');
-                document.getElementById('success').classList.add('active');
-                addCustomer()
-            }
-        else{
-            document.getElementById('processing').classList.remove('active');
-                document.getElementById('processing').classList.add('hidden');
-                document.getElementById('failure').classList.remove('hidden');
-                document.getElementById('failure').classList.add('active');
-
-
-        }
-    }
-    else{
-
-    if (plan === "f") { 
-            planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
-        }
-        else{
-            planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
-        }
-
-    if (loggedin === "true") {
-        nameActive()
-    } else {
-        singupActive()
-    }
-
-    }
-}
-
-function failedCheckout(){
-
-    const params = new URLSearchParams(window.location.search);
-    let email = decodeURIComponent(params.get('email') || '');
-    let password = decodeURIComponent(params.get('password') || '');
-
-    let url = `https://syneticslz.github.io/test-client/payment.html?loggedin=true&plan=f`;
-    url += `&email=${encodeURIComponent(email)}`;
-    url += `&password=${encodeURIComponent(password)}`;
-    window.location.href = url;
-}
-
- function singupActive(){
-
-AccountIcon.innerHTML = `
-
-<h2>1. Create an Account </h2>
-
-<i class="fi fi-rr-circle" id="down"></i>
-
-`;
-SenderNameIcon.innerHTML = `
-
-        <h2>2. Your Sender Name</h2>
-
-        <i class="fi fi-rr-angle-small-down" id="down"></i>
-
-`;
-CheckoutIcon.innerHTML = `
-
-        <h2>3. Select Payment</h2>
-
-        <i class="fi fi-rr-angle-small-down" id="down"></i>
-
-`;
-
-    document.getElementById('accountContainer').style.display = "flex";
-    document.getElementById('InputNameBox').style.display = "none";
-    document.getElementById('full-Account').style.border = "none";
-    document.getElementById('full-Name').style.border = "2px solid black";
-}
-
-
-
-
-function nameActive(){
-    AccountIcon.innerHTML = `
-
-<h2>1. Create an Account </h2>
-
-
-<i class="fi fi-ss-hexagon-check" id="accountTick"></i>
-
-`;
-SenderNameIcon.innerHTML = `
-
-        <h2>2. Your Sender Name</h2>
-
-        <i class="fi fi-rr-circle" id="down"></i>
-
-`;
-CheckoutIcon.innerHTML = `
-
-        <h2>3. Select Payment</h2>
-
-        <i class="fi fi-rr-angle-small-down" id="down"></i>
-
-`;
-    document.getElementById('accountContainer').style.display = "none";
-    document.getElementById('InputNameBox').style.display = "flex";
-    document.getElementById('full-Account').style.border = "2px solid black";
-    document.getElementById('full-Name').style.border = "none";
-}
-
-function parseJWT(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    
-    return JSON.parse(jsonPayload);
-}
-
-
-// Create a Checkout Session
-async function PremiumEmail(emailx, password, name) {
-    console.log("running premium email")
-            const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
-            const fetchClientSecret = async (email) => {
-                const response = await fetch('https://volt-server.onrender.com/create-checkout-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email: emailx, password: password, name: name })  // Pass the email in the request body
-                });
-                const data = await response.json();
-                if (data.error) {
-                    console.error('Error:', data.error);
-                    throw new Error(data.error);
-                }
-                return data.clientSecret;
-            };
-            try {
-                const checkout = await stripe.initEmbeddedCheckout({
-                    clientSecret: await fetchClientSecret(),
-                });
-                checkout.mount('#checkout');
-            } catch (e) {
-                console.error('Error initializing embedded checkout:', e);
-            }
-};
-
-// async function PremiumToken(email) {
-//     console.log("running premium email with token")
-//             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
-//             const userData = parseJWT(token);
-//             const fetchClientSecret = async (email) => {
-//                 const response = await fetch('https://volt-server.onrender.com/create-checkout-session-token', {
-//                     method: 'POST',
-//                     headers: {
-//                         'Content-Type': 'application/json',
-//                     },
-//                     body: JSON.stringify({ email:email })  // Pass the email in the request body
-//                 });
-//                 const data = await response.json();
-//                 if (data.error) {
-//                     console.error('Error:', data.error);
-//                     throw new Error(data.error);
-//                 }
-//                 return data.clientSecret;
-//             };
-//             try {
-//                 const checkout = await stripe.initEmbeddedCheckout({
-//                     clientSecret: await fetchClientSecret(),
-//                 });
-//                 checkout.mount('#checkout');
-//             } catch (e) {
-//                 console.error('Error initializing embedded checkout:', e);
-//             }
-// };
-
-
-async function FreeEmail(emailx, password, name) {
-    console.log("running free email")
-            const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
-            const fetchClientSecret = async (email) => {
-                const response = await fetch('https://volt-server.onrender.com/create-checkout-session-free', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email: emailx, password: password, name: name })  // Pass the email in the request body
-                });
-                const data = await response.json();
-                if (data.error) {
-                    console.error('Error:', data.error);
-                    throw new Error(data.error);
-                }
-                return data.clientSecret;
-            };
-            try {
-                const checkout = await stripe.initEmbeddedCheckout({
-                    clientSecret: await fetchClientSecret(),
-                });
-                checkout.mount('#checkout');
-            } catch (e) {
-                console.error('Error initializing embedded checkout:', e);
-            }
-};
-
-// async function FreeToken(email) {
-//     console.log("running free token email")
-//             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
-//             const userData = parseJWT(token);
-//             const fetchClientSecret = async (email) => {
-//                 const response = await fetch('https://volt-server.onrender.com/create-checkout-session-free-token', {
-//                     method: 'POST',
-//                     headers: {
-//                         'Content-Type': 'application/json',
-//                     },
-//                     body: JSON.stringify({ email: email })  // Pass the email in the request body
-//                 });
-//                 const data = await response.json();
-//                 if (data.error) {
-//                     console.error('Error:', data.error);
-//                     throw new Error(data.error);
-//                 }
-//                 return data.clientSecret;
-//             };
-//             try {
-//                 const checkout = await stripe.initEmbeddedCheckout({
-//                     clientSecret: await fetchClientSecret(),
-//                 });
-//                 checkout.mount('#checkout');
-//             } catch (e) {
-//                 console.error('Error initializing embedded checkout:', e);
-//             }
-// };
-
-    </script>
-    
+ 
 </head>
 <body>
 
@@ -1019,5 +628,398 @@ async function FreeEmail(emailx, password, name) {
     <div id="checkout">
         <!-- Checkout will insert the payment form here -->
       </div>
+
+      <script>
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const AccountIcon = document.getElementbyId('Account')
+        const SenderNameIcon = document.getElementbyId('SenderName')
+        const CheckoutIcon = document.getElementbyId('PaymentIcon')
+                    initialize();
+        
+                });
+        
+                
+        
+        function Checkout(){
+            let name = document.getElementById('name').value;
+            if (name) {
+        
+            
+            AccountIcon.innerHTML = `
+        
+        <h2>1. Create an Account </h2>
+        
+        
+        <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+        
+        `;
+        SenderNameIcon.innerHTML = `
+        
+                <h2>2. Your Sender Name</h2>
+        
+               
+                <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+        
+        
+        `;
+        CheckoutIcon.innerHTML = `
+        
+                <h2>3. Select Payment</h2>
+        
+                 <i class="fi fi-rr-circle" id="down"></i>
+        
+        `;
+        document.getElementById('accountContainer').style.display = "none";
+        document.getElementById('InputNameBox').style.display = "none";
+        document.getElementById('Checkout-full').style.border = "none";
+        document.getElementById('full-Name').style.border = "2px solid black";
+        
+            
+            let email = decodeURIComponent(params.get('email') || '');
+            let password = decodeURIComponent(params.get('password') || '');
+                // const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
+                if (plan === "f") {  
+                    FreeEmail(email, password, name);
+                    // if (password == null) {
+                        
+                    //     FreeToken(email, name);
+                    //     console.log(" no pwrd, f")
+                    // } else {
+                    //     FreeEmail(email, password, name);
+                    //     console.log(" email, f", email)
+                        
+                    // }
+        
+                } else {
+                    PremiumEmail(email, password, name);
+                    // if (password == null) {
+                    //     PremiumToken(email, name);
+                    //     console.log(" no email, p")
+                    // } else {
+                    //     PremiumEmail(email, password, name);
+                    //     console.log(" email, p")
+                    // }
+                }
+        
+            }
+            else {
+                alert("must input a senders name")
+            }
+        }
+        
+        async function addCustomer(){
+        
+            const params = new URLSearchParams(window.location.search);
+            let email = params.get('email');
+            let password = decodeURIComponent(params.get('password'));
+            let name =  params.get('name');
+        try {
+                // Fetch session details from your backend using the session ID
+            const sessionResponse = await fetch(`https://volt-server.onrender.com/get-session-details?session_id=${sessionId}`);
+                        const sessionData = await sessionResponse.json();
+        
+                        // Determine plan and total_emails based on price ID
+                        let plan, plan_emails;
+                        if (sessionData.line_items[0].price.id === 'price_1PKf2PKJeZAyw8f418JphiK0') {
+                            plan = 'premium';
+                            plan_emails = 1000;
+                        } else {
+                            plan = 'free';
+                            plan_emails = 20;
+                        }
+        
+                        const customerData = {
+                            stripeID: sessionData.customer,
+                            email: email,
+                            plan: plan,
+                            total_emails: 0,
+                            priceID: sessionData.line_items[0].price.id,
+                            password: password,
+                            name: name,
+                            plan_emails: plan_emails
+                        };
+        
+                        // Send customer data to your backend to add to the database
+                        const addCustomerResponse = await fetch('/add-customer-to-db', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(customerData)
+                        });
+        
+                        const addCustomerResult = await addCustomerResponse.json();
+        
+                        // Redirect to dashboard with token
+                        if (addCustomerResult.redirectUrl) {
+                            window.location.href = addCustomerResult.redirectUrl;
+                        }
+        
+                        // Optionally, show success message or redirect to another page
+                        document.getElementById('accountTick').style.display = "block";
+                    } catch (error) {
+                        console.error('Error handling checkout session:', error);
+                    }
+        
+        }
+        
+        
+        async function initialize() {
+            const planElement = document.getElementById('selected-plan');
+            const params = new URLSearchParams(window.location.search);
+            const loggedin = decodeURIComponent(params.get('loggedin') || '');
+            const plan = decodeURIComponent(params.get('plan') || '');
+            const session = params.get('session_id')
+            if (session){
+        
+        // handle the html 
+        
+                document.getElementById('above-checkout').style.display = "none"
+                document.getElementById('checkout').style.display = "none"
+                document.getElementById('loading').style.display = "flex"
+                const response = await fetch(`https://volt-server.onrender.com/session-status?session_id=${session}`);
+                    const session = await response.json();
+                    const success = document.getElementById('success')
+                    if (session.status === 'complete') {
+                        document.getElementById('processing').classList.remove('active');
+                        document.getElementById('processing').classList.add('hidden');
+                        document.getElementById('success').classList.remove('hidden');
+                        document.getElementById('success').classList.add('active');
+                        addCustomer()
+                    }
+                else{
+                    document.getElementById('processing').classList.remove('active');
+                        document.getElementById('processing').classList.add('hidden');
+                        document.getElementById('failure').classList.remove('hidden');
+                        document.getElementById('failure').classList.add('active');
+        
+        
+                }
+            }
+            else{
+        
+            if (plan === "f") { 
+                    planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
+                }
+                else{
+                    planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
+                }
+        
+            if (loggedin === "true") {
+                nameActive()
+            } else {
+                singupActive()
+            }
+        
+            }
+        }
+        
+        function failedCheckout(){
+        
+            const params = new URLSearchParams(window.location.search);
+            let email = decodeURIComponent(params.get('email') || '');
+            let password = decodeURIComponent(params.get('password') || '');
+        
+            let url = `https://syneticslz.github.io/test-client/payment.html?loggedin=true&plan=f`;
+            url += `&email=${encodeURIComponent(email)}`;
+            url += `&password=${encodeURIComponent(password)}`;
+            window.location.href = url;
+        }
+        
+         function singupActive(){
+        
+        AccountIcon.innerHTML = `
+        
+        <h2>1. Create an Account </h2>
+        
+        <i class="fi fi-rr-circle" id="down"></i>
+        
+        `;
+        SenderNameIcon.innerHTML = `
+        
+                <h2>2. Your Sender Name</h2>
+        
+                <i class="fi fi-rr-angle-small-down" id="down"></i>
+        
+        `;
+        CheckoutIcon.innerHTML = `
+        
+                <h2>3. Select Payment</h2>
+        
+                <i class="fi fi-rr-angle-small-down" id="down"></i>
+        
+        `;
+        
+            document.getElementById('accountContainer').style.display = "flex";
+            document.getElementById('InputNameBox').style.display = "none";
+            document.getElementById('full-Account').style.border = "none";
+            document.getElementById('full-Name').style.border = "2px solid black";
+        }
+        
+        
+        
+        
+        function nameActive(){
+            AccountIcon.innerHTML = `
+        
+        <h2>1. Create an Account </h2>
+        
+        
+        <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+        
+        `;
+        SenderNameIcon.innerHTML = `
+        
+                <h2>2. Your Sender Name</h2>
+        
+                <i class="fi fi-rr-circle" id="down"></i>
+        
+        `;
+        CheckoutIcon.innerHTML = `
+        
+                <h2>3. Select Payment</h2>
+        
+                <i class="fi fi-rr-angle-small-down" id="down"></i>
+        
+        `;
+            document.getElementById('accountContainer').style.display = "none";
+            document.getElementById('InputNameBox').style.display = "flex";
+            document.getElementById('full-Account').style.border = "2px solid black";
+            document.getElementById('full-Name').style.border = "none";
+        }
+        
+        function parseJWT(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            
+            return JSON.parse(jsonPayload);
+        }
+        
+        
+        // Create a Checkout Session
+        async function PremiumEmail(emailx, password, name) {
+            console.log("running premium email")
+                    const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
+                    const fetchClientSecret = async (email) => {
+                        const response = await fetch('https://volt-server.onrender.com/create-checkout-session', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email: emailx, password: password, name: name })  // Pass the email in the request body
+                        });
+                        const data = await response.json();
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            throw new Error(data.error);
+                        }
+                        return data.clientSecret;
+                    };
+                    try {
+                        const checkout = await stripe.initEmbeddedCheckout({
+                            clientSecret: await fetchClientSecret(),
+                        });
+                        checkout.mount('#checkout');
+                    } catch (e) {
+                        console.error('Error initializing embedded checkout:', e);
+                    }
+        };
+        
+        // async function PremiumToken(email) {
+        //     console.log("running premium email with token")
+        //             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
+        //             const userData = parseJWT(token);
+        //             const fetchClientSecret = async (email) => {
+        //                 const response = await fetch('https://volt-server.onrender.com/create-checkout-session-token', {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         'Content-Type': 'application/json',
+        //                     },
+        //                     body: JSON.stringify({ email:email })  // Pass the email in the request body
+        //                 });
+        //                 const data = await response.json();
+        //                 if (data.error) {
+        //                     console.error('Error:', data.error);
+        //                     throw new Error(data.error);
+        //                 }
+        //                 return data.clientSecret;
+        //             };
+        //             try {
+        //                 const checkout = await stripe.initEmbeddedCheckout({
+        //                     clientSecret: await fetchClientSecret(),
+        //                 });
+        //                 checkout.mount('#checkout');
+        //             } catch (e) {
+        //                 console.error('Error initializing embedded checkout:', e);
+        //             }
+        // };
+        
+        
+        async function FreeEmail(emailx, password, name) {
+            console.log("running free email")
+                    const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
+                    const fetchClientSecret = async (email) => {
+                        const response = await fetch('https://volt-server.onrender.com/create-checkout-session-free', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email: emailx, password: password, name: name })  // Pass the email in the request body
+                        });
+                        const data = await response.json();
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            throw new Error(data.error);
+                        }
+                        return data.clientSecret;
+                    };
+                    try {
+                        const checkout = await stripe.initEmbeddedCheckout({
+                            clientSecret: await fetchClientSecret(),
+                        });
+                        checkout.mount('#checkout');
+                    } catch (e) {
+                        console.error('Error initializing embedded checkout:', e);
+                    }
+        };
+        
+        // async function FreeToken(email) {
+        //     console.log("running free token email")
+        //             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
+        //             const userData = parseJWT(token);
+        //             const fetchClientSecret = async (email) => {
+        //                 const response = await fetch('https://volt-server.onrender.com/create-checkout-session-free-token', {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         'Content-Type': 'application/json',
+        //                     },
+        //                     body: JSON.stringify({ email: email })  // Pass the email in the request body
+        //                 });
+        //                 const data = await response.json();
+        //                 if (data.error) {
+        //                     console.error('Error:', data.error);
+        //                     throw new Error(data.error);
+        //                 }
+        //                 return data.clientSecret;
+        //             };
+        //             try {
+        //                 const checkout = await stripe.initEmbeddedCheckout({
+        //                     clientSecret: await fetchClientSecret(),
+        //                 });
+        //                 checkout.mount('#checkout');
+        //             } catch (e) {
+        //                 console.error('Error initializing embedded checkout:', e);
+        //             }
+        // };
+        
+            </script>
+            
 </body>
 </html>
