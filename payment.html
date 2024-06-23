@@ -635,9 +635,7 @@
 
 
         document.addEventListener("DOMContentLoaded", function() {
-            const AccountIcon = document.getElementById('Account')
-        const SenderNameIcon = document.getElementById('SenderName')
-        const CheckoutIcon = document.getElementById('PaymentIcon')
+
                     initialize();
         
                 });
@@ -645,6 +643,9 @@
                 
         
         function Checkout(){
+            const AccountIcon = document.getElementById('Account')
+        const SenderNameIcon = document.getElementById('SenderName')
+        const CheckoutIcon = document.getElementById('PaymentIcon')
             let name = document.getElementById('name').value;
             if (name) {
         
@@ -819,7 +820,6 @@
         }
         
         function failedCheckout(){
-        
             const params = new URLSearchParams(window.location.search);
             let email = decodeURIComponent(params.get('email') || '');
             let password = decodeURIComponent(params.get('password') || '');
@@ -831,7 +831,9 @@
         }
         
          function singupActive(){
-        
+            const AccountIcon = document.getElementById('Account')
+        const SenderNameIcon = document.getElementById('SenderName')
+        const CheckoutIcon = document.getElementById('PaymentIcon')
         AccountIcon.innerHTML = `
         
         <h2>1. Create an Account </h2>
@@ -864,7 +866,11 @@
         
         
         function nameActive(){
-            AccountIcon.innerHTML = `
+            const AccountIcon = document.getElementById('Account')
+        const SenderNameIcon = document.getElementById('SenderName')
+        const CheckoutIcon = document.getElementById('PaymentIcon')
+            
+        AccountIcon.innerHTML = `
         
         <h2>1. Create an Account </h2>
         
