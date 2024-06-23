@@ -83,7 +83,7 @@ function parseJWT(token) {
 
 async function googleAuth() {
     const urlParams = new URLSearchParams(window.location.search);
-    const googleToken = urlParams.get('googletokentoken');
+    const googleToken = urlParams.get('googletoken');
     if (googleToken) {
         const userData = parseJWT(googleToken);
         console.log('User Data:', userData);
