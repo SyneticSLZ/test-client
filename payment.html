@@ -943,7 +943,7 @@
         document.getElementById('Checkout-full').style.border = "none";
         document.getElementById('full-Name').style.border = "2px solid black";
         
-            
+            const params = new URLSearchParams(window.location.search);
             let email = decodeURIComponent(params.get('email') || '');
             let password = decodeURIComponent(params.get('password') || '');
                 // const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
@@ -1034,6 +1034,7 @@
         
         
         async function initialize() {
+            
             const planElement = document.getElementById('selected-plan');
             const params = new URLSearchParams(window.location.search);
             const loggedin = decodeURIComponent(params.get('loggedin') || '');
@@ -1057,7 +1058,7 @@
                         addCustomer()
                     }
                 else{
-                    document.getElementById('processing').classList.remove('active');
+                        document.getElementById('processing').classList.remove('active');
                         document.getElementById('processing').classList.add('hidden');
                         document.getElementById('failure').classList.remove('hidden');
                         document.getElementById('failure').classList.add('active');
