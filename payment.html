@@ -910,6 +910,7 @@
             const AccountIcon = document.getElementById('Account')
         const SenderNameIcon = document.getElementById('SenderName')
         const CheckoutIcon = document.getElementById('PaymentIcon')
+        
             let name = document.getElementById('name').value;
             if (name) {
         
@@ -944,6 +945,7 @@
         document.getElementById('full-Name').style.border = "2px solid black";
         
             const params = new URLSearchParams(window.location.search);
+            const plan = decodeURIComponent(params.get('plan') || '');
             let email = decodeURIComponent(params.get('email') || '');
             let password = decodeURIComponent(params.get('password') || '');
                 // const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
