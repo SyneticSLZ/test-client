@@ -16,6 +16,7 @@ const SenderNameIcon = document.getElementbyId('SenderName')
 const CheckoutIcon = document.getElementbyId('PaymentIcon')
 
 
+
 document.addEventListener("DOMContentLoaded", function() {
             initialize();
         });
@@ -50,6 +51,7 @@ CheckoutIcon.innerHTML = `
 document.getElementById('accountContainer').style.display = "none";
 document.getElementById('InputNameBox').style.display = "none";
 document.getElementById('Checkout-full').style.border = "none";
+document.getElementById('full-Name').style.border = "2px solid black";
 
     let name = document.getElementById('name').value;
     let email = decodeURIComponent(params.get('email') || '');
@@ -124,6 +126,8 @@ CheckoutIcon.innerHTML = `
 
     document.getElementById('accountContainer').style.display = "flex";
     document.getElementById('InputNameBox').style.display = "none";
+    document.getElementById('full-Account').style.border = "none";
+    document.getElementById('full-Name').style.border = "2px solid black";
 }
 
 
@@ -154,6 +158,8 @@ CheckoutIcon.innerHTML = `
 `;
     document.getElementById('accountContainer').style.display = "none";
     document.getElementById('InputNameBox').style.display = "flex";
+    document.getElementById('full-Account').style.border = "2px solid black";
+    document.getElementById('full-Name').style.border = "none";
 }
 
 
@@ -527,7 +533,7 @@ async function FreeEmail(emailx, password, name) {
         <h2>You’re almost there! Complete your order</h2>
         <p id="selected-plan">Selected Plan:  <b>Premium</b></p>
 
-    <div class="full">
+    <div class="full" id="full-Account">
 <div class="headerrow" id="Account">
     <h2>1. Create an Account </h2>
 
@@ -565,7 +571,7 @@ async function FreeEmail(emailx, password, name) {
 
         </div>
     </div>
-<div class="full">
+<div class="full" id='full-Name'>
 <div class="headerrow" id="SenderName">
         <h2>2. Your Sender Name</h2>
         <i class="fi fi-rr-angle-small-down" id="down"></i>
