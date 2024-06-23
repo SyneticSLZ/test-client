@@ -975,8 +975,32 @@ function Premium(){
              
 };
 
+function getTokenFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('token');
+}
+
+function parseJWT(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    
+    return JSON.parse(jsonPayload);
+}
+
 // Initial render
 document.addEventListener('DOMContentLoaded', () => {
+  const token = getTokenFromUrl();
+    if (token) {
+        const userData = parseJWT(token);
+        console.log('User Data:', userData);
+        document.getElementById('user-email').textContent = `GOOGLE ACCOUNT SIGNED IN: ${userData.email}`;
+        // Store the token in localStorage or use it directly for sending emails
+        localStorage.setItem('authToken', token);
+    }
+
     renderPlans(businessPlans);
     // const { email, password } = getQueryParams();
         // if (email && password) {
