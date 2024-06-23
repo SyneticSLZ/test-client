@@ -978,14 +978,14 @@
             }
         }
         
-        async function addCustomer(){
+        async function addCustomer(PriceID){
         
             const params = new URLSearchParams(window.location.search);
             let email = params.get('email');
             let password = decodeURIComponent(params.get('password'));
             let name =  params.get('name');
             let sessionId = params.get('session_id')
-            let planChar = params.get('plan')
+            let plan = params.get('plan')
         try {
                 // Fetch session details from your backend using the session ID
             const sessionResponse = await fetch(`https://volt-server.onrender.com/get-session-details?session_id=${sessionId}`);
@@ -993,7 +993,7 @@
         
                         // Determine plan and total_emails based on price ID
                         let plan, plan_emails;
-                        if (planChar === "p") {
+                        if (PriceID === 'price_1PKf2PKJeZAyw8f418JphiK0') {
                             plan = 'premium';
                             plan_emails = 1000;
                         } else {
@@ -1059,7 +1059,7 @@
                         document.getElementById('processing').classList.add('hidden');
                         document.getElementById('success').classList.remove('hidden');
                         document.getElementById('success').classList.add('active');
-                        addCustomer()
+                        addCustomer(sessionData.first_price_id)
                     }
                 else{
                         document.getElementById('processing').classList.remove('active');
