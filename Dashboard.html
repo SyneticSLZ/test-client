@@ -126,6 +126,7 @@ async function googleAuth() {
 }
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
+    console.log("running")
     const urlParams = new URLSearchParams(window.location.search);
     var token  = urlParams.get('token');        
             if (token) {
