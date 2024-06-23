@@ -1013,7 +1013,7 @@
                         };
         
                         // Send customer data to your backend to add to the database
-                        const addCustomerResponse = await fetch('/add-customer-to-db', {
+                        const addCustomerResponse = await fetch('https://volt-server.onrender.com/add-customer-to-db', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
