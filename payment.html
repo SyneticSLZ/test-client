@@ -1002,7 +1002,7 @@
                         }
         
                         const customerData = {
-                            stripeID: sessionData.customer,
+                            stripeID: sessionData.customer.id,
                             email: email,
                             plan: plan,
                             total_emails: 0,
@@ -1059,7 +1059,7 @@
                         document.getElementById('processing').classList.add('hidden');
                         document.getElementById('success').classList.remove('hidden');
                         document.getElementById('success').classList.add('active');
-                        addCustomer(sessionData.first_price_id.id)
+                        addCustomer(sessionData.first_price_id)
                     }
                 else{
                         document.getElementById('processing').classList.remove('active');
