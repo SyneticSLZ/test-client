@@ -961,7 +961,8 @@ function Premium(){
             const { token, email, password } = params;
             
             if (token) {
-                let url = `https://syneticslz.github.io/test-client/payment.html?token=${encodeURIComponent(token)}&loggedin=true&plan=p`;
+              const userData = parseJWT(token);
+                let url = `https://syneticslz.github.io/test-client/payment.html?email=${encodeURIComponent(userData.email)}&loggedin=true&plan=p`;
                 window.location.href = url;
             }
             if (email) {

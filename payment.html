@@ -6,6 +6,8 @@
     <title>Payment | VoltMailer</title>
     <link rel="icon" href="volt.png" type="image/icon type">
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-solid-straight/css/uicons-solid-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <script src="https://js.stripe.com/v3/"></script>
     <script>
 
@@ -25,13 +27,13 @@ function initialize() {
         document.getElementById('accountContainer').style.display = "none";
         let email = decodeURIComponent(params.get('email') || '');
         let password = decodeURIComponent(params.get('password') || '');
-        const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
+        // const token = decodeURIComponent(params.get('token') || ''); // Add this line to get the token from the URL
         if (plan === "f") {   
             planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
-            if (email == null) {
+            if (password == null) {
                 
-                FreeToken(token);
-                console.log(" no email, f")
+                FreeToken(email);
+                console.log(" no pwrd, f")
             } else {
                 FreeEmail(email, password);
                 console.log(" email, f", email)
@@ -39,8 +41,8 @@ function initialize() {
             }
         } else {
             planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
-            if (email == null) {
-                PremiumToken(token);
+            if (password == null) {
+                PremiumToken(email);
                 console.log(" no email, p")
             } else {
                 PremiumEmail(email, password);
@@ -54,8 +56,8 @@ function initialize() {
         else{
             planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
         }
-        document.getElementById('accountTick').style.display = "none";
-        document.getElementById('accountContainer').style.display = "block";
+        document.getElementById('accountTick').style.display = "flex";
+        document.getElementById('accountContainer').style.display = "flex";
     }
 }
 
@@ -99,7 +101,7 @@ async function PremiumEmail(emailx, password) {
             }
 };
 
-async function PremiumToken(token) {
+async function PremiumToken(email) {
     console.log("running premium email with token")
             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
             const userData = parseJWT(token);
@@ -109,7 +111,7 @@ async function PremiumToken(token) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ token: token, email:userData.email })  // Pass the email in the request body
+                    body: JSON.stringify({ email:email })  // Pass the email in the request body
                 });
                 const data = await response.json();
                 if (data.error) {
@@ -157,7 +159,7 @@ async function FreeEmail(emailx, password) {
             }
 };
 
-async function FreeToken(token) {
+async function FreeToken(email) {
     console.log("running free token email")
             const stripe = Stripe('pk_test_51MNx4UKJeZAyw8f4z0YJFRQozQsqzwCBKOuzaSScWRXgDDG8GW9YH3qyrI9UZlUW1V8RXkieoHgqoaMOtIbxlLSm00QDD02K7W');
             const userData = parseJWT(token);
@@ -167,7 +169,7 @@ async function FreeToken(token) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ token: token, email:userData.email })  // Pass the email in the request body
+                    body: JSON.stringify({ email: email })  // Pass the email in the request body
                 });
                 const data = await response.json();
                 if (data.error) {
@@ -220,15 +222,29 @@ async function FreeToken(token) {
             border-radius: 8px;
             box-sizing: border-box;
         }
+         .headerrow{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #1b1b1b;
+            border-radius: 10px;
+        } 
         h2 {
+            margin-left: 20px;
             font-size: 32px;
             margin-top: 30px;
             margin-bottom: 30px;
         }
-        #accountTick {
-            margin-left: 20px;
+        #accountTick{
+            margin-right: 20px;
+            font-size: 40px;
             color: purple;
             display: none;
+        }
+        #down {
+            margin-right: 20px;
+            font-size: 40px;
         }
         p {
             font-size: 18px;
@@ -345,8 +361,12 @@ async function FreeToken(token) {
     <div class="content">
         <h2>You’re almost there! Complete your order</h2>
         <p id="selected-plan">Selected Plan:  <b>Premium</b></p>
+<div class="headerrow">
+    <h2>1. Create an Account </h2>
 
-        <h2>1. Create an Account <i class="fi fi-ss-hexagon-check" id="accountTick"></i></h2>
+    <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+</div>
+        
         <div class="container" id="accountContainer">
             <div class="social-login">
                 <div class="account-link">
@@ -372,8 +392,11 @@ async function FreeToken(token) {
             </div>
 
         </div>
-
+    <div class="headerrow">
         <h2>2. Select Payment</h2>
+        <i class="fi fi-rr-angle-small-down" id="down"></i>
+        <!-- <i class="fi fi-rr-angle-small-left" id="down"></i> -->
+</div>
 
     </div>
     <div id="checkout">
