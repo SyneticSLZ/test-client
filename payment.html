@@ -92,6 +92,51 @@ document.getElementById('full-Name').style.border = "2px solid black";
 
 async function addCustomer(){
 
+    const params = new URLSearchParams(window.location.search);
+    let email = params.get('email');
+    let password = decodeURIComponent(params.get('password'));
+    let name =  params.get('name');
+try {
+        // Fetch session details from your backend using the session ID
+    const sessionResponse = await fetch(`https://volt-server.onrender.com/get-session-details?session_id=${sessionId}`);
+                const sessionData = await sessionResponse.json();
+
+                // Determine plan and total_emails based on price ID
+                let plan, plan_emails;
+                if (sessionData.line_items[0].price.id === 'price_1PKf2PKJeZAyw8f418JphiK0') {
+                    plan = 'premium';
+                    plan_emails = 1000;
+                } else {
+                    plan = 'free';
+                    plan_emails = 20;
+                }
+
+                const customerData = {
+                    stripeID: sessionData.customer,
+                    email: email,
+                    plan: plan,
+                    total_emails: 0,
+                    priceID: sessionData.line_items[0].price.id,
+                    password: password,
+                    name: name,
+                    plan_emails: plan_emails
+                };
+
+                // Send customer data to your backend to add to the database
+                await fetch('https://volt-server.onrender.com/add-customer-to-db', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(customerData)
+                });
+
+                // Optionally, show success message or redirect to another page
+                document.getElementById('accountTick').style.display = "block";
+            } catch (error) {
+                console.error('Error handling checkout session:', error);
+            }
+
 }
 
 
