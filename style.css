@@ -229,8 +229,24 @@
   }
   .buttons{
     margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
   }
-
+.buttons input{
+  /* background-color: #000000; */
+}
+input[type="file"] {
+  background-color: #000000;
+  color: #fff;
+  border: none;
+  padding: 20px 50px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+}
   .buttons .button-csv {
     background-color: #000000;
     color: #fff;
@@ -324,7 +340,10 @@
 
 #dataTable tbody tr td {
     width: 33.33%;
-    border: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
     padding: 8px;
     box-sizing: border-box;
     text-align: left; /* Adjust the text alignment as needed */

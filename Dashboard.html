@@ -70,7 +70,10 @@ function fetchUserData() {
     }
 }
 
-
+function logout(){
+    localStorage.clear();
+    window.location.href='https://syneticslz.github.io/test-client/'
+}
 function ConnectGoogle() {
     alert("google logic here")
 }
@@ -104,16 +107,17 @@ async function RenderHtml(data){
     document.getElementById('h2name').innerHTML=`${name}`;
     document.getElementById('plan-usage-detail').innerHTML=`You have used : ${UsedEmails} Emails of :  ${planEmails} Emails / mo`;
     document.getElementById('progress-text').innerHTML=`<p>Current: ${UsedEmails}</p><p>Total: ${planEmails}</p>`;
-    document.getElementById('subscription').onclick = function() { billing(stripeID) };
+    document.getElementById('subscription').onclick = function() { billing(data.stripeID) };
+    document.getElementById('3').onclick = function() { billing(data.stripeID) };
     document.getElementById('progress').style.width = percentageUsed + '%';  
-    document.getElementById('sidemenu').innerHTML=`
-                <div class="menu-item active" id="1"><i class="fi fi-br-house-blank"></i>Home</div>
-            <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
-            <div class="menu-item" id="3" onclick="billing(stripeID)" > <i class="fi fi-rr-credit-card"></i> Billing</div>
-            <div class="menu-item tools">Tools</div>
-            <div class="menu-item" id="openPopup"><i class="fi fi-rr-user-pen"></i>Account</div>
-            <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div>
-    `;
+    // document.getElementById('sidemenu').innerHTML=`
+    //         <div class="menu-item active" id="1"><i class="fi fi-br-house-blank"></i>Home</div>
+    //         <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
+    //         <div class="menu-item" id="3" onclick="billing(data.stripeID)" > <i class="fi fi-rr-credit-card"></i> Billing</div>
+    //         <div class="menu-item tools">Tools</div>
+    //         <div class="menu-item" id="openPopup"><i class="fi fi-rr-user-pen"></i>Account</div>
+    //         <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div>
+    // `;
 
     if (!token){
         document.getElementById('maintop').innerHTML=`
@@ -924,12 +928,33 @@ async function sendMessage(sender, to, subject, messageText) {
       }
 
 
-//// MAIN STUFF
-function billing(){
-// mainContent.innerHTML = document.getElementById('billing').innerHTML;
-const url = 'https://billing.stripe.com/p/login/bIY15e8DBdSv8SY6oo';
-                    window.open(url, '_blank'); 
-        }
+// //// MAIN STUFF
+// function billing(){
+
+// // mainContent.innerHTML = document.getElementById('billing').innerHTML;
+// const url = 'https://billing.stripe.com/p/login/bIY15e8DBdSv8SY6oo';
+//                     window.open(url, '_blank'); 
+//         }
+
+async function billing(stripeID) {
+    const response = await fetch('https://volt-server.onrender.com/create-billing-portal-session', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ customerId: stripeID })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        window.location.href = data.url;
+    } else {
+        const errorData = await response.json();
+        console.error('Error:', errorData.error);
+        alert('Failed to create billing portal session: ' + errorData.error);
+    }
+}
+
 
        async function customerportal(){
 
@@ -1142,7 +1167,7 @@ function showNotification(message) {
             <!-- #setting -->
             <!-- #signout -->
         <!-- </div> -->
-        <div class="menu-item logout" id="5"><i class="fi fi-rs-sign-out-alt"></i>Logout</div>
+        <div class="menu-item logout" id="5" onclick="logout()"><i class="fi fi-rs-sign-out-alt"></i>Logout</div>
     </div>
     <div class="dashboard">
         <div class="navtop" id="mobile-nav">
@@ -1169,9 +1194,11 @@ function showNotification(message) {
             <h2 id="h2name">{{ name }}</h2>
             </div>
             <div class="buttons">
+
                 <button class="button-man" onclick="togglePopupManual()">Manual Entry</button>
                 <button class="button-csv" onclick="ShowCsv()" id="csvBTN">Upload Csv</button>
                 <input name="text" type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(this)" style="display: none;"/>
+                
             </div>
             </div>
             <div class="pitch-row">
