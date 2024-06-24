@@ -392,7 +392,8 @@ input[type="file"] {
     display: flex;
     min-width: 600px;
     max-width: 80%;
-    color: #fff;
+    color: #414141;
+    
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     position: relative;
   }
@@ -1017,6 +1018,7 @@ input[type="file"] {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    color: #000;
   }
   .manual-popup-overlay .container {
     border: solid 1px #8d8d8d;
@@ -1078,6 +1080,7 @@ input[type="file"] {
     position: relative;
     background: #fff;
     background-color: #fff;
+    color: #000;
   }
   
   .input-field label {
@@ -1091,7 +1094,7 @@ input[type="file"] {
     background-color: #fff;
   }
   
-  .manual-popup-overlay .input-field input {
+  .manual-popup-overlay input {
     padding: 10px 15px;
     font-size: 1rem;
     border-radius: 8px;
@@ -1107,6 +1110,7 @@ input[type="file"] {
     outline: none;
     border: solid 1px #0034de;
     background-color: #fff;
+    
   }
   
  .manual-popup-overlay  .input-field input:focus ~ label,
