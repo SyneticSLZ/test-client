@@ -123,7 +123,7 @@ async function RenderHtml(data){
         document.getElementById('maintop').innerHTML=`
                     <div class="plan">${plan} plan Subscriber</div>
             <div class="google">
-                    <button class="button" onclick="ConnectGoogle()" id="submit">
+                    <button class="button" onclick="ConnectGoogle()">
                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
                         Connect Google
                     </button>
@@ -131,7 +131,7 @@ async function RenderHtml(data){
         `;
         button.innerHTML=`
                     
-                    <button class="button" onclick="ConnectGoogle()" id="submit">
+                    <button class="button" onclick="ConnectGoogle()">
                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
                         Connect Google
                       </button>
@@ -142,7 +142,7 @@ async function RenderHtml(data){
     else {
         if (UsedEmails >= planEmails) {
                 button.innerHTML=`                    
-                <button class="button" onClick="billing(stripeID, email)" id="submit">
+                <button class="button" onClick="billing(stripeID, email)" >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
@@ -152,7 +152,7 @@ async function RenderHtml(data){
         else {
             button.innerHTML=`
                     
-                    <button class="button" onclick="Submitandcheckautosend()" id="submit">
+                    <button class="button" onclick="Submitandcheckautosend()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
@@ -1256,12 +1256,13 @@ function showNotification(message) {
                 <div class="pitch">  
                     <!-- <div class=""></div> -->
                     <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
-                    <button class="button" onclick="Submitandcheckautosend()" id="submit">
+                    <div id="submit"></div>
+                    <!-- <button class="button" onclick="Submitandcheckautosend()" id="submit">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
                         Generate
-                    </button>
+                    </button> -->
                     <div class="nobg-submit">
                         <div class="checkbox-wrapper-46">
                           <input type="checkbox" id="cbx-46" class="inp-cbx" onchange="checkbox()" />
