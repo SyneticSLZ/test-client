@@ -152,7 +152,7 @@ async function RenderHtml(data){
         else {
             button.innerHTML=`
                     
-                    <button class="button" onclick="Submitandcheckautosend()">
+                    <button class="button" onclick="Submitandcheckautosend(data.name)">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
@@ -457,7 +457,7 @@ function IsAutoSend() {
             return checkbox.checked;
         }
 
-function Submitandcheckautosend(){
+function Submitandcheckautosend(name){
           if (submittedData.length === 0) {
               // The array is empty
               console.log('The array is empty');
@@ -476,9 +476,9 @@ function Submitandcheckautosend(){
                 // The value is not empty
                 console.log('Value provided:', userPitch);
                 if (IsAutoSend()){
-                  Autosend();
+                  Autosend(name);
                 }else{
-                  manualSend();
+                  manualSend(name);
             }
             }
           }
@@ -590,6 +590,44 @@ async function Autosend() {
 
   checkTaskStatus(taskId);
 }
+
+async function Autosend_new(Uname){
+            const userPitch = document.getElementById('userPitch').value; 
+            // const token = 'YOUR_JWT_TOKEN'; // Replace with your actual JWT token
+            const token = localStorage.getItem('authToken');
+
+            const requestBody = {
+                submittedData: submittedData,
+                userPitch: userPitch,
+                Uname: Uname,
+                token: token
+            };
+
+            // document.getElementById('statusMessage').textContent = 'Emails are being sent. You can close the tab.';
+            showNotification('Emails are being sent. You can close the tab.')
+            try {
+                const response = await fetch('https://volt-server.onrender.com/send-emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    console.log('Email sending process started.');
+                } else {
+                    console.error('Error starting email sending process:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error sending emails:', error);
+                alert('Error sending emails');
+            }
+};
+
+
+
 
 async function checkTaskStatus(taskId) {
   const response = await fetch(`/task-status/${taskId}`);
