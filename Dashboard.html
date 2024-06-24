@@ -22,7 +22,7 @@
     
 const submittedData = [];
 let generatedData = [];
-
+let U_Username;
 function getEmailTokenFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('token');
@@ -93,6 +93,7 @@ async function RenderHtml(data){
 
     const planEmails = data.plan_emails
     const name = data.name
+    U_Username = name
     const email = data.email
     const plan = data.plan
     const UsedEmails = data.total_emails
@@ -152,7 +153,7 @@ async function RenderHtml(data){
         else {
             button.innerHTML=`
                     
-                    <button class="button" onclick="Submitandcheckautosend("${data.name}"")">
+                    <button class="button" onclick="Submitandcheckautosend()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
@@ -457,7 +458,7 @@ function IsAutoSend() {
             return checkbox.checked;
         }
 
-function Submitandcheckautosend(name){
+function Submitandcheckautosend(){
           if (submittedData.length === 0) {
               // The array is empty
               console.log('The array is empty');
@@ -476,9 +477,9 @@ function Submitandcheckautosend(name){
                 // The value is not empty
                 console.log('Value provided:', userPitch);
                 if (IsAutoSend()){
-                  Autosend_new(name);
+                  Autosend_new();
                 }else{
-                  manualSend(name);
+                  manualSend();
             }
             }
           }
@@ -591,7 +592,7 @@ async function Autosend() {
   checkTaskStatus(taskId);
 }
 
-async function Autosend_new(Uname){
+async function Autosend_new(){
             const userPitch = document.getElementById('userPitch').value; 
             // const token = 'YOUR_JWT_TOKEN'; // Replace with your actual JWT token
             const token = localStorage.getItem('authToken');
@@ -599,7 +600,7 @@ async function Autosend_new(Uname){
             const requestBody = {
                 submittedData: submittedData,
                 userPitch: userPitch,
-                Uname: Uname,
+                Uname: U_Username,
                 token: token
             };
 
