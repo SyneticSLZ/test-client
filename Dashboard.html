@@ -20,7 +20,7 @@
     <link rel="icon" href="favicon.png" type="image/icon type"> 
 <script>
     
-const submittedData = [];
+let submittedData = [];
 let generatedData = [];
 let U_Username;
 let U_MyEmail;
@@ -443,7 +443,7 @@ function updateTable() {
             const emailCell = row.insertCell(0);
             const websiteCell = row.insertCell(1);
             const nameCell = row.insertCell(2);
-            const actionCell = row.insertCell(); // Cell for delete button
+            const actionCell = row.insertCell(3); // Cell for delete button
 
             // Create delete button
             const deleteButton = document.createElement('button');
