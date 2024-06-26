@@ -24,6 +24,35 @@ let submittedData = [];
 let generatedData = [];
 let U_Username;
 let U_MyEmail;
+
+
+// Call fetchUserData on page load
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("running")
+    const urlParams = new URLSearchParams(window.location.search);
+    var token  = urlParams.get('token');        
+    var affiliate = urlParams.get('token');  
+    var connectedGoogle = urlParams.get('connectedgoogletoken');
+    
+    if (affiliate){
+        localStorage.setItem('affiliate', affiliate);
+    }
+
+    if(connectedGoogle) {
+        connectedgoogleAuth();
+    }else {
+            if (token) {
+                console.log("noraml running")
+                fetchUserData();
+            } else {
+                console.log("google running")
+                googleAuth();
+            }
+
+        }
+        });
+
+
 function getEmailTokenFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('token');
@@ -78,7 +107,8 @@ function logout(){
     window.location.href='https://syneticslz.github.io/test-client/'
 }
 function ConnectGoogle() {
-    alert("google logic here")
+    localStorage.setItem('connectedGoogle', 'False');
+    window.location.href = 'https://volt-server.onrender.com/get/auth/google';
 }
 
 
@@ -123,10 +153,21 @@ async function RenderHtml(data){
     //         <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div>
     // `;
 
-    if (!token){
-        document.getElementById('maintop').innerHTML=`
+
+        if (UsedEmails >= planEmails) {
+                button.innerHTML=`                    
+                <button class="button" onClick="billing(${stripeID}, ${email})" >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Unlock Pro
+                </button>`
+            }
+        else {
+            if (!token){
+                document.getElementById('maintop').innerHTML=`
                     <div class="plan">${plan} plan Subscriber</div>
-            <div class="google">
+            <div class="google" id="googleauthid">
                     <button class="button" onclick="ConnectGoogle()">
                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
                         Connect Google
@@ -141,19 +182,7 @@ async function RenderHtml(data){
                       </button>
                       `
 
-        // check if token     // plan
-    }
-    else {
-        if (UsedEmails >= planEmails) {
-                button.innerHTML=`                    
-                <button class="button" onClick="billing(${stripeID}, ${email})" >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Unlock Pro
-                </button>`
-            }
-        else {
+            } else {
             button.innerHTML=`
                     
                     <button class="button" onclick="Submitandcheckautosend()">
@@ -164,14 +193,13 @@ async function RenderHtml(data){
                       </button>
 
                       `
-            }
-
         document.getElementById('maintop').innerHTML=`
                     <div class="plan">${plan} plan Subscriber</div>
-            <div class="google">
+            <div class="google" id="googleauthid">
                     Emails Sent From : ${email}
             </div>
         `;
+        }
     }
 
 
@@ -224,19 +252,32 @@ async function googleAuth() {
         
     }
 }
-// Call fetchUserData on page load
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("running")
+
+
+async function connectedgoogleAuth() {
+    let button = document.getElementById('submit')
     const urlParams = new URLSearchParams(window.location.search);
-    var token  = urlParams.get('token');        
-            if (token) {
-                console.log("noraml running")
-                fetchUserData();
-            } else {
-                console.log("google running")
-                googleAuth();
-            }
-        });
+    const connectedGoogletoken = urlParams.get('connectedgoogletoken');
+    if (connectedGoogletoken) {
+        const userData = parseJWT(connectedGoogletoken);
+        console.log('User Data:', userData);
+        U_MyEmail = userData.email;
+        localStorage.setItem('authToken', connectedGoogletoken);
+        document.getElementById('googleauthid').innerHTML=`
+                    Emails Sent From : ${userData.email}
+        `;
+
+        button.innerHTML=`
+                    
+                    <button class="button" onclick="Submitandcheckautosend()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Generate
+                      </button>`;
+    }
+}
+
 
 
 // document.getElementById('openPopup').addEventListener('click', () => {
@@ -1293,7 +1334,7 @@ function showNotification(message) {
 
         <div class="top" id="maintop">
             <div class="plan">Free plan Subscriber</div>
-            <div class="google">
+            <div class="google" id="googleauthid">
                 <!-- <img  src='../static/google.png' alt="google"> -->
                 <!-- {{ email }} -->
             </div>
