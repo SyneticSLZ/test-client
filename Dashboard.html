@@ -436,6 +436,14 @@ function updateTable() {
             const emailCell = row.insertCell(0);
             const websiteCell = row.insertCell(1);
             const nameCell = row.insertCell(2);
+            const actionCell = row.insertCell(); // Cell for delete button
+
+            // Create delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'X';
+            deleteButton.addEventListener('click', function() {
+            deleteRow(index); // Call deleteRow function with index
+            });
 
             emailCell.textContent = data.email;
             websiteCell.textContent = data.website;
@@ -445,6 +453,15 @@ function updateTable() {
         return true 
     }
 
+    function deleteRow(index) {
+    submittedData.splice(index, 1); // Remove data from submittedData array
+    updateTable(); // Update the table after deletion
+}
+
+    function reset(){
+        submittedData = [];
+        updatetable()
+    }
 
 // SUBMIT THE DATA 
 
