@@ -735,7 +735,7 @@ async function manualSend() {
 
     for (let index = 0; index < submittedData.length; index++) {
         
-
+        const data = submittedData[index];
 
         try {
             const sddata = submittedData[index];
@@ -788,13 +788,13 @@ async function manualSend() {
                     throw new Error('Failed to generate email content');
                 }
 
-                const data = await response.json();
-                const subject_line = data.subject_line
-                const main_message = data.body_content
+                const data_new = await response.json();
+                const subject_line = data_new.subject_line
+                const main_message = data_new.body_content
 
 
             generatedData.push({
-                email: data.email,
+                email: sddata.email,
                 subject: subject_line,
                 content: main_message
             });
