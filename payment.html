@@ -985,6 +985,7 @@
             let password = decodeURIComponent(params.get('password'));
             let name =  params.get('name');
             let sessionId = params.get('session_id')
+            const affiliate = localStorage.getItem('affiliate');
             // let plan = params.get('plan')
         try {
                 // Fetch session details from your backend using the session ID
@@ -1009,7 +1010,8 @@
                             priceID: PriceID,
                             password: password,
                             name: name,
-                            plan_emails: plan_emails
+                            plan_emails: plan_emails,
+                            affiliate: affiliate
                         };
                         console.log(customerData)
                         // Send customer data to your backend to add to the database
