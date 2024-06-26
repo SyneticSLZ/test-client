@@ -1079,7 +1079,8 @@ async function billing(stripeID, Email) {
             console.log("data")
 
             if (data.url) {
-                window.location.href = data.url;
+                // window.location.href = data.url;
+                window.open(data.url, '_blank');
             } else {
                 console.error('Failed to create billing portal session:', data.error);
             }
