@@ -769,7 +769,7 @@ input[type="file"] {
     height: 65vh;
     /* max-width: 1000px; */
     padding: 20px;
-    max-height: 400px;
+    /* max-height: 400px; */
     overflow-y: hidden;
     overflow-x: hidden; /* Add this to hide horizontal scrollbar */
     position: relative;
