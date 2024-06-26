@@ -374,30 +374,30 @@ function Manual() {
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
         
-        const email = emailInput.value;
+        const email_inputted = emailInput.value;
         let website = websiteInput.value;
         const name = nameInput.value;
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const websiteRegex = /^https:\/\/.+$/;
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // const websiteRegex = /^https:\/\/.+$/;
 
-    // Prepend "https://" if not included
-    if (!/^https:\/\//i.test(website)) {
-        website = 'https://' + website;
-    }
+    // // Prepend "https://" if not included
+    // if (!/^https:\/\//i.test(website)) {
+    //     website = 'https://' + website;
+    // }
 
-        if (!emailRegex.test(email)) {
-            manualError.textContent = "Invalid email format.";
-            return;
-        } else if (!websiteRegex.test(website)) {
-            manualError.textContent = "Invalid website format. Must start with https://";
-            return;
-        } else {
-            manualError.textContent = "";
-        }
+    //     if (!emailRegex.test(email)) {
+    //         manualError.textContent = "Invalid email format.";
+    //         return;
+    //     } else if (!websiteRegex.test(website)) {
+    //         manualError.textContent = "Invalid website format. Must start with https://";
+    //         return;
+    //     } else {
+    //         manualError.textContent = "";
+    //     }
 
         const formData = {
-            email: email,
+            email: email_inputted,
             website: website,
             name: name
         };
