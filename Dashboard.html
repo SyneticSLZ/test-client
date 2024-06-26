@@ -23,6 +23,7 @@
 const submittedData = [];
 let generatedData = [];
 let U_Username;
+let U_MyEmail;
 function getEmailTokenFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('token');
@@ -39,6 +40,7 @@ function fetchUserData() {
     if (token) {
         const decoded = decodeEmailJWT(token);
         const email = decoded.email;
+        U_MyEmail = decoded.email;
 
         fetch('https://volt-server.onrender.com/user-data', {
             method: 'GET',
@@ -601,7 +603,8 @@ async function Autosend_new(){
                 submittedData: submittedData,
                 userPitch: userPitch,
                 Uname: U_Username,
-                token: token
+                token: token,
+                myemail: U_MyEmail
             };
 
             // document.getElementById('statusMessage').textContent = 'Emails are being sent. You can close the tab.';
@@ -728,40 +731,66 @@ async function manualSend() {
     const threadID = threadData.thread_id;
 
     generatedData = [];
+
+
     for (let index = 0; index < submittedData.length; index++) {
         const data = submittedData[index];
+
+
         try {
-            const descriptionResponse = await fetch('/get-site-description', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: data.website })
-            });
-            const descriptionData = await descriptionResponse.json();
-            const website_content = descriptionData.description;
-            const Uname = '{{ name }}';
-            const To = data.name;
-
             updateRowStatus(index, 'Personalizing message');
-            // Add messages to the thread
-            const emailContentResponse = await fetch('/add-messages-to-thread', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    thread_id: threadID,
-                    website_content: website_content,
-                    user_pitch: userPitch,
-                    To: To,
-                    Me: Uname
-                })
-            });
 
-            const emailContentData = await emailContentResponse.json();
-            const email_content = emailContentData.email_content;
-            const lines = email_content.split('\n');
-            const subject_line = lines[0].replace('Subject: ', '');
-            const main_message = lines.slice(1).join('\n').trim();
+            // const descriptionResponse = await fetch('/get-site-description', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ url: data.website })
+            // });
+            // const descriptionData = await descriptionResponse.json();
+            // const website_content = descriptionData.description;
+            // const Uname = '{{ name }}';
+            // const To = data.name;
+
+            
+            // const emailContentResponse = await fetch('/add-messages-to-thread', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         thread_id: threadID,
+            //         website_content: website_content,
+            //         user_pitch: userPitch,
+            //         To: To,
+            //         Me: Uname
+            //     })
+            // });
+
+            // const emailContentData = await emailContentResponse.json();
+            // const email_content = emailContentData.email_content;
+            // const lines = email_content.split('\n');
+            // const subject_line = lines[0].replace('Subject: ', '');
+            // const main_message = lines.slice(1).join('\n').trim();
+
+            const response = await fetch('https://volt-server.onrender.com/generate-email-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        website: data.website, 
+                        userPitch: userPitch, 
+                        Uname: Uname,
+                        To: To})
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate email content');
+                }
+
+                const data = await response.json();
+                const subject_line = data.subject_line
+                const main_message = data.body_content
+
 
             generatedData.push({
                 email: data.email,
@@ -798,7 +827,10 @@ async function sendEmailindex(index) {
     // Implement send logic here
     try {
         updateRowStatus(index, 'Sending');
+
         const result = await sendMessage('me', data.email, subject, content);
+
+
         console.log('Message to ', data.email, ' successfully sent:', result);
         showNotification(`Message to ${data.email} successfully sent`);
         removeRow(index);
@@ -921,21 +953,28 @@ document.getElementById('regenerateAllBtn').addEventListener('click', regenerate
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function sendMessage(sender, to, subject, messageText) {
-    const response = await fetch('/snd_msg', {
+
+    const token = localStorage.getItem('authToken');
+    const response = await fetch('https://volt-server.onrender.com/send-bulk-manual', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ sender: sender, to: to, subject: subject, message_text: messageText })
+        body: JSON.stringify({ token: token , email: to, subject: subject, content: messageText, myemail: U_MyEmail })
     });
+
+
 
     if (!response.ok) {
         throw new Error('Network response was not ok ' + response.statusText);
     }
 
     const result = await response.json();
+
     console.log('Message sent, ID:', result.id);
     return result;
+
+
 }
 
       async function useEmails(numUsedUp) {
