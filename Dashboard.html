@@ -367,16 +367,22 @@ function detectColumnType(sample) {
 
 function togglePopupManual() {
       const overlay = document.getElementById('manual-popup-overlay');
-      overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
-    }
-function Manual() {
-    emailInput.value = "";
-        websiteInput.value = "https://";
-        nameInput.value = "";
-          const emailInput = document.getElementById('email');
+      const emailInput = document.getElementById('email');
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
-        
+
+
+
+        emailInput.value = "";
+        websiteInput.value = "https://";
+        nameInput.value = "";
+      overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+
+    }
+function Manual() {
+        const emailInput = document.getElementById('email');
+        const websiteInput = document.getElementById('website');
+        const nameInput = document.getElementById('name');
         const email_inputted = emailInput.value;
         let website = websiteInput.value;
         const name = nameInput.value;
