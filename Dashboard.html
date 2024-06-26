@@ -370,6 +370,9 @@ function togglePopupManual() {
       overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
     }
 function Manual() {
+    emailInput.value = "";
+        websiteInput.value = "https://";
+        nameInput.value = "";
           const emailInput = document.getElementById('email');
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
@@ -378,23 +381,23 @@ function Manual() {
         let website = websiteInput.value;
         const name = nameInput.value;
 
-        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // const websiteRegex = /^https:\/\/.+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const websiteRegex = /^https:\/\/.+$/;
 
     // // Prepend "https://" if not included
-    // if (!/^https:\/\//i.test(website)) {
-    //     website = 'https://' + website;
-    // }
+    if (!/^https:\/\//i.test(website)) {
+        website = 'https://' + website;
+    }
 
-    //     if (!emailRegex.test(email)) {
-    //         manualError.textContent = "Invalid email format.";
-    //         return;
-    //     } else if (!websiteRegex.test(website)) {
-    //         manualError.textContent = "Invalid website format. Must start with https://";
-    //         return;
-    //     } else {
-    //         manualError.textContent = "";
-    //     }
+        if (!emailRegex.test(email)) {
+            manualError.textContent = "Invalid email format.";
+            return;
+        } else if (!websiteRegex.test(website)) {
+            manualError.textContent = "Invalid website format. Must start with https://";
+            return;
+        } else {
+            manualError.textContent = "";
+        }
 
         const formData = {
             email: email_inputted,
@@ -406,7 +409,7 @@ function Manual() {
         console.log(updateTable());
          // Clear input fields manually
         emailInput.value = "";
-        websiteInput.value = "";
+        websiteInput.value = "https://";
         nameInput.value = "";
         console.log("cleared")
         togglePopupManual()
