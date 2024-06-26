@@ -382,23 +382,24 @@ function togglePopupManual() {
 
     }
 function Manual() {
-        const emailInput = document.getElementById('email');
+        const emailInput = document.getElementById('emailinput');
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
         const email_inputted = emailInput.value;
         let website = websiteInput.value;
         const name = nameInput.value;
 
-        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const websiteRegex = /^https:\/\/.+$/;
 
     // // Prepend "https://" if not included
     if (!/^https:\/\//i.test(website)) {
         website = 'https://' + website;
     }
-
-        
-        if (!websiteRegex.test(website)) {
+        if (!emailRegex.test(email_inputted)) {
+            manualError.textContent = "Invalid email format.";
+            return;
+        } else if (!websiteRegex.test(website)) {
             manualError.textContent = "Invalid website format. Must start with https://";
             return;
         } else {
@@ -1205,11 +1206,11 @@ function showNotification(message) {
 
             <div class="coolinput">
                 <label for="input" class="text">Email:</label>
-                <input type="text" placeholder="CoolGuy1@email.com" name="input" class="input" id="email">
+                <input type="text" placeholder="CoolGuy1@email.com" name="input" class="input" id="emailinput">
             </div>              
             
             <div class="coolinput">
-                <label for="input" class="text">Name:</label>
+                <label for="input" class="text">Website:</label>
                 <input type="text" placeholder="Https://" name="input" class="input" id="website" value="https://">
             </div>
               <!-- <div class="input-field">
