@@ -59,6 +59,7 @@ function fetchUserData() {
                 console.log(data)
 
                 const UserEmail = data.email
+                U_MyEmail = data.email
                 const UserStripeID = data.email
                 RenderHtml(data);
                 // Add more customization based on user data
@@ -96,7 +97,7 @@ async function RenderHtml(data){
     const planEmails = data.plan_emails
     const name = data.name
     U_Username = name
-    const email = data.email
+    const email = U_MyEmail
     const plan = data.plan
     const UsedEmails = data.total_emails
     const stripeID = data.stripeID
@@ -184,6 +185,7 @@ async function googleAuth() {
     if (googleToken) {
         const userData = parseJWT(googleToken);
         console.log('User Data:', userData);
+        U_MyEmail = userData.email;
         // document.getElementById('user-email').textContent = `GOOGLE ACCOUNT SIGNED IN: ${userData.email}`;
         
         // Store the token in localStorage or use it directly for sending emails
