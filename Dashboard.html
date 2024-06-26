@@ -715,6 +715,7 @@ async function Restart() {
 function showNewHtml() {
     document.getElementById('currentContent').style.display = 'none';
     document.getElementById('newContent').style.display = 'block';
+    document.getElementById('hidewhengenerating').style.display = 'none';
     populateEmailTable();
 }
 
@@ -1373,7 +1374,7 @@ function showNotification(message) {
                         </svg>
                         Generate
                     </button> -->
-                    <div class="nobg-submit">
+                    <div class="nobg-submit" id="hidewhengenerating">
                         <div class="checkbox-wrapper-46">
                           <input type="checkbox" id="cbx-46" class="inp-cbx" onchange="checkbox()" />
                           <label for="cbx-46" class="cbx"
@@ -1383,8 +1384,9 @@ function showNotification(message) {
                             ><span> <div id="autosend-text">Autosend is <b>OFF</b></div> </span>
                           </label>
                         </div>
-
+                        <button onclick="reset()">Clear all </button>
                     </div>
+                   
                 </div>
             </div>
         </div>
