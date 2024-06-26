@@ -734,10 +734,11 @@ async function manualSend() {
 
 
     for (let index = 0; index < submittedData.length; index++) {
-        const data = submittedData[index];
+        
 
 
         try {
+            const sddata = submittedData[index];
             updateRowStatus(index, 'Personalizing message');
 
             // const descriptionResponse = await fetch('/get-site-description', {
@@ -777,7 +778,7 @@ async function manualSend() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ 
-                        website: data.website, 
+                        website: sddata.website, 
                         userPitch: userPitch, 
                         Uname: Uname,
                         To: To})
