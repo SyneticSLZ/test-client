@@ -52,7 +52,7 @@
   }
   
   .top img{
-    height: 30px;
+    height: 20px;
     width: 35px;
     /* padding-top: 10px; */
   }
@@ -282,7 +282,7 @@ input[type="file"] {
   }
   
   .pitch-row{
-    margin-top: 40px;
+    margin-top: 30px;
     margin-inline: 20px;
     height: 65vh;
     display: flex;
