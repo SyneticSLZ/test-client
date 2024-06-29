@@ -289,7 +289,7 @@
         .then(response => response.json())
     .then(data => {
         if (data.success) {
-            window.location.href = `https://syneticslz.github.io/test-client/dashboard?token=${data.token}`;
+            window.location.href = `https://syneticslz.github.io/test-client/Dashboard?token=${data.token}`;
         } else if (data.error) {
             loginError.textContent = data.error;
         }
