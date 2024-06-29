@@ -508,8 +508,13 @@ function updateTable() {
 }
 
     function reset(){
-        submittedData = [];
-        updateTable();
+        if (submittedData = []){
+            return;
+        }else{
+            submittedData = [];
+            updateTable();
+        }
+
     }
 
 // SUBMIT THE DATA 
