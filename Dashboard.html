@@ -108,7 +108,7 @@ function logout(){
 }
 function ConnectGoogle() {
     localStorage.setItem('connectedGoogle', 'False');
-    window.location.href = 'https://volt-server.onrender.com/get/auth/google';
+    window.location.href = 'https://volt-server.onrender.com/auth/google';
 }
 
 
@@ -1334,7 +1334,7 @@ function showNotification(message) {
         </div>
 
         <div class="top" id="maintop">
-            <div class="plan">Free plan Subscriber</div>
+            <div class="plan"></div>
             <div class="google" id="googleauthid">
                 <!-- <img  src='../static/google.png' alt="google"> -->
                 <!-- {{ email }} -->
@@ -1345,7 +1345,7 @@ function showNotification(message) {
             <div class="welcome-content-row">
             <div class="welcome">
             <p>Welcome, </p>
-            <h2 id="h2name">{{ name }}</h2>
+            <h2 id="h2name"></h2>
             </div>
             <div class="buttons">
 
