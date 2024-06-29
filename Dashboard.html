@@ -129,6 +129,7 @@ async function RenderHtml(data){
     U_Username = name
     const email = U_MyEmail
     const plan = data.plan
+    const CapsPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
     const UsedEmails = data.total_emails
     const stripeID = data.stripeID
     const token = localStorage.getItem('authToken');
@@ -166,7 +167,7 @@ async function RenderHtml(data){
         else {
             if (!token){
                 document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${plan} plan Subscriber</div>
+                    <div class="plan">${CapsPlan} plan Subscriber</div>
             <div class="google" id="googleauthid">
                     <button class="button" onclick="ConnectGoogle()">
                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
@@ -194,7 +195,7 @@ async function RenderHtml(data){
 
                       `
         document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${plan} plan Subscriber</div>
+                    <div class="plan">${CapsPlan} plan Subscriber</div>
             <div class="google" id="googleauthid">
                     Emails Sent From : ${email}
             </div>
