@@ -358,18 +358,48 @@
 }
 
 
-        function forgotPassword() {
-            var email = document.getElementById('forgotEmail').value;
-            var forgotError = document.getElementById('forgotError');
+        // function forgotPassword() {
+        //     var email = document.getElementById('forgotEmail').value;
+        //     var forgotError = document.getElementById('forgotError');
 
-            // Placeholder logic for forgot password validation
-            if (email === "test@example.com") {
-                forgotError.textContent = "";
-                alert("Password reset link sent!");
-            } else {
-                forgotError.textContent = "Email not found.";
-            }
+        //     // Placeholder logic for forgot password validation
+        //     if (email === "test@example.com") {
+        //         forgotError.textContent = "";
+        //         alert("Password reset link sent!");
+        //     } else {
+        //         forgotError.textContent = "Email not found.";
+        //     }
+        // }
+
+
+
+      async function forgotPassword() {
+
+      const email = document.getElementById('email').value;
+      const responseMessage = document.getElementById('forgotError');
+
+      try {
+        const response = await fetch('/request-password-reset', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+
+        if (response.ok) {
+          const result = await response.text();
+          responseMessage.textContent = result;
+        } else {
+          const errorText = await response.text();
+          responseMessage.textContent = errorText;
         }
+      } catch (error) {
+        responseMessage.textContent = 'An error occurred. Please try again later.';
+      }
+    };
+
+
     </script>
 </body>
 </html>
