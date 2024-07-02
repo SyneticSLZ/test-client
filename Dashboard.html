@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Voltmailer</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-straight/css/uicons-bold-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-straight/css/uicons-bold-straight.css'>
@@ -408,6 +408,70 @@ function detectColumnType(sample) {
         }
     });
 }
+
+
+
+
+function handleFile(event) {
+    console.log("running file chanfge")
+    const file = event.target.files[0];
+    if (file) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (fileExtension === 'xlsx') {
+            handleExcelFile(file);
+        } else if (fileExtension === 'csv') {
+            handleCSVFile(file);
+        } else {
+            alert('Unsupported file type');
+        }
+    }
+}
+
+function handleExcelFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        processData(jsonData);
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function handleCSVFile(file) {
+    Papa.parse(file, {
+        header: true,
+        complete: function(results) {
+            processData(results.data);
+        }
+    });
+}
+
+function processData(data) {
+    const emailCol = 'Email';
+    const websiteCol = 'Website';
+    const nameCol = 'Name';
+                let center = document.getElementById('center');
+            center.style.display = 'none'
+    // const submittedData = [];
+
+    data.forEach(row => {
+        const formData = {
+            email: row[emailCol],
+            website: row[websiteCol],
+            name: row[nameCol]
+        };
+        submittedData.push(formData);
+        updateTable();
+    });
+
+    console.log(submittedData); // Display the output in the console
+}
+
+
 
 function togglePopupManual() {
       const overlay = document.getElementById('manual-popup-overlay');
@@ -1106,7 +1170,7 @@ async function billing(stripeID, Email) {
     if (response.ok) {
         const data = await response.json();
         // window.location.href = data.url;
-        window.open(url, '_blank');
+        window.open(data.url, '_blank');
 
     } else {
         const errorData = await response.json();
@@ -1215,7 +1279,7 @@ function showNotification(message) {
                     <h2>Account</h2>
                     <form>
                         <div class="profile-picture">
-                            <img src="placeholder.png" alt="Profile Picture">
+                            <!-- <img src="placeholder.png" alt="Profile Picture"> -->
                         </div>
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" value="Synetic">
@@ -1365,14 +1429,19 @@ function showNotification(message) {
         <div class="contentf" id="main">
             <div class="welcome-content-row">
             <div class="welcome">
-            <p>Welcome, </p>
-            <h2 id="h2name"></h2>
+            <p>Welcome, 
+            <h2 id="h2name"></h2> </p>
             </div>
             <div class="buttons">
 
                 <button class="button-man" onclick="togglePopupManual()">Manual Entry</button>
-                <button class="button-csv" onclick="ShowCsv()" id="csvBTN">Upload Csv</button>
-                <input name="text" type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(this)" style="display: none;"/>
+                <!-- <button class="button-csv" onclick="ShowCsv()" id="csvBTN">Upload Csv</button> -->
+                <!-- <input name="text" type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(this)" style="display: none;"/> -->
+                <!-- <input type="file" id="fileInput" accept=".xlsx,.csv"> -->
+                <label for="fileInput" id="uploadLabel">Upload File</label>
+                <input type="file" id="fileInput" accept=".xlsx,.csv" style="display: none;">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
                 
             </div>
             </div>
@@ -1495,64 +1564,40 @@ function showNotification(message) {
 
     <div id="myAccount-content" style="display: none;">
         <div class="dashboard-usage">
-            <h1>Account</h1>
+            <h1>Your Account</h1>
             <h4>A detailed overview of your metrics, usage, plan and more</h4>
-            <div class="metrics">
-               <div class="metric">
-
-                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Potential Clients</p>
-                    <h2 class="metric-value">11</h2>
-                </div>
-                <div class="metric">
-
-                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Pipeline Value</p>
-                    <h2 class="metric-value">$847</h2>
-                </div>
-                <div class="metric">
-
-                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Appointments</p>
-                    <h2 class="metric-value">5</h2>
-                </div>
-                <div class="metric">
-                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Sales</p>
-                    <h2 class="metric-value">$148.94</h2>
-                </div>
-            </div>
-            
+            <h2>Name</h2>
+            <h4>This is the name your emails are sent from.</h4>
             <div class="coolinput">
                 <!-- <label for="input" class="text">Name:</label> -->
                 <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
             </div>
-
+            <button>Save</button>
+            <h2>Email</h2>
+            <h4>The Email associated with your account, not necessarily the email used to send your emails.</h4>
             <div class="coolinput">
                 <!-- <label for="input" class="text">Email:</label> -->
                 <input type="text" placeholder="CoolGuy1@email.com" name="input" class="input" id="emailinput">
                 <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
-
             </div>              
-            
+            <button>Save</button>
+            <h2 class="password-reset">Reset Password</h2>
+
+            <div class="coolinput">
+                <input type="text" placeholder="New Password" name="input" class="input" id="website" >
+            </div>
+
             <div class="coolinput">
                 <!-- <label for="input" class="text">Website:</label> -->
-                <input type="text" placeholder="Https://" name="input" class="input" id="website" value="https://">
+                <input type="text" placeholder="Confirm Password" name="input" class="input" id="website" >
             </div>
-            <!-- <div class="row-2"> -->
-            <div class="plan-usage">
-                <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p>
-                <div class="progress-text" id="progress-text">
-                  <p>Current: 2</p>
-                  <p>Total: 1000</p>
-                </div>
-                <div class="progress-bar">
-                    <div id="progress" style="width: 57.3%;"></div>
-                </div>
-                <button class="actual-buttons" id="subscription">Upgrade</button>
-            </div>
+            <button>Save</button>
           </div>
   </div>
 
     <div id="notification-container-pop"></div>
     <script>
-        
+        document.getElementById('fileInput').addEventListener('change', handleFile, false);
         // Function to handle tab switching
         function switchTab(event) {
             // Remove active class from all menu items
