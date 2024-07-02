@@ -1001,6 +1001,7 @@ function populateEmailTable() {
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
 
     tbody.innerHTML = "";
+    tbody.style.overflow = "auto";
     generatedData.forEach((data, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
