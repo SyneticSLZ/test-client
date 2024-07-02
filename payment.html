@@ -177,6 +177,9 @@
             margin-bottom: 20px;
             gap: 10px;
             width: 85%;
+            /* border: #00ddeb 1px solid; */
+            align-items: center;
+            justify-content: start;
         }
         .login-form-name input  {
             padding: 10px ;
@@ -195,9 +198,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 0;
          }
         .login-form-name .input-group {
             position: relative;
+            /* justify-self: center; */
+            /* align-self: center; */
         }
         .login-form-name .input-group img {
             position: absolute;
@@ -494,7 +500,7 @@
 
     <div class="nav">
         <img src="vmb.png" alt="VoltMailer Logo">
-        <a href="#">Log In</a>
+        <!-- <a href="#">Log In</a> -->
     </div>
 
     <div class="container"  id="loading" style="display: none;">
@@ -1137,7 +1143,7 @@
         
         
         function nameActive(){
-            const AccountIcon = document.getElementById('Account')
+        const AccountIcon = document.getElementById('Account')
         const SenderNameIcon = document.getElementById('SenderName')
         const CheckoutIcon = document.getElementById('PaymentIcon')
             
@@ -1146,7 +1152,7 @@
         <h2>1. Create an Account </h2>
         
         
-        <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+        <i class="fi fi-ss-hexagon-check" id="down"></i>
         
         `;
         SenderNameIcon.innerHTML = `
