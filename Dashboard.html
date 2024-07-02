@@ -1103,7 +1103,9 @@ async function billing(stripeID, Email) {
 
     if (response.ok) {
         const data = await response.json();
-        window.location.href = data.url;
+        // window.location.href = data.url;
+        window.open(url, '_blank');
+
     } else {
         const errorData = await response.json();
         console.error('Error:', errorData.error);
