@@ -684,6 +684,7 @@ async function Autosend_new(){
 
             // document.getElementById('statusMessage').textContent = 'Emails are being sent. You can close the tab.';
             showNotification('Emails are being sent. You can close the tab.')
+            document.getElementById('pr').innerHTML = `Emails are being sent. You can close the tab.`;
             try {
                 const response = await fetch('https://volt-server.onrender.com/send-emails', {
                     method: 'POST',
@@ -1201,6 +1202,7 @@ function showNotification(message) {
     </script>
 </head>
 <body>
+    <div id="notification-container-pop"></div>
    <div id="popup" class="popup hidden">
         <div class="popup-content">
             <div class="sidebar">
@@ -1374,8 +1376,8 @@ function showNotification(message) {
                 
             </div>
             </div>
-            <div class="pitch-row">
-                <div class="content-row">
+            <div class="pitch-row" >
+                <div class="content-row" id="pr">
                     <div id="newContent" style="display: none;">
                         <h1>Your Emails</h1>
                         <table id="emailTable">
