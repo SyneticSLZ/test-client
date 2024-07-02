@@ -267,72 +267,110 @@ input[type="file"] {
   
   .buttons .button-man {
     background-color: #fff;
-    color: #000;
+    color: #0000007e;
     border: none;
     padding: 20px 50px;
     border-radius: 3px;
     cursor: pointer;
     font-size: 16px;
     margin-right: 10px;
-    border: 1px solid #000;
+    /* border: 1px solid #000; */
 
-    border: 1.5px solid #000;
+    /* border: 1.5px solid #000; */
     border-radius: 0.5rem;
     box-shadow: 2.5px 3px 0 #000;
     outline: none;
     transition: ease 0.25s;
     text-align: left;
     background-color: #fff;
+    -webkit-border-radius: 16px;
+border-radius: 16px;
+background: #ffffff;
+-webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 
   }
   .buttons .button-man:hover {
     /* background-color: #2b0031; */
     /* color: white; */
     /* border: white 1px solid; */
-    box-shadow: 5.5px 7px 0 black;
+    /* box-shadow: 5.5px 7px 0 #000030; */
+    background: linear-gradient(
+        15deg,
+        #880088,
+        #8320aa,
+        rgb(111, 0, 255)
+        /* #0ff */
+      )
+      no-repeat;
+    background-size: 300%;
+    background-position: left center;
+    /* transition: background 0.3s ease; */
+    transition: ease 0.6s;
+    color: #fff;
   }
 
   #uploadLabel {
-    background-color: #000000;
-    color: #fff;
+    background-color: #fff;
+    color: #0000007e;
     border: none;
-    padding: 21px 50px;
+    padding: 20px 50px;
     border-radius: 3px;
     cursor: pointer;
     font-size: 16px;
     margin-right: 10px;
-    display: inline-block;
-    border-radius: 3px;
-    margin-top: 2px;
+    /* border: 1px solid #000; */
 
-    border: 1.5px solid #000;
+    /* border: 1.5px solid #000; */
     border-radius: 0.5rem;
     box-shadow: 2.5px 3px 0 #000;
     outline: none;
     transition: ease 0.25s;
     text-align: left;
-    background: linear-gradient(
-        15deg,
-        #880088,
-        #8320aa,
-        rgb(111, 0, 255),
+    background-color: #fff;
+    -webkit-border-radius: 16px;
+border-radius: 16px;
+background: #ffffff;
+-webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 
-        rgb(111, 0, 255),
-        #8320aa,
-        #880088
-      )
-      no-repeat;
-    background-size: 300%;
-    background-position: left center;
-    transition: background 0.3s ease;
-    
+
+background: linear-gradient(
+  15deg,
+  #880088,
+  #8320aa,
+  rgb(111, 0, 255),
+  /* #0ff, */
+  /* #0ff, */
+  /* rgb(111, 0, 255), */
+  #8320aa,
+  #880088
+)
+no-repeat;
+background-size: 300%;
+background-position: left center;
+/* transition: background 0.3s ease; */
+transition: ease 0.6s;
+color: #fff;
+
+
+
   }
 
 #uploadLabel:hover {
-  /* background-color: #2b0031; */
-  /* color: white; */
-  /* border: white 1px solid; */
-  box-shadow: 5.5px 7px 0 black;
+  background-color: #fff;
+  /* color: #0000007e; */
+  background: linear-gradient(
+  15deg,
+  #880088,
+  #8320aa
+)
+no-repeat;
+background-size: 300%;
+background-position: left center;
+transition: ease 0.6s;
+  /* border: #000030 1px solid; */
+  /* box-shadow: 5.5px 7px 0 #000030; */
 }
 
   .pitch-row{
@@ -376,6 +414,11 @@ input[type="file"] {
     text-align: left;
     background-color: #fff;
     resize: none;
+    -webkit-border-radius: 16px;
+border-radius: 16px;
+background: #ffffff;
+-webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
 
   .submit{
@@ -384,6 +427,7 @@ input[type="file"] {
     border: 2px solid #fff;
     border-radius: 3px;
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+    
   }
   .nobg-submit{
     height:18%;
@@ -405,6 +449,11 @@ input[type="file"] {
     text-align: left;
     background-color: #fff;
     /* border: #0034de 1px solid; */
+    -webkit-border-radius: 16px;
+border-radius: 16px;
+background: #ffffff;
+-webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 }
 
 #dataTable {
