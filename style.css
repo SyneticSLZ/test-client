@@ -265,7 +265,7 @@ input[type="file"] {
     border: 1px solid #000;
   }
   
-  .buttons .button-man {
+ .button-man {
     background-color: #fff;
     color: #0000007e;
     border: none;
@@ -290,7 +290,7 @@ background: #ffffff;
 box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 
   }
-  .buttons .button-man:hover {
+   .button-man:hover {
     /* background-color: #2b0031; */
     /* color: white; */
     /* border: white 1px solid; */
@@ -374,7 +374,7 @@ transition: ease 0.6s;
 }
 
   .pitch-row{
-    margin-top: 30px;
+    margin-top: 20px;
     margin-inline: 20px;
     height: 65vh;
     display: flex;
@@ -823,9 +823,12 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    border: 1.5px solid #000;
-    border-radius: 0.5rem;
-    box-shadow: 2.5px 3px 0 #000;
+    /* background-col/or: #fff; */
+    -webkit-border-radius: 16px;
+border-radius: 16px;
+/* background: #ffffff; */
+-webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   
   .button-g:hover {
@@ -1438,28 +1441,35 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
       padding-block: 25px;
       padding-inline-start: 20px;
       border-radius: 10px;
+      /* height: 60px; */
       text-align: start;
       flex: 1;
       margin-right: 10px;
-      border: 1.5px solid #000;
-      border-radius: 0.5rem;
-      box-shadow: 2.5px 3px 0 #000;
+      /* border: 1.5px solid #000; */
+      /* border-radius: 0.5rem; */
+      /* box-shadow: 2.5px 3px 0 #000; */
       outline: none;
       transition: ease 0.25s;
       text-align: left;
       background-color: #fff;  
+      background-color: #fff;
+      -webkit-border-radius: 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+  box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   
   .metric-value {
       font-size: 45px;
       margin: 0;
-      color: rgb(5, 1, 24);
+      color: rgba(5, 1, 24, 0.678);
   }
   
   .metric-label {
       font-size: 20px;
       font-weight: bold;
-      color: rgb(5, 1, 24);
+      color: rgb(5, 1, 24, 0.678);
   
   }
   
@@ -1492,6 +1502,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     flex-direction: column;
     /* align-items: center; */
     width: 50%;
+    
   }
   .as button{
     margin-top: 2em;
@@ -1510,7 +1521,12 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     margin-top: 20px;
     width: 100%; 
     padding: 20px ;
-    
+    background-color: #fff;
+    -webkit-border-radius: 16px;
+border-radius: 16px;
+background: #ffffff;
+-webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   
   }
   .plan-usage-detail {
