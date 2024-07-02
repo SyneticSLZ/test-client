@@ -1562,6 +1562,8 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   
   #subscription{
     background-color: #150552;
+    color: white;
+    transition: ease 0.6s;
   }
   .actual-buttons {
       /* background-color: #007bff; */
@@ -1761,16 +1763,23 @@ text-align: left;
     /* max-width: 190px; */
     padding: 0.875rem ;
     font-size: 1rem;
-    border: 1.5px solid #000;
+    /* border: 1.5px solid #000; */
     border-radius: 0.5rem;
-    box-shadow: 2.5px 3px 0 #000;
+    /* box-shadow: 2.5px 3px 0 #000; */
     outline: none;
     transition: ease 0.25s;
     text-align: left;
+    background-color: #fff;
+    -webkit-border-radius: 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+  box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   
   .coolinput  .input:focus {
-    box-shadow: 5.5px 7px 0 black;
+    /* box-shadow: 5.5px 7px 0 black; */
+    border: 1.5px solid #000;
   }
   .btn-container {
     margin-top: 10px;
@@ -1783,18 +1792,22 @@ text-align: left;
   }
   #myAccount-content button {
     margin-bottom: 35px;
-    padding: 5px 15px;
-    border: 1.5px solid #000;
-    border-radius: 0.5rem;
-    box-shadow: 2.5px 3px 0 #000;
-    outline: none;
-    transition: ease 0.25s;
-    text-align: left;
-    background-color: #fff;
+    padding: 7px 25px;
+    /* padding: 20px 50px; */
+  background: linear-gradient(
+    15deg,
+    #880088,
+    #8320aa,
+    rgb(111, 0, 255)
+    /* #0ff */
+  )
+  no-repeat;
+  color: #fff;
   }
 
   #myAccount-content button:hover {
-    box-shadow: 5.5px 5px 0 black;
+    background: rgb(111, 0, 255);
+    /* color: #0000007e; */
   }
 
 #myAccount-content .password-reset{
@@ -1804,13 +1817,19 @@ text-align: left;
   #myAccount-content .coolinput .input {
     padding: 0.875rem ;
     font-size: 1rem;
-    border: 1.5px solid #000;
+    border: none;
     border-radius: 0.5rem;
-    box-shadow: 2.5px 3px 0 #000;
+    /* box-shadow: 2./5px 3px 0 #000; */
     outline: none;
     transition: ease 0.25s;
     text-align: left;
     background-color: #fff;
+    background-color: #fff;
+    -webkit-border-radius: 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+  box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   
   #myAccount-content .coolinput  .input:focus {
@@ -1819,3 +1838,4 @@ text-align: left;
   #myAccount-content .btn-container {
     margin-top: 10px;
   }
+
