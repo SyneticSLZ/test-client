@@ -231,8 +231,32 @@
                 margin: 0 20px;
             }
         }
-
-        
+        #loadingbody {
+                font-family: 'Arial', sans-serif;
+                /* background-color: #02021E; */
+                color: #fff;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+            }
+    
+            #loading {
+                /* max-width: 800px; */
+                /* padding: 20px; */
+                background-color: rgba(0, 0, 0, 0);
+                border-radius: 10px;
+                text-align: center;
+                width: 100%;
+                margin-top: 30px;
+                /* box-sizing: border-box; */
+                /* border: #00ddeb 2px solid; */
+                display: flex;
+                align-items: center;justify-content: center;
+            }
         .title {
                 font-size: 2.5em;
                 margin-bottom: 10px;
@@ -246,7 +270,7 @@
             .subtitle {
                 font-size: 1.2em;
                 margin-bottom: 30px;
-                color: #ddd;
+                color: #181818;
             }
     
             .hidden {
@@ -276,7 +300,8 @@
             .text {
                 font-size: 20px;
                 font-weight: 700;
-                color: #cecece;
+                /* color: #cecece; */
+                color: #1818189a;
                 z-index: 10;
             }
     
@@ -503,7 +528,7 @@
         <img src="vmb.png" alt="VoltMailer Logo">
         <!-- <a href="#">Log In</a> -->
     </div>
-
+<div id="loadingbody">
     <div class="container"  id="loading" style="display: none;">
         <div id="processing" class="active">
             <h1 class="title">Processing Payment</h1>
@@ -511,7 +536,7 @@
                 <div class="load-inner load-one"></div>
                 <div class="load-inner load-two"></div>
                 <div class="load-inner load-three"></div>
-                <span class="text">Loading...</span>
+                <!-- <span class="text">Loading...</span> -->
             </div>
         </div>
         <!-- <div id="success" class="hidden">
@@ -822,7 +847,7 @@
         </style> -->
 
     </div>
-
+</div>
 
 
     <div class="content" id="above-checkout">
@@ -906,8 +931,10 @@
 
 
         document.addEventListener("DOMContentLoaded", function() {
-
-                    initialize();
+            document.getElementById('above-checkout').style.display = "none"
+                document.getElementById('checkout').style.display = "none"
+                document.getElementById('loading').style.display = "flex"
+                    // initialize();
         
                 });
         
