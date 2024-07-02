@@ -512,8 +512,9 @@ function updateTable() {
             return;
         }else{
             submittedData = [];
-            updateTable();
+            
         }
+        updateTable();
 
     }
 
@@ -1455,7 +1456,7 @@ function showNotification(message) {
               <h1>Dashboard</h1>
               <h4>A detailed overview of your metrics, usage, plan and more</h4>
               <div class="metrics">
-                <!--  <div class="metric">
+                 <div class="metric">
 
                       <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Potential Clients</p>
                       <h2 class="metric-value">11</h2>
@@ -1474,7 +1475,7 @@ function showNotification(message) {
                       <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Sales</p>
                       <h2 class="metric-value">$148.94</h2>
                   </div>
-              </div> -->
+              </div>
               <!-- <div class="row-2"> -->
               <div class="plan-usage">
                   <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p>
