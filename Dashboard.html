@@ -1324,7 +1324,7 @@ function showNotification(message) {
             <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
             <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-rr-credit-card"></i> Billing</div>
             <div class="menu-item tools">Tools</div>
-            <div class="menu-item" id="openPopup"><i class="fi fi-rr-user-pen"></i>Account</div>
+            <div class="menu-item" id="4" ><i class="fi fi-rr-user-pen"></i>Account</div>
             <!-- <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div> -->
         </div>
     </div>
@@ -1453,7 +1453,7 @@ function showNotification(message) {
                 </div>
             </div>
         </div>
-        <div id="myAccount-content" style="display: none;">
+        <div id="myUsage-content" style="display: none;">
           <div class="dashboard-usage">
               <h1>Dashboard</h1>
               <h4>A detailed overview of your metrics, usage, plan and more</h4>
@@ -1493,6 +1493,63 @@ function showNotification(message) {
             </div>
     </div>
 
+    <div id="myAccount-content" style="display: none;">
+        <div class="dashboard-usage">
+            <h1>Account</h1>
+            <h4>A detailed overview of your metrics, usage, plan and more</h4>
+            <div class="metrics">
+               <div class="metric">
+
+                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Potential Clients</p>
+                    <h2 class="metric-value">11</h2>
+                </div>
+                <div class="metric">
+
+                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Pipeline Value</p>
+                    <h2 class="metric-value">$847</h2>
+                </div>
+                <div class="metric">
+
+                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Appointments</p>
+                    <h2 class="metric-value">5</h2>
+                </div>
+                <div class="metric">
+                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Sales</p>
+                    <h2 class="metric-value">$148.94</h2>
+                </div>
+            </div>
+            
+            <div class="coolinput">
+                <!-- <label for="input" class="text">Name:</label> -->
+                <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
+            </div>
+
+            <div class="coolinput">
+                <!-- <label for="input" class="text">Email:</label> -->
+                <input type="text" placeholder="CoolGuy1@email.com" name="input" class="input" id="emailinput">
+                <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
+
+            </div>              
+            
+            <div class="coolinput">
+                <!-- <label for="input" class="text">Website:</label> -->
+                <input type="text" placeholder="Https://" name="input" class="input" id="website" value="https://">
+            </div>
+            <!-- <div class="row-2"> -->
+            <div class="plan-usage">
+                <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p>
+                <div class="progress-text" id="progress-text">
+                  <p>Current: 2</p>
+                  <p>Total: 1000</p>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress" style="width: 57.3%;"></div>
+                </div>
+                <button class="actual-buttons" id="subscription">Upgrade</button>
+            </div>
+          </div>
+  </div>
+
     <div id="notification-container-pop"></div>
     <script>
         
@@ -1521,13 +1578,15 @@ function showNotification(message) {
                 case '1':
                     console.log('1')
                     document.getElementById('myAccount-content').style.display = 'none';
+                    document.getElementById('myUsage-content').style.display = 'none';
                     document.getElementById('main').style.display = 'block';
                     document.getElementById('maintop').style.display = 'flex';
                     contentDiv.innerHTML = '<h2>Home Content</h2><p>This is the home page content.</p>';
                     break;
                 case '2':
                 console.log('2')
-                    document.getElementById('myAccount-content').style.display = 'flex';
+                    document.getElementById('myUsage-content').style.display = 'flex';
+                    document.getElementById('myAccount-content').style.display = 'none';
                     document.getElementById('main').style.display = 'none';
                     document.getElementById('maintop').style.display = 'none';
                     contentDiv.innerHTML = '<h2>Usage Content</h2><p>This is the usage page content.</p>';
@@ -1536,6 +1595,10 @@ function showNotification(message) {
                     contentDiv.innerHTML = '<h2>Billing Content</h2><p>This is the billing page content.</p>';
                     break;
                 case '4':
+                    document.getElementById('myAccount-content').style.display = 'flex'; 
+                    document.getElementById('myUsage-content').style.display = 'none';
+                    document.getElementById('main').style.display = 'none';
+                    document.getElementById('maintop').style.display = 'none';
                     contentDiv.innerHTML = '<h2>Account Content</h2><p>This is the account page content.</p>';
                     break;
                 case '5':

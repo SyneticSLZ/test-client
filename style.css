@@ -1263,24 +1263,27 @@ input[type="file"] {
     align-self: center;
     justify-self: start;
       padding: 20px;
-      margin-top: 20px;
+      margin-top: 40px;
     margin-left: 20px;
       border-radius: 10px;
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
       width: 100%;
       /* max-width: 1000px; */
+      color: rgb(5, 1, 24);
   }
   
   .section-header {
       font-size: 24px;
       margin-bottom: 20px;
       color: #ffffff;
-    color: #000;
+    color: rgb(5, 1, 24);
       justify-self: start;
   }
   .dashboard-usage h4{
     font-weight: 200;
     margin-bottom: 30px;
+    margin-top: 10px;
+    color: rgb(5, 1, 24);
   }
   
   .metrics {
