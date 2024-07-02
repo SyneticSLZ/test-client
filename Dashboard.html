@@ -1203,6 +1203,38 @@ function showNotification(message) {
 </head>
 <body>
     <div id="notification-container-pop"></div>
+   <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <div class="sidebar">
+                <div class="sidebar-item active" id="profileTab">Profile</div>
+                <div class="sidebar-item" id="workspacesTab">Workspaces</div>
+                <div class="sidebar-item" id="sessionsTab">Sessions</div>
+            </div>
+            <div class="main-content">
+                <div id="profileContent" class="content active">
+                    <h2>Account</h2>
+                    <form>
+                        <div class="profile-picture">
+                            <img src="placeholder.png" alt="Profile Picture">
+                        </div>
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" value="Synetic">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" value="X">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="syneticslz@gmail.com">
+                        <p>This email address is associated with your Framer account.</p>
+                        <p>To update your billing email, go to Workspace Settings → Plans.</p>
+                        <div class="button-group">
+                            <button type="button" id="signOut">Sign Out</button>
+                            <button type="button" id="deleteAccount">Delete Account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button id="closePopup" class="close-popup">X</button>
+        </div>
+    </div> 
 
     <div class="manual-popup-overlay" id="manual-popup-overlay">
         
