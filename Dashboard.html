@@ -982,20 +982,14 @@ async function manualSend() {
     // document.getElementById('togglewoggle').style.display = 'none';
     const button = document.getElementById('submit');
     showNewHtml();
-    button.innerHTML = `
-                    <button class="button" onclick="sendAllEmails()">
-                        <img width="30" height="30" src="https://img.icons8.com/nolan/64/new-post.png" alt="new-post"/>
-                        Send All
-                    </button>
-                `;
-    // const threadResponse = await fetch('/create-thread', { method: 'POST' });
-// 
-    // const threadData = await threadResponse.json();
-    // const threadID = threadData.thread_id;
-
+    button.innerHTML = `<section class="dots-container">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                      </section> `;
     generatedData = [];
-
-
     for (let index = 0; index < submittedData.length; index++) {
         
         const data = submittedData[index];
@@ -1072,8 +1066,20 @@ async function manualSend() {
         }
     }
     document.getElementById('customLoader').style.display = 'none';
+    button.innerHTML = `
+                    <button class="button" onclick="sendAllEmails()">
+                        <img width="30" height="30" src="https://img.icons8.com/nolan/64/new-post.png" alt="new-post"/>
+                        Send All
+                    </button>
+                `;
     populateEmailTable();
 }
+
+
+
+
+
+
 
 async function sendEmailindex(index) {
     const data = generatedData[index];
@@ -1569,7 +1575,8 @@ function showNotification(message) {
             </div>
             <div class="pitch-row" >
                 
-                <div class="content-row" id="pr">
+                <div class="content-row" >
+                    <div id="pr" >
                     <span id="sending" style="display: none;">Emails are sending, you can close this tab.</span>
                     <div id="newContent" style="display: none;">
                         <h1>Your Emails</h1>
@@ -1620,6 +1627,7 @@ function showNotification(message) {
                     </table>
                 </div>
                 </div>
+            </div>
 
 
                 <div class="pitch">  
