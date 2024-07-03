@@ -1503,7 +1503,11 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
       color: rgb(5, 1, 24);
   }
   #sending {
-    background-color: red;
+    /* background-color: red; */
+    margin-left: 50px;
+    margin-top: 50px;
+    font-size: 40px;
+    font-weight: bold;
     width: 100%;
     height: 100%;
     display: flex;
