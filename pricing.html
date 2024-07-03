@@ -945,11 +945,11 @@ function Starter(){
             
             if (token) {
                 const userData = parseJWT(token);
-                let url = `https://syneticslz.github.io/test-client/payment.html?email=${encodeURIComponent(userData.email)}&loggedin=true&plan=f`;
+                let url = `https://voltmailer.com/payment.html?email=${encodeURIComponent(userData.email)}&loggedin=true&plan=f`;
                 window.location.href = url;
             }
             if (email) {
-                let url = `https://syneticslz.github.io/test-client/payment.html?loggedin=true&plan=f`;
+                let url = `https://voltmailer.com/payment.html?loggedin=true&plan=f`;
                     url += `&email=${encodeURIComponent(email)}`;
                     url += `&password=${encodeURIComponent(password)}`;
                     window.location.href = url;
@@ -963,11 +963,11 @@ function Premium(){
             
             if (token) {
               const userData = parseJWT(token);
-                let url = `https://syneticslz.github.io/test-client/payment.html?email=${encodeURIComponent(userData.email)}&loggedin=true&plan=p`;
+                let url = `https://voltmailer.com/payment.html?email=${encodeURIComponent(userData.email)}&loggedin=true&plan=p`;
                 window.location.href = url;
             }
             if (email) {
-                let url = `https://syneticslz.github.io/test-client/payment.html?loggedin=true&plan=p`;
+                let url = `https://voltmailer.com/payment.html?loggedin=true&plan=p`;
                     url += `&email=${encodeURIComponent(email)}`;
                     url += `&password=${encodeURIComponent(password)}`;
                     window.location.href = url;
