@@ -1109,11 +1109,10 @@ async function sendEmailindex(index) {
     }
 }
 else {
-    document.getElementById('pr').style.display = `none`;
+     document.getElementById('pr').style.display = `none`;
         document.getElementById('sending').style.display = 'block';
         document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
-                        New Campaign
-                    </button>`;
+                        New Campaign                     </button>`;
     return
 }
 }
@@ -1139,7 +1138,7 @@ async function sendAllEmails() {
 
 function populateEmailTable() {
 
-    if (!generatedData[0]) {
+    // if (!generatedData[0]) {
 
     //                 return;
     // }
@@ -1183,15 +1182,15 @@ function populateEmailTable() {
         tbody.appendChild(detailsRow);
     });
 }
-else {
-    document.getElementById('pr').style.display = `none`;
-        document.getElementById('sending').style.display = 'block';
-        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
-                        New Campaign
-                    </button>`;
-    return;
-}
-}
+// else {
+    // document.getElementById('pr').style.display = `none`;
+        // document.getElementById('sending').style.display = 'block';
+        // document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
+                        // New Campaign
+                    // </button>`;
+    // return;
+// }
+// }
 
 function makeEditable(field, index) {
     const displayElement = document.getElementById(`${field}-display-${index}`);
