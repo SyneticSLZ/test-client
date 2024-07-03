@@ -558,6 +558,7 @@ function Manual() {
     if (!/^https:\/\//i.test(website)) {
         website = 'https://' + website;
     }
+    print(isValidURL(website))
         if (!emailRegex.test(email_inputted)) {
             manualError.textContent = "Invalid email format.";
             return;
@@ -638,14 +639,16 @@ function updateTable() {
     function reset(){
         console.log("reset clicked")
         formData = []
-        if (submittedData = []){
-            return;
-        }else{
-            submittedData = [];
+        submittedData = [];
+        // if (submittedData = []){
+            // return;
+        // }else{
+            // submittedData = [];
             
-        }
-        updateTable();
-
+        // }
+        // updateTable();
+        dataTable.innerHTML = '';
+document.getElementById('tablerows').innerHTML = '';
     }
 
 // SUBMIT THE DATA 
@@ -1627,7 +1630,7 @@ function showNotification(message) {
                                 <th>Recipient Name</th>
                             </tr>
                         </thead>  -->
-                        <tbody>
+                        <tbody id="tablerows">
                             <!-- Rows will be added here dynamically -->
                         </tbody>
                     </table>
