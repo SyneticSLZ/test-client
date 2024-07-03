@@ -558,7 +558,7 @@ function Manual() {
     if (!/^https:\/\//i.test(website)) {
         website = 'https://' + website;
     }
-    print(isValidURL(website))
+    console.log(isValidURL(website))
         if (!emailRegex.test(email_inputted)) {
             manualError.textContent = "Invalid email format.";
             return;
