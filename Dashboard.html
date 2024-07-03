@@ -536,9 +536,9 @@ function togglePopupManual() {
     function isValidURL(string) {
   try {
     new URL(string);
-    return true;
+    return false;
   } catch (_) {
-    return false;  
+    return true;  
   }
 }
 
@@ -566,14 +566,15 @@ function Manual() {
             manualError.textContent = "Invalid website format. Must start with https://";
             return;
         } else {
-            
-            if (isValidURL(website)){
-                manualError.textContent = "";
-            } else {
-                manualError.textContent = "Invalid URL format.";
-                return;
-            }
+            manualError.textContent = "";
         }
+
+        if (isValidURL(website)){
+            manualError.textContent = "Invalid URL format.";
+            return;
+            } else {
+                manualError.textContent = "";
+            }
 
         const formData = {
             email: email_inputted,
