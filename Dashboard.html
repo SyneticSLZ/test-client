@@ -612,7 +612,9 @@ function updateTable() {
 
             // Create delete button
             const deleteButton = document.createElement('button');
+            deleteButton.style.color = "#000";
             deleteButton.textContent = 'X';
+
             deleteButton.addEventListener('click', function() {
             deleteRow(index); // Call deleteRow function with index
             });
