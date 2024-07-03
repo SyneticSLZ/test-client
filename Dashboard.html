@@ -15,6 +15,7 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-regular-straight/css/uicons-regular-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-straight/css/uicons-regular-straight.css'>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>   
     <link rel="icon" href="favicon.png" type="image/icon type"> 
@@ -829,6 +830,7 @@ function NewCampaign() {
                     man.disabled = false;
                     const textarea = document.getElementById('userPitch');
                     textarea.disabled = false;
+                    document.getElementById('autosend-text').style.display = "block"
 }
 
 
@@ -984,8 +986,16 @@ function toggleDetails(index) {
 }
 
 async function manualSend() {
+    document.getElementById('autosend-text').style.display = "none"
     const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
     document.getElementById('customLoader').style.display = 'flex';
+    const textarea = document.getElementById('userPitch');
+                    const csv = document.getElementById('uploadLabel');
+                    const man = document.getElementById('man');
+                    textarea.disabled = true;
+                    csv.disabled = true;
+                    man.disabled = true;
+
     // document.getElementById('togglewoggle').style.display = 'none';
     const button = document.getElementById('submit');
     showNewHtml();
@@ -1004,38 +1014,6 @@ async function manualSend() {
         try {
             const sddata = submittedData[index];
             updateRowStatus(index, 'Personalizing message');
-
-            // const descriptionResponse = await fetch('/get-site-description', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ url: data.website })
-            // });
-            // const descriptionData = await descriptionResponse.json();
-            // const website_content = descriptionData.description;
-            // const Uname = '{{ name }}';
-            // const To = data.name;
-
-            
-            // const emailContentResponse = await fetch('/add-messages-to-thread', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //         thread_id: threadID,
-            //         website_content: website_content,
-            //         user_pitch: userPitch,
-            //         To: To,
-            //         Me: Uname
-            //     })
-            // });
-
-            // const emailContentData = await emailContentResponse.json();
-            // const email_content = emailContentData.email_content;
-            // const lines = email_content.split('\n');
-            // const subject_line = lines[0].replace('Subject: ', '');
-            // const main_message = lines.slice(1).join('\n').trim();
-
             const response = await fetch('https://volt-server.onrender.com/generate-email-content', {
                     method: 'POST',
                     headers: {
@@ -1072,10 +1050,11 @@ async function manualSend() {
             showNotification(`Error generating email for ${data.email}`);
         }
     }
+
     document.getElementById('customLoader').style.display = 'none';
     button.innerHTML = `
                     <button class="button" onclick="sendAllEmails()">
-                        <img width="30" height="30" src="https://img.icons8.com/nolan/64/new-post.png" alt="new-post"/>
+                        <i class="fi fi-rs-paper-plane"></i>
                         Send All
                     </button>
                 `;
@@ -1089,6 +1068,17 @@ async function manualSend() {
 
 
 async function sendEmailindex(index) {
+
+    if (generatedData[0]) {
+        document.getElementById('pr').style.display = `none`;
+        document.getElementById('sending').style.display = 'block';
+        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
+                        New Campaign
+                    </button>`;
+                    return;
+    }
+
+
     const data = generatedData[index];
     const subjectElement = document.getElementById(`subject-${index}`);
     const contentElement = document.getElementById(`content-${index}`);
@@ -1123,7 +1113,12 @@ async function sendAllEmails() {
     try {
         await Promise.all(promises);
         showNotification('All emails sent successfully');
-        initialize()
+        document.getElementById('pr').style.display = `none`;
+        document.getElementById('sending').style.display = 'block';
+        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
+                        New Campaign
+                    </button>`;
+        // initialize()
     } catch (error) {
         console.error('Error sending one or more emails:', error);
         showNotification('Error sending one or more emails');
