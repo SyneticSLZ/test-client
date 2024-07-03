@@ -2000,7 +2000,7 @@ async function addCustomer() {
               </svg></div> -->
               </div>
         </div>
-        <button class="google-signin-btn" onclick="window.location.href='/test-client/OldLogin.html'"  >
+        <button class="google-signin-btn" onclick="window.location.href='/OldLogin.html'"  >
             <!-- <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google Logo" class="google-logo"> -->
             <span>Sign in / Log in</span>
         </button>
@@ -2010,7 +2010,7 @@ async function addCustomer() {
             <h1>Boost Your Outreach with <b>Personalized Emails</b></h1>
             <h2>Increase open rates and engagement with crafted personalized emails</h2>
             <!-- <button>Get Started For Free</button> -->
-            <button class="cta" onclick="window.location.href='/test-client/OldLogin.html'">
+            <button class="cta" onclick="window.location.href='/OldLogin.html'">
                 <span>Get Started</span>
                 <svg width="15px" height="10px" viewBox="0 0 13 10">
                   <path d="M1,5 L11,5"></path>
@@ -2115,7 +2115,7 @@ async function addCustomer() {
                         <p class="card-content">
                             Adapt your emails to suit the unique needs of prospect
                         </p>
-                        <span class="see-more" onclick="window.location.href='/test-clientOldLogin.html'">Learn More</span>
+                        <span class="see-more" onclick="window.location.href='/OldLogin.html'">Learn More</span>
                     </div>
                     <div class="date-box">
                         <i class="fi fi-ss-wrench-alt"></i></i>
@@ -2129,7 +2129,7 @@ async function addCustomer() {
                         <p class="card-content">
                             Boost open rates with tailor made content ffor every single email. 
                         </p>
-                        <span class="see-more" onclick="window.location.href='/test-clientOldLogin.html'">Learn More</span>
+                        <span class="see-more" onclick="window.location.href='/OldLogin.html'">Learn More</span>
                     </div>
                     <div class="date-box">
                         <i class="fi fi-rs-chart-line-up"></i></i>
@@ -2143,7 +2143,7 @@ async function addCustomer() {
                         <p class="card-content">
                             Manage large outreach campaigns seamlessly
                         </p>
-                        <span class="see-more" onclick="window.location.href='/test-clientOldLogin.html'">Learn More</span>
+                        <span class="see-more" onclick="window.location.href='/OldLogin.html'">Learn More</span>
                     </div>
                     <div class="date-box">
                         <i class="fi fi-ss-megaphone"></i></i>
@@ -2481,7 +2481,7 @@ async function addCustomer() {
                     <label for="textarea">How Can We Help You?</label>
                     <textarea required="" cols="50" rows="10" id="textarea" name="textarea">          </textarea>
                   </div>
-                  <button class="button1 ">
+                  <button class="button1 " type="submit">
                     <svg
                       height="24"
                       width="24"
@@ -2498,6 +2498,7 @@ async function addCustomer() {
                   </button>
                   
                 </form>
+                <div id="result"></div>
               </div>
         </div>
         <div class="faq">
@@ -2585,5 +2586,33 @@ async function addCustomer() {
             <a href="#">PRIVACY POLICY</a> | <a href="#">TERMS AND CONDITIONS</a>
         </div>
     </footer>
+
+
+    <script>
+          document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const textarea = document.getElementById('textarea').value;
+
+      fetch('https://volt-server.onrender.com/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          email: email,
+          textarea: textarea
+        })
+      })
+      .then(response => response.text())
+      .then(result => {
+        document.getElementById('result').innerText = result;
+      })
+      .catch(error => {
+        document.getElementById('result').innerText = 'Error: ' + error;
+      });
+    });
+    </script>
 </body>
 </html>
