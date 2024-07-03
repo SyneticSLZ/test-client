@@ -25,9 +25,7 @@ let generatedData = [];
 let U_Username;
 let U_MyEmail;
 
-
-// Call fetchUserData on page load
-document.addEventListener("DOMContentLoaded", function() {
+async function init() {
     console.log("running")
     const urlParams = new URLSearchParams(window.location.search);
     var token  = urlParams.get('token');        
@@ -50,6 +48,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
         }
+}
+// Call fetchUserData on page load
+document.addEventListener("DOMContentLoaded", function() {
+    init()
         });
 
 
@@ -128,6 +130,7 @@ async function RenderHtml(data){
     const name = data.name
     U_Username = name
     const email = U_MyEmail
+    const UserEmail = data.email
     const plan = data.plan
     const CapsPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
     const UsedEmails = data.total_emails
@@ -144,7 +147,46 @@ async function RenderHtml(data){
     document.getElementById('progress-text').innerHTML=`<p>Current: ${UsedEmails}</p><p>Total: ${planEmails}</p>`;
     document.getElementById('subscription').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
-    document.getElementById('progress').style.width = percentageUsed + '%';  
+    document.getElementById('progress').style.width = percentageUsed + '%'; 
+    document.getElementById('').innerHTML = `
+    
+    <div class="dashboard-usage">
+            <h1>Your Account</h1>
+            <h4>A detailed overview of your metrics, usage, plan and more</h4>
+            <h2>Name</h2>
+            <h4>This is the name your emails are sent from.</h4>
+            <div class="coolinput">
+                <!-- <label for="input" class="text">Name:</label> -->
+                <input type="text" placeholder="${name}" name="input" class="input" id="name" value="${name}">
+            </div>
+            <h5 id="errorMessagename"></h5>
+            <button class="button-man" onclick="updateNameForm(${UserEmail})">Save</button>
+
+            <h2>Email</h2>
+            <h4>The Email associated with your account, not necessarily the email used to send your emails.</h4>
+            <div class="coolinput">
+                <!-- <label for="input" class="text">Email:</label> -->
+                <input type="text" placeholder="${UserEmail}" name="input" class="input" id="emailinput" value="${UserEmail}">
+                <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
+            </div>     
+            <h5 id="errorMessageemail"></h5>         
+            <button class="button-man"  onclick="updateEmailForm(${UserEmail})" >Save</button>
+
+
+            <h2 class="password-reset">Reset Password</h2>
+
+            <div class="coolinput">
+                <input type="text" placeholder="New Password" name="input" class="input" id="newPassword" >
+            </div>
+
+            <div class="coolinput">
+                <!-- <label for="input" class="text">Website:</label> -->
+                <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
+            </div>
+            <h5 id="errorMessage"></h5>
+            <button class="button-man" onclick="updatePasswordForm(${UserEmail})">Save</button>
+          </div>
+    ` 
     // document.getElementById('sidemenu').innerHTML=`
     //         <div class="menu-item active" id="1"><i class="fi fi-br-house-blank"></i>Home</div>
     //         <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
@@ -1573,25 +1615,28 @@ function showNotification(message) {
                 <!-- <label for="input" class="text">Name:</label> -->
                 <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
             </div>
+            <h5 id="errorMessagename"></h5>
             <button class="button-man">Save</button>
             <h2>Email</h2>
             <h4>The Email associated with your account, not necessarily the email used to send your emails.</h4>
             <div class="coolinput">
                 <!-- <label for="input" class="text">Email:</label> -->
-                <input type="text" placeholder="CoolGuy1@email.com" name="input" class="input" id="emailinput">
+                <input type="text" placeholder="Name@email.com" name="input" class="input" id="emailinput">
                 <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
-            </div>              
+            </div>     
+            <h5 id="errorMessageemail"></h5>         
             <button class="button-man">Save</button>
             <h2 class="password-reset">Reset Password</h2>
 
             <div class="coolinput">
-                <input type="text" placeholder="New Password" name="input" class="input" id="website" >
+                <input type="text" placeholder="New Password" name="input" class="input" id="newPassword" >
             </div>
 
             <div class="coolinput">
                 <!-- <label for="input" class="text">Website:</label> -->
-                <input type="text" placeholder="Confirm Password" name="input" class="input" id="website" >
+                <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
             </div>
+            <h5 id="errorMessage"></h5>
             <button class="button-man">Save</button>
           </div>
   </div>
@@ -1668,6 +1713,134 @@ function showNotification(message) {
             menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
         });
+
+
+
+
+    async function updateNameForm(email){
+    const name = document.getElementById('name').value;
+    // const email = prompt('Please enter your email to update your name:');
+    const errorMessages = document.getElementById('errorMessagename');
+
+    errorMessages.innerHTML = '';
+
+    try {
+        const response = await fetch('https://volt-server.onrender.com/update-customer-by-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                updateField: 'name',
+                newData: name
+            }),
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            errorMessages.innerHTML = `<p>${data.message}</p>`;
+            init()
+        } else {
+            errorMessages.innerHTML = `<p>Error: ${data.message}</p>`;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        errorMessages.innerHTML = '<p>An error occurred while updating the name.</p>';
+    }
+};
+
+async function updateEmailForm(email){
+    const name = document.getElementById('emailinput').value;
+    // const email = prompt('Please enter your email to update your name:');
+    const errorMessages = document.getElementById('errorMessageemail');
+
+    errorMessages.innerHTML = '';
+
+    try {
+        const response = await fetch('https://volt-server.onrender.com/update-customer-by-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                updateField: 'email',
+                newData: name
+            }),
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            errorMessages.innerHTML = `<p>${data.message}</p>`;
+            init()
+        } else {
+            errorMessages.innerHTML = `<p>Error: ${data.message}</p>`;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        errorMessages.innerHTML = '<p>An error occurred while updating the name.</p>';
+    }
+};
+    async function updatePasswordForm(email) {
+
+    const password = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    // const email = prompt('Please enter your email to update your password:');
+    const errorMessages = document.getElementById('errorMessages');
+
+    errorMessages.innerHTML = '';
+
+    if (password !== confirmPassword) {
+        errorMessages.innerHTML += '<p>Passwords do not match.</p>';
+        return;
+    }
+
+    if (password.length <= 5) {
+        errorMessages.innerHTML += '<p>Password must be longer than 5 characters.</p>';
+        return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+        errorMessages.innerHTML += '<p>Password must contain at least one uppercase letter.</p>';
+        return;
+    }
+
+    if (!/\d/.test(password)) {
+        errorMessages.innerHTML += '<p>Password must contain at least one number.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('https://volt-server.onrender.com/update-customer-by-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                updateField: 'password',
+                newData: password
+            }),
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            errorMessages.innerHTML = `<p>${data.message}</p>`;
+            init()
+        } else {
+            errorMessages.innerHTML = `<p>Error: ${data.message}</p>`;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        errorMessages.innerHTML = '<p>An error occurred while updating the password.</p>';
+    }
+};
+
+
     </script>
 </body>
 </html>

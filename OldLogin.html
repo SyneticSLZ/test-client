@@ -53,7 +53,7 @@
             color: rgba(2, 0, 27, 0.562);
             margin-bottom: 2em;
         }
-        .login-form, .signup-form, .forgot-form {
+        .login-form, .signup-form, .forgot-form, .Reset-form {
             display: none;
             flex-direction: column;
             margin-top: 5em;
@@ -257,7 +257,7 @@
         <div class="form-container">
             <!-- <div class="nav">VoltMail</div> -->
             <img  src='vmb.png' alt="google" style="width: 200px; height: 120px;">
-            <div id="loginForm" class="login-form active">
+            <div id="loginForm" class="login-form ">
                 <h1>Login</h1>
                 <h4>Enter your email and password</h4>
                 <input type="text" id="loginEmail" placeholder="Email">
@@ -298,7 +298,20 @@
                 <div id="forgotError" class="error"></div>
                 <h4>Remembered your password? <a id="loginLinkFromForgot">Login</a></h4>
             </div>
+
+
+            <div id="ResetForm" class="Reset-form active">
+                <h1>Reset your Password</h1>
+                <h4>This link will self-destruct in 15 minutes</h4>
+                <input type="text" id="newPassword" placeholder="New Password">
+                <input type="password" id="confirmPassword" placeholder="Confirm Password">
+                <button onclick="Reset()">Continue</button>
+                <div id="resetError" class="error"></div>
+                <!-- <h4>Remembered your Password? <a id="forgotLink">Login Now</a></h4> -->
+                <h3>Remembered your Password? <a id="loginLinkFromReset">Log In</a></h3>
+            </div>
         </div>
+
         <div class="right-container">
             <h1>Hi, I'm your AI powered sales assistant, Volt!</h1>
             <h4>Volt can automate and personalize all of your cold email outreach for you... Crafting unique emails for all your potential clients.</h4>
@@ -309,6 +322,16 @@
     </div>
 
     <script>
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("running")
+    const urlParams = new URLSearchParams(window.location.search);
+    var token  = urlParams.get('token');    
+    if (token) {
+        document.getElementById('loginForm').classList.remove('active');
+        document.getElementById('ResetForm').classList.add('active');
+    }
+})
+
         document.getElementById('signupLink').addEventListener('click', function() {
             document.getElementById('loginForm').classList.remove('active');
             document.getElementById('signupForm').classList.add('active');
@@ -326,6 +349,11 @@
 
         document.getElementById('loginLinkFromForgot').addEventListener('click', function() {
             document.getElementById('forgotForm').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        document.getElementById('loginLinkFromReset').addEventListener('click', function() {
+            document.getElementById('ResetForm').classList.remove('active');
             document.getElementById('loginForm').classList.add('active');
         });
 
@@ -448,6 +476,7 @@
 
         if (response.ok) {
           const result = await response.text();
+          responseMessage.style.color = 'green';
           responseMessage.textContent = result;
         } else {
           const errorText = await response.text();
@@ -457,6 +486,50 @@
         responseMessage.textContent = 'An error occurred. Please try again later.';
       }
     };
+
+
+    async function ResetPassword() {
+
+        const password = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const responseMessage = document.getElementById('resetError');
+
+      if (password !== confirmPassword) {
+        responseMessage.textContent = 'Passwords do not match!';
+        return;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+
+      if (!token) {
+        responseMessage.textContent = 'Invalid or missing token!';
+        return;
+      }
+
+      try {
+        const response = await fetch('https://volt-server.onrender.com/reset-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token, newPassword: password })
+        });
+
+        if (response.ok) {
+          const result = await response.text();
+          responseMessage.textContent = result;
+          responseMessage.style.color = 'green';
+        //   responseMessage.className = 'message success';
+        } else {
+          const errorText = await response.text();
+          responseMessage.textContent = errorText;
+        }
+      } catch (error) {
+        responseMessage.textContent = 'An error occurred. Please try again later.';
+      }
+    };
+
 
 
     </script>
