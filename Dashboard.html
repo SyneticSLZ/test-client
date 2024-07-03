@@ -811,7 +811,7 @@ function NewCampaign() {
 
                     document.getElementById('currentContent').style.display = 'flex';
                     document.getElementById('newContent').style.display = 'none';
-                    document.getElementById('hidewhengenerating').style.display = 'flex';
+                    // document.getElementById('hidewhengenerating').style.display = 'flex';
 
                     formData = []
                     submittedData = []
@@ -823,7 +823,10 @@ function NewCampaign() {
                         Generate
                     </button> `
                     updateTable();
-                    document.getElementById('inputButtons').style.display = "flex";
+                    const csv = document.getElementById('uploadLabel');
+                    const man = document.getElementById('man');
+                    csv.disabled = false;
+                    man.disabled = false;
                     const textarea = document.getElementById('userPitch');
                     textarea.disabled = false;
 }
@@ -873,10 +876,14 @@ async function Autosend_new(){
                     // disable buttons 
 
                         // Get references to the button and textarea
-                    document.getElementById('inputButtons').style.display = "none";
+                    // document.getElementById('inputButtons').style.display = "none";
                     const textarea = document.getElementById('userPitch');
+                    const csv = document.getElementById('uploadLabel');
+                    const man = document.getElementById('man');
                     textarea.disabled = true;
-                    document.getElementById('hidewhengenerating').style.display = 'none';
+                    csv.disabled = true;
+                    man.disabled = true;
+                    // document.getElementById('hidewhengenerating').style.display = 'none';
                     document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
                         New Campaign
                     </button>`;
@@ -949,7 +956,7 @@ async function Restart() {
 function showNewHtml() {
     document.getElementById('currentContent').style.display = 'none';
     document.getElementById('newContent').style.display = 'block';
-    document.getElementById('hidewhengenerating').style.display = 'none';
+    // document.getElementById('hidewhengenerating').style.display = 'none';
     populateEmailTable();
 }
 
@@ -1562,7 +1569,7 @@ function showNotification(message) {
             </div>
             <div class="buttons" id="inputButtons">
 
-                <button class="button-man" onclick="togglePopupManual()">Manual Entry</button>
+                <button class="button-man" onclick="togglePopupManual()" id="man">Manual Entry</button>
                 <!-- <button class="button-csv" onclick="ShowCsv()" id="csvBTN">Upload Csv</button> -->
                 <!-- <input name="text" type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(this)" style="display: none;"/> -->
                 <!-- <input type="file" id="fileInput" accept=".xlsx,.csv"> -->
