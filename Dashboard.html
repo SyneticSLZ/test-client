@@ -593,53 +593,49 @@ function Manual() {
 }
 
 function updateTable() {
-            const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-            // const thead = document.getElementById('thead');
-            let center = document.getElementById('center');
-            center.style.display = 'none'
-            // thead.style.display = 'block'
-            dataTable.innerHTML = ''; // Clear the existing table rows
-            console.log("working: ", submittedData)
-            const hrow = dataTable.insertRow();
-            const hemailCell = hrow.insertCell(); // Insert a new cell into the row
-            hemailCell.textContent = "Email";
-            const hwebsiteCell = hrow.insertCell();
-            hwebsiteCell.textContent = "Website";
-            const hnameCell = hrow.insertCell();
-            hnameCell.textContent = "Name";
+      const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+      let center = document.getElementById('center');
+      center.style.display = 'none';
+      dataTable.innerHTML = ''; // Clear the existing table rows
+      console.log("working: ", submittedData);
+      
+      submittedData.forEach((data, index) => {
+        const row = dataTable.insertRow();
+        const emailCell = row.insertCell(0);
+        const websiteCell = row.insertCell(1);
+        const nameCell = row.insertCell(2);
+        const actionCell = row.insertCell(3); // Cell for delete button
 
-            submittedData.forEach((data, index) => {
-            const row = dataTable.insertRow();
-            const emailCell = row.insertCell(0);
-            const websiteCell = row.insertCell(1);
-            const nameCell = row.insertCell(2);
-            const actionCell = row.insertCell(3); // Cell for delete button
+        // Create delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.style.color = "#000";
+        deleteButton.textContent = 'X';
 
-            // Create delete button
-            const deleteButton = document.createElement('button');
-            deleteButton.style.color = "#000";
-            deleteButton.textContent = 'X';
-
-            deleteButton.addEventListener('click', function() {
-            deleteRow(index); // Call deleteRow function with index
-            });
-
-            emailCell.textContent = data.email;
-            websiteCell.textContent = data.website;
-            nameCell.textContent = data.name;
-            row.setAttribute('data-index', index);
+        deleteButton.addEventListener('click', function() {
+          deleteRow(index); // Call deleteRow function with index
         });
-        return true 
+
+        emailCell.textContent = data.email;
+        websiteCell.textContent = data.website;
+        nameCell.textContent = data.name;
+        actionCell.appendChild(deleteButton); // Append delete button to action cell
+        row.setAttribute('data-index', index);
+      });
     }
 
     function deleteRow(index) {
-    submittedData.splice(index, 1); // Remove data from submittedData array
-    updateTable(); // Update the table after deletion
-}
+      submittedData.splice(index, 1); // Remove data from array
+      updateTable(); // Update table to reflect changes
+    }
+
+    function clearTable() {
+      submittedData = []; // Clear the data array
+      updateTable(); // Update table to reflect changes
+    }
 
     function reset(){
         console.log("reset clicked")
-        formData = []
+        // formData = []
         submittedData = [];
         // if (submittedData = []){
             // return;
@@ -647,9 +643,9 @@ function updateTable() {
             // submittedData = [];
             
         // }
-        // updateTable();
+        updateTable();
         // dataTable.innerHTML = '';
-document.getElementById('tablerows').innerHTML = '';
+// document.getElementById('tablerows').innerHTML = '';
     }
 
 // SUBMIT THE DATA 
