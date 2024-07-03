@@ -1075,13 +1075,9 @@ async function manualSend() {
 async function sendEmailindex(index) {
 
     if (generatedData[0]) {
-        document.getElementById('pr').style.display = `none`;
-        document.getElementById('sending').style.display = 'block';
-        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
-                        New Campaign
-                    </button>`;
-                    return;
-    }
+
+                    // return;
+    
 
 
     const data = generatedData[index];
@@ -1111,6 +1107,15 @@ async function sendEmailindex(index) {
         showNotification(`Error sending email to ${data.email}`);
     }
 }
+else {
+    document.getElementById('pr').style.display = `none`;
+        document.getElementById('sending').style.display = 'block';
+        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
+                        New Campaign
+                    </button>`;
+    return
+}
+}
 
 async function sendAllEmails() {
     const promises = generatedData.map((_, index) => sendEmailindex(index));
@@ -1132,6 +1137,13 @@ async function sendAllEmails() {
 
 
 function populateEmailTable() {
+
+    if (!generatedData[0]) {
+
+    //                 return;
+    // }
+
+
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
 
     tbody.innerHTML = "";
@@ -1169,6 +1181,15 @@ function populateEmailTable() {
         `;
         tbody.appendChild(detailsRow);
     });
+}
+else {
+    document.getElementById('pr').style.display = `none`;
+        document.getElementById('sending').style.display = 'block';
+        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
+                        New Campaign
+                    </button>`;
+    return;
+}
 }
 
 function makeEditable(field, index) {
