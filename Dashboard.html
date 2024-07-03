@@ -148,7 +148,7 @@ async function RenderHtml(data){
     document.getElementById('subscription').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('progress').style.width = percentageUsed + '%'; 
-    document.getElementById('').innerHTML = `
+    document.getElementById('myAccount-content').innerHTML = `
     
     <div class="dashboard-usage">
             <h1>Your Account</h1>
