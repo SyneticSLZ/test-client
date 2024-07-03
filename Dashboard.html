@@ -529,6 +529,17 @@ function togglePopupManual() {
       overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
 
     }
+
+    function isValidURL(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;  
+  }
+}
+
+
 function Manual() {
         const emailInput = document.getElementById('emailinput');
         const websiteInput = document.getElementById('website');
@@ -551,7 +562,13 @@ function Manual() {
             manualError.textContent = "Invalid website format. Must start with https://";
             return;
         } else {
-            manualError.textContent = "";
+            
+            if (isValidURL(website)){
+                manualError.textContent = "";
+            } else {
+                manualError.textContent = "Invalid URL format.";
+                return;
+            }
         }
 
         const formData = {
@@ -1367,7 +1384,7 @@ function showNotification(message) {
 
             <div class="coolinput">
                 <!-- <label for="input" class="text">Email:</label> -->
-                <input type="text" placeholder="CoolGuy1@email.com" name="input" class="input" id="emailinput">
+                <input type="text" placeholder="Example@email.com" name="input" class="input" id="emailinput">
                 <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
 
             </div>              
