@@ -1718,6 +1718,7 @@ function showNotification(message) {
 
 
     async function updateNameForm(email){
+        console.log("name")
     const name = document.getElementById('name').value;
     // const email = prompt('Please enter your email to update your name:');
     const errorMessages = document.getElementById('errorMessagename');
@@ -1752,6 +1753,7 @@ function showNotification(message) {
 };
 
 async function updateEmailForm(email){
+    console.log("email")
     const name = document.getElementById('emailinput').value;
     // const email = prompt('Please enter your email to update your name:');
     const errorMessages = document.getElementById('errorMessageemail');
@@ -1785,7 +1787,7 @@ async function updateEmailForm(email){
     }
 };
     async function updatePasswordForm(email) {
-
+        console.log("password")
     const password = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     // const email = prompt('Please enter your email to update your password:');
