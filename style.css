@@ -1903,13 +1903,14 @@ text-align: left;
     margin-bottom: 35px;
     padding: 7px 25px;
     /* padding: 20px 50px; */
-  background-color: rgb(255, 255, 255);
-  color: #000000cb;
+
+  background: rgb(111, 0, 255);
+  color: #ffffff;
   }
 
   #myAccount-content button:hover {
-    background: rgb(111, 0, 255);
-    color: #ffffff;
+    background-color: rgb(255, 255, 255);
+    color: #000000cb;
   }
 
 #myAccount-content .password-reset{
