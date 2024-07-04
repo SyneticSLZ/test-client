@@ -1164,11 +1164,11 @@ function populateEmailTable() {
         detailsRow.innerHTML = `
             <td colspan="2">
                 <div class="details">
-                    <label>Subject: 
+                    <label id="sbj">Subject: 
                         <input type="text" id="subject-${index}" value="${data.subject}" class="editable">
                         <span class="pencil-icon" id="subject-pencil-${index}" onclick="makeEditable('subject', ${index})">✏️</span>
                     </label><br>
-                    <label>Content: 
+                    <label >Content: 
                         <textarea id="content-${index}" class="editable">${data.content}</textarea>
                         <span class="pencil-icon" id="content-pencil-${index}" onclick="makeEditable('content', ${index})">✏️</span>
                     </label><br>
