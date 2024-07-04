@@ -1733,7 +1733,7 @@ function showNotification(message) {
             <h4>This is the name your emails are sent from.</h4>
             <div class="coolinput">
                 <!-- <label for="input" class="text">Name:</label> -->
-                <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
+                <input type="text" placeholder="Joe Smith" name="input" class="input" id="UPDATE_name">
             </div>
             <h5 id="errorMessagename"></h5>
             <button class="button-man" onclick="updateNameForm()">Save</button>
@@ -1840,7 +1840,7 @@ function showNotification(message) {
     async function updateNameForm(){
 
         console.log("name", U_MyEmail)
-    const name = document.getElementById('name').value;
+    const name = document.getElementById('UPDATE_name').value;
     console.log(name, U_MyEmail)
     // const email = prompt('Please enter your email to update your name:');
     const errorMessages = document.getElementById('errorMessagename');
