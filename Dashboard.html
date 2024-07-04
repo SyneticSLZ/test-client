@@ -163,7 +163,7 @@ async function RenderHtml(data){
                 <input type="text" placeholder="${name}" name="input" class="input" id="name" value="${name}">
             </div>
             <h5 id="errorMessagename"></h5>
-            <button class="button-man" onclick="updateNameForm(${UserEmail})">Save</button>
+            <button class="button-man" onclick="updateNameForm()">Save</button>
 
             <h2>Email</h2>
             <h4>The Email associated with your account, not necessarily the email used to send your emails.</h4>
@@ -1736,7 +1736,7 @@ function showNotification(message) {
                 <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
             </div>
             <h5 id="errorMessagename"></h5>
-            <button class="button-man">Save</button>
+            <button class="button-man" onclick="updateNameForm()">Save</button>
             <h2>Email</h2>
             <h4>The Email associated with your account, not necessarily the email used to send your emails.</h4>
             <div class="coolinput">
@@ -1837,8 +1837,9 @@ function showNotification(message) {
 
 
 
-    async function updateNameForm(email){
-        console.log("name")
+    async function updateNameForm(){
+
+        console.log("name", U_MyEmail)
     const name = document.getElementById('name').value;
     // const email = prompt('Please enter your email to update your name:');
     const errorMessages = document.getElementById('errorMessagename');
