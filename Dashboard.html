@@ -173,7 +173,7 @@ async function RenderHtml(data){
                 <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
             </div>     
             <h5 id="errorMessageemail"></h5>         
-            <button class="button-man"  onclick="updateEmailForm(${UserEmail})" >Save</button>
+            <button class="button-man"  onclick="updateEmailForm())" >Save</button>
 
 
             <h2 class="password-reset">Reset Password</h2>
@@ -187,7 +187,7 @@ async function RenderHtml(data){
                 <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
             </div>
             <h5 id="errorMessage"></h5>
-            <button class="button-man" onclick="updatePasswordForm(${UserEmail})">Save</button>
+            <button class="button-man" onclick="updatePasswordForm()">Save</button>
           </div>
     ` 
     // document.getElementById('sidemenu').innerHTML=`
@@ -1853,7 +1853,7 @@ function showNotification(message) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email: email,
+                email: U_MyEmail,
                 updateField: 'name',
                 newData: name
             }),
@@ -1873,7 +1873,7 @@ function showNotification(message) {
     }
 };
 
-async function updateEmailForm(email){
+async function updateEmailForm(){
     console.log("email")
     const name = document.getElementById('emailinput').value;
     // const email = prompt('Please enter your email to update your name:');
@@ -1888,7 +1888,7 @@ async function updateEmailForm(email){
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email: email,
+                email: U_MyEmail,
                 updateField: 'email',
                 newData: name
             }),
@@ -1907,7 +1907,7 @@ async function updateEmailForm(email){
         errorMessages.innerHTML = '<p>An error occurred while updating the name.</p>';
     }
 };
-    async function updatePasswordForm(email) {
+    async function updatePasswordForm() {
         console.log("password")
     const password = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
@@ -1943,7 +1943,7 @@ async function updateEmailForm(email){
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email: email,
+                email: U_MyEmail,
                 updateField: 'password',
                 newData: password
             }),
