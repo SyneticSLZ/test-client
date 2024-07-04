@@ -1933,6 +1933,7 @@ text-align: left;
   background: #ffffff;
   -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   box-shadow:2.5px 3px 0 #000, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+  color: #000;
   }
   
   #myAccount-content .coolinput  .input:focus {
