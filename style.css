@@ -498,7 +498,7 @@ transition: ease 0.6s;
 }
 
 #dataTable tbody{
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 #dataTable tbody tr {
     width: 100%;
@@ -1055,7 +1055,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     margin-top: 10px;
     display: flex;
     justify-content: space-between;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 
 #newContent button {
