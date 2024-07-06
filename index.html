@@ -1441,6 +1441,10 @@ input:checked + .slider:before {
     /* border: #00DDEB 2px solid; */
 }
 
+.subtitle a{
+  color: #fff;
+}
+
 .contact-form label, .faq-question {
     font-weight: bold;
     margin-top: 10px;
@@ -2447,7 +2451,13 @@ async function addCustomer() {
               <h1 class="t">Contact Us</h1>
             </div>
             <div class="subtitle">
-                <p class="st">We'd love to hear from you! Reach out to us using the form below.</p></div>
+                <p class="st">We'd love to hear from you! Reach out to us using the form below.</p>
+                <!-- Calendly link widget begin -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/rohanmehmi72/30min?background_color=02021e&text_color=ffffff'});return false;">Or Schedule time with me</a>
+<!-- Calendly link widget end -->
+</div>
             </div>
             <!-- <form class="contact-form">
                 <label for="name">Name</label>

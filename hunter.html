@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Search</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .tooltip {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background: #555;
+            color: white;
+            padding: 5px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 14px;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position the tooltip above the text */
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Domain Search</h2>
+    <div class="form-group">
+        <label for="domain">Domain Name</label>
+        <input type="text" id="domain" name="domain" required>
+        <span class="tooltip">?
+            <span class="tooltiptext">The domain name you want to search for, e.g., example.com.</span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="company">Company Name</label>
+        <input type="text" id="company" name="company">
+        <span class="tooltip">?
+            <span class="tooltiptext">The name of the company you want to search for.</span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="department">Department</label>
+        <select id="department" name="department" multiple>
+            <option value="executive">Executive</option>
+            <option value="it">IT</option>
+            <option value="finance">Finance</option>
+            <option value="management">Management</option>
+            <option value="sales">Sales</option>
+            <option value="legal">Legal</option>
+            <option value="support">Support</option>
+            <option value="hr">HR</option>
+            <option value="marketing">Marketing</option>
+            <option value="communication">Communication</option>
+            <option value="education">Education</option>
+            <option value="design">Design</option>
+            <option value="health">Health</option>
+            <option value="operations">Operations</option>
+        </select>
+        <span class="tooltip">?
+            <span class="tooltiptext">Select one or more departments to filter the results.</span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="seniority">Seniority</label>
+        <select id="seniority" name="seniority" multiple>
+            <option value="junior">Junior</option>
+            <option value="senior">Senior</option>
+            <option value="executive">Executive</option>
+        </select>
+        <span class="tooltip">?
+            <span class="tooltiptext">Select one or more seniority levels to filter the results.</span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="limit">Limit</label>
+        <input type="number" id="limit" name="limit" min="1" max="100" value="10">
+        <span class="tooltip">?
+            <span class="tooltiptext">The maximum number of email addresses to return (1-100).</span>
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="offset">Offset</label>
+        <input type="number" id="offset" name="offset" min="0" value="0">
+        <span class="tooltip">?
+            <span class="tooltiptext">The number of email addresses to skip.</span>
+        </span>
+    </div>
+    <button id="searchButton">Search</button>
+
+    <!-- Calendly link widget begin -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/rohanmehmi72/30min'});return false;">Schedule time with me</a>
+<!-- Calendly link widget end -->
+ 
+
+    <div class="results" id="results"></div>
+</div>
+
+<script>
+    document.getElementById('searchButton').addEventListener('click', async () => {
+        const domain = document.getElementById('domain').value;
+        const company = document.getElementById('company').value;
+        const department = Array.from(document.getElementById('department').selectedOptions).map(option => option.value);
+        const seniority = Array.from(document.getElementById('seniority').selectedOptions).map(option => option.value);
+        const limit = document.getElementById('limit').value;
+        const offset = document.getElementById('offset').value;
+
+        const response = await fetch('https://volt-server.onrender.com/domain-search', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ domain, company, department, seniority, limit, offset })
+        });
+
+        const data = await response.json();
+        document.getElementById('results').innerText = JSON.stringify(data, null, 2);
+    });
+</script>
+
+</body>
+</html>
