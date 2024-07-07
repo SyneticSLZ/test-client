@@ -6,8 +6,10 @@
     <title>Voltmailer | Personalized Email Automation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- <link rel="icon" href="../logo.svg" type="image/svg+xml"> -->
-<link rel="icon" href="favicon.png" type="image/icon type">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-straight/css/uicons-regular-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
@@ -16,6 +18,13 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
 </head>
 <style>
+
+link[rel="icon"] {
+    width: 512px;
+    height: 512px;
+  }
+
+
 @media (min-width: 600px) {
   .c{
   flex-direction: row;
@@ -137,7 +146,7 @@ body {
     align-items: center;
     padding: 15px 20px;
     border: 2px solid transparent; /* Use transparent border to make space for the gradient */
-    border-radius: 25px; /* Set border radius */
+    border-radius: 15px; /* Set border radius */
     position: relative; /* Position relative to place pseudo-element correctly */
     background-clip: padding-box; /* Clip the background to the padding box */
     font-size: 16px;
@@ -161,6 +170,24 @@ body {
     z-index: -1; /* Place the pseudo-element behind the button content */
 }
 
+.google-signin-btn-underline{
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border: 2px solid transparent; /* Use transparent border to make space for the gradient */
+    border-radius: 5px; /* Set border radius */
+    position: relative; /* Position relative to place pseudo-element correctly */
+    background-clip: padding-box; /* Clip the background to the padding box */
+    font-size: 18px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    background-color: #02021E; 
+    color: #fff;
+    /* text-decoration: underline; */
+
+}
+
 .google-signin-btn:hover {
     background-color: #02021E10;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -174,6 +201,28 @@ body {
     margin-right: 10px;
 }
 
+.google-signin-btn svg {
+  position: relative;
+  top: 0;
+  margin-left: 10px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: white;
+  stroke-width: 2;
+  transform: translateX(-5px);
+  transition: all 0.3s ease;
+}
+
+.google-signin-btn:hover svg {
+  transform: translateX(0);
+}
+
+.row-login{
+  display: flex;
+  flex-direction: row;
+  align-items: center;justify-content: center;
+}
 
     .google-logo {
         width: 20px;
@@ -203,6 +252,7 @@ body {
     .hero h1{
         font-size: 55px;
         margin-bottom: 0.3em;
+        text-align: center;
         /* color: black; */
     }
     .hero h1 b {
@@ -218,18 +268,20 @@ body {
         font-weight: 200;
         margin-top: 0;
         margin-bottom: 1em;
+        text-align: center;
         /* color: black; */
     }
+
+
     .cta {
   position: relative;
-  margin-block: 1em;
-  margin-bottom: 4em;
+
   padding: 12px 18px;
   transition: all 0.2s ease;
   /* border: none; */
   border: 2px solid; /* Set border width */
     border-image: linear-gradient(to bottom, rgba(255, 0, 255, 0.719), rgba(0, 255, 255, 0.637)) 1;
-    border-radius: 2em;
+    border-radius: 50px;
   background: none;
   cursor: pointer;
 }
@@ -297,6 +349,37 @@ body {
   transform: scale(0.95);
 }
 
+.button-container-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 20px;
+}
+.col{
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  flex-direction: column;
+  /* border: #00DDEB 1px solid ; */
+  margin-block: 50px;
+  margin-bottom: 50px;
+  gap: 15px;
+}
+
+.none {
+  border: none;
+}
+
+.none:hover:before {
+  width: 100%;
+  /* background:  #240b36 */
+  background: linear-gradient(to bottom, rgba(255, 0, 255, 0), rgba(0, 255, 255, 0));
+        /* -webkit-background-clip: text; */
+        -webkit-text-fill-color: transparent;
+        /* background-clip: text; */
+        color: transparent;
+}
     .icon-3{
         margin-block: 3em;
        
@@ -1809,6 +1892,13 @@ flex-direction: column;
         align-items: start;
 }
 
+.hero h1{
+  text-align: left;
+}
+ .hero h2{
+  text-align: left;
+}
+
 .container-contact {
   width: 100%;
 }
@@ -2004,23 +2094,53 @@ async function addCustomer() {
               </svg></div> -->
               </div>
         </div>
-        <button class="google-signin-btn" onclick="window.location.href='/OldLogin.html'"  >
+    <div class="row-login">
+        <button class="google-signin-btn-underline" onclick="window.location.href='/OldLogin.html?action=signup'"  >
+          <!-- <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google Logo" class="google-logo"> -->
+          <span>Create an Account</span>
+      </button>
+        <button class="google-signin-btn" onclick="window.location.href='/OldLogin.html?action=login'"  >
             <!-- <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google Logo" class="google-logo"> -->
-            <span>Sign in / Log in</span>
+            <span>Log in</span>
+            <svg width="15px" height="10px" viewBox="0 0 13 10">
+              <path d="M1,5 L11,5"></path>
+              <polyline points="8 1 12 5 8 9"></polyline>
+            </svg>
         </button>
+        </div>
+
     </div>
     <div class="container">
         <div class="hero">
             <h1>Boost Your Outreach with <b>Personalized Emails</b></h1>
             <h2>Increase open rates and engagement with crafted personalized emails</h2>
-            <!-- <button>Get Started For Free</button> -->
-            <button class="cta" onclick="window.location.href='/OldLogin.html'">
-                <span>Get Started</span>
+
+            <div class="col">
+            
+            <div class="button-container-row">
+            <button class="cta " onclick="window.location.href='/OldLogin.html?action=signup'">
+                <span>Get Started for Free</span>
+                <!-- <svg width="15px" height="10px" viewBox="0 0 13 10">
+                  <path d="M1,5 L11,5"></path>
+                  <polyline points="8 1 12 5 8 9"></polyline>
+                </svg> -->
+              </button>
+              <button class="cta none" onclick="window.location.href='/#plan'">
+                <span class="seeplans">See our Plans</span>
                 <svg width="15px" height="10px" viewBox="0 0 13 10">
                   <path d="M1,5 L11,5"></path>
                   <polyline points="8 1 12 5 8 9"></polyline>
                 </svg>
               </button>
+              </div>
+              <span>No credit card required. Free plan.</span>
+              
+
+            </div>
+
+
+
+
 <div class="hide">
               <div class="container-glass">
                 <div data-text="Design" style="--r:-15;" class="glass">
@@ -2253,8 +2373,8 @@ async function addCustomer() {
                             </div>
                         </figure>
                     </div> -->
-        <div class="subscriptions" >
-            <h1>Our pricing is <br><b>SUPER</b> simple.</h1>
+        <div class="subscriptions" id="plan" >
+            <h1 >Our pricing is <br><b>SUPER</b> simple.</h1>
             <h2>Choose the right plan for you. Cancel Anytime.</h2>
             <!-- <div class="toggle-container"> -->
                 <!-- <span id="toggleLabelbuisness">Business Plans</span> -->
@@ -2264,7 +2384,7 @@ async function addCustomer() {
                 </label> -->
                 <!-- <span id="toggleLabelconsumer">Consumer Plans</span> -->
             <!-- </div> -->
-            <div class="c">
+            <div class="c" id="plans">
                 <div class="pack_card ">
                     <div class="box">
                     <div class="pack_name">Starter</div>
@@ -2455,7 +2575,7 @@ async function addCustomer() {
                 <!-- Calendly link widget begin -->
 <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-<a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/rohanmehmi72/30min?background_color=02021e&text_color=ffffff'});return false;">Or Schedule time with me</a>
+<a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/rohanmehmi72/30min?background_color=02021e&text_color=ffffff'});return false;">Or Schedule a call with our team</a>
 <!-- Calendly link widget end -->
 </div>
             </div>
@@ -2488,8 +2608,12 @@ async function addCustomer() {
                     <input required="" name="email" id="email" type="text">
                   </div>
                   <div class="form-group">
-                    <label for="textarea">How Can We Help You?</label>
-                    <textarea required="" cols="50" rows="10" id="textarea" name="textarea">          </textarea>
+                    <label for="email">Company Website</label>
+                    <input required="" name="website" id="email" type="text">
+                  </div>
+                  <div class="form-group">
+                    <label for="textarea">Tell us about yourself</label>
+                    <textarea required="" cols="50" rows="10" id="textarea" name="textarea"></textarea>
                   </div>
                   <button class="button1 " type="submit">
                     <svg
@@ -2603,6 +2727,7 @@ async function addCustomer() {
       event.preventDefault();
 
       const email = document.getElementById('email').value;
+      const website = document.getElementById('web').value;
       const textarea = document.getElementById('textarea').value;
 
       fetch('https://volt-server.onrender.com/send-email', {
@@ -2612,7 +2737,8 @@ async function addCustomer() {
         },
         body: new URLSearchParams({
           email: email,
-          textarea: textarea
+          textarea: textarea,
+          website: website
         })
       })
       .then(response => response.text())

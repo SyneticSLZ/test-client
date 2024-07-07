@@ -356,8 +356,11 @@ input:checked + .slider:before {
 <script>
 
 var email = '{{ email }}';
-console.log("Customer email:", '{{ email }}');
-        async function startFreeTrial() {
+
+console.log("Customer email:", '{{ email }}', "name is : ", '{{ username }}' );
+
+
+async function startFreeTrial() {
           const email = '{{ email }}';
                 const sessionId = '{{ session_id }}';
                 const password = '{{ password }}';
@@ -941,7 +944,7 @@ function parseJWT(token) {
 
 function Starter(){
             const params = getQueryParams();
-            const { token, email, password } = params;
+            const { token, email, password, userName } = params;
             
             if (token) {
                 const userData = parseJWT(token);
@@ -952,6 +955,7 @@ function Starter(){
                 let url = `https://voltmailer.com/payment.html?loggedin=true&plan=f`;
                     url += `&email=${encodeURIComponent(email)}`;
                     url += `&password=${encodeURIComponent(password)}`;
+                    url += `&userName=${encodeURIComponent(userName)}`;
                     window.location.href = url;
             }
                
@@ -959,7 +963,7 @@ function Starter(){
 
 function Premium(){
             const params = getQueryParams();
-            const { token, email, password } = params;
+            const { token, email, password, userName } = params;
             
             if (token) {
               const userData = parseJWT(token);
@@ -970,6 +974,7 @@ function Premium(){
                 let url = `https://voltmailer.com/payment.html?loggedin=true&plan=p`;
                     url += `&email=${encodeURIComponent(email)}`;
                     url += `&password=${encodeURIComponent(password)}`;
+                    url += `&userName=${encodeURIComponent(userName)}`;
                     window.location.href = url;
             }
              
@@ -1002,26 +1007,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     renderPlans(businessPlans);
-    // const { email, password } = getQueryParams();
-        // if (email && password) {
-            // normal signup
-            // document.getElementById('email').value = email;
-            // document.getElementById('password').value = password;
-
-            // email and password
-        // }
-        // else{
-            // const token = getTokenFromUrl();  // use this in call to payment page.
-            // if (token) {
-                // const userData = parseJWT(token);
-                // console.log('User Data:', userData);
-// email and token
-
-        // document.getElementById('user-email').textContent = `GOOGLE ACCOUNT SIGNED IN: ${userData.email}`;
-        // Store the token in localStorage or use it directly for sending emails
-        // localStorage.setItem('authToken', token);
-    // }
-        // }
 });
 
 </script>

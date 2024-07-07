@@ -23,9 +23,10 @@
             display: flex;
             /* width: 90%; */
             /* height: 90px; */
-            border-radius: 10px;
-            background-color: #02021E;
-            background-color: #fff;
+            /* border-radius: 10px; */
+            /* background-color: #02021E; */
+            /* background-color: #fff; */
+            /* background-color: #02021E; */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             /* color: white; */
             /* margin-block: 22em; */
@@ -33,6 +34,9 @@
         .form-container {
             width: 50%;
             /* padding: 2em; */
+            background-color: #fff; 
+            border-bottom-left-radius:10px;
+            border-top-left-radius:10px;
 
         }
         .form-container img{
@@ -41,7 +45,9 @@
         .right-container {
             width: 50%;
             background-color: #02021E;
-            border-radius: 10px;
+            /* border-radius: 10px; */
+            border-bottom-right-radius:10px;
+            border-top-right-radius:10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -199,16 +205,16 @@
     background-color: #fff;
 }
 .google-login-button:hover{
-    padding: 1em ;
-            font-size: 1em;
+    /* padding: 1em ; */
+            /* font-size: 1em; */
             /* background-color: #000; */
             background-color: rgb(5, 1, 24);
             color: #fff;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            margin: 0.5em 0;
-            margin-right: 10em;
+            /* margin: 0.5em 0; */
+            /* margin-right: 10em; */
             transition: background-color 0.3s;
             /* width:80%/; */
 }
@@ -301,7 +307,7 @@
             <div id="signupForm" class="signup-form">
                 <h1>Sign Up</h1>
                 <h4>Create your account</h4>
-                <!-- <input type="text" id="signupFullName" placeholder="Full Name"> -->
+                <input type="text" id="signupFullName" placeholder="Name to send Emails From">
                 <input type="text" id="signupEmail" placeholder="Email">
                 <input type="password" id="signupPassword" placeholder="Password">
                 <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
@@ -341,14 +347,42 @@
     </div>
 
     <script>
+
+
+function displayMessage() {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+
+
+            // Display the message
+            document.getElementById('message').innerText = message;
+        }
+
+        // Run the displayMessage function when the page loads
+        window.onload = displayMessage;
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     console.log("running")
     const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get('action');
     var token  = urlParams.get('token');    
     if (token) {
         document.getElementById('loginForm').classList.remove('active');
         document.getElementById('ResetForm').classList.add('active');
     }
+
+if (action === 'login') {
+    document.getElementById('signupForm').classList.remove('active');
+    document.getElementById('loginForm').classList.add('active');
+} else if (action === 'signup') {
+    document.getElementById('loginForm').classList.remove('active');
+    document.getElementById('signupForm').classList.add('active');
+}
+
+
+
 })
 
         document.getElementById('signupLink').addEventListener('click', function() {
@@ -411,58 +445,91 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.href = 'https://volt-server.onrender.com/auth/google';
         }
 
+        document.getElementById('signupEmail').addEventListener('input', validateEmail);
+        document.getElementById('signupPassword').addEventListener('input', validatePassword);
+        document.getElementById('signupConfirmPassword').addEventListener('input', validateConfirmPassword);
+
+        function validateEmail() {
+            const email = document.getElementById('signupEmail').value;
+            const signupError = document.getElementById('signupError');
+            const emailPattern = /^[^\s@]+@[^\s@]+\.(com|net|org|edu|gov|mil|co\.uk|org\.uk|ac\.uk|co|io)$/;
+
+            if (!emailPattern.test(email)) {
+                signupError.textContent = "Please enter a valid email address.";
+            } else if (email === "existing@example.com") {
+                signupError.textContent = "User already has an account.";
+            } else if (email === "google@example.com") {
+                signupError.textContent = "This email is linked to a Google account.";
+            } else {
+                signupError.textContent = "";
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('signupPassword').value;
+            const signupError = document.getElementById('signupError');
+            const passwordCriteria = [
+                { regex: /.{6,15}/, message: "Password must be between 6 and 15 characters." },
+                { regex: /[A-Z]/, message: "Password must contain at least one uppercase letter." },
+                { regex: /[a-z]/, message: "Password must contain at least one lowercase letter." },
+                { regex: /[0-9]/, message: "Password must contain at least one number." }
+            ];
+
+            for (let criterion of passwordCriteria) {
+                if (!criterion.regex.test(password)) {
+                    signupError.textContent = criterion.message;
+                    return;
+                }
+            }
+            signupError.textContent = "";
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const signupError = document.getElementById('signupError');
+
+            if (password !== confirmPassword) {
+                signupError.textContent = "Passwords do not match.";
+            } else {
+                signupError.textContent = "";
+            }
+        }
+
         function signUp() {
-            console.log("signingn in")
-            // var fullName = document.getElementById('signupFullName').value;
+            console.log("signing in");
             var email = document.getElementById('signupEmail').value;
+            var userName = document.getElementById('signupFullName').value;
             var password = document.getElementById('signupPassword').value;
             var confirmPassword = document.getElementById('signupConfirmPassword').value;
             var signupError = document.getElementById('signupError');
 
-            // Placeholder logic for email check and password validation
-            if (email === "existing@example.com") {
-                signupError.textContent = "User already has an account.";
-            } else if (email === "google@example.com") {
-                signupError.textContent = "This email is linked to a Google account.";
-            } else if (password !== confirmPassword) {
-                signupError.textContent = "Passwords do not match.";
-            } else if (password.length < 6 || password.length > 15) {
-                signupError.textContent = "Password must be between 6 and 15 characters.";
-            } else if (!/[A-Z]/.test(password)) {
-                signupError.textContent = "Password must contain at least one uppercase letter.";
-            } else if (!/[a-z]/.test(password)) {
-                signupError.textContent = "Password must contain at least one lowercase letter.";
-            } else if (!/[0-9]/.test(password)) {
-                signupError.textContent = "Password must contain at least one number.";
-            } else {
-                signupError.textContent = "";
-                // alert("Sign up successful!");
-                                // Send the signup data to the server
-                            // Send the signup data to the server
-            fetch('https://volt-server.onrender.com/signup-customer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
+            // Final validation before sending data to the server
+            if (signupError.textContent === "") {
+                fetch('https://volt-server.onrender.com/signup-customer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        userName: userName
+                    })
                 })
-            })
-            .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = data.redirectUrl;
-        } else if (data.error) {
-            signupError.textContent = data.error;
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirectUrl;
+                    } else if (data.error) {
+                        signupError.textContent = data.error;
+                    }
+                })
+                .catch(error => {
+                    signupError.textContent = "An error occurred. Please try again.";
+                });
+            }
         }
-    })
-    .catch(error => {
-        signupError.textContent = "An error occurred. Please try again.";
-    });
-  }
-}
-
 
         // function forgotPassword() {
         //     var email = document.getElementById('forgotEmail').value;

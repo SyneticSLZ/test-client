@@ -941,11 +941,19 @@
                 
         
         function Checkout(){
-            const AccountIcon = document.getElementById('Account')
+        const params = new URLSearchParams(window.location.search);
+        const username = params.get('userName')
+        if (username) {
+            let name = username
+        } else {
+            let name = document.getElementById('name').value;
+        }
+
+        const AccountIcon = document.getElementById('Account')
         const SenderNameIcon = document.getElementById('SenderName')
         const CheckoutIcon = document.getElementById('PaymentIcon')
         
-            let name = document.getElementById('name').value;
+            
             if (name) {
         
             
@@ -968,7 +976,7 @@
         `;
         CheckoutIcon.innerHTML = `
         
-                <h2>3. Select Payment</h2>
+                <h2>3. Confirm </h2>
         
                  <i class="fi fi-rr-circle" id="down"></i>
         
@@ -1077,6 +1085,7 @@
             
             const planElement = document.getElementById('selected-plan');
             const params = new URLSearchParams(window.location.search);
+            const username = params.get('userName')
             const loggedin = decodeURIComponent(params.get('loggedin') || '');
             const plan = decodeURIComponent(params.get('plan') || '');
             const session = params.get('session_id')
@@ -1116,7 +1125,13 @@
                 }
         
             if (loggedin === "true") {
-                nameActive()
+                if(username) {
+                    Checkout()
+                }
+                else {
+                    nameActive()
+                }
+                
             } else {
                 singupActive()
             }
