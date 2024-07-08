@@ -592,19 +592,83 @@ function Manual() {
         togglePopupManual()
 }
 
-function updateTable() {
-      const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-      let center = document.getElementById('center');
-      center.style.display = 'none';
-      dataTable.innerHTML = ''; // Clear the existing table rows
-      console.log("working: ", submittedData);
+// function updateTable() {
+//       const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+//       let center = document.getElementById('center');
+//       center.style.display = 'none';
+//       dataTable.innerHTML = ''; // Clear the existing table rows
+//       console.log("working: ", submittedData);
       
-      submittedData.forEach((data, index) => {
+//       submittedData.forEach((data, index) => {
+//         const row = dataTable.insertRow();
+//         const emailCell = row.insertCell(0);
+//         const websiteCell = row.insertCell(1);
+//         const nameCell = row.insertCell(2);
+//         const actionCell = row.insertCell(3); // Cell for delete button
+
+//         // Create delete button
+//         const deleteButton = document.createElement('button');
+//         deleteButton.style.color = "#000";
+//         deleteButton.textContent = 'X';
+
+//         deleteButton.addEventListener('click', function() {
+//           deleteRow(index); // Call deleteRow function with index
+//         });
+
+//         emailCell.textContent = data.email;
+//         websiteCell.textContent = data.website;
+//         nameCell.textContent = data.name;
+//         actionCell.appendChild(deleteButton); // Append delete button to action cell
+//         row.setAttribute('data-index', index);
+//       });
+//     }
+
+//     function deleteRow(index) {
+//       submittedData.splice(index, 1); // Remove data from array
+//       updateTable(); // Update table to reflect changes
+//     }
+
+    function updateTable() {
+    const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+    let center = document.getElementById('center');
+    const thead = document.getElementById('dataTable').getElementsByTagName('thead')[0];
+    // document.getElementById("thead").style.display = "inline-block";
+    center.style.display = 'none';
+    dataTable.innerHTML = ''; // Clear the existing table rows
+
+
+    if (!thead || thead.rows.length === 0) {
+        if (!thead) {
+            thead = table.createTHead();
+        }
+        const headerRow = thead.insertRow();
+        const headers = ['Email', 'Website', 'Recipient Name', 'Actions'];
+
+        headers.forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+    }
+
+
+    console.log("working: ", submittedData);
+
+    submittedData.forEach((data, index) => {
         const row = dataTable.insertRow();
         const emailCell = row.insertCell(0);
         const websiteCell = row.insertCell(1);
         const nameCell = row.insertCell(2);
-        const actionCell = row.insertCell(3); // Cell for delete button
+        const actionCell = row.insertCell(3); // Cell for action buttons
+
+        // Create edit button
+        const editButton = document.createElement('button');
+        editButton.style.color = "#000";
+        editButton.textContent = 'Edit';
+
+        editButton.addEventListener('click', function() {
+            editRow(index, row); // Call editRow function with index
+        });
 
         // Create delete button
         const deleteButton = document.createElement('button');
@@ -612,21 +676,94 @@ function updateTable() {
         deleteButton.textContent = 'X';
 
         deleteButton.addEventListener('click', function() {
-          deleteRow(index); // Call deleteRow function with index
+            deleteRow(index); // Call deleteRow function with index
         });
 
         emailCell.textContent = data.email;
         websiteCell.textContent = data.website;
         nameCell.textContent = data.name;
+        actionCell.appendChild(editButton); // Append edit button to action cell
         actionCell.appendChild(deleteButton); // Append delete button to action cell
         row.setAttribute('data-index', index);
-      });
-    }
+    });
+}
 
-    function deleteRow(index) {
-      submittedData.splice(index, 1); // Remove data from array
-      updateTable(); // Update table to reflect changes
-    }
+function deleteRow(index) {
+    submittedData.splice(index, 1); // Remove data from array
+    updateTable(); // Update table to reflect changes
+}
+
+
+function editRow(index, row) {
+    const data = submittedData[index];
+    const emailCell = row.cells[0];
+    const websiteCell = row.cells[1];
+    const nameCell = row.cells[2];
+    const actionCell = row.cells[3];
+
+    // Replace text with input fields
+    emailCell.innerHTML = `<input type="email" value="${data.email}" />`;
+    websiteCell.innerHTML = `<input type="url" value="${data.website}" />`;
+    nameCell.innerHTML = `<input type="text" value="${data.name}" />`;
+
+    // Change the edit button to a save button
+    const saveButton = document.createElement('button');
+    saveButton.style.color = "#000";
+    saveButton.textContent = 'Save';
+    saveButton.addEventListener('click', function() {
+        saveRow(index, row); // Call saveRow function with index and row
+    });
+
+    // Remove old edit and delete buttons
+    actionCell.innerHTML = '';
+    actionCell.appendChild(saveButton);
+}
+
+function saveRow(index, row) {
+    const emailCell = row.cells[0];
+    const websiteCell = row.cells[1];
+    const nameCell = row.cells[2];
+    const actionCell = row.cells[3];
+
+    // Get new values from input fields
+    const newEmail = emailCell.firstChild.value;
+    const newWebsite = websiteCell.firstChild.value;
+    const newName = nameCell.firstChild.value;
+
+    // Update the submittedData array
+    submittedData[index] = { email: newEmail, website: newWebsite, name: newName };
+
+    // Replace input fields with text
+    emailCell.textContent = newEmail;
+    websiteCell.textContent = newWebsite;
+    nameCell.textContent = newName;
+
+    // Restore the edit and delete buttons
+    actionCell.innerHTML = '';
+
+    // Create edit button
+    const editButton = document.createElement('button');
+    editButton.style.color = "#000";
+    editButton.textContent = 'Edit';
+    editButton.addEventListener('click', function() {
+        editRow(index, row); // Call editRow function with index and row
+    });
+
+    // Create delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.style.color = "#000";
+    deleteButton.textContent = 'X';
+    deleteButton.addEventListener('click', function() {
+        deleteRow(index); // Call deleteRow function with index
+    });
+
+    actionCell.appendChild(editButton); // Append edit button to action cell
+    actionCell.appendChild(deleteButton); // Append delete button to action cell
+}
+
+
+
+
 
     function clearTable() {
       submittedData = []; // Clear the data array
@@ -1418,6 +1555,7 @@ function showNotification(message) {
     </script>
 </head>
 <body>
+    <div class="top-bar"></div>
     <div id="notification-container-pop"></div>
    <div id="popup" class="popup hidden">
         <div class="popup-content">
@@ -1536,6 +1674,7 @@ function showNotification(message) {
         </div>
         <div class="menu" id="sidemenu">
             <!-- <div class="menu-item">Menu</div> -->
+             <button>+ New Campaign</button>
             <div class="menu-item active" id="1"><i class="fi fi-br-house-blank"></i>Home</div>
             <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
             <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-rr-credit-card"></i> Billing</div>
@@ -1547,6 +1686,7 @@ function showNotification(message) {
         <!-- upsell ?? -->
         <!-- <div class="upsell">
             <div class="upsell-content">
+                <span>Upgrade</span>
                 <div class="upsell-close">
                     <span>&times;</span>
                 </div>
@@ -1560,7 +1700,11 @@ function showNotification(message) {
         <!-- </div> -->
         <div class="menu-item logout" id="5" onclick="logout()"><i class="fi fi-rs-sign-out-alt"></i>Logout</div>
     </div>
+
+
     <div class="dashboard">
+
+
         <div class="navtop" id="mobile-nav">
             <img src="volt.png" alt="Logo">
             
@@ -1571,15 +1715,16 @@ function showNotification(message) {
         </div>
 
         <div class="top" id="maintop">
-            <div class="plan"></div>
+            <div class="plan">New Campaign</div>
             <div class="google" id="googleauthid">
+                Please connect your gmail Account
                 <!-- <img  src='../static/google.png' alt="google"> -->
                 <!-- {{ email }} -->
             </div>
         </div>
 
-        <div class="contentf" id="main">
-            <div class="welcome-content-row">
+        <div class="contentf" id="myUsage-content" style="display: none;">
+            <!-- <div class="welcome-content-row">
             <div class="welcome">
             <p>Welcome </p>
             <h2 id="h2name"> </h2> 
@@ -1587,16 +1732,14 @@ function showNotification(message) {
             <div class="buttons" id="inputButtons">
 
                 <button class="button-man" onclick="togglePopupManual()" id="man">+ New lead</button>
-                <!-- <button class="button-csv" onclick="ShowCsv()" id="csvBTN">Upload Csv</button> -->
-                <!-- <input name="text" type="file" id="csvFile" accept=".csv" onchange="handleFileSelect(this)" style="display: none;"/> -->
-                <!-- <input type="file" id="fileInput" accept=".xlsx,.csv"> -->
+
                 <label for="fileInput" id="uploadLabel"  > + Import leads</label>
                 <input type="file" id="fileInput" accept=".xlsx,.csv" style="display: none;">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
                 
             </div>
-            </div>
+            </div> -->
             <div class="pitch-row" >
                 
                 <div class="content-row" 
@@ -1640,13 +1783,8 @@ function showNotification(message) {
 
                         </div>  
                         
-                        <!-- <thead id="thead" style="display: none;">
-                            <tr>
-                                <th>Email</th>
-                                <th>Website</th>
-                                <th>Recipient Name</th>
-                            </tr>
-                        </thead>  -->
+                        <thead id="thead" >
+                        </thead>  
                         <tbody id="tablerows">
                             <!-- Rows will be added here dynamically -->
                         </tbody>
@@ -1657,15 +1795,25 @@ function showNotification(message) {
 
 
                 <div class="pitch">  
+                    <div class="buttons" id="inputButtons">
+
+                        <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
+        
+                        <label for="fileInput" id="uploadLabel"  ><div class="lead"> + Import leads</div></label>
+                        <input type="file" id="fileInput" accept=".xlsx,.csv" style="display: none;">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+                        
+                    </div>
                     <!-- <div class=""></div> -->
                     <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
                     <div id="submit"></div>
-                    <!-- <button class="button" onclick="Submitandcheckautosend()" id="submit">
+                    <button class="button" onclick="Submitandcheckautosend()" id="submit">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
                         Generate
-                    </button> -->
+                    </button>
 
 
                       
@@ -1679,27 +1827,43 @@ function showNotification(message) {
                             ><span> <div id="autosend-text">Autosend is <b>OFF</b></div> </span>
                           </label>
                         </div>
-                        <div id="ca" onclick="reset()" class="Clear-all">Clear all</div>
+                        <!-- <div id="ca" onclick="reset()" class="Clear-all">Clear all</div> -->
                     </div>
                    
                 </div>
             </div>
         </div>
-        <div id="myUsage-content" style="display: none;">
+        <div  class="contentf" id="main">
+
           <div class="dashboard-usage">
-              <h1>Dashboard</h1>
-              <h4>A detailed overview of your metrics, usage, plan and more</h4>
+              <!-- <h1>Dashboard</h1> -->
+              <!-- <h4>A detailed overview of your metrics, usage, plan and more</h4> -->
+              <div class="welcome-content-row">
+              <div class="welcome">
+                <p>Welcome </p>
+                <h2 id="h2name"> HARRY</h2> 
+                </div>
+                </div>
+
               <div class="metrics">
-                 <div class="metric">
+                <!-- <div class="half"> -->
 
-                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
-                      <h2 class="metric-value" id="metric-label-total">11</h2>
-                  </div>
-                  <div class="metric">
+                    <div class="metric">
 
-                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
-                      <h2 class="metric-value" id="metric-label-plan">$847</h2>
-                  </div>
+                        <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
+                        <h2 class="metric-value" id="metric-label-total">11 / 1000</h2>
+                    </div>
+                    <div class="metric">
+  
+                        <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
+                        <h2 class="metric-value" id="metric-label-plan">Premium</h2>
+                    </div>
+                <!-- </div>
+                <div class="half">
+
+                </div> -->
+
+                  
                   <!-- <div class="metric">
 
                       <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Appointments</p>
@@ -1712,7 +1876,7 @@ function showNotification(message) {
               </div>
               <!-- <div class="row-2"> -->
               <div class="plan-usage">
-                  <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p>
+                  <!-- <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p> -->
                   <div class="progress-text" id="progress-text">
                     <p>Current: 2</p>
                     <p>Total: 1000</p>
@@ -1720,7 +1884,8 @@ function showNotification(message) {
                   <div class="progress-bar">
                       <div id="progress" style="width: 57.3%;"></div>
                   </div>
-                  <button class="button-man " id="subscription" >Upgrade</button>
+                  <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
+                  <button  id="subscription" >Upgrade</button>
               </div>
             </div>
     </div>
@@ -1791,7 +1956,7 @@ function showNotification(message) {
                     document.getElementById('myAccount-content').style.display = 'none';
                     document.getElementById('myUsage-content').style.display = 'none';
                     document.getElementById('main').style.display = 'block';
-                    document.getElementById('maintop').style.display = 'flex';
+                    // document.getElementById('maintop').style.display = 'flex';
                     contentDiv.innerHTML = '<h2>Home Content</h2><p>This is the home page content.</p>';
                     break;
                 case '2':
@@ -1799,7 +1964,7 @@ function showNotification(message) {
                     document.getElementById('myUsage-content').style.display = 'flex';
                     document.getElementById('myAccount-content').style.display = 'none';
                     document.getElementById('main').style.display = 'none';
-                    document.getElementById('maintop').style.display = 'none';
+                    // document.getElementById('maintop').style.display = 'none';
                     contentDiv.innerHTML = '<h2>Usage Content</h2><p>This is the usage page content.</p>';
                     break;
                 case '3':
@@ -1809,7 +1974,7 @@ function showNotification(message) {
                     document.getElementById('myAccount-content').style.display = 'flex'; 
                     document.getElementById('myUsage-content').style.display = 'none';
                     document.getElementById('main').style.display = 'none';
-                    document.getElementById('maintop').style.display = 'none';
+                    // document.getElementById('maintop').style.display = 'none';
                     contentDiv.innerHTML = '<h2>Account Content</h2><p>This is the account page content.</p>';
                     break;
                 case '5':

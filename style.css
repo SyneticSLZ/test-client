@@ -10,6 +10,7 @@
   body {
     display: flex;
     min-height: 100vh;
+    /* flex-direction: column; */
     /* background-color: #f7f8fa; */
 
     color: #575e73;
@@ -17,8 +18,17 @@
     
     /* background: linear-gradient(to bottom right, #011831, #1e021d); */
     /* background-color: #030330; */
+    overflow: hidden;
   }
-  
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: hsl(273, 100%, 50%);
+    z-index: 1000;
+}
   .dashboard {
     display: flex;
     width: 100%;
@@ -26,7 +36,7 @@
   }
   
   .sidebar {
-    width: 200px;
+    width: 250px;
     background-color: #fff;
     /* background: #02021e; */
     /* padding: 20px; */
@@ -48,14 +58,16 @@
     width: 100%;
   }
    .logo{
-    margin-top: 20px;
-    margin-bottom: 40px;
-    height: 10%;
+    /* margin-top: 20px; */
+    /* margin-bottom: 20px; */
+    height: 10vh;
      background-color: #fff;
      /* background-color: #02021e; */
      /* border-bottom: #eeeeee 1px solid; */
+     border-bottom: #eeeeee 2px solid;
+     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
      /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
-     width: 100%;
+     width: 110%;
      display: flex;
      align-items: center;
      justify-content: start;
@@ -82,11 +94,15 @@
     margin-left: 20px;
   }
   i{
-    padding-left: 10px;
+    padding-left: 15px;
+    margin-right: 10px;
+    /* padding-right: 15px; */
     padding-top: 10px;
     height: 40px; 
     width: 40px;
     color: #575e73;
+    margin-block: 10px;
+    color: #131313;
   }
   .top, .navtop{
     height: 10vh;
@@ -94,7 +110,7 @@
     background-color: #02021e;
     /* padding: 20px; */
     /* border-bottom: #eeeeee 2px solid; */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
     width: 100%;
     display: flex;
     align-items: center;
@@ -106,12 +122,15 @@
     align-items: center;
     justify-content: start;
     flex-direction: row; 
-    width: 94%;
+    width: 110%;
     /* margin: 10px; */
-    border-radius:10px ;
+    /* border-radius:10px ; */
+    height: 70px;
     font-size: 19px;
     margin-block:10px ;
+    margin-left: 20px;
     /* color: #ffffff60; */
+    color: #131313;
   }
   .end{
     
@@ -137,7 +156,7 @@
     height: 10%;
     background-color: #fff;
     /* padding: 20px; */
-    /* border-bottom: #eeeeee 2px solid; */
+    border-bottom: #eeeeee 2px solid;
     /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
     width: 100%;
     display: flex;
@@ -148,11 +167,12 @@
     /* -webkit-border-radius: 16px; */
     /* border-radius: 16px; */
     /* background: #ffffff; */
-    -webkit-box-shadow: 12px 12px 33px #cccccc2f, -12px -12px 23px #ffffff00;
-    box-shadow: 12px 12px 33px #cccccc2f, -12px -12px 23px #ffffff00;
+    /* -webkit-box-shadow: 12px 12px 33px #cccccc2f, -12px -12px 23px #ffffff00; */
+    /* box-shadow: 12px 12px 33px #cccccc2f, -12px -12px 23px #ffffff00; */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
   .menu{
-    margin-top: 1em;
+    margin-top: 0em;
     display: flex;
     align-items: center;
     justify-content: start;
@@ -163,8 +183,26 @@
     color: #575e73;
     /* color: #ffffff60; */
   }
+
+  .menu button{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    border: 2px solid #880088; /* Use transparent border to make space for the gradient */
+    border-radius: 15px; /* Set border radius */
+    position: relative; /* Position relative to place pseudo-element correctly */
+    background-clip: padding-box;
+    font-size: 16px;
+    /* font-weight: bold; */
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    background-color: #880088; 
+    color: #fff;
+  }
   .tools{
-    margin-left: 10px;
+    margin-left: 40px;
     margin-bottom: 5px;
     color: #000;
   }
@@ -236,8 +274,8 @@
   
   
   .welcome{
-    margin: 20px;
-    margin-left: 50px;
+    /* margin: 20px; */
+    /* margin-left: 50px; */
     display: flex;
     flex-direction: column;
   }
@@ -257,15 +295,24 @@
     justify-content: space-between;
     flex-direction: row;
     width: 100%;
-    margin-top: 20px;
-    margin-right: 20px;
+    /* margin-top: 2px; */
+    /* margin-right: 20px; */
   }
   .buttons{
-    margin-right: 10px;
+    width: 100%;
+    /* margin-right: 10px; */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
+  }
+
+  .buttons .lead {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    /* color: rgb(110, 20, 20); */
   }
 .buttons input{
   /* background-color: #000000; */
@@ -322,6 +369,10 @@ input[type="file"] {
     border: 1.5px solid #000;
     border-radius: 0.5rem;
     box-shadow: 2.5px 3px 0 #000, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
    .button-man:hover {
     /* background-color: #2b0031; */
@@ -412,7 +463,8 @@ transition: ease 0.6s;
   .pitch-row{
     margin-top: 20px;
     margin-inline: 20px;
-    height: 65vh;
+    height: 85vh;
+    width: 85vw;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -424,7 +476,7 @@ transition: ease 0.6s;
     /* background: #fff; */
     /* border: 2px solid #fff; */
     height: 100%;
-    width: 25%;
+    width: 30%;
     /* border-radius: 3px; */
     /* box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1); */
     display: flex;
@@ -469,12 +521,12 @@ transition: ease 0.6s;
     height:18%;
   }
   .content-row {
-    background: #fff;
+    background: #c90c0c;
     border: 2px solid #fff;
     height: 100%;
-    width: 70%;
+    width: 85%;
     border-radius: 3px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
     margin: 0 auto; /* Center the content row horizontally */
     overflow-y: auto;
     /* border: 1.5px solid #000000a8; */
@@ -491,41 +543,124 @@ transition: ease 0.6s;
     box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
 }
 
+
+/* Custom Scrollbar for WebKit Browsers */
+.content-row::-webkit-scrollbar {
+  width: 20px; /* Width of the scrollbar */
+}
+
+.content-row::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3); /* Optional shadow */
+}
+
+.content-row::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color when hovered */
+}
+
+.content-row::-webkit-scrollbar-track {
+  background: #880088; /* Background color of the track */
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Custom Scrollbar for Firefox */
+.content-row {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: #808080 #f1f1f1; /* thumb and track color */
+}
+
+/* Custom Scrollbar for Edge */
+.content-row::-ms-scrollbar {
+  width: 12px;
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
 #dataTable {
-    width: 90%;
-    border-collapse: collapse;
-    /* overflow-y: hidden; */
+  width: 98%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.1), -5px -5px 15px rgba(255,255,255,0.7);
+  border-radius: 10px;
+  overflow: hidden;
+  /* background: #e0e0e0; */
 }
 
-#dataTable tbody{
-  /* overflow-y: auto; */
-}
-#dataTable tbody tr {
-    width: 100%;
-}
-
-#dataTable tbody tr td {
-    width: 33.33%;
-    border-bottom: 1px solid #ddd;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-    padding: 8px;
-    box-sizing: border-box;
-    text-align: left; /* Adjust the text alignment as needed */
+#dataTable thead {
+  color: #f8f8f8;
+  background-color: #880088;
 }
 
 #dataTable thead tr th {
-    width: 33.33%;
-    border: 1px solid #ddd;
-    padding: 8px;
-    box-sizing: border-box;
-    text-align: left; /* Adjust the text alignment as needed */
-    background-color: #f2f2f2; /* Optional: Add a background color to the header */
+  padding: 15px;
+  text-align: left;
+  font-weight: bold;
 }
 
-#dataTable {
-    table-layout: fixed;
+#dataTable tbody tr {
+  border-bottom: 1px solid #ccc;
+}
+
+#dataTable tbody tr:last-child {
+  border-bottom: none;
+}
+
+#dataTable tbody tr td {
+  padding: 15px;
+  text-align: left;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1), -2px -2px 5px rgba(255,255,255,0.7);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2), -2px -2px 5px rgba(255,255,255,0.9);
+}
+
+button:focus {
+  outline: none;
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+#dataTable input[type="email"],
+#dataTable input[type="url"],
+#dataTable input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    background-color: #e0e0e0;
+    color: #000;
+}
+
+#dataTable input[type="email"]:focus,
+#dataTable input[type="url"]:focus,
+#dataTable input[type="text"]:focus {
+    outline: none;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2), inset -2px -2px 5px rgba(255,255,255,0.9);
+}
+
+#dataTable input[type="email"]:active,
+#dataTable input[type="url"]:active,
+#dataTable input[type="text"]:active {
+    transform: translateY(2px);
+    box-shadow: none;
 }
 
 
@@ -995,6 +1130,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 }
 #currentContent{
     display: block;
+    width: 100%;
 }
 #newContent {
     background-color: rgb(5, 1, 24);
@@ -1386,7 +1522,7 @@ height: 20vh;
   } 
   .center{
     width: 100%;
-    height: 62vh;
+    height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1542,12 +1678,20 @@ height: 20vh;
       justify-items: space-between;
       flex-direction: row;
       margin-bottom: 20px;
-      width: 40%;
+      width: 50%;
       margin-block: 50px;
       /* margin-inline: 20px; */
       /* border:  red 1px solid; */
   }
-  
+  .half{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    justify-items: space-between;
+    flex-direction: row;
+  }
   .metric {
     background: #fff;
       padding-block: 25px;
@@ -1570,14 +1714,18 @@ height: 20vh;
   background: #ffffff;
   -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
-  border: 1.5px solid #000;
-  border-radius: 0.5rem;
-  box-shadow: 2.5px 3px 0 #000, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+  border: 1.5px solid #880088;
+  box-shadow: 2.5px 3px 0 #880088, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+  height: 150px;
   }
+
+
   
   .metric-value {
       font-size: 45px;
+      
       margin: 0;
+      margin-left: 12px;
       color: rgba(5, 1, 24, 0.678);
   }
   
@@ -1634,7 +1782,7 @@ height: 20vh;
   }
   .plan-usage{
     margin-top: 20px;
-    width: 100%; 
+    width: 80%; 
     padding: 20px ;
     background-color: #fff;
     -webkit-border-radius: 16px;
@@ -1670,15 +1818,28 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     margin-top: 20px;
   }
   #progress {
-      background-color: #150552;
+      background-color: #880088;
       border-radius: 5px;
       height: 100%;
   }
   
   #subscription{
-    background-color: #150552;
-    color: white;
-    transition: ease 0.6s;
+    /* margin-left: 15px; */
+    margin-top: 30px;
+    /* margin-bottom: 10px; */
+    display: flex;
+    align-items: center;
+    padding: 10px 35px;
+    border: 2px solid #880088; /* Use transparent border to make space for the gradient */
+    border-radius: 15px; /* Set border radius */
+    position: relative; /* Position relative to place pseudo-element correctly */
+    background-clip: padding-box;
+    font-size: 16px;
+    /* font-weight: bold; */
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    background-color: #880088; 
+    color: #fff;
   }
   .actual-buttons {
       /* background-color: #007bff; */
@@ -1951,3 +2112,5 @@ text-align: left;
     margin-top: 10px;
   }
 
+
+  
