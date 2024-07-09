@@ -1133,7 +1133,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     width: 100%;
 }
 #newContent {
-    background-color: rgb(5, 1, 24);
+    /* background-color: rgb(5, 1, 24);
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     box-shadow: 
@@ -1143,12 +1143,67 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
         0 10px 20px rgba(255, 0, 255, 0.5);
     width: 100%;
     height: 65vh;
-    /* max-width: 1000px; */
+
     padding: 20px;
-    /* max-height: 400px; */
+
     overflow-y: hidden;
-    overflow-x: hidden; /* Add this to hide horizontal scrollbar */
-    position: relative;
+    overflow-x: hidden; 
+    position: relative; */
+
+
+    background: #c90c0c;
+    border: 2px solid #fff;
+    height: 100%;
+    width: 85%;
+    border-radius: 3px;
+    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
+    margin: 0 auto; /* Center the content row horizontally */
+    overflow-y: auto;
+    /* border: 1.5px solid #000000a8; */
+    border-radius: 0.5rem;
+    /* box-shadow: 2.5px 3px 0 #000000a8; */
+    outline: none;
+    transition: ease 0.25s;
+    text-align: left;
+    -webkit-border-radius: 16px;
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    background: #ffffff;
+    -webkit-box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
+    box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
+}
+
+/* Custom Scrollbar for WebKit Browsers */
+#newContent::-webkit-scrollbar {
+  width: 20px; /* Width of the scrollbar */
+}
+
+#newContent::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3); /* Optional shadow */
+}
+
+#newContent::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color when hovered */
+}
+
+#newContent::-webkit-scrollbar-track {
+  background: #880088; /* Background color of the track */
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Custom Scrollbar for Firefox */
+#newContent {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: #808080 #f1f1f1; /* thumb and track color */
+}
+
+/* Custom Scrollbar for Edge */
+#newContent::-ms-scrollbar {
+  width: 12px;
+  background: #f1f1f1;
+  border-radius: 10px;
 }
 
 #newContent h1 {
@@ -1160,38 +1215,49 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 }
 
 #newContent table {
-    width: 100%; /* Ensure the table takes up the full width of its container */
+    /* border-collapse: collapse; */
+    /* margin-bottom: 20px; */
+    /* color: #ffffff; */
+    /* position: relative; */
+
+
+    width: 98%;
     border-collapse: collapse;
-    margin-bottom: 20px;
-    color: #ffffff;
-    position: relative;
+    margin: 20px auto;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1), -5px -5px 15px rgba(255,255,255,0.7);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 #newContent table thead {
-    border-bottom: none;
-    border-bottom: solid 1px #ffffff60;
+    /* border-bottom: none; */
+    /* border-bottom: solid 1px #ffffff60; */
+    color: #f8f8f8;
+    background-color: #880088;
 }
 
 #newContent table th, #newContent table td {
-    padding: 12px 15px;
-    text-align: left;
-    border: none;
+  padding: 15px;
+  text-align: left;
 }
 
 #newContent table th {
     border-bottom: none;
+    font-weight: bold;
 }
 
 #newContent table tbody tr:nth-child(even) {
     background-color: #0dd69a00;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    /* border-bottom: 1px solid #ccc; */
 }
 
 #newContent table tbody tr {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
+    /* margin-top: 10px; */
+    /* display: flex; */
+    /* justify-content: space-between; */
     /* overflow-y: scroll; */
+    border-bottom: 1px solid #ccc;
 }
 
 #newContent button {
