@@ -1363,8 +1363,6 @@ function makeEditable(field, index) {
     pencilIcon.onclick = function() { saveChanges(field, index); };
 }
 
-
-
 function saveChanges(field, index) {
     const inputElement = document.getElementById(`${field}-${index}`);
     const displayElement = document.getElementById(`${field}-display-${index}`);
