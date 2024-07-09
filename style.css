@@ -1204,6 +1204,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     /* border-bottom: solid 1px #ffffff60; */
     color: #f8f8f8;
     background-color: #880088;
+    width: 100%;
 }
 
 #newContent table th, #newContent table td {
@@ -1262,33 +1263,68 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 }
 
 .details {
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #444477;
-    border-radius: 10px;
-    margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
 .details label {
-    display: block;
-    margin-bottom: 8px;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
 }
 
 .details input[type="text"],
 .details textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #666666;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    border: 1px solid #2a2a55;
-    color: #ffffff;
-    background-color: #f0f0f0;
-    resize: none;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #f0f0f0;
+  color: #000;
+  resize: none;
+  pointer-events: none; /* Make it non-editable */
 }
-.details textarea{
-height: 20vh;
+
+.details textarea {
+  height: 20vh;
 }
+
+.details .pencil-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.details .editable {
+  display: inline-block;
+  width: calc(100% - 40px); /* Adjust width to make space for pencil icon */
+  vertical-align: middle;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.action-buttons button {
+  margin-left: 10px;
+  padding: 8px 12px;
+  background-color: #683FEA;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-buttons button:hover {
+  background-color: #8320aa;
+}
+
 
 #sbj{
   height: 30px;
@@ -1307,7 +1343,7 @@ height: 20vh;
 .text {
     font-size: 20px;
     font-weight: 700;
-    color: #cecece;
+    color: #333;
     z-index: 10;
 }
 

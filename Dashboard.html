@@ -1097,16 +1097,39 @@ async function Restart() {
 function showNewHtml() {
     document.getElementById('currentContent').style.display = 'none';
     document.getElementById('newContent').style.display = 'block';
+    document.getElementById('tfoot').style.display = 'none';
     // document.getElementById('hidewhengenerating').style.display = 'none';
     populateEmailTable();
 }
 
+// function toggleDetails(index) {
+//     const detailsRow = document.getElementById(`details-${index}`);
+//     const arrowIcon = document.getElementById(`arrow-${index}`);
+//     if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+//         detailsRow.style.display = 'table-row';
+//         detailsRow.style.height = '0px';
+//         arrowIcon.innerHTML = '↑';
+//         setTimeout(() => {
+//             detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+//             detailsRow.style.height = detailsRow.scrollHeight + 'px';
+//             detailsRow.style.opacity = '1';
+//         }, 0);
+//     } else {
+//         detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+//         detailsRow.style.height = '0px';
+//         detailsRow.style.opacity = '0';
+//         arrowIcon.innerHTML = '↓';
+//         setTimeout(() => {
+//             detailsRow.style.display = 'none';
+//         }, 300);
+//     }
+// }
 function toggleDetails(index) {
     const detailsRow = document.getElementById(`details-${index}`);
     const arrowIcon = document.getElementById(`arrow-${index}`);
+
     if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
         detailsRow.style.display = 'table-row';
-        detailsRow.style.height = '0px';
         arrowIcon.innerHTML = '↑';
         setTimeout(() => {
             detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
@@ -1189,7 +1212,7 @@ async function manualSend() {
             showNotification(`Error generating email for ${data.email}`);
         }
     }
-
+    document.getElementById('tfoot').style.display = 'block';
     document.getElementById('customLoader').style.display = 'none';
     button.innerHTML = `
                     <button class="button" onclick="sendAllEmails()">
@@ -1280,7 +1303,7 @@ function populateEmailTable() {
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
 
     tbody.innerHTML = "";
-    tbody.style.overflow = "auto";
+    // tbody.style.overflow = "auto";
     generatedData.forEach((data, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -1302,11 +1325,11 @@ function populateEmailTable() {
             <td colspan="2">
                 <div class="details">
                     <label id="sbj">Subject: 
-                        <input type="text" id="subject-${index}" value="${data.subject}" class="editable">
+                        <span class="editable" id="subject-display-${index}">${data.subject}</span>
                         <span class="pencil-icon" id="subject-pencil-${index}" onclick="makeEditable('subject', ${index})">✏️</span>
                     </label><br>
-                    <label >Content: 
-                        <textarea id="content-${index}" class="editable">${data.content}</textarea>
+                    <label>Content: 
+                        <span class="editable" id="content-display-${index}">${data.content}</span>
                         <span class="pencil-icon" id="content-pencil-${index}" onclick="makeEditable('content', ${index})">✏️</span>
                     </label><br>
                 </div>
@@ -1329,23 +1352,28 @@ function makeEditable(field, index) {
     const displayElement = document.getElementById(`${field}-display-${index}`);
     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
     const value = displayElement.innerText;
+
     if (field === 'content') {
-        displayElement.innerHTML = `<textarea id="${field}-${index}" rows="4">${value}</textarea>`;
+        displayElement.innerHTML = `<textarea id="${field}-${index}" rows="4" class="details editable">${value}</textarea>`;
     } else {
-        displayElement.innerHTML = `<input type="text" id="${field}-${index}" value="${value}">`;
+        displayElement.innerHTML = `<input type="text" id="${field}-${index}" value="${value}" class="details editable">`;
     }
+    document.getElementById(`${field}-${index}`).style.pointerEvents = 'auto';
     pencilIcon.innerText = '✔️';
     pencilIcon.onclick = function() { saveChanges(field, index); };
 }
+
+
 
 function saveChanges(field, index) {
     const inputElement = document.getElementById(`${field}-${index}`);
     const displayElement = document.getElementById(`${field}-display-${index}`);
     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
     if (inputElement) {
-        displayElement.innerHTML = inputElement.value.replace(/\n/g, '<br>');
+        displayElement.innerText = inputElement.value;
         generatedData[index][field] = inputElement.value;
     }
+    inputElement.style.pointerEvents = 'none';
     pencilIcon.innerText = '✏️';
     pencilIcon.onclick = function() { makeEditable(field, index); };
 }
@@ -1780,7 +1808,7 @@ function showNotification(message) {
                             <tbody>
                                 <!-- Rows will be populated here -->
                             </tbody>
-                            <tfoot>
+                            <tfoot id="tfoot">
                                 <tr>
                                     <td colspan="1">
                                         <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
