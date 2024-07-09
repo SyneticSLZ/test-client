@@ -1747,7 +1747,7 @@ function showNotification(message) {
                 <span id="sending" style="display: none;">Emails are sending, you can close this tab.</span>
                     <div id="pr" >
                     
-                    <div id="newContent" style="display: none;">
+                    <!-- <div id="newContent" >
                         <h1>Your Emails</h1>
                         <table id="emailTable">
                             <thead >
@@ -1756,11 +1756,39 @@ function showNotification(message) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Rows will be populated here -->
+                           
                             </tbody>
                         </table>
                         <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
                         <button onclick="Restart()" >Reset</button>
+                        <div class="custom-loader" id="customLoader" style="display: none;">
+                            <div class="load-inner load-one"></div>
+                            <div class="load-inner load-two"></div>
+                            <div class="load-inner load-three"></div>
+                            <span class="text" id="loaderText"></span>
+                        </div>
+                    </div> -->
+
+                    <div id="newContent" style="display: none;">
+                        <h1>Your Emails</h1>
+                        <table id="emailTable">
+                            <thead>
+                                <tr>
+                                    <th>Recipient Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be populated here -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="1">
+                                        <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
+                                        <button onclick="Restart()">Reset</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
                         <div class="custom-loader" id="customLoader" style="display: none;">
                             <div class="load-inner load-one"></div>
                             <div class="load-inner load-two"></div>

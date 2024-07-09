@@ -1132,6 +1132,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     display: block;
     width: 100%;
 }
+
 #newContent {
     /* background-color: rgb(5, 1, 24);
     border-radius: 8px;
@@ -1151,18 +1152,14 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     position: relative; */
 
 
-    background: #c90c0c;
+    /* background: #c90c0c;
     border: 2px solid #fff;
     height: 100%;
-    width: 85%;
+    width: 100%;
     border-radius: 3px;
-    /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
-    margin: 0 auto; /* Center the content row horizontally */
-    overflow-y: auto;
-    /* border: 1.5px solid #000000a8; */
-    border-radius: 0.5rem;
-    /* box-shadow: 2.5px 3px 0 #000000a8; */
-    outline: none;
+    margin: 0 auto; */
+    /* overflow-y: auto; */
+    /* outline: none;
     transition: ease 0.25s;
     text-align: left;
     -webkit-border-radius: 16px;
@@ -1170,45 +1167,18 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     border-radius: 16px;
     background: #ffffff;
     -webkit-box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
-    box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
+    box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff; */
+
+
+    display: block;
+    width: 100%;
+    margin-top: 0;
 }
 
-/* Custom Scrollbar for WebKit Browsers */
-#newContent::-webkit-scrollbar {
-  width: 20px; /* Width of the scrollbar */
-}
-
-#newContent::-webkit-scrollbar-thumb {
-  background: #888; /* Color of the scrollbar thumb */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: inset 0 0 6px rgba(0,0,0,0.3); /* Optional shadow */
-}
-
-#newContent::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color when hovered */
-}
-
-#newContent::-webkit-scrollbar-track {
-  background: #880088; /* Background color of the track */
-  border-radius: 10px; /* Rounded corners */
-}
-
-/* Custom Scrollbar for Firefox */
-#newContent {
-  scrollbar-width: thin; /* "auto" or "thin" */
-  scrollbar-color: #808080 #f1f1f1; /* thumb and track color */
-}
-
-/* Custom Scrollbar for Edge */
-#newContent::-ms-scrollbar {
-  width: 12px;
-  background: #f1f1f1;
-  border-radius: 10px;
-}
 
 #newContent h1 {
     font-size: 24px;
-    color: #ffffff;
+    color: #333;
     margin-bottom: 20px;
     text-align: center;
 
@@ -1247,7 +1217,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 }
 
 #newContent table tbody tr:nth-child(even) {
-    background-color: #0dd69a00;
+  background-color: #f0f0f0;
     /* margin-top: 10px; */
     /* border-bottom: 1px solid #ccc; */
 }
@@ -1261,7 +1231,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 }
 
 #newContent button {
-    background-color: #683FEA;
+    background-color: #880088;
     color: #ffffff;
     border: none;
     padding: 10px 15px;
@@ -1293,7 +1263,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 
 .details {
     padding: 10px;
-    background-color: #1e1e2f00;
+    background-color: #f0f0f0;
     border: 1px solid #444477;
     border-radius: 10px;
     margin-top: 10px;
@@ -1313,7 +1283,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     margin-bottom: 10px;
     border: 1px solid #2a2a55;
     color: #ffffff;
-    background-color: #2a2a55;
+    background-color: #f0f0f0;
     resize: none;
 }
 .details textarea{
