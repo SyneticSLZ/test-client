@@ -1124,28 +1124,6 @@ function showNewHtml() {
 //         }, 300);
 //     }
 // }
-function toggleDetails(index) {
-    const detailsRow = document.getElementById(`details-${index}`);
-    const arrowIcon = document.getElementById(`arrow-${index}`);
-
-    if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
-        detailsRow.style.display = 'table-row';
-        arrowIcon.innerHTML = '↑';
-        setTimeout(() => {
-            detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
-            detailsRow.style.height = detailsRow.scrollHeight + 'px';
-            detailsRow.style.opacity = '1';
-        }, 0);
-    } else {
-        detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
-        detailsRow.style.height = '0px';
-        detailsRow.style.opacity = '0';
-        arrowIcon.innerHTML = '↓';
-        setTimeout(() => {
-            detailsRow.style.display = 'none';
-        }, 300);
-    }
-}
 
 async function manualSend() {
     // document.getElementById('ca').style.display = "none"
@@ -1324,14 +1302,16 @@ function populateEmailTable() {
         detailsRow.innerHTML = `
             <td colspan="2">
                 <div class="details">
-                    <label id="sbj">Subject: 
-                        <span class="editable" id="subject-display-${index}">${data.subject}</span>
+                    <label>Subject:</label>
+                    <div class="editable-container">
+                        <div class="editable text-container" id="subject-display-${index}">${data.subject}</div>
                         <span class="pencil-icon" id="subject-pencil-${index}" onclick="makeEditable('subject', ${index})">✏️</span>
-                    </label><br>
-                    <label>Content: 
-                        <span class="editable" id="content-display-${index}">${data.content}</span>
+                    </div>
+                    <label>Content:</label>
+                    <div class="editable-container">
+                        <div class="editable text-container" id="content-display-${index}">${data.content}</div>
                         <span class="pencil-icon" id="content-pencil-${index}" onclick="makeEditable('content', ${index})">✏️</span>
-                    </label><br>
+                    </div>
                 </div>
             </td>
         `;
@@ -1368,12 +1348,35 @@ function saveChanges(field, index) {
     const displayElement = document.getElementById(`${field}-display-${index}`);
     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
     if (inputElement) {
-        displayElement.innerText = inputElement.value;
+        displayElement.innerHTML = inputElement.value.replace(/\n/g, '<br>');
         generatedData[index][field] = inputElement.value;
     }
     inputElement.style.pointerEvents = 'none';
     pencilIcon.innerText = '✏️';
     pencilIcon.onclick = function() { makeEditable(field, index); };
+}
+
+function toggleDetails(index) {
+    const detailsRow = document.getElementById(`details-${index}`);
+    const arrowIcon = document.getElementById(`arrow-${index}`);
+
+    if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+        detailsRow.style.display = 'table-row';
+        arrowIcon.innerHTML = '↑';
+        setTimeout(() => {
+            detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+            detailsRow.style.height = detailsRow.scrollHeight + 'px';
+            detailsRow.style.opacity = '1';
+        }, 0);
+    } else {
+        detailsRow.style.transition = 'height 0.3s ease-out, opacity 0.3s ease-out';
+        detailsRow.style.height = '0px';
+        detailsRow.style.opacity = '0';
+        arrowIcon.innerHTML = '↓';
+        setTimeout(() => {
+            detailsRow.style.display = 'none';
+        }, 300);
+    }
 }
 
 function removeRow(index) {
