@@ -2154,10 +2154,10 @@ function showNotification(message) {
         }
 
         // Attach event listeners to menu items
-        // const menuItems = document.querySelectorAll('.menu-item');
-        // menuItems.forEach(item => {
-        //     item.addEventListener('click', switchTab);
-        // });
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', switchTab);
+        });
 
         // const menuToggle = document.getElementById('mobile-menu');
         // const navLinks = document.querySelector('.nav-links');
