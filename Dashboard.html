@@ -146,7 +146,7 @@ async function RenderHtml(data){
     document.getElementById('h2name').innerHTML=`${name}`;
     document.getElementById('metric-label-plan').innerHTML = `${plan}`;
     document.getElementById('metric-label-total').innerHTML = `${UsedEmails}`;
-    document.getElementById('plan-usage-detail').innerHTML=`You have used : ${UsedEmails} Emails of :  ${planEmails} Emails / mo`;
+    // document.getElementById('plan-usage-detail').innerHTML=`You have used : ${UsedEmails} Emails of :  ${planEmails} Emails / mo`;
     document.getElementById('progress-text').innerHTML=`<p>Current: ${UsedEmails}</p><p>Total: ${planEmails}</p>`;
     document.getElementById('subscription').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
@@ -1510,7 +1510,7 @@ async function CallThisWhenAutosend() {
 }
 
 // document.getElementById('sendAllBtn').addEventListener('click', CallThisWhenAutosend);
-document.getElementById('regenerateAllBtn').addEventListener('click', regenerateAllEmails);
+// document.getElementById('regenerateAllBtn').addEventListener('click', regenerateAllEmails);
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2154,18 +2154,18 @@ function showNotification(message) {
         }
 
         // Attach event listeners to menu items
-        const menuItems = document.querySelectorAll('.menu-item');
-        menuItems.forEach(item => {
-            item.addEventListener('click', switchTab);
-        });
+        // const menuItems = document.querySelectorAll('.menu-item');
+        // menuItems.forEach(item => {
+        //     item.addEventListener('click', switchTab);
+        // });
 
-        const menuToggle = document.getElementById('mobile-menu');
-        const navLinks = document.querySelector('.nav-links');
+        // const menuToggle = document.getElementById('mobile-menu');
+        // const navLinks = document.querySelector('.nav-links');
 
-        menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
+        // menuToggle.addEventListener('click', () => {
+        //     menuToggle.classList.toggle('active');
+        //     navLinks.classList.toggle('active');
+        // });
 
 
 
