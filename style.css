@@ -394,7 +394,7 @@ input[type="file"] {
     color: #fff;
   }
 
-  #uploadLabel {
+  .uploadLabel {
     background-color: #fff;
     color: #0000007e;
     border: none;
@@ -444,7 +444,7 @@ box-shadow: 2.5px 3px 0 #000, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 
   }
 
-#uploadLabel:hover {
+.uploadLabel:hover {
   background-color: #fff;
   /* color: #0000007e; */
   background: linear-gradient(

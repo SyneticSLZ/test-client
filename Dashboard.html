@@ -1964,10 +1964,10 @@ function showNotification(message) {
 
                         <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
         
-                        <label for="fileInput" id="uploadLabel"  ><div class="lead"> + Import leads</div></label>
+                        <label for="fileInput" id="uploadLabel" class="uploadLabel" ><div class="lead"> + Import leads</div></label>
                         <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
 
-                        <button class="button-man" style="display: none;" onclick="exportToExcel()" id="export"><div class="lead"> Export Generated Data</div></button>
+                        <button class="uploadLabel" style="display: none;" onclick="exportToExcel()" id="export"><div class="lead"> Export Generated Data</div></button>
 
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
