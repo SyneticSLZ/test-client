@@ -1146,7 +1146,9 @@ async function manualSend() {
                         <div class="dot"></div>
                         <div class="dot"></div>
                       </section> `;
+
     generatedData = [];
+
     for (let index = 0; index < submittedData.length; index++) {
         
         const data = submittedData[index];
@@ -1183,7 +1185,9 @@ async function manualSend() {
 
             document.getElementById('loaderText').innerText = `Generating email for ${data.email}...`;
             await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
-            populateEmailTable();
+
+            addEmailRow(generatedData.length - 1);
+            // populateEmailTable();
 
         } catch (error) {
             console.error('Error generating email for', data.email, ':', error);
@@ -1198,9 +1202,47 @@ async function manualSend() {
                         Send All
                     </button>
                 `;
-    populateEmailTable();
+    // populateEmailTable();
 }
 
+function addEmailRow(index) {
+    const data = generatedData[index];
+    const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${data.email}</td>
+        <td class="action-buttons">
+            <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
+            <div class="tooltip">
+                <button onclick="toggleDetails(${index})" class="button-icon" id="arrow-${index}">↓</button>
+                <span class="tooltiptext">Show/Hide Details</span>
+            </div>
+        </td>
+    `;
+    tbody.appendChild(row);
+
+    const detailsRow = document.createElement('tr');
+    detailsRow.style.display = 'none';
+    detailsRow.id = `details-${index}`;
+    detailsRow.innerHTML = `
+        <td colspan="2">
+            <div class="details">
+                <label>Subject:</label>
+                <div class="editable-container">
+                    <div class="editable text-container" id="subject-display-${index}">${data.subject}</div>
+                    <span class="pencil-icon" id="subject-pencil-${index}" onclick="makeEditable('subject', ${index})">✏️</span>
+                </div>
+                <label>Content:</label>
+                <div class="editable-container">
+                    <div class="editable text-container" id="content-display-${index}">${data.content}</div>
+                    <span class="pencil-icon" id="content-pencil-${index}" onclick="makeEditable('content', ${index})">✏️</span>
+                </div>
+            </div>
+        </td>
+    `;
+    tbody.appendChild(detailsRow);
+}
 
 
 
@@ -1804,6 +1846,7 @@ function showNotification(message) {
                             <thead>
                                 <tr>
                                     <th>Recipient Email</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1811,7 +1854,7 @@ function showNotification(message) {
                             </tbody>
                             <tfoot id="tfoot">
                                 <tr>
-                                    <td colspan="1">
+                                    <td colspan="2">
                                         <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
                                         <button onclick="Restart()">Reset</button>
                                     </td>
