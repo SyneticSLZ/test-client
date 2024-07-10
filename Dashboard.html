@@ -1370,33 +1370,64 @@ function populateEmailTable() {
 // }
 // }
 
+// function makeEditable(field, index) {
+//     const displayElement = document.getElementById(`${field}-display-${index}`);
+//     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
+//     const value = displayElement.innerText;
+
+//     if (field === 'content') {
+//         displayElement.innerHTML = `<textarea id="${field}-${index}" rows="4" class="details editable">${value}</textarea>`;
+//     } else {
+//         displayElement.innerHTML = `<input type="text" id="${field}-${index}" value="${value}" class="details editable">`;
+//     }
+//     document.getElementById(`${field}-${index}`).style.pointerEvents = 'auto';
+    
+//     pencilIcon.innerText = '✔️';
+//     pencilIcon.onclick = function() { saveChanges(field, index); };
+// }
+
+
+
 function makeEditable(field, index) {
     const displayElement = document.getElementById(`${field}-display-${index}`);
     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
     const value = displayElement.innerText;
 
-    if (field === 'content') {
-        displayElement.innerHTML = `<textarea id="${field}-${index}" rows="4" class="details editable">${value}</textarea>`;
-    } else {
-        displayElement.innerHTML = `<input type="text" id="${field}-${index}" value="${value}" class="details editable">`;
-    }
-    document.getElementById(`${field}-${index}`).style.pointerEvents = 'auto';
+    displayElement.classList.add('edit-mode'); // Added line
+    displayElement.setAttribute('contenteditable', 'true'); // Added line
+
     pencilIcon.innerText = '✔️';
     pencilIcon.onclick = function() { saveChanges(field, index); };
 }
 
+
+// function saveChanges(field, index) {
+//     const inputElement = document.getElementById(`${field}-${index}`);
+//     const displayElement = document.getElementById(`${field}-display-${index}`);
+//     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
+//     if (inputElement) {
+//         displayElement.innerHTML = inputElement.value.replace(/\n/g, '<br>');
+//         generatedData[index][field] = inputElement.value;
+//     }
+//     inputElement.style.pointerEvents = 'none';
+//     pencilIcon.innerText = '✏️';
+//     pencilIcon.onclick = function() { makeEditable(field, index); };
+// }
+
+
 function saveChanges(field, index) {
-    const inputElement = document.getElementById(`${field}-${index}`);
     const displayElement = document.getElementById(`${field}-display-${index}`);
     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
-    if (inputElement) {
-        displayElement.innerHTML = inputElement.value.replace(/\n/g, '<br>');
-        generatedData[index][field] = inputElement.value;
-    }
-    inputElement.style.pointerEvents = 'none';
+
+    displayElement.classList.remove('edit-mode'); // Added line
+    displayElement.removeAttribute('contenteditable'); // Added line
+
+    generatedData[index][field] = displayElement.innerText;
+    
     pencilIcon.innerText = '✏️';
     pencilIcon.onclick = function() { makeEditable(field, index); };
 }
+
 
 function toggleDetails(index) {
     const detailsRow = document.getElementById(`details-${index}`);
@@ -1880,7 +1911,7 @@ function showNotification(message) {
                             <div class="text">
                                <span>Click to upload Csv</span>
                                </div>
-                               <input type="file" id="file"  accept=".xlsx,.csv" onchange="handleFileSelect(this)">
+                               <input type="file" id="fileMIDDLE"  accept=".xlsx" >
                             </label> 
 
                         </div>  
@@ -1903,7 +1934,11 @@ function showNotification(message) {
                         <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
         
                         <label for="fileInput" id="uploadLabel"  ><div class="lead"> + Import leads</div></label>
-                        <input type="file" id="fileInput" accept=".xlsx,.csv" style="display: none;">
+                        <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+
+                        <button class="button-man" id="man" style="display: none;"><div class="lead"> Export Generated Data</div></button>
+
+
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
                         
@@ -2032,6 +2067,7 @@ function showNotification(message) {
     <div id="notification-container-pop"></div>
     <script>
         document.getElementById('fileInput').addEventListener('change', handleFile, false);
+        document.getElementById('fileMIDDLE').addEventListener('change', handleFile, false);
         // Function to handle tab switching
         function switchTab(event) {
             // Remove active class from all menu items

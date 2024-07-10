@@ -1277,8 +1277,14 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   color: #333;
 }
 
-.details input[type="text"],
-.details textarea {
+.details .editable-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.details .text-container,
+.details .editable {
   width: calc(100% - 40px);
   padding: 8px;
   margin-bottom: 10px;
@@ -1287,36 +1293,25 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   background: #f0f0f0;
   color: #000;
   resize: none;
-  pointer-events: none; /* Make it non-editable */
-}
-
-.details textarea {
-  height: 20vh;
 }
 
 .details .editable {
-  display: inline-block;
-  vertical-align: middle;
+  pointer-events: none; /* Make it non-editable */
+}
+
+.details .text-container {
   background: #f0f0f0;
 }
 
-.details .editable-container {
-  display: inline-flex;
-  align-items: center;
-  width: 100%;
+.details .text-container.edit-mode {
+  background: #e0e0e0; /* Slightly darker background in edit mode */
+  pointer-events: auto; /* Make it editable */
 }
 
 .details .pencil-icon {
   cursor: pointer;
   margin-left: 10px;
   vertical-align: middle;
-}
-
-.details .text-container {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  background: #fff;
 }
 
 .action-buttons {
