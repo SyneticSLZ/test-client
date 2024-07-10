@@ -942,6 +942,10 @@ function NewCampaign() {
                     // disable button 
                     document.getElementById('pr').style.display = `block`;
                     document.getElementById('sending').style.display = 'none';
+
+                    document.getElementById('uploadLabel').style.display = "flex";
+    document.getElementById('man').style.display = "flex";
+    document.getElementById('export').style.display = "none";
                     // disable textarea 
                     // disable buttons 
                     // const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
@@ -1081,6 +1085,9 @@ async function Restart() {
   document.getElementById('currentContent').style.display = 'block';
   document.getElementById('newContent').style.display = 'none';
   document.getElementById('togglewoggle').style.display = 'flex';
+  document.getElementById('uploadLabel').style.display = "flex";
+    document.getElementById('man').style.display = "flex";
+    document.getElementById('export').style.display = "none";
   dataTable = document.getElementById('dataTable');
   dataTable.innerHTML=``;
   button.innerHTML=`<button class="button" onclick="SendEmails()">
@@ -1126,6 +1133,9 @@ function showNewHtml() {
 // }
 
 async function manualSend() {
+    document.getElementById('uploadLabel').style.display = "none";
+    document.getElementById('man').style.display = "none";
+    document.getElementById('export').style.display = "flex";
     // document.getElementById('ca').style.display = "none"
     const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
     document.getElementById('customLoader').style.display = 'flex';
@@ -1460,8 +1470,26 @@ function removeRow(index) {
 }
 
 function regenerateAllEmails() {
+    const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
+    tbody.innerHTML = "";
+    generatedData = [];
     manualSend();
 }
+
+function exportToExcel() {
+    // Create a new workbook and a worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(generatedData, {
+        header: ["email", "subject", "content"]
+    });
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Emails");
+
+    // Generate a file and prompt the user to save it
+    XLSX.writeFile(wb, "emails.xlsx");
+}
+
 
 async function CallThisWhenAutosend() {
     document.getElementById('sendAllBtn').innerHTML = `<div class="loader"></div>`;
@@ -1596,6 +1624,7 @@ async function billing(stripeID, Email) {
 
 
 function initialize() {
+
     let button = document.getElementById('submit')
             total_emails = '{{ total_emails }}'
             plan = '{{ plan_emails}}'
@@ -1887,7 +1916,7 @@ function showNotification(message) {
                                 <tr>
                                     <td colspan="2">
                                         <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
-                                        <button onclick="Restart()">Reset</button>
+                                        <button onclick="NewCampaign()">Reset</button>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -1936,7 +1965,7 @@ function showNotification(message) {
                         <label for="fileInput" id="uploadLabel"  ><div class="lead"> + Import leads</div></label>
                         <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
 
-                        <button class="button-man" id="man" style="display: none;"><div class="lead"> Export Generated Data</div></button>
+                        <button class="button-man" style="display: none;" onclick="exportToExcel()" id="export"><div class="lead"> Export Generated Data</div></button>
 
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
@@ -1946,12 +1975,12 @@ function showNotification(message) {
                     <!-- <div class=""></div> -->
                     <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
                     <div id="submit"></div>
-                    <button class="button" onclick="Submitandcheckautosend()" id="submit">
+                    <!-- <button class="button" onclick="Submitandcheckautosend()" id="submit">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
                         Generate
-                    </button>
+                    </button> -->
 
 
                       
