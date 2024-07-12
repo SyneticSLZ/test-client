@@ -919,7 +919,7 @@ button:active {
         #880088
       )
       no-repeat; */
-      background: linear-gradient(
+      /* background: linear-gradient(
         15deg,
         #880088,
         #8320aa,
@@ -930,7 +930,19 @@ button:active {
         #8320aa,
         #880088
       )
-      no-repeat;
+      no-repeat; */
+      background: linear-gradient(
+  15deg,
+  #880088,
+  #8320aa,
+  rgb(111, 0, 255),
+  /* #0ff, */
+  /* #0ff, */
+  /* rgb(111, 0, 255), */
+  #8320aa,
+  #880088
+)
+no-repeat;
     background-size: 300%;
     background-position: left center;
     transition: background 0.3s ease;
