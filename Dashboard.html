@@ -16,8 +16,10 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-straight/css/uicons-regular-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>   
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
     <link rel="icon" href="favicon.png" type="image/icon type"> 
 <script>
     
@@ -53,7 +55,116 @@ async function init() {
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
     init()
-        });
+
+
+    window.tasks = [
+        { id: 1, completed: false },
+        { id: 2, completed: false },
+        { id: 3, completed: false },
+    ];
+    const totalTasks = tasks.length;
+    initializeProgressBar();
+    updateProgress(tasks, totalTasks);
+
+    tasks.forEach(task => {
+        const taskElement = document.querySelector(`.task[data-task-id="${task.id}"] i`);
+        if (taskElement) {
+            taskElement.addEventListener('click', () => toggleDetails(taskElement));
+        }
+    });
+
+});
+
+let progressBar;
+
+function initializeProgressBar() {
+    progressBar = new ProgressBar.Circle('#progress-circle', {
+        color: '#aaa',
+        strokeWidth: 8,
+        trailWidth: 8,
+        trailColor: '#eee',
+        easing: 'easeInOut',
+        duration: 1400,
+        text: {
+            autoStyleContainer: false
+        },
+        from: { color: '#ff0000', width: 8 },
+        to: { color: '#00ff00', width: 8 },
+        step: function(state, circle) {
+            circle.path.setAttribute('stroke', state.color);
+            circle.path.setAttribute('stroke-width', state.width);
+
+            const value = Math.round(circle.value() * 100);
+            if (value === 0) {
+                circle.setText('');
+            } else {
+                circle.setText(`${value}%`);
+            }
+        }
+    });
+
+    progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+    progressBar.text.style.fontSize = '2rem';
+}
+
+function updateProgress(tasks, totalTasks) {
+    const completedTasks = tasks.filter(task => task.completed).length;
+    const percentage = (completedTasks / totalTasks) * 100;
+    progressBar.animate(percentage / 100); // Number from 0.0 to 1.0
+
+    tasks.forEach(task => {
+        const icon = document.getElementById(`task-icon-${task.id}`);
+        if (icon) {
+            if (task.completed) {
+                icon.className = 'fi fi-br-check'; // Update the icon class for completed task
+            } else {
+                icon.className = 'fi fi-rr-angle-small-down'; // Update the icon class for incomplete task
+            }
+        }
+    });
+}
+
+function toggleDetailsx(icon) {
+    const taskElement = icon.parentElement;
+    const taskId = taskElement.getAttribute('data-task-id');
+    const detailsElement = document.querySelector(`.task-details[data-task-id="${taskId}"]`);
+    
+    if (detailsElement) {
+        if (detailsElement.style.display === 'none' || detailsElement.style.display === '') {
+            detailsElement.style.display = 'block';
+            // icon.className = 'fi fi-ss-hexagon'; // Update the icon class for details open
+        } else {
+            detailsElement.style.display = 'none';
+            // icon.className = 'fi fi-ss-hexagon'; // Update the icon class for details closed
+        }
+    }
+}
+
+function completeTask(taskId) {
+    const task = tasks.find(t => t.id == taskId);
+    task.completed = !task.completed;
+    const totalTasks = tasks.length;
+    updateProgress(tasks, totalTasks);
+}
+
+function sendFirstEmail() {
+    // Logic to send the first email
+    completeTask(1);
+}
+
+function createFirstCampaign() {
+    // Logic to create the first campaign
+    createCampaign()
+    completeTask(2);
+}
+
+function editUsername() {
+    // Logic to edit the username
+    completeTask(3);
+}
+
+
+
 
 
 function getEmailTokenFromUrl() {
@@ -1809,7 +1920,7 @@ function showNotification(message) {
             <!-- <div class="menu-item">Menu</div> -->
              <button>+ New Campaign</button>
             <div class="menu-item active" id="1"><i class="fi fi-br-house-blank"></i>Home</div>
-            <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
+            <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>New Campaign</div>
             <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-rr-credit-card"></i> Billing</div>
             <div class="menu-item tools">Tools</div>
             <div class="menu-item" id="4" ><i class="fi fi-rr-user-pen"></i>Account</div>
@@ -1875,8 +1986,7 @@ function showNotification(message) {
             </div> -->
             <div class="pitch-row" >
                 
-                <div class="content-row" 
-                >
+                <div class="content-row" >
                 <span id="sending" style="display: none;">Emails are sending, you can close this tab.</span>
                     <div id="pr" >
                     
@@ -2002,62 +2112,243 @@ function showNotification(message) {
                 </div>
             </div>
         </div>
-        <div  class="contentf" id="main">
 
-          <div class="dashboard-usage">
-              <!-- <h1>Dashboard</h1> -->
-              <!-- <h4>A detailed overview of your metrics, usage, plan and more</h4> -->
-              <div class="welcome-content-row">
-              <div class="welcome">
-                <p>Welcome </p>
-                <h2 id="h2name"> HARRY</h2> 
-                </div>
-                </div>
 
-              <div class="metrics">
-                <!-- <div class="half"> -->
+        <div  class="contentf" id="main"  >
+            <div class="pitch-row" >
+                
+                <div class="content-row" style="border: none; box-shadow: none; overflow-x: hidden;"> 
 
-                    <div class="metric">
+                    <div style="margin: 20px; width: calc(100% - 20px); ">
+                        <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">Home</h1>
+                        <h3 style="margin-block: 30px;">Quick Actions  ?</h3>
+                        <div style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 30px;">
+                            <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
+                            <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
+                            <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
+                        </div>
+                        <div class="plan-usage">
+                            <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e">Premium</b></h2>
+                            <p class="plan-usage-detail" id="plan-usage-detail">100 of 10,000 emails used this month</p>
+                            <div class="progress-text" id="progress-text">
+                              <p>Current: 2</p>
+                              <p>Total: 1000</p>
+                            </div>
+                            <div class="progress-bar">
+                                <div id="progress" style="width: 57.3%;"></div>
+                            </div>
+                            <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
+                            <button  id="subscription" >Upgrade</button>
+                        </div>
+                        <div style="width: 95%; display: flex; flex-direction: row; gap: 20px; justify-content: space-between; border-radius: 16px;
+                        background: #ffffff;
+                        -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+                        box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;">
+                            <div style=" width: 70%; margin: 60px;">
+                                <h2 style="margin-bottom: 20px;">Attract and win customers with targeted campaigns</h2>
+                                <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New Campaign</div></button>
+                            </div>
+                            <div style= "width: 20%; margin: 20px; display: flex; justify-content: center; align-content: center;">
+                                <img src="mail-inbox.png" alt="" style="height: 200px; width: 200px;">
+                            </div>
+                            <!-- below when we have metrics to display -->
+                            <!-- <div style="border: #ff0000 1px solid; width: 30%; display: flex; flex-direction: column; gap: 20px;">
+                                <div class="metric">
 
-                        <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
-                        <h2 class="metric-value" id="metric-label-total">11 / 1000</h2>
+                                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
+                                    <h2 class="metric-value" id="metric-label-total">11 / 1000</h2>
+                                </div>
+                                <div class="metric">
+              
+                                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
+                                    <h2 class="metric-value" id="metric-label-plan">Premium</h2>
+                                </div>
+                            </div> -->
+                        </div>
                     </div>
-                    <div class="metric">
-  
-                        <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
-                        <h2 class="metric-value" id="metric-label-plan">Premium</h2>
-                    </div>
-                <!-- </div>
-                <div class="half">
+
+
+                </div>
+
+
+                <!-- <div class="pitch" style=" background: #ffffff;
+                -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+                box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; display: flex; align-items: center; justify-content: start;">
+                
+                <h3 style="margin-top: 20px;">Your Progress</h3>
+              
+                <div>
+                    <h2>75%</h2>
+                </div>
+                <div style="width: 100%; height: 1px; background-color: #5e5e5e49;"></div>
+
+                <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+                    <h3>Send your first Email</h3>
+                    <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+                </div>
 
                 </div> -->
 
-                  
-                  <!-- <div class="metric">
 
-                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Appointments</p>
-                      <h2 class="metric-value">5</h2>
-                  </div>
-                  <div class="metric">
-                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Sales</p>
-                      <h2 class="metric-value">$148.94</h2>
-                  </div> -->
-              </div>
-              <!-- <div class="row-2"> -->
-              <div class="plan-usage">
-                  <!-- <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p> -->
-                  <div class="progress-text" id="progress-text">
-                    <p>Current: 2</p>
-                    <p>Total: 1000</p>
-                  </div>
-                  <div class="progress-bar">
-                      <div id="progress" style="width: 57.3%;"></div>
-                  </div>
-                  <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
-                  <button  id="subscription" >Upgrade</button>
-              </div>
+
+                <div class="pitch" style="background: #ffffff; border-radius: 16px;
+                -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+                box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+                display: flex; flex-direction: column; align-items: center; padding: 20px;">
+        
+                <h3 style="margin-top: 20px;">Your Progress</h3>
+              
+                <div id="progress-circle" style="position: relative; width: 100px; height: 100px;">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <h2 id="progress-percentage">0%</h2>
+                    </div>
+                </div>
+                <div style="width: 100%; height: 1px; background-color: #5e5e5e49; margin: 5px 0;"></div>
+        
+                <div class="task" data-task-id="1" >
+                    <h3 > Send your first Email</h3>
+                    <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-1" style=" cursor: pointer; color: #5e5e5e;"></i>
+                </div>
+                
+                <div class="task-details" data-task-id="1" style="display: none; width: 90%;">
+                    <button onclick="createCampaign()">Send Email</button>
+                </div>
+        
+                <div class="task" data-task-id="2" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+                    <h3>Create your first Campaign</h3>
+                    <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-2"></i>
+                </div>
+                <div class="task-details" data-task-id="2" style="display: none; width: 90%;">
+                    <button onclick="createCampaign()">Create Campaign</button>
+                </div>
+        
+                <div class="task" data-task-id="3" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+                    <h3>Edit your Username</h3>
+                    <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-3"></i>
+                </div>
+                <div class="task-details" data-task-id="3" style="display: none; width: 90%;">
+                    <button onclick="editUsername()">Edit Username</button>
+                </div>
+            </div>
+        
+              
             </div>
     </div>
+
+    <div  class="contentf" id="main-old"  style="display: none;">
+
+        <div class="dashboard-usage">
+            <div class="welcome-content-row">
+            <div class="welcome">
+              <p>Welcome </p>
+              <h2 id="h2name"> HARRY</h2> 
+              </div>
+              </div>
+
+            <div class="metrics">
+                  <div class="metric">
+
+                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
+                      <h2 class="metric-value" id="metric-label-total">11 / 1000</h2>
+                  </div>
+                  <div class="metric">
+
+                      <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
+                      <h2 class="metric-value" id="metric-label-plan">Premium</h2>
+                  </div>
+              <!-- </div>
+              <div class="half">
+
+              </div> -->
+
+                
+                <!-- <div class="metric">
+
+                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Appointments</p>
+                    <h2 class="metric-value">5</h2>
+                </div>
+                <div class="metric">
+                    <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Sales</p>
+                    <h2 class="metric-value">$148.94</h2>
+                </div> -->
+            </div>
+            <!-- <div class="row-2"> -->
+            <div class="plan-usage">
+                <!-- <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p> -->
+                <div class="progress-text" id="progress-text">
+                  <p>Current: 2</p>
+                  <p>Total: 1000</p>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress" style="width: 57.3%;"></div>
+                </div>
+                <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
+                <button  id="subscription" >Upgrade</button>
+            </div>
+          </div>
+  </div>
+
+
+
+    <div   id="myAccount-content"  style="display: none;">
+
+        <div class="ACC_dashboard-usage" style="overflow-y: auto;">
+            <!-- <h1>Dashboard</h1> -->
+            <!-- <h4>A detailed overview of your metrics, usage, plan and more</h4> -->
+            <div class="welcome-content-row">
+            <div class="welcome">
+              <!-- <p>Account Settings</p> -->
+              <h1 style="color: black; font-size: 40px; margin-bottom: 10px; margin-left: 20px;">Account Settings</h1>
+              <!-- <h2 id="h2name"> HARRY</h2>  -->
+              </div>
+              </div>
+<!-- <div style="display: flex; width: 80%; flex-direction: row;  margin-block:10px ;  gap: 60px; padding: 20px;"> -->
+    <div style="width: 80%; -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+    box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; border-radius: 10px;">
+        <h2 style="padding-left: 20px; padding-top: 20px;">Name</h2>
+        <h4 style="padding-left: 20px;">This is the name your emails are sent from.</h4>
+         <div class="coolinput" style="padding-left: 20px;">
+            <input type="text" placeholder="Joe Smith" name="input" class="input" id="UPDATE_name">
+        </div> 
+        <h5 id="errorMessagename" style="padding-left: 10px;"></h5>
+        <button class="button-man" onclick="updateNameForm()" style="margin-left: 20px;">Save</button>
+        <br>
+    </div>
+
+    <div style="width: 80%; -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+    box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; border-radius: 10px;">
+    <!-- <br> -->
+        <h2 style="padding-left: 20px; padding-top: 20px;">Email</h2>
+        <h4 style="padding-left: 20px;">The email associated with your account.</h4>
+        <div class="coolinput" style="padding-left: 20px;">
+            <input type="text" placeholder="Name@email.com" name="input" class="input" id="emailinput">
+        </div>     
+        <h5 id="errorMessageemail" style="padding-left: 20px;"></h5>         
+        <button class="button-man" style="padding-left: 20px;">Save</button>
+        <br>
+    </div>
+<!-- </div> -->
+
+<div style="width: 80%;  -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+    box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; border-radius: 10px;" >
+    <!-- <br> -->
+              <h2 class="password-reset" style="margin: 20px; margin-top: 30px;">Reset Password</h2>
+  
+              <div class="coolinput" style="margin: 20px;">
+                  <input type="text" placeholder="New Password" name="input" class="input" id="newPassword" >
+              </div>
+  
+              <div class="coolinput" style="margin: 20px;">
+                  <!-- <label for="input" class="text">Website:</label> -->
+                  <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
+              </div>
+              <h5 id="errorMessage"></h5>
+              <button class="button-man" style="margin: 20px;">Save</button>
+              <br>
+            </div>
+        </div>
+  </div>
+
 
     <div id="myAccount-content" style="display: none;" class="contentf">
         <div class="dashboard-usage">
@@ -2070,7 +2361,8 @@ function showNotification(message) {
                 <input type="text" placeholder="Joe Smith" name="input" class="input" id="UPDATE_name">
             </div>
             <h5 id="errorMessagename"></h5>
-            <button class="button-man" onclick="updateNameForm()">Save</button>
+            <button id="subscription" onclick="updateNameForm()">Save</button>
+            
             <h2>Email</h2>
             <h4>The Email associated with your account, not necessarily the email used to send your emails.</h4>
             <div class="coolinput">
@@ -2079,7 +2371,7 @@ function showNotification(message) {
                 <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
             </div>     
             <h5 id="errorMessageemail"></h5>         
-            <button class="button-man">Save</button>
+            <button id="subscription">Save</button>
             <h2 class="password-reset">Reset Password</h2>
 
             <div class="coolinput">
@@ -2091,7 +2383,7 @@ function showNotification(message) {
                 <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
             </div>
             <h5 id="errorMessage"></h5>
-            <button class="button-man">Save</button>
+            <button id="subscription">Save</button>
           </div>
   </div>
 
@@ -2100,6 +2392,16 @@ function showNotification(message) {
         document.getElementById('fileInput').addEventListener('change', handleFile, false);
         document.getElementById('fileMIDDLE').addEventListener('change', handleFile, false);
         // Function to handle tab switching
+
+        function createCampaign() {
+            // Example logic for createCampaign
+            console.log('Creating campaign...');
+            // Simulate a click on the 'Usage' tab (id 2)
+            const usageTab = document.getElementById('2');
+            usageTab.click();
+        }
+
+
         function switchTab(event) {
             // Remove active class from all menu items
             const menuItems = document.querySelectorAll('.menu-item');

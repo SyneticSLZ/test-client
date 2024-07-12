@@ -171,6 +171,7 @@
     /* box-shadow: 12px 12px 33px #cccccc2f, -12px -12px 23px #ffffff00; */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
+  
   .menu{
     margin-top: 0em;
     display: flex;
@@ -1776,7 +1777,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   .metric {
     background: #fff;
-      padding-block: 25px;
+      padding-block: 5px;
       padding-inline-start: 20px;
       border-radius: 10px;
       /* height: 60px; */
@@ -1804,7 +1805,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 
   
   .metric-value {
-      font-size: 45px;
+      font-size: 25px;
       
       margin: 0;
       margin-left: 12px;
@@ -1812,7 +1813,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   
   .metric-label {
-      font-size: 20px;
+      font-size: 12px;
       font-weight: bold;
       color: rgb(5, 1, 24, 0.678);
   
@@ -1864,7 +1865,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   .plan-usage{
     margin-top: 20px;
-    width: 80%; 
+    width: 95%; 
     padding: 20px ;
     background-color: #fff;
     -webkit-border-radius: 16px;
@@ -2049,6 +2050,8 @@ text-align: left;
   .coolinput {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    /* border: #00tton34de solid 2px; */
     /* position: static; */
   }
   
@@ -2119,7 +2122,8 @@ text-align: left;
   .coolinput .input {
     /* font-family: "SF Pro"; */
     /* max-width: 190px; */
-    padding: 0.875rem ;
+    padding: 0.875rem;
+    margin-block: 15px;
     font-size: 1rem;
     /* border: 1.5px solid #000; */
     border-radius: 0.5rem;
@@ -2134,7 +2138,19 @@ text-align: left;
   -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
-  
+
+  .ACC_dashboard-usage{
+    align-self: center;
+    justify-self: start;
+      padding: 20px;
+      margin-top: 40px;
+    margin-left: 20px;
+      border-radius: 10px;
+      /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+      width: 100%;
+      /* max-width: 1000px; */
+      color: rgb(5, 1, 24);
+  }
   .coolinput  .input:focus {
     /* box-shadow: 5.5px 7px 0 black; */
     border: 1.5px solid #000;
@@ -2142,7 +2158,9 @@ text-align: left;
   .btn-container {
     margin-top: 10px;
   }
-
+#myAccount-content {
+  overflow-y: scroll;
+}
   #myAccount-content .coolinput{
 
     width: 30%;
@@ -2150,7 +2168,7 @@ text-align: left;
   }
   #myAccount-content button {
     border-radius: 16px;
-    margin-bottom: 35px;
+    margin-bottom: 10px;
     padding: 7px 25px;
     /* padding: 20px 50px; */
 
@@ -2164,7 +2182,7 @@ text-align: left;
   }
 
 #myAccount-content .password-reset{
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
   #myAccount-content .coolinput .input {
@@ -2195,4 +2213,47 @@ text-align: left;
   }
 
 
-  
+
+.pitch {
+    text-align: center;
+}
+
+.progress-circle {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+
+.progress-circle .progressbar-text {
+    font-size: 1.5em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.task {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 10px;
+}
+
+.task h3 {
+  margin: 0;
+  font-size: 18px; /* Adjust the font size as needed */
+}
+
+.task i {
+  font-size: 35px; /* Adjust the size as needed */
+  text-align: center;
+  cursor: pointer;
+  color: #5e5e5e; /* Adjust the color as needed */
+}
+
+.task-details {
+    margin-top: 10px;
+    display: none;
+}
