@@ -108,8 +108,13 @@ function initializeProgressBar() {
 }
 
 function updateProgress(tasks, totalTasks) {
+    console.log(totalTasks)
     const completedTasks = tasks.filter(task => task.completed).length;
     const percentage = (completedTasks / totalTasks) * 100;
+if (percentage != 0) {
+    document.getElementById('progress-percentage').innerHTML = ``;
+}
+
     progressBar.animate(percentage / 100); // Number from 0.0 to 1.0
 
     tasks.forEach(task => {
@@ -325,10 +330,7 @@ async function RenderHtml(data){
                 document.getElementById('maintop').innerHTML=`
                     <div class="plan">${CapsPlan} plan Subscriber</div>
             <div class="google" id="googleauthid">
-                    <button class="button" onclick="ConnectGoogle()">
-                        <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
-                        Connect Google
-                    </button>
+<div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> 
             </div>
         `;
         button.innerHTML=`
@@ -337,6 +339,17 @@ async function RenderHtml(data){
                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
                         Connect Google
                       </button>
+
+                      <div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> -->
+
+                                          <button class="button" onclick="Submitandcheckautosend()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Generate
+                      </button>
+
+                      
                       `
 
             } else {
@@ -1961,7 +1974,13 @@ function showNotification(message) {
         <div class="top" id="maintop">
             <div class="plan">New Campaign</div>
             <div class="google" id="googleauthid">
-                Please connect your gmail Account
+                <!-- <div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> -->
+
+                <!-- <button class="button" onclick="ConnectGoogle()">
+                    <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
+                    Connect Google
+                </button> -->
+
                 <!-- <img  src='../static/google.png' alt="google"> -->
                 <!-- {{ email }} -->
             </div>
@@ -2077,7 +2096,7 @@ function showNotification(message) {
                         <label for="fileInput" id="uploadLabel" class="uploadLabel" ><div class="lead"> + Import leads</div></label>
                         <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
 
-                        <button class="uploadLabel" style="display: none;" onclick="exportToExcel()" id="export"><div class="lead"> Export Generated Data</div></button>
+                        <button class="uploadLabel"  onclick="exportToExcel()" id="export" style="display: none; width: 100%;"><div class="lead"> Export Generated Data  </div></button>
 
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
