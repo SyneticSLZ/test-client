@@ -902,7 +902,7 @@ button:active {
     padding: 0.8em 1.1em;
     gap: 0.4rem;
     border: none;
-    font-weight: bold;
+    font-weight: 200;
     border-radius: 3px;
     cursor: pointer;
     text-shadow: 2px 2px 3px rgb(136 0 136 / 50%);
