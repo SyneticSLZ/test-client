@@ -1239,6 +1239,9 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
             const planElement = document.getElementById('selected-plan');
             const params = new URLSearchParams(window.location.search);
             const username = params.get('userName')
+            let email = decodeURIComponent(params.get('email') || '');
+            let password = decodeURIComponent(params.get('password') || '');
+
             const loggedin = decodeURIComponent(params.get('loggedin') || '');
             const plan = decodeURIComponent(params.get('plan') || '');
             const session = params.get('session_id')
@@ -1280,7 +1283,30 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
         
             if (loggedin === "true") {
                 // if(username) {
-                    Checkout()
+                    // Checkout()
+                    const AccountIcon = document.getElementById('Account')
+                        const CheckoutIcon = document.getElementById('PaymentIcon')
+                        AccountIcon.innerHTML = `
+        
+        <h2>1. Create an Account </h2>
+        
+        
+        <i class="fi fi-ss-hexagon-check" id="down"></i>
+        
+        `;
+        CheckoutIcon.innerHTML = `
+        
+                <h2>3. Confirm </h2>
+        
+                 <i class="fi fi-rr-circle" id="down"></i>
+        
+        `;
+                    document.getElementById('accountContainer').style.display = "none";
+                    document.getElementById('Checkout-full').style.border = "none";
+
+                        // Checkout();
+                        PremiumEmail(email, password, username);
+
                 // }
                 // else {
                     // nameActive()
