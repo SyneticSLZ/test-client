@@ -368,6 +368,7 @@
     <script>
 
 
+
 function displayMessage() {
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
@@ -454,7 +455,7 @@ if (action === 'login') {
             var password = document.getElementById('loginPassword').value;
             var loginError = document.getElementById('loginError');
 
-            fetch('https://volt-server.onrender.com/login-customer', {
+            fetch('https://server.voltmailer.com/login-customer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -480,7 +481,7 @@ if (action === 'login') {
         function loginWithGoogle() {
             // Placeholder for Google login logic
             // alert("Login with Google clicked");
-            window.location.href = 'https://volt-server.onrender.com/auth/google';
+            window.location.href = 'https://server.voltmailer.com/auth/google';
         }
 
         document.getElementById('signupEmail').addEventListener('input', validateEmail);
@@ -544,7 +545,7 @@ if (action === 'login') {
 
             // Final validation before sending data to the server
             if (signupError.textContent === "") {
-                fetch('https://volt-server.onrender.com/signup-customer', {
+                fetch('https://server.voltmailer.com/signup-customer', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -569,6 +570,18 @@ if (action === 'login') {
             }
         }
 
+        function letsGo() {
+            const urlParams = new URLSearchParams(window.location.search);  
+            var Google = urlParams.get('google');  
+            let data = parseJWT(Google)
+            let email = decodeURIComponent( urlParams.get('email'))
+            var userName = document.getElementById('UserNameHolder').value;
+        console.log("email recived in headers  : ", decodeURIComponent( urlParams.get('email')), "email decoded : ", data.email )
+    // res.redirect(`https://voltmailer.com/OldLogin.html?email=${encodeURIComponent(userInfo.data.email)}&password=null&google=${jwtToken}`);
+    window.location.href =  `https://voltmailer.com/pricing.html?email=${encodeURIComponent(data.email)}&password=null&username=${encodeURIComponent(userName)}` 
+}
+
+
         // function forgotPassword() {
         //     var email = document.getElementById('forgotEmail').value;
         //     var forgotError = document.getElementById('forgotError');
@@ -590,7 +603,7 @@ if (action === 'login') {
       const responseMessage = document.getElementById('forgotError');
 
       try {
-        const response = await fetch('https://volt-server.onrender.com/request-password-reset', {
+        const response = await fetch('https://server.voltmailer.com/request-password-reset', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -632,7 +645,7 @@ if (action === 'login') {
       }
 
       try {
-        const response = await fetch('https://volt-server.onrender.com/reset-password', {
+        const response = await fetch('https://server.voltmailer.com/reset-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
