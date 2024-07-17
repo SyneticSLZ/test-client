@@ -578,7 +578,7 @@ if (action === 'login') {
             var userName = document.getElementById('UserNameHolder').value;
         console.log("email recived in headers  : ", decodeURIComponent( urlParams.get('email')), "email decoded : ", data.email )
     // res.redirect(`https://voltmailer.com/OldLogin.html?email=${encodeURIComponent(userInfo.data.email)}&password=null&google=${jwtToken}`);
-    window.location.href =  `https://voltmailer.com/pricing.html?email=${encodeURIComponent(data.email)}&password=null&username=${encodeURIComponent(userName)}` 
+    window.location.href =  `https://voltmailer.com/pricing.html?email=${encodeURIComponent(data.email)}&password=null&userName=${encodeURIComponent(userName)}` 
 }
 
 
