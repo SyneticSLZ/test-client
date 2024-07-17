@@ -57,77 +57,77 @@ document.addEventListener("DOMContentLoaded", function() {
     init()
 
 
-    window.tasks = [
-        { id: 1, completed: false },
-        { id: 2, completed: false },
-        { id: 3, completed: false },
-    ];
-    const totalTasks = tasks.length;
-    initializeProgressBar();
-    updateProgress(tasks, totalTasks);
+    // window.tasks = [
+    //     { id: 1, completed: false },
+    //     { id: 2, completed: false },
+    //     { id: 3, completed: false },
+    // ];
+    // const totalTasks = tasks.length;
+    // initializeProgressBar();
+    // updateProgress(tasks, totalTasks);
 
-    tasks.forEach(task => {
-        const taskElement = document.querySelector(`.task[data-task-id="${task.id}"] i`);
-        if (taskElement) {
-            taskElement.addEventListener('click', () => toggleDetails(taskElement));
-        }
-    });
+    // tasks.forEach(task => {
+    //     const taskElement = document.querySelector(`.task[data-task-id="${task.id}"] i`);
+    //     if (taskElement) {
+    //         taskElement.addEventListener('click', () => toggleDetails(taskElement));
+    //     }
+    // });
 
 });
 
-let progressBar;
+// let progressBar;
 
-function initializeProgressBar() {
-    progressBar = new ProgressBar.Circle('#progress-circle', {
-        color: '#aaa',
-        strokeWidth: 8,
-        trailWidth: 8,
-        trailColor: '#eee',
-        easing: 'easeInOut',
-        duration: 1400,
-        text: {
-            autoStyleContainer: false
-        },
-        from: { color: '#ff0000', width: 8 },
-        to: { color: '#00ff00', width: 8 },
-        step: function(state, circle) {
-            circle.path.setAttribute('stroke', state.color);
-            circle.path.setAttribute('stroke-width', state.width);
+// function initializeProgressBar() {
+//     progressBar = new ProgressBar.Circle('#progress-circle', {
+//         color: '#aaa',
+//         strokeWidth: 8,
+//         trailWidth: 8,
+//         trailColor: '#eee',
+//         easing: 'easeInOut',
+//         duration: 1400,
+//         text: {
+//             autoStyleContainer: false
+//         },
+//         from: { color: '#ff0000', width: 8 },
+//         to: { color: '#00ff00', width: 8 },
+//         step: function(state, circle) {
+//             circle.path.setAttribute('stroke', state.color);
+//             circle.path.setAttribute('stroke-width', state.width);
 
-            const value = Math.round(circle.value() * 100);
-            if (value === 0) {
-                circle.setText('');
-            } else {
-                circle.setText(`${value}%`);
-            }
-        }
-    });
+//             const value = Math.round(circle.value() * 100);
+//             if (value === 0) {
+//                 circle.setText('');
+//             } else {
+//                 circle.setText(`${value}%`);
+//             }
+//         }
+//     });
 
-    progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
-    progressBar.text.style.fontSize = '2rem';
-}
+//     progressBar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+//     progressBar.text.style.fontSize = '2rem';
+// }
 
-function updateProgress(tasks, totalTasks) {
-    console.log(totalTasks)
-    const completedTasks = tasks.filter(task => task.completed).length;
-    const percentage = (completedTasks / totalTasks) * 100;
-if (percentage != 0) {
-    document.getElementById('progress-percentage').innerHTML = ``;
-}
+// function updateProgress(tasks, totalTasks) {
+//     console.log(totalTasks)
+//     const completedTasks = tasks.filter(task => task.completed).length;
+//     const percentage = (completedTasks / totalTasks) * 100;
+// if (percentage != 0) {
+//     document.getElementById('progress-percentage').innerHTML = ``;
+// }
 
-    progressBar.animate(percentage / 100); // Number from 0.0 to 1.0
+//     progressBar.animate(percentage / 100); // Number from 0.0 to 1.0
 
-    tasks.forEach(task => {
-        const icon = document.getElementById(`task-icon-${task.id}`);
-        if (icon) {
-            if (task.completed) {
-                icon.className = 'fi fi-br-check'; // Update the icon class for completed task
-            } else {
-                icon.className = 'fi fi-rr-angle-small-down'; // Update the icon class for incomplete task
-            }
-        }
-    });
-}
+//     tasks.forEach(task => {
+//         const icon = document.getElementById(`task-icon-${task.id}`);
+//         if (icon) {
+//             if (task.completed) {
+//                 icon.className = 'fi fi-br-check'; // Update the icon class for completed task
+//             } else {
+//                 icon.className = 'fi fi-rr-angle-small-down'; // Update the icon class for incomplete task
+//             }
+//         }
+//     });
+// }
 
 function toggleDetailsx(icon) {
     const taskElement = icon.parentElement;
@@ -262,12 +262,13 @@ async function RenderHtml(data){
     
     document.getElementById('h2name').innerHTML=`${name}`;
     document.getElementById('metric-label-plan').innerHTML = `${plan}`;
-    document.getElementById('metric-label-total').innerHTML = `${UsedEmails} / ${planEmails}`;
+    document.getElementById('plan-usage-detail').innerHTML = `${UsedEmails} of ${planEmails} emails used this month`;
 
     // document.getElementById('plan-usage-detail').innerHTML=`You have used : ${UsedEmails} Emails of :  ${planEmails} Emails / mo`;
     document.getElementById('progress-text').innerHTML=`<p>Current: ${UsedEmails}</p><p>Total: ${planEmails}</p>`;
     document.getElementById('subscription').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
+    document.getElementById('billing-man').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('progress').style.width = percentageUsed + '%'; 
 
     document.getElementById('myAccount-content').innerHTML = `
@@ -2138,12 +2139,12 @@ function showNotification(message) {
                         <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">Home</h1>
                         <h3 style="margin-block: 30px;">Quick Actions  ?</h3>
                         <div style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 30px;">
-                            <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
-                            <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
-                            <button class="uploadLabel" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
+                            <button class="button-man" onclick="OpenAccount()" id="man"><div class="lead"> Account Settings</div></button>
+                            <button class="button-man"  id="billing-man"><div class="lead"> Plan Details</div></button>
+                            <button class="uploadLabel" onclick="createCampaign()" id="man"><div class="lead"> + New lead</div></button>
                         </div>
                         <div class="plan-usage">
-                            <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e">Premium</b></h2>
+                            <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e" id="metric-label-plan">Premium</b></h2>
                             <p class="plan-usage-detail" id="plan-usage-detail">100 of 10,000 emails used this month</p>
                             <div class="progress-text" id="progress-text">
                               <p>Current: 2</p>
@@ -2264,12 +2265,12 @@ function showNotification(message) {
                   <div class="metric">
 
                       <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
-                      <h2 class="metric-value" id="metric-label-total">11 / 1000</h2>
+                      <!-- <h2 class="metric-value" id="metric-label-total">11 / 1000</h2> -->
                   </div>
                   <div class="metric">
 
                       <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
-                      <h2 class="metric-value" id="metric-label-plan">Premium</h2>
+                      <!-- <h2 class="metric-value" id="metric-label-plan">Premium</h2> -->
                   </div>
               <!-- </div>
               <div class="half">
@@ -2408,6 +2409,13 @@ function showNotification(message) {
         document.getElementById('fileMIDDLE').addEventListener('change', handleFile, false);
         // Function to handle tab switching
 
+        function OpenAccount() {
+            // Example logic for createCampaign
+            console.log('Creating campaign...');
+            // Simulate a click on the 'Usage' tab (id 2)
+            const usageTab = document.getElementById('4');
+            usageTab.click();
+        }
         function createCampaign() {
             // Example logic for createCampaign
             console.log('Creating campaign...');
@@ -2415,6 +2423,7 @@ function showNotification(message) {
             const usageTab = document.getElementById('2');
             usageTab.click();
         }
+        
 
 
         function switchTab(event) {
