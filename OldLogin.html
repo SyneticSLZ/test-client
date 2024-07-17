@@ -307,7 +307,7 @@
             <div id="signupForm" class="signup-form">
                 <h1>Sign Up</h1>
                 <h4>Create your account</h4>
-                <input type="text" id="signupFullName" placeholder="Name to send Emails From">
+                <input type="text" id="signupFullName" placeholder="Full Name">
                 <input type="text" id="signupEmail" placeholder="Email">
                 <input type="password" id="signupPassword" placeholder="Password">
                 <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
@@ -418,6 +418,21 @@ if (action === 'login') {
 } else if (action === 'signup') {
     document.getElementById('loginForm').classList.remove('active');
     document.getElementById('signupForm').classList.add('active');
+} else if (action === 'signup-freeTrial') {
+    document.getElementById('loginForm').classList.remove('active');
+    document.getElementById('signupForm').classList.add('active');
+    document.getElementById('signupForm').innerHTML = `
+    
+                    <h1>30 Day Free Trial | No credit card info Required</h1>
+                <h4>First, Create your account</h4>
+                <input type="text" id="signupFullName" placeholder="Full Name">
+                <input type="text" id="signupEmail" placeholder="Email">
+                <input type="password" id="signupPassword" placeholder="Password">
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
+                <button onclick="signUptoFreeTrial()">Start your Trial Now</button>
+                <div id="signupError" class="error"></div>
+                <h4>Already have an account? <a id="loginLinkFromSignup">Login</a></h4>    
+    `
 }
 
 
@@ -560,6 +575,44 @@ if (action === 'login') {
                 .then(data => {
                     if (data.success) {
                         window.location.href = data.redirectUrl;
+                    } else if (data.error) {
+                        signupError.textContent = data.error;
+                    }
+                })
+                .catch(error => {
+                    signupError.textContent = "An error occurred. Please try again.";
+                });
+            }
+        }
+
+      function  signUptoFreeTrial() {
+        console.log("signing in");
+            var email = document.getElementById('signupEmail').value;
+            var userName = document.getElementById('signupFullName').value;
+            var password = document.getElementById('signupPassword').value;
+            var confirmPassword = document.getElementById('signupConfirmPassword').value;
+            var signupError = document.getElementById('signupError');
+
+            // Final validation before sending data to the server
+            if (signupError.textContent === "") {
+                fetch('https://server.voltmailer.com/signup-customer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        userName: userName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        
+// logic to call the add subscription here 
+
+                        // window.location.href = data.redirectUrl;
                     } else if (data.error) {
                         signupError.textContent = data.error;
                     }
