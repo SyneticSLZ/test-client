@@ -201,6 +201,7 @@ function fetchUserData() {
         .then(data => {
             if (data.error) {
                 console.error('Error fetching user data:', data.error);
+                window.location.href='https://voltmailer.com/ExpiredSession.html'
             } else {
                 // Customize the page using user data
                 // document.getElementById('userEmail').textContent = data.email;
@@ -261,12 +262,14 @@ async function RenderHtml(data){
     
     document.getElementById('h2name').innerHTML=`${name}`;
     document.getElementById('metric-label-plan').innerHTML = `${plan}`;
-    document.getElementById('metric-label-total').innerHTML = `${UsedEmails}`;
+    document.getElementById('metric-label-total').innerHTML = `${UsedEmails} / ${planEmails}`;
+
     // document.getElementById('plan-usage-detail').innerHTML=`You have used : ${UsedEmails} Emails of :  ${planEmails} Emails / mo`;
     document.getElementById('progress-text').innerHTML=`<p>Current: ${UsedEmails}</p><p>Total: ${planEmails}</p>`;
     document.getElementById('subscription').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('progress').style.width = percentageUsed + '%'; 
+
     document.getElementById('myAccount-content').innerHTML = `
     
     <div class="dashboard-usage">
