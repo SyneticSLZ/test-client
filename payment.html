@@ -867,12 +867,12 @@
                 <div class="account-link">
                     Already have an account? <a href="#">Log In</a>
                 </div>
-                <button class="google">
+                <button class="google" disabled>
                     <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo"/>
                     <b>Google</b>
                 </button>
                 
-                <button class="facebook" onclick="nameActive()">Advance</button>
+                <button class="facebook" onclick="SignUpCustomer()">Advance</button>
             </div>
             <div class="separator">
                 <span>|</span>
@@ -881,22 +881,32 @@
             </div>
             <div class="login-form">
                 <div class="input-group">
-                    <input type="email" placeholder="Email Address">
-                    <img src="https://img.icons8.com/material-outlined/24/000000/help.png" alt="Help icon"/>
+                    <input type="email" placeholder="Email Address" id="signupEmail">
+                    <!-- <img src="https://img.icons8.com/material-outlined/24/000000/help.png" alt="Help icon"/> -->
                 </div>
                 <div class="input-group">
-                    <input type="password" placeholder="Password">
-                    <img src="https://img.icons8.com/ios-glyphs/24/000000/visible.png" alt="Show password icon"/>
+                    <input type="username" placeholder="Full Name " id="signupFullName">
+                    <!-- <img src="https://img.icons8.com/material-outlined/24/000000/help.png" alt="Help icon"/> -->
                 </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" id="signupPassword">
+                    <img src="https://img.icons8.com/ios-glyphs/24/000000/visible.png" alt="Show password icon" id="toggleinitPassword"/>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Confirm Password" id="signupConfirmPassword">
+                    <img src="https://img.icons8.com/ios-glyphs/24/000000/visible.png" alt="Show password icon" id="togglePassword"/>
+                </div>
+                <div id="forgotError" class="error" style="color: red;"></div>
             </div>
 
         </div>
     </div>
-<div class="full" id='full-Name'>
+
+<!-- <div class="full" id='full-Name'>
+
 <div class="headerrow" id="SenderName">
-        <h2>2. Your Sender Name</h2>
+        <h2>2. Your Full Name</h2>
         <i class="fi fi-rr-angle-small-down" id="down"></i>
-        <!-- <i class="fi fi-rr-angle-small-left" id="down"></i> -->
 </div>
 
 <div class="login-form-name" id="InputNameBox">
@@ -910,7 +920,11 @@
 </div>
 
 
-</div>
+</div> -->
+
+
+
+
 <div class="full" id="Checkout-full">
 <div class="headerrow" id="PaymentIcon">
     <h2>3. Select Payment</h2>
@@ -928,7 +942,28 @@
       <script>
 
 
+document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('signupConfirmPassword');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
 
+            // Optionally change the icon when the password is shown/hidden
+            this.src = type === 'password' 
+                ? 'https://img.icons8.com/ios-glyphs/24/000000/visible.png'
+                : 'https://img.icons8.com/ios-glyphs/24/000000/invisible.png';
+        });
+
+        
+document.getElementById('toggleinitPassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('signupPassword');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Optionally change the icon when the password is shown/hidden
+            this.src = type === 'password' 
+                ? 'https://img.icons8.com/ios-glyphs/24/000000/visible.png'
+                : 'https://img.icons8.com/ios-glyphs/24/000000/invisible.png';
+        });
 
         document.addEventListener("DOMContentLoaded", function() {
             // document.getElementById('above-checkout').style.display = "none"
@@ -938,6 +973,123 @@
         
                 });
         
+
+          function SignUpCustomer() {
+
+
+
+          }
+
+          
+        document.getElementById('signupEmail').addEventListener('input', validateEmail);
+        document.getElementById('signupPassword').addEventListener('input', validatePassword);
+        document.getElementById('signupConfirmPassword').addEventListener('input', validateConfirmPassword);
+
+        function validateEmail() {
+            const email = document.getElementById('signupEmail').value;
+            const signupError = document.getElementById('signupError');
+            const emailPattern = /^[^\s@]+@[^\s@]+\.(com|net|org|edu|gov|mil|co\.uk|org\.uk|ac\.uk|co|io)$/;
+
+            if (!emailPattern.test(email)) {
+                signupError.textContent = "Please enter a valid email address.";
+            } else if (email === "existing@example.com") {
+                signupError.textContent = "User already has an account.";
+            } else if (email === "google@example.com") {
+                signupError.textContent = "This email is linked to a Google account.";
+            } else {
+                signupError.textContent = "";
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('signupPassword').value;
+            const signupError = document.getElementById('signupError');
+            const passwordCriteria = [
+                { regex: /.{6,15}/, message: "Password must be between 6 and 15 characters." },
+                { regex: /[A-Z]/, message: "Password must contain at least one uppercase letter." },
+                { regex: /[a-z]/, message: "Password must contain at least one lowercase letter." },
+                { regex: /[0-9]/, message: "Password must contain at least one number." }
+            ];
+
+            for (let criterion of passwordCriteria) {
+                if (!criterion.regex.test(password)) {
+                    signupError.textContent = criterion.message;
+                    return;
+                }
+            }
+            signupError.textContent = "";
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const signupError = document.getElementById('signupError');
+
+            if (password !== confirmPassword) {
+                signupError.textContent = "Passwords do not match.";
+            } else {
+                signupError.textContent = "";
+            }
+        }
+
+          function signUp() {
+            console.log("signing in");
+            var email = document.getElementById('signupEmail').value;
+            var userName = document.getElementById('signupFullName').value;
+            var password = document.getElementById('signupPassword').value;
+            var confirmPassword = document.getElementById('signupConfirmPassword').value;
+            var signupError = document.getElementById('signupError');
+
+            // Final validation before sending data to the server
+            if (signupError.textContent === "") {
+                fetch('https://server.voltmailer.com/signup-customer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        userName: userName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+
+                        // window.location.href = data.redirectUrl;
+                        const AccountIcon = document.getElementById('Account')
+                        const CheckoutIcon = document.getElementById('PaymentIcon')
+                        AccountIcon.innerHTML = `
+        
+        <h2>1. Create an Account </h2>
+        
+        
+        <i class="fi fi-ss-hexagon-check" id="down"></i>
+        
+        `;
+        CheckoutIcon.innerHTML = `
+        
+                <h2>3. Confirm </h2>
+        
+                 <i class="fi fi-rr-circle" id="down"></i>
+        
+        `;
+                    document.getElementById('accountContainer').style.display = "none";
+                    document.getElementById('Checkout-full').style.border = "none";
+
+                        // Checkout();
+                        PremiumEmail(email, password, userName);
+                    } else if (data.error) {
+                        signupError.textContent = data.error;
+                    }
+                })
+                .catch(error => {
+                    signupError.textContent = "An error occurred. Please try again.";
+                });
+            }
+        }
+
                 
         
         function Checkout(){
@@ -1127,12 +1279,12 @@
                 }
         
             if (loggedin === "true") {
-                if(username) {
+                // if(username) {
                     Checkout()
-                }
-                else {
-                    nameActive()
-                }
+                // }
+                // else {
+                    // nameActive()
+                // }
                 
             } else {
                 singupActive()
@@ -1153,8 +1305,8 @@
         }
         
          function singupActive(){
-            const AccountIcon = document.getElementById('Account')
-        const SenderNameIcon = document.getElementById('SenderName')
+        const AccountIcon = document.getElementById('Account')
+        // const SenderNameIcon = document.getElementById('SenderName')
         const CheckoutIcon = document.getElementById('PaymentIcon')
         AccountIcon.innerHTML = `
         
@@ -1163,13 +1315,13 @@
         <i class="fi fi-rr-circle" id="down"></i>
         
         `;
-        SenderNameIcon.innerHTML = `
+        // SenderNameIcon.innerHTML = `
         
-                <h2>2. Your Sender Name</h2>
+        //         <h2>2. Your Sender Name</h2>
         
-                <i class="fi fi-rr-angle-small-down" id="down"></i>
+        //         <i class="fi fi-rr-angle-small-down" id="down"></i>
         
-        `;
+        // `;
         CheckoutIcon.innerHTML = `
         
                 <h2>3. Select Payment</h2>
@@ -1181,44 +1333,44 @@
             document.getElementById('accountContainer').style.display = "flex";
             document.getElementById('InputNameBox').style.display = "none";
             document.getElementById('full-Account').style.border = "none";
-            document.getElementById('full-Name').style.border = "2px solid black";
+            // document.getElementById('full-Name').style.border = "2px solid black";
         }
         
         
         
         
-        function nameActive(){
-        const AccountIcon = document.getElementById('Account')
-        const SenderNameIcon = document.getElementById('SenderName')
-        const CheckoutIcon = document.getElementById('PaymentIcon')
+        // function nameActive(){
+        // const AccountIcon = document.getElementById('Account')
+        // const SenderNameIcon = document.getElementById('SenderName')
+        // const CheckoutIcon = document.getElementById('PaymentIcon')
             
-        AccountIcon.innerHTML = `
+        // AccountIcon.innerHTML = `
         
-        <h2>1. Create an Account </h2>
+        // <h2>1. Create an Account </h2>
         
         
-        <i class="fi fi-ss-hexagon-check" id="down"></i>
+        // <i class="fi fi-ss-hexagon-check" id="down"></i>
         
-        `;
-        SenderNameIcon.innerHTML = `
+        // `;
+        // SenderNameIcon.innerHTML = `
         
-                <h2>2. Your Sender Name</h2>
+        //         <h2>2. Your Sender Name</h2>
         
-                <i class="fi fi-rr-circle" id="down"></i>
+        //         <i class="fi fi-rr-circle" id="down"></i>
         
-        `;
-        CheckoutIcon.innerHTML = `
+        // `;
+        // CheckoutIcon.innerHTML = `
         
-                <h2>3. Select Payment</h2>
+        //         <h2>3. Select Payment</h2>
         
-                <i class="fi fi-rr-angle-small-down" id="down"></i>
+        //         <i class="fi fi-rr-angle-small-down" id="down"></i>
         
-        `;
-            document.getElementById('accountContainer').style.display = "none";
-            document.getElementById('InputNameBox').style.display = "flex";
-            document.getElementById('full-Account').style.border = "2px solid black";
-            document.getElementById('full-Name').style.border = "none";
-        }
+        // `;
+        //     document.getElementById('accountContainer').style.display = "none";
+        //     document.getElementById('InputNameBox').style.display = "flex";
+        //     document.getElementById('full-Account').style.border = "2px solid black";
+        //     document.getElementById('full-Name').style.border = "none";
+        // }
         
         function parseJWT(token) {
             const base64Url = token.split('.')[1];
