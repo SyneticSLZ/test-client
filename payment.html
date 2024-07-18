@@ -1165,6 +1165,60 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
             }
         }
         
+
+        async function addFreeCustomer(){
+        
+        const params = new URLSearchParams(window.location.search);
+        let email = params.get('email');
+            let password = decodeURIComponent(params.get('password'));
+            let name =  params.get('name');
+            let stripeid = params.get('trial')
+            const affiliate = localStorage.getItem('affiliate');
+            // let plan = params.get('plan')
+        try {
+        
+                        // Determine plan and total_emails based on price ID
+                        let plan, plan_emails;
+                            plan = 'Free';
+                            plan_emails = 20;
+
+        
+                        const customerData = {
+                            stripeID: stripeid,
+                            email: email,
+                            plan: plan,
+                            total_emails: 0,
+                            priceID: "price_1PdqxCKJeZAyw8f44eTYC7Rw",
+                            password: password,
+                            name: name,
+                            plan_emails: plan_emails,
+                            affiliate: affiliate
+                        };
+                        console.log(customerData)
+                        // Send customer data to your backend to add to the database
+                        const addCustomerResponse = await fetch('https://server.voltmailer.com/add-customer-to-db', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(customerData)
+                        });
+        
+                        const addCustomerResult = await addCustomerResponse.json();
+                        console.log(addCustomerResult)
+                        // Redirect to dashboard with token
+                        if (addCustomerResult.redirectUrl) {
+                            window.location.href = addCustomerResult.redirectUrl;
+                        }
+        
+                        // Optionally, show success message or redirect to another page
+                        document.getElementById('accountTick').style.display = "block";
+                    } catch (error) {
+                        console.error('Error handling checkout session:', error);
+                    }
+        
+        }
+
         async function addCustomer(PriceID){
         
             const params = new URLSearchParams(window.location.search);
@@ -1182,11 +1236,11 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
         
                         // Determine plan and total_emails based on price ID
                         let plan, plan_emails;
-                        if (PriceID === 'price_1PKf2PKJeZAyw8f418JphiK0') {
-                            plan = 'premium';
+                        if (PriceID === 'price_1Pdqx3KJeZAyw8f4T0AfWCIJ') {
+                            plan = 'Premium';
                             plan_emails = 1000;
                         } else {
-                            plan = 'free';
+                            plan = 'Free';
                             plan_emails = 20;
                         }
         
@@ -1238,6 +1292,19 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
             const loggedin = decodeURIComponent(params.get('loggedin') || '');
             const plan = decodeURIComponent(params.get('plan') || '');
             const session = params.get('session_id')
+            const trial = params.get('trial')
+            //trial is the stripeid
+            if(trial) {
+                        document.getElementById('processing').classList.remove('active');
+                        document.getElementById('processing').classList.add('hidden');
+                        document.getElementById('success').classList.remove('hidden');
+                        document.getElementById('success').classList.add('active');
+
+                       addFreeCustomer();
+
+
+            } else {
+
             if (session){
         
         // handle the html 
@@ -1246,8 +1313,9 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
                 document.getElementById('checkout').style.display = "none"
                 document.getElementById('loading').style.display = "flex"
                 const response = await fetch(`https://server.voltmailer.com/session-status?session_id=${session}`);
-                    const sessionData = await response.json();
-                    const success = document.getElementById('success')
+                const sessionData = await response.json();
+                const success = document.getElementById('success')
+
                     if (sessionData.status === 'complete') {
                         document.getElementById('processing').classList.remove('active');
                         document.getElementById('processing').classList.add('hidden');
@@ -1264,6 +1332,7 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
         
                 }
             }
+
 
             else{
         
@@ -1310,6 +1379,7 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
             }
         
             }
+        }
         }
         
         function failedCheckout(){

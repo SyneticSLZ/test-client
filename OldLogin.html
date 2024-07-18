@@ -641,7 +641,11 @@ if (action === 'login') {
                     const data = await response.json();
                     
                     // Redirect to payment page with query params
-                    window.location.href = `/payment-page?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&name=${encodeURIComponent(name)}`;
+                    window.location.href = `/payment.html?trial=${data.customerId}&email=${email}&password=${password}&name=${userName}`;
+
+            let stripeid = params.get('trial')
+
+
                 } else {
                     // Handle error
                     alert('Failed to start free trial. Please try again.');
