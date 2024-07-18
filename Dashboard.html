@@ -254,14 +254,14 @@ async function RenderHtml(data){
     const UsedEmails = data.total_emails
     const stripeID = data.stripeID
     const token = localStorage.getItem('authToken');
-    const userData = parseJWT(token);
-        console.log('User Data:', userData);
-        document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${CapsPlan} plan Subscriber</div>
-            <div class="google" id="googleauthid">
-                    Emails Sent From : ${userData.email}
-            </div>
-        `;
+    // const userData = parseJWT(token);
+    //     console.log('User Data:', userData);
+    //     document.getElementById('maintop').innerHTML=`
+    //                 <div class="plan">${CapsPlan} plan Subscriber</div>
+    //         <div class="google" id="googleauthid">
+    //                 Emails Sent From : ${userData.email}
+    //         </div>
+    //     `;
 
     let button = document.getElementById('submit')
     let percentageUsed = (UsedEmails / planEmails) * 100;
