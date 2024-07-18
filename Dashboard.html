@@ -1427,7 +1427,7 @@ function addEmailRow(index) {
 
 async function sendEmailindex(index) {
 
-    if (generatedData[0]) {
+    if (generatedData.length === 0) {
 
                     // return;
     
@@ -1445,8 +1445,8 @@ async function sendEmailindex(index) {
 
     // const subject = subjectElement.value;
     // const content = contentElement.value;
-    const subject =     generatedData[index][1];
-    const content =     generatedData[index][2];
+    const subject =    data.subject;
+    const content =     data.content;
 
     console.log(subject, content)
 
