@@ -30,6 +30,14 @@ let generatedData = [];
 let U_Username;
 let U_MyEmail;
 
+
+window.onload = function() {
+            if (window.innerWidth <= 768) {
+                window.location.href = "https://voltmailer.com/mobile.html";
+            }
+        };
+
+
 async function init() {
     console.log("running")
     const urlParams = new URLSearchParams(window.location.search);
