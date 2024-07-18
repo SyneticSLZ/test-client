@@ -1439,9 +1439,30 @@ async function sendEmailindex(index) {
     if (generatedData.length === 0) {
 
                     // return;
+                    document.getElementById('pr').style.display = `none`;
+        document.getElementById('sending').style.display = 'block';
+        document.getElementById('submit').innerHTML = ` 
+        
+
+                                        <button class="button" onclick="NewCampaign()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                         New Campaign
+                      </button>
+
+
+                        `;
+    return
     
 
 
+}
+else {
+
+
+
+    
     const data = generatedData[index];
     const subjectElement = document.getElementById(`subject-display-${index}`);
     const contentElement = document.getElementById(`content-display-${index}`);
@@ -1474,23 +1495,10 @@ async function sendEmailindex(index) {
         showNotification(`Error sending email to ${data.email}`);
     }
 }
-else {
-     document.getElementById('pr').style.display = `none`;
-        document.getElementById('sending').style.display = 'block';
-        document.getElementById('submit').innerHTML = ` 
-        
-
-                                        <button class="button" onclick="NewCampaign()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                         New Campaign
-                      </button>
 
 
-                        `;
-    return
-}
+
+
 }
 
 async function sendAllEmails() {
