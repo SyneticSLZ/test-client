@@ -360,6 +360,39 @@ var email = '{{ email }}';
 console.log("Customer email:", '{{ email }}', "name is : ", '{{ username }}' );
 
 
+
+async function createFreeSubscription(email, password, userName) {
+
+
+try {
+    const response = await fetch('https://server.voltmailer.com/start-stripe-free-trial', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userName, email, password })
+    });
+
+    if (response.ok) {
+        // Assuming the subscription creation is successful and the server returns a relevant success message or data
+        const data = await response.json();
+        
+        // Redirect to payment page with query params
+        window.location.href = `/payment.html?trial=${data.customerId}&email=${email}&password=${password}&name=${userName}`;
+
+let stripeid = params.get('trial')
+
+
+    } else {
+        // Handle error
+        alert('Failed to start free trial. Please try again.');
+    }
+} catch (error) {
+    console.error('Error:', error);
+    // alert('An error occurred. Please try again.');
+}
+};
+
 async function startFreeTrial() {
           const email = '{{ email }}';
                 const sessionId = '{{ session_id }}';
@@ -945,19 +978,19 @@ function parseJWT(token) {
 function Starter(){
             const params = getQueryParams();
             const { token, email, password, userName } = params;
-            
-            if (token) {
-                const userData = parseJWT(token);
-                let url = `https://voltmailer.com/payment.html?email=${encodeURIComponent(userData.email)}&loggedin=true&plan=f`;
-                window.location.href = url;
-            }
-            if (email) {
-                let url = `https://voltmailer.com/payment.html?loggedin=true&plan=f`;
-                    url += `&email=${encodeURIComponent(email)}`;
-                    url += `&password=${encodeURIComponent(password)}`;
-                    url += `&userName=${encodeURIComponent(userName)}`;
-                    window.location.href = url;
-            }
+            createFreeSubscription(email, password, userName)
+            // if (token) {
+            //     const userData = parseJWT(token);
+            //     let url = `https://voltmailer.com/payment.html?email=${encodeURIComponent(userData.email)}&loggedin=true&plan=f`;
+            //     window.location.href = url;
+            // }
+            // if (email) {
+            //     let url = `https://voltmailer.com/payment.html?loggedin=true&plan=f`;
+            //         url += `&email=${encodeURIComponent(email)}`;
+            //         url += `&password=${encodeURIComponent(password)}`;
+            //         url += `&userName=${encodeURIComponent(userName)}`;
+            //         window.location.href = url;
+            // }
                
 };
 
