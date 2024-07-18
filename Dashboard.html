@@ -254,6 +254,14 @@ async function RenderHtml(data){
     const UsedEmails = data.total_emails
     const stripeID = data.stripeID
     const token = localStorage.getItem('authToken');
+    const userData = parseJWT(token);
+        console.log('User Data:', userData);
+        document.getElementById('maintop').innerHTML=`
+                    <div class="plan">${CapsPlan} plan Subscriber</div>
+            <div class="google" id="googleauthid">
+                    Emails Sent From : ${userData.email}
+            </div>
+        `;
 
     let button = document.getElementById('submit')
     let percentageUsed = (UsedEmails / planEmails) * 100;
@@ -360,12 +368,7 @@ async function RenderHtml(data){
                       </button>
 
                       `
-        document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${CapsPlan} plan Subscriber</div>
-            <div class="google" id="googleauthid">
-                    Emails Sent From : ${email}
-            </div>
-        `;
+
         }
     }
 
@@ -406,6 +409,12 @@ async function googleAuth() {
 
                 const UserEmail = data.email
                 const UserStripeID = data.email
+                        document.getElementById('maintop').innerHTML=`
+                    <div class="plan">${CapsPlan} plan Subscriber</div>
+            <div class="google" id="googleauthid">
+                    Emails Sent From : ${UserEmail}
+            </div>
+        `;
                 RenderHtml(data);
 
                 // Add more customization based on user data
@@ -1152,10 +1161,18 @@ async function Autosend_new(){
                     csv.disabled = true;
                     man.disabled = true;
                     // document.getElementById('hidewhengenerating').style.display = 'none';
-                    document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
-                        New Campaign
-                    </button>`;
+                    document.getElementById('submit').innerHTML = ` 
+                    
+                    
+                    
 
+                                        <button class="button" onclick="NewCampaign()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                         New Campaign
+                      </button>
+`
 
 
                 } else {
@@ -1345,11 +1362,20 @@ async function manualSend() {
     }
     document.getElementById('tfoot').style.display = 'block';
     document.getElementById('customLoader').style.display = 'none';
+    // <button class="button" onclick="sendAllEmails()">
+    //                     <i class="fi fi-rs-paper-plane"></i>
+    //                     Send All
+    //                 </button>
     button.innerHTML = `
-                    <button class="button" onclick="sendAllEmails()">
-                        <i class="fi fi-rs-paper-plane"></i>
+
+
+                        <button class="button" onclick="sendAllEmails()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
                         Send All
-                    </button>
+                      </button>
+
                 `;
     // populateEmailTable();
 }
@@ -1441,8 +1467,18 @@ async function sendEmailindex(index) {
 else {
      document.getElementById('pr').style.display = `none`;
         document.getElementById('sending').style.display = 'block';
-        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
-                        New Campaign                     </button>`;
+        document.getElementById('submit').innerHTML = ` 
+        
+
+                                        <button class="button" onclick="NewCampaign()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                         New Campaign
+                      </button>
+
+
+                        `;
     return
 }
 }
@@ -1455,9 +1491,20 @@ async function sendAllEmails() {
         showNotification('All emails sent successfully');
         document.getElementById('pr').style.display = `none`;
         document.getElementById('sending').style.display = 'block';
-        document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
-                        New Campaign
-                    </button>`;
+        document.getElementById('submit').innerHTML = ` 
+        
+        
+
+
+                                        <button class="button" onclick="NewCampaign()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                         New Campaign
+                      </button>
+
+                    
+                    `;
         // initialize()
     } catch (error) {
         console.error('Error sending one or more emails:', error);
