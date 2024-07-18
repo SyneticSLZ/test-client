@@ -1255,6 +1255,22 @@ function showNewHtml() {
 //     }
 // }
 
+function separateSubject(input) {
+    // Check if the input starts with "Subject: "
+    const prefix = "Subject: ";
+    if (input.startsWith(prefix)) {
+        // Extract the actual subject line by removing the prefix
+        const actualSubject = input.substring(prefix.length);
+        return {
+            prefix: prefix.trim(),
+            subject: actualSubject.trim()
+        };
+    } else {
+        // If the input does not start with "Subject: ", return null or handle accordingly
+        return null;
+    }
+}
+
 async function manualSend() {
     document.getElementById('uploadLabel').style.display = "none";
     document.getElementById('man').style.display = "none";
@@ -1306,7 +1322,7 @@ async function manualSend() {
                 }
 
                 const data_new = await response.json();
-                const subject_line = data_new.subject_line
+                const subject_line = separateSubject(data_new.subject_line)
                 const main_message = data_new.body_content
 
 
@@ -1400,8 +1416,13 @@ async function sendEmailindex(index) {
         return;
     }
 
-    const subject = subjectElement.value;
-    const content = contentElement.value;
+    // const subject = subjectElement.value;
+    // const content = contentElement.value;
+    const subject =     generatedData[index][1];
+    const content =     generatedData[index][2];
+
+    console.log(subject, content)
+
     // Implement send logic here
     try {
         updateRowStatus(index, 'Sending');
