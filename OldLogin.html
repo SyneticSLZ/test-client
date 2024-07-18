@@ -613,6 +613,7 @@ if (action === 'login') {
 // logic to call the add subscription here 
 
                         // window.location.href = data.redirectUrl;
+                        createFreeSubscription(email, userName, password)
                     } else if (data.error) {
                         signupError.textContent = data.error;
                     }
@@ -622,6 +623,35 @@ if (action === 'login') {
                 });
             }
         }
+
+        async function createFreeSubscription(email, userName, password) {
+
+
+            try {
+                const response = await fetch('https://server.voltmailer.com/start-stripe-free-trial', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userName, email, password })
+                });
+
+                if (response.ok) {
+                    // Assuming the subscription creation is successful and the server returns a relevant success message or data
+                    const data = await response.json();
+                    
+                    // Redirect to payment page with query params
+                    window.location.href = `/payment-page?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&name=${encodeURIComponent(name)}`;
+                } else {
+                    // Handle error
+                    alert('Failed to start free trial. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        };
+
 
         function letsGo() {
             const urlParams = new URLSearchParams(window.location.search);  
