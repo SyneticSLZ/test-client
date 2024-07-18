@@ -1391,8 +1391,8 @@ async function sendEmailindex(index) {
 
 
     const data = generatedData[index];
-    const subjectElement = document.getElementById(`subject-${index}`);
-    const contentElement = document.getElementById(`content-${index}`);
+    const subjectElement = document.getElementById(`subject-display-${index}`);
+    const contentElement = document.getElementById(`content-display-${index}`);
 
     if (!subjectElement || !contentElement) {
         console.error(`Element(s) not found for index ${index}`);
