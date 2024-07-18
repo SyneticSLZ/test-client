@@ -20,7 +20,9 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>   
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
-    <link rel="icon" href="favicon.png" type="image/icon type"> 
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"> 
 <script>
     
 let submittedData = [];
@@ -409,11 +411,10 @@ async function googleAuth() {
 
                 const UserEmail = data.email
                 const UserStripeID = data.email
-                        document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${CapsPlan} plan Subscriber</div>
-            <div class="google" id="googleauthid">
+                        document.getElementById('googleauthid').innerHTML=`
+
                     Emails Sent From : ${UserEmail}
-            </div>
+
         `;
                 RenderHtml(data);
 
