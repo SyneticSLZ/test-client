@@ -2042,6 +2042,12 @@ function renderPlans(plans) {
 
 // Initial render
 document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);    
+    var affiliate = urlParams.get('affiliate');  
+    
+    if (affiliate){
+        localStorage.setItem('affiliate', affiliate);
+    }
     renderPlans(businessPlans);
 });
 
