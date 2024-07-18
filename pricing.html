@@ -961,7 +961,8 @@ function getQueryParams() {
             return {
                 token: params.get('token'),
                 email: decodeURIComponent(params.get('email')),
-                password: decodeURIComponent(params.get('password'))
+                password: decodeURIComponent(params.get('password')),
+                username: decodeURIComponent(params.get('username'))
             };
         }
 
@@ -996,7 +997,7 @@ function Starter(){
 
 function Premium(){
             const params = getQueryParams();
-            const { token, email, password, userName } = params;
+            const { token, email, password, username } = params;
             
             if (token) {
               const userData = parseJWT(token);
@@ -1007,7 +1008,7 @@ function Premium(){
                 let url = `https://voltmailer.com/payment.html?loggedin=true&plan=p`;
                     url += `&email=${encodeURIComponent(email)}`;
                     url += `&password=${encodeURIComponent(password)}`;
-                    url += `&userName=${encodeURIComponent(userName)}`;
+                    url += `&userName=${encodeURIComponent(username)}`;
                     window.location.href = url;
             }
              
