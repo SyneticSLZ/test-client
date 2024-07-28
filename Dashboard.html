@@ -2519,7 +2519,7 @@ function showNotification(message) {
                 
                 if (data.data && data.data.emails) {
                     const emails = data.data.emails;
-                    if(len(emails) >= 1){
+                    if (emails.length > 0){
                     emails.forEach(item => {
                         const formData = {
                             email: item.value,
