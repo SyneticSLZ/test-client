@@ -2510,7 +2510,7 @@ function showNotification(message) {
             event.preventDefault();
 
             const domain = document.getElementById('domain').value;
-            const response = await fetch('https://server.voltmailer.com/get-emails', {
+            const response = await fetch('http://127.0.0.1:5501/get-emails', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
