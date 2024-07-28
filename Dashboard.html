@@ -2519,7 +2519,7 @@ function showNotification(message) {
                 
                 if (data.data && data.data.emails) {
                     const emails = data.data.emails;
-
+                    if(len(emails) >= 1){
                     emails.forEach(item => {
                         const formData = {
                             email: item.value,
@@ -2528,9 +2528,13 @@ function showNotification(message) {
                         };
                         submittedData.push(formData);
                     });
-                    // updateTable()
-
-
+                    updateTable()
+                    console.log("found")
+                }
+                else
+                {
+                    document.getElementById('results').textContent = 'No emails found or an error occurred.'; 
+                }
                 } else {
                     document.getElementById('results').textContent = 'No emails found or an error occurred.';
                 }
