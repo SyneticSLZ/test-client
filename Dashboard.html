@@ -1893,29 +1893,7 @@ function showNotification(message) {
                 }, 5000);
             };
 
-document.getElementById('emailForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
 
-            const domain = document.getElementById('domain').value;
-            const response = await fetch('https://server.voltmailer.com/get-emails', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ domain })
-            });
-
-            const data = await response.json();
-            const resultsDiv = document.getElementById('results');
-
-            if (data.success) {
-                const emailsList = data.submittedData.map(item => `<li>${item.name} (${item.email})</li>`).join('');
-                resultsDiv.innerHTML = `<ul>${emailsList}</ul>`;
-                updateTable();
-            } else {
-                resultsDiv.textContent = data.error;
-            }
-        });
             
     </script>
 </head>
@@ -2527,6 +2505,30 @@ document.getElementById('emailForm').addEventListener('submit', async function(e
     <script>
         document.getElementById('fileInput').addEventListener('change', handleFile, false);
         document.getElementById('fileMIDDLE').addEventListener('change', handleFile, false);
+
+        document.getElementById('emailForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const domain = document.getElementById('domain').value;
+            const response = await fetch('https://server.voltmailer.com/get-emails', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ domain })
+            });
+
+            const data = await response.json();
+            const resultsDiv = document.getElementById('results');
+
+            if (data.success) {
+                const emailsList = data.submittedData.map(item => `<li>${item.name} (${item.email})</li>`).join('');
+                resultsDiv.innerHTML = `<ul>${emailsList}</ul>`;
+                updateTable();
+            } else {
+                resultsDiv.textContent = data.error;
+            }
+        });
         // Function to handle tab switching
 
         function OpenAccount() {
