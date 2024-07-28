@@ -2516,9 +2516,19 @@ function showNotification(message) {
                 const data = await response.json();
                 
                 if (data.data && data.data.emails) {
-                    const resultsDiv = document.getElementById('results');
-                    const emailsList = data.data.emails.map(item => `<li>${item.first_name} (${item.value})</li>`).join('');
-                    resultsDiv.innerHTML = `<ul>${emailsList}</ul>`;
+                    const emails = data.data.emails;
+
+                    emails.forEach(item => {
+                        const formData = {
+                            email: item.value,
+                            website: domain,
+                            name: item.first_name || '' // Fallback in case first_name is not provided
+                        };
+                        submittedData.push(formData);
+                    });
+                    updateTable()
+
+
                 } else {
                     document.getElementById('results').textContent = 'No emails found or an error occurred.';
                 }
