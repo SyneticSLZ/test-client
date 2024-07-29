@@ -1152,9 +1152,9 @@ function NewCampaign() {
                     document.getElementById('sending').style.display = 'none';
 
                     document.getElementById('uploadLabel').style.display = "flex";
-                    document.getElementById('export').style.display = "flex";
+                    document.getElementById('DOMAIN').style.display = "flex";
     document.getElementById('man').style.display = "flex";
-    // document.getElementById('export').style.display = "none";
+    document.getElementById('export').style.display = "none";
                     // disable textarea 
                     // disable buttons 
                     // const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
@@ -1303,9 +1303,9 @@ async function Restart() {
   document.getElementById('newContent').style.display = 'none';
   document.getElementById('togglewoggle').style.display = 'flex';
   document.getElementById('uploadLabel').style.display = "flex";
-  document.getElementById('export').style.display = "flex";
+  document.getElementById('DOMAIN').style.display = "flex";
     document.getElementById('man').style.display = "flex";
-    // document.getElementById('export').style.display = "none";
+    document.getElementById('export').style.display = "none";
   dataTable = document.getElementById('dataTable');
   dataTable.innerHTML=``;
   button.innerHTML=`<button class="button" onclick="SendEmails()">
@@ -1368,9 +1368,9 @@ function separateSubject(input) {
 
 async function manualSend() {
     document.getElementById('uploadLabel').style.display = "none";
-    document.getElementById('export').style.display = "none";
+    document.getElementById('DOMAIN').style.display = "none";
     document.getElementById('man').style.display = "none";
-    // document.getElementById('export').style.display = "flex";
+    document.getElementById('export').style.display = "flex";
     // document.getElementById('ca').style.display = "none"
     const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
     document.getElementById('customLoader').style.display = 'flex';
@@ -2308,7 +2308,7 @@ function showNotification(message) {
                     <!-- <span>Or</span> -->
                     <div class="buttons" id="inputButtons">
 
-                        <button class="button-man" onclick="togglePopupDomain()" id="man" style="width: 100%;"><div class="lead"> + Add from Domain</div></button>      
+                        <button class="button-man" onclick="togglePopupDomain()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add from Domain</div></button>      
                     </div>
                     <!-- <div class=""></div> -->
                     <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
