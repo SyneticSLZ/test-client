@@ -1152,6 +1152,7 @@ function NewCampaign() {
                     document.getElementById('sending').style.display = 'none';
 
                     document.getElementById('uploadLabel').style.display = "flex";
+                    document.getElementById('export').style.display = "flex";
     document.getElementById('man').style.display = "flex";
     document.getElementById('export').style.display = "none";
                     // disable textarea 
@@ -1302,6 +1303,7 @@ async function Restart() {
   document.getElementById('newContent').style.display = 'none';
   document.getElementById('togglewoggle').style.display = 'flex';
   document.getElementById('uploadLabel').style.display = "flex";
+  document.getElementById('export').style.display = "flex";
     document.getElementById('man').style.display = "flex";
     document.getElementById('export').style.display = "none";
   dataTable = document.getElementById('dataTable');
@@ -1366,6 +1368,7 @@ function separateSubject(input) {
 
 async function manualSend() {
     document.getElementById('uploadLabel').style.display = "none";
+    document.getElementById('export').style.display = "none";
     document.getElementById('man').style.display = "none";
     document.getElementById('export').style.display = "flex";
     // document.getElementById('ca').style.display = "none"
