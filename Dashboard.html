@@ -1154,7 +1154,7 @@ function NewCampaign() {
                     document.getElementById('uploadLabel').style.display = "flex";
                     document.getElementById('export').style.display = "flex";
     document.getElementById('man').style.display = "flex";
-    document.getElementById('export').style.display = "none";
+    // document.getElementById('export').style.display = "none";
                     // disable textarea 
                     // disable buttons 
                     // const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
@@ -1305,7 +1305,7 @@ async function Restart() {
   document.getElementById('uploadLabel').style.display = "flex";
   document.getElementById('export').style.display = "flex";
     document.getElementById('man').style.display = "flex";
-    document.getElementById('export').style.display = "none";
+    // document.getElementById('export').style.display = "none";
   dataTable = document.getElementById('dataTable');
   dataTable.innerHTML=``;
   button.innerHTML=`<button class="button" onclick="SendEmails()">
@@ -1370,7 +1370,7 @@ async function manualSend() {
     document.getElementById('uploadLabel').style.display = "none";
     document.getElementById('export').style.display = "none";
     document.getElementById('man').style.display = "none";
-    document.getElementById('export').style.display = "flex";
+    // document.getElementById('export').style.display = "flex";
     // document.getElementById('ca').style.display = "none"
     const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
     document.getElementById('customLoader').style.display = 'flex';
