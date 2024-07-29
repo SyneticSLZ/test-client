@@ -239,6 +239,7 @@ function decodeEmailJWT(token) {
 // }
 
 function fetchUserData() {
+    console.log("fetching data")
     const token = getEmailTokenFromUrl();
     if (token) {
         const decoded = decodeEmailJWT(token);
@@ -253,6 +254,7 @@ function fetchUserData() {
             }
         })
         .then(response => {
+            console.log("response : ", response)
             if (response.status === 401) {
                 // Unauthorized error, redirect to expired session page
                 window.location.href = 'https://voltmailer.com/ExpiredSession.html';
