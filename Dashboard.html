@@ -17,6 +17,12 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-straight/css/uicons-regular-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-straight/css/uicons-regular-straight.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-straight/css/uicons-thin-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-straight/css/uicons-thin-straight.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>   
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
@@ -662,6 +668,20 @@ function togglePopupManual() {
       const emailInput = document.getElementById('email');
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
+
+
+
+        // emailInput.value = "";
+        // websiteInput.value = "https://";
+        // nameInput.value = "";
+      overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+
+    }
+    function togglePopupDomain() {
+      const overlay = document.getElementById('manual-popup-overlay-domain');
+    //   const emailInput = document.getElementById('email');
+        // const websiteInput = document.getElementById('website');
+        // const nameInput = document.getElementById('name');
 
 
 
@@ -1934,8 +1954,8 @@ function showNotification(message) {
     </div> 
 
     <div class="manual-popup-overlay" id="manual-popup-overlay">
-        
         <div class="container">
+            <h2 style="align-self: center; margin-bottom: 10px;">Manual Lead Entry</h2>
             <button id="closePopup" class="close-popup" onclick="togglePopupManual()">X</button>
             <!-- <div class="heading">Add Manually</div> -->
             <!-- <form class="form" action=""> -->
@@ -1951,20 +1971,20 @@ function showNotification(message) {
               </div> -->
 
               <div class="coolinput">
-                <!-- <label for="input" class="text">Name:</label> -->
+                <label for="input" class="text">Name:</label>
                 <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
             </div>
 
             <div class="coolinput">
-                <!-- <label for="input" class="text">Email:</label> -->
+                <label for="input" class="text">Email:</label>
                 <input type="text" placeholder="Example@email.com" name="input" class="input" id="emailinput">
                 <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
 
             </div>              
             
             <div class="coolinput">
-                <!-- <label for="input" class="text">Website:</label> -->
-                <input type="text" placeholder="Https://" name="input" class="input" id="website" value="https://">
+                <label for="input" class="text">Website:</label>
+                <input type="text" placeholder="Voltmailer.com" name="input" class="input" id="website" >
             </div>
               <!-- <div class="input-field">
                 <input
@@ -2008,6 +2028,38 @@ function showNotification(message) {
           
       </div>
 
+      <div class="manual-popup-overlay domain" id="manual-popup-overlay-domain">
+        <div class="container">
+        <div class="center" id="center">
+
+            <h1 style="font-size: 20px; margin-bottom:20px;">Enter Domain to Search for Emails</h1>
+            <form id="emailForm" style="display: flex;flex-direction: row;">
+                <input type="text" id="domain" name="domain" placeholder="Enter domain" required style="height: 100%;">
+                <button type="submit" style="margin-top: 0; height: 100%; width: 35%;"><i class="fi fi-rr-arrow-right" style="padding-left: 10px;     height: 14px; width: 14px;"></i></button>
+            </form>
+            <div id="results" style="color: red;"></div>
+
+            
+         <!-- <label class="custum-file-upload" for="fileMIDDLE">
+            <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+            </div>
+            <div class="text">
+               <span>Click to upload Csv</span>
+               </div>
+               <input type="file" id="fileMIDDLE"  accept=".xlsx" >
+            </label>  -->
+
+        </div> 
+        </div>
+        <div class="btn-container">
+
+            <div class="acc-text">
+                <span style="color : #ff0000; cursor : pointer;"  id="manualErrorm"></span>
+            </div>
+          </div>
+      </div>
+
     <div class="sidebar">
         <div class="div">
         <div class="logo">
@@ -2022,7 +2074,7 @@ function showNotification(message) {
             <div class="menu-item" id="2"> <i class="fi fi-tr-rocket-lunch"></i>New Campaign</div>
             <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
             <!-- <div class="menu-item tools">Tools</div> -->
-            <div class="menu-item" id="4" style="border-top: 1px solid #00000081;"><i class="fi fi-rr-user-pen"></i>Account</div>
+            <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Account</div>
             <!-- <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div> -->
         </div>
     </div>
@@ -2041,7 +2093,7 @@ function showNotification(message) {
             <!-- #setting -->
             <!-- #signout -->
         <!-- </div> -->
-        <div class="menu-item logout" id="5" onclick="logout()"><i class="fi fi-tr-arrow-square-right"></i>Logout</div>
+        <div class="menu-item logout" id="5" onclick="logout()" style="background-color: #5e5e5e34; padding-left: 0; margin-left: 0; "><i class="fi fi-tr-arrow-square-right"></i>Logout</div>
     </div>
 
 
@@ -2197,6 +2249,11 @@ function showNotification(message) {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
                         
+                    </div>
+                    <!-- <span>Or</span> -->
+                    <div class="buttons" id="inputButtons">
+
+                        <button class="button-man" onclick="togglePopupDomain()" id="man" style="width: 100%;"><div class="lead"> + Add from Domain</div></button>      
                     </div>
                     <!-- <div class=""></div> -->
                     <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
@@ -2528,6 +2585,7 @@ function showNotification(message) {
                         };
                         submittedData.push(formData);
                     });
+                    document.getElementById('manual-popup-overlay-domain').style.display = 'none';
                     updateTable()
                     console.log("found")
                 }

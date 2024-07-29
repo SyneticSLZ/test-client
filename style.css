@@ -93,7 +93,7 @@
   .plan{
     margin-left: 20px;
   }
-  i{
+  .menu-item i{
     padding-left: 15px;
     margin-right: 10px;
     /* padding-right: 15px; */
@@ -1504,16 +1504,20 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     padding: 20px;
     border-radius: 20px;
     background-color: #fff;
-    width: 15%;
-    height: 35%;
+    width: 25%;
+    height: 55%;
     display: flex;
     align-items: start;
     justify-content: center;
     flex-direction: column;
   }
   
+  .domain .container{
+    height: 30% ;
+  }
  .manual-popup-overlay .container .heading {
     font-size: 1.3rem;
+    margin-left: 30px;
     margin-bottom: 20px;
     font-weight: bolder;
   }
@@ -1571,6 +1575,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     /* transform: translateY(0.6rem); */
     transition: all 0.3s ease;
     background-color: #fff;
+    margin-left: 60px;
   }
   
   .manual-popup-overlay input {
