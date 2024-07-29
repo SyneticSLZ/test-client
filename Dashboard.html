@@ -1955,8 +1955,9 @@ function showNotification(message) {
 
     <div class="manual-popup-overlay" id="manual-popup-overlay">
         <div class="container">
+            <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupManual()">X</button>
             <h2 style="align-self: center; margin-bottom: 10px;">Manual Lead Entry</h2>
-            <button id="closePopup" class="close-popup" onclick="togglePopupManual()">X</button>
+            <!-- <button id="closePopup" class="close-popup" onclick="togglePopupManual()">X</button> -->
             <!-- <div class="heading">Add Manually</div> -->
             <!-- <form class="form" action=""> -->
               <!-- <div class="input-field">
@@ -2030,6 +2031,7 @@ function showNotification(message) {
 
       <div class="manual-popup-overlay domain" id="manual-popup-overlay-domain">
         <div class="container">
+            <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupDomain()">X</button>
         <div class="center" id="center">
 
             <h1 style="font-size: 20px; margin-bottom:20px;">Enter Domain to Search for Emails</h1>
