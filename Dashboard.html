@@ -199,6 +199,45 @@ function decodeEmailJWT(token) {
     return JSON.parse(atob(base64));
 }
 
+// function fetchUserData() {
+//     const token = getEmailTokenFromUrl();
+//     if (token) {
+//         const decoded = decodeEmailJWT(token);
+//         const email = decoded.email;
+//         U_MyEmail = decoded.email;
+
+//         fetch('https://server.voltmailer.com/user-data', {
+//             method: 'GET',
+//             headers: {
+//                 'Authorization': `Bearer ${token}`,
+//                 'Content-Type': 'application/json'
+//             }
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.error) {
+//                 console.error('Error fetching user data:', data.error);
+//                 window.location.href='https://voltmailer.com/ExpiredSession.html'
+//             } else {
+//                 // Customize the page using user data
+//                 // document.getElementById('userEmail').textContent = data.email;
+//                 console.log(data)
+
+//                 const UserEmail = data.email
+//                 U_MyEmail = data.email
+//                 const UserStripeID = data.email
+//                 RenderHtml(data);
+//                 // Add more customization based on user data
+//             }
+//         })
+//         .catch(error => {
+//             console.error('An error occurred:', error);
+//         });
+//     } else {
+//         console.error('Token not found in URL');
+//     }
+// }
+
 function fetchUserData() {
     const token = getEmailTokenFromUrl();
     if (token) {
@@ -213,19 +252,24 @@ function fetchUserData() {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 401) {
+                // Unauthorized error, redirect to expired session page
+                window.location.href = 'https://voltmailer.com/ExpiredSession.html';
+                return null; // Stop further processing
+            }
+            return response.json();
+        })
         .then(data => {
-            if (data.error) {
+            if (data && data.error) {
                 console.error('Error fetching user data:', data.error);
-                window.location.href='https://voltmailer.com/ExpiredSession.html'
-            } else {
+                window.location.href = 'https://voltmailer.com/ExpiredSession.html';
+            } else if (data) {
                 // Customize the page using user data
-                // document.getElementById('userEmail').textContent = data.email;
-                console.log(data)
-
-                const UserEmail = data.email
-                U_MyEmail = data.email
-                const UserStripeID = data.email
+                console.log(data);
+                const UserEmail = data.email;
+                U_MyEmail = data.email;
+                const UserStripeID = data.email;
                 RenderHtml(data);
                 // Add more customization based on user data
             }
@@ -237,6 +281,7 @@ function fetchUserData() {
         console.error('Token not found in URL');
     }
 }
+
 
 function logout(){
     localStorage.clear();
