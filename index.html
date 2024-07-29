@@ -2152,9 +2152,203 @@ async function addCustomer() {
             </div>
 
 
+            <div class="input__container">
+              <div class="shadow__input"></div>
+              <button class="input__button__shadow">
+                <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="20px" width="20px">
+                  <path d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z" fill-rule="evenodd" fill="#17202A"></path>
+                </svg>
+              </button>
+              <input type="text" name="text" class="input__search" id="search-input" placeholder="What do you want to search?" readonly>
+            </div>
+            <style>
+              html {
+            height: 100%;
+            width: 100%;
+          }
+          .input__container {
+            margin-block: 30px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.664);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            border-radius: 22px;
+            max-width: 300px;
+            transition: transform 400ms;
+            transform-style: preserve-3d;
+            transform: rotateX(15deg) rotateY(-20deg);
+            perspective: 500px;
+          }
+          
+          .shadow__input {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            bottom: 0;
+            z-index: -1;
+            filter: blur(30px);
+            border-radius: 20px;
+            background-color: #999cff;
+            background-image: radial-gradient(at 85% 51%, hsla(60,60%,61%,1) 0px, transparent 50%),
+              radial-gradient(at 74% 68%, hsla(235,69%,77%,1) 0px, transparent 50%),
+              radial-gradient(at 64% 79%, hsla(284,72%,73%,1) 0px, transparent 50%),
+              radial-gradient(at 75% 16%, hsla(283,60%,72%,1) 0px, transparent 50%),
+              radial-gradient(at 90% 65%, hsla(153,70%,64%,1) 0px, transparent 50%),
+              radial-gradient(at 91% 83%, hsla(283,74%,69%,1) 0px, transparent 50%),
+              radial-gradient(at 72% 91%, hsla(213,75%,75%,1) 0px, transparent 50%);
+          }
+          
+          .input__button__shadow {
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: transform 400ms, background 400ms;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            padding: 5px;
+          }
+          
+          .input__button__shadow:hover {
+            background: rgba(255, 255, 255, 0.411);
+          }
+          
+          .input__search {
+            width: 100%;
+            border-radius: 20px;
+            outline: none;
+            border: none;
+            padding: 8px;
+            position: relative;
+          }
+          body, html {
+    margin: 0;
+    padding: 0;
+    /* font-family: Arial, sans-serif; */
+}
+
+.email-slider-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    /* background-color: white; */
+    padding: 20px 0;
+    margin-top: 20px;
+    color: #000000;
+}
+
+.email-slider-container h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 40px;
+    color: white;
+}
+
+.email-slider {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.email-slider-wrapper {
+    display: flex;
+    animation: scroll 30s linear infinite;
+    width: max-content; /* Adjust according to the content width */
+}
+
+.email {
+    width: calc(100vw - 40px);
+    max-width: 600px;
+    box-sizing: border-box;
+    padding: 20px;
+    margin: 0 10px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.email h2 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.email p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.email p:last-child {
+    margin-bottom: 0;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #555;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-30%); }
+}
 
 
-<div class="hide">
+
+
+            </style>
+            <script>
+
+
+
+
+              const searchInput = document.getElementById('search-input');
+          const searchTerms = [
+            'I run marketing campaigns for businesses',
+            'SaaS software solution',
+            'Software tools for coding',
+            'I do accounting for businesses',
+            'I half variable costs',
+          ];
+          
+          let termIndex = 0;
+          let charIndex = 0;
+          let currentTerm = '';
+          let isDeleting = false;
+          
+          function typeAnimation() {
+            const speed = 150;
+            const term = searchTerms[termIndex];
+          
+            if (isDeleting) {
+              currentTerm = term.substring(0, charIndex - 1);
+              charIndex--;
+            } else {
+              currentTerm = term.substring(0, charIndex + 1);
+              charIndex++;
+            }
+          
+            searchInput.value = currentTerm;
+          
+            if (!isDeleting && charIndex === term.length) {
+              setTimeout(() => isDeleting = true, 1000);
+            } else if (isDeleting && charIndex === 0) {
+              isDeleting = false;
+              termIndex = (termIndex + 1) % searchTerms.length;
+            }
+          
+            setTimeout(typeAnimation, isDeleting ? speed / 2 : speed);
+          }
+          
+          document.addEventListener('DOMContentLoaded', typeAnimation);
+            </script>
+
+<!-- <div class="hide">
               <div class="container-glass">
                 <div data-text="Design" style="--r:-15;" class="glass">
                   <i class="fi fi-sr-customize-computer" style="color: white;"></i>
@@ -2174,7 +2368,88 @@ async function addCustomer() {
                   </svg>
                 </div>
               </div>
-            </div>
+            </div> -->
+
+            <div class="email-slider-container">
+              <h2>Here are some emails we have generated</h2>
+              <div class="email-slider">
+                  <div class="email-slider-wrapper">
+                      <div class="email" style="border-color: #007bff;">
+                          <h2>Subject: Important Update</h2>
+                          <p>Dear John Doe,</p>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, pulvinar facilisis justo mollis, auctor consequat urna.</p>
+                          <p>Morbi a bibendum metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+                          <p>Best regards,</p>
+                          <p><strong>Jane Smith</strong><br>Company XYZ<br>Email: jane.smith@companyxyz.com</p>
+                      </div>
+                      <div class="email" style="border-color: #ffc107;">
+                          <h2>Subject: Meeting Reminder</h2>
+                          <p>Dear Alice Johnson,</p>
+                          <p>Proin laoreet ex nec lobortis bibendum. Ut sit amet purus euismod, scelerisque mauris a, aliquet risus. Mauris ut vehicula magna.</p>
+                          <p>Fusce eu urna et est euismod ornare nec ut magna. Curabitur sagittis metus id dolor ultricies, sit amet sollicitudin ligula feugiat.</p>
+                          <p>Best regards,</p>
+                          <p><strong>Michael Brown</strong><br>Company ABC<br>Email: michael.brown@companyabc.com</p>
+                      </div>
+                      <div class="email" style="border-color: #000000;">
+                          <h2>Subject: Project Update</h2>
+                          <p>Dear Maria Gonzalez,</p>
+                          <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
+                          <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
+                          <p>Best regards,</p>
+                          <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+                      </div>
+                      <div class="email" style="border-color: #007bff;">
+                        <h2>Subject: Important Update</h2>
+                        <p>Dear John Doe,</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, pulvinar facilisis justo mollis, auctor consequat urna.</p>
+                        <p>Morbi a bibendum metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+                        <p>Best regards,</p>
+                        <p><strong>Jane Smith</strong><br>Company XYZ<br>Email: jane.smith@companyxyz.com</p>
+                    </div>
+                    <div class="email" style="border-color: #ffc107;">
+                        <h2>Subject: Meeting Reminder</h2>
+                        <p>Dear Alice Johnson,</p>
+                        <p>Proin laoreet ex nec lobortis bibendum. Ut sit amet purus euismod, scelerisque mauris a, aliquet risus. Mauris ut vehicula magna.</p>
+                        <p>Fusce eu urna et est euismod ornare nec ut magna. Curabitur sagittis metus id dolor ultricies, sit amet sollicitudin ligula feugiat.</p>
+                        <p>Best regards,</p>
+                        <p><strong>Michael Brown</strong><br>Company ABC<br>Email: michael.brown@companyabc.com</p>
+                    </div>
+                    <div class="email" style="border-color: #000000;">
+                        <h2>Subject: Project Update</h2>
+                        <p>Dear Maria Gonzalez,</p>
+                        <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
+                        <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
+                        <p>Best regards,</p>
+                        <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+                    </div>
+                      <div class="email" style="border-color: #000000;">
+                        <h2>Subject: Project Update</h2>
+                        <p>Dear Maria Gonzalez,</p>
+                        <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
+                        <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
+                        <p>Best regards,</p>
+                        <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+                    </div>
+                    <div class="email" style="border-color: #000000;">
+                      <h2>Subject: Project Update</h2>
+                      <p>Dear Maria Gonzalez,</p>
+                      <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
+                      <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
+                      <p>Best regards,</p>
+                      <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+                  </div>
+                  <div class="email" style="border-color: #000000;">
+                    <h2>Subject: Project Update</h2>
+                    <p>Dear Maria Gonzalez,</p>
+                    <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
+                    <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
+                    <p>Best regards,</p>
+                    <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+                </div>
+                  </div>
+              </div>
+          </div>
+
 
             
 
