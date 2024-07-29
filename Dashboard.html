@@ -1466,6 +1466,7 @@ function addEmailRow(index) {
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
 
     const row = document.createElement('tr');
+    console.log(data.content)
     row.innerHTML = `
         <td>${data.email}</td>
         <td class="action-buttons">
