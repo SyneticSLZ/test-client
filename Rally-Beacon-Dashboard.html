@@ -406,59 +406,52 @@ async function RenderHtml(data){
             <button class="button-man" onclick="updatePasswordForm()">Save</button>
           </div>
     ` 
-    // document.getElementById('sidemenu').innerHTML=`
-    //         <div class="menu-item active" id="1"><i class="fi fi-br-house-blank"></i>Home</div>
-    //         <div class="menu-item" id="2"> <i class="fi fi-bs-pulse"></i>Usage</div>
-    //         <div class="menu-item" id="3" onclick="billing(data.stripeID)" > <i class="fi fi-rr-credit-card"></i> Billing</div>
-    //         <div class="menu-item tools">Tools</div>
-    //         <div class="menu-item" id="openPopup"><i class="fi fi-rr-user-pen"></i>Account</div>
-    //         <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div>
-    // `;
 
 
-        if (UsedEmails >= planEmails) {
-                button.innerHTML=`                    
-                <button class="button" onClick="billing(${stripeID}, ${email})" >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Unlock Pro
-                </button>`
-            }
-        else {
-            if (!token){
-                document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${CapsPlan} plan Subscriber</div>
-            <div class="google" id="googleauthid">
-<div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> 
-            </div>
-        `;
-        button.innerHTML=`
+
+        // if (UsedEmails >= planEmails) {
+        //         button.innerHTML=`                    
+        //         <button class="button" onClick="billing(${stripeID}, ${email})" >
+        //                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+        //                   <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+        //                 </svg>
+        //                 Unlock Pro
+        //         </button>`
+        //     }
+//         else {
+//             if (!token){
+//                 document.getElementById('maintop').innerHTML=`
+//                     <div class="plan">${CapsPlan} plan Subscriber</div>
+//             <div class="google" id="googleauthid">
+// <div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> 
+//             </div>
+//         `;
+//         button.innerHTML=`
                     
-                    <button class="button" onclick="ConnectGoogle()">
-                        <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
-                        Connect Google
-                      </button>
+//                     <button class="button" onclick="ConnectGoogle()">
+//                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
+//                         Connect Google
+//                       </button>
 
 
 
                       
-                      `
+//                       `
 
-            } else {
-            button.innerHTML=`
+//             } else {
+//             button.innerHTML=`
                     
-                    <button class="button" onclick="Submitandcheckautosend()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Generate
-                      </button>
+//                     <button class="button" onclick="Submitandcheckautosend()">
+//                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+//                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+//                         </svg>
+//                         Generate
+//                       </button>
 
-                      `
+//                       `
 
-        }
-    }
+//         }
+//     }
 
 
 
