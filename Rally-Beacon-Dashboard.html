@@ -1138,46 +1138,49 @@ async function Autosend() {
 }
 
 function NewCampaign() {
-    submittedData = [];
-    generatedData = [];
-                    // reset the whole thing {
+    // Reload the current page
+location.reload();
 
-                    // disable button 
-                    document.getElementById('pr').style.display = `block`;
-                    document.getElementById('sending').style.display = 'none';
+    // submittedData = [];
+    // generatedData = [];
+    //                 // reset the whole thing {
 
-                    document.getElementById('uploadLabel').style.display = "flex";
-                    document.getElementById('DOMAIN').style.display = "flex";
-    document.getElementById('man').style.display = "flex";
-    document.getElementById('export').style.display = "none";
-                    // disable textarea 
-                    // disable buttons 
-                    // const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-                    // dataTable.style.display = "none"
-                    let center = document.getElementById('center');
-                    center.style.display = 'flex'
+    //                 // disable button 
+    //                 document.getElementById('pr').style.display = `block`;
+    //                 document.getElementById('sending').style.display = 'none';
 
-                    document.getElementById('currentContent').style.display = 'flex';
-                    document.getElementById('newContent').style.display = 'none';
-                    // document.getElementById('hidewhengenerating').style.display = 'flex';
+    //                 document.getElementById('uploadLabel').style.display = "flex";
+    //                 document.getElementById('DOMAIN').style.display = "flex";
+    // document.getElementById('man').style.display = "flex";
+    // document.getElementById('export').style.display = "none";
+    //                 // disable textarea 
+    //                 // disable buttons 
+    //                 // const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+    //                 // dataTable.style.display = "none"
+    //                 let center = document.getElementById('center');
+    //                 center.style.display = 'flex'
 
-                    formData = []
-                    submittedData = []
+    //                 document.getElementById('currentContent').style.display = 'flex';
+    //                 document.getElementById('newContent').style.display = 'none';
+    //                 // document.getElementById('hidewhengenerating').style.display = 'flex';
 
-                    document.getElementById('submit').innerHTML = `<button class="button" onclick="Submitandcheckautosend()" id="submit">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Generate
-                    </button> `
-                    updateTable();
-                    const csv = document.getElementById('uploadLabel');
-                    const man = document.getElementById('man');
-                    csv.disabled = false;
-                    man.disabled = false;
-                    const textarea = document.getElementById('userPitch');
-                    textarea.disabled = false;
-                    // document.getElementById('ca').style.display = "block"
+    //                 formData = []
+    //                 submittedData = []
+
+    //                 document.getElementById('submit').innerHTML = `<button class="button" onclick="Submitandcheckautosend()" id="submit">
+    //                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+    //                       <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+    //                     </svg>
+    //                     Generate
+    //                 </button> `
+    //                 updateTable();
+    //                 const csv = document.getElementById('uploadLabel');
+    //                 const man = document.getElementById('man');
+    //                 csv.disabled = false;
+    //                 man.disabled = false;
+    //                 const textarea = document.getElementById('userPitch');
+    //                 textarea.disabled = false;
+    //                 // document.getElementById('ca').style.display = "block"
 }
 
 
