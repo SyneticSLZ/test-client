@@ -2058,14 +2058,14 @@ function fetchNextRace(url) {
                 if (profileStartEvent) {
                     // Get the text inside the a tag
                     const raceName = profileStartEvent.querySelector('a').textContent.trim();
-                    console.log(raceName, profileStartEvent)
+                    console.log(raceName)
                     // Check if there is an overall position element
                     const profileStartOa = profileStartLine.querySelector('.profile-start-oa.font-weight-bold.d-flex.justify-content-start.flex-wrap.flex-column');
                     
                     if (profileStartOa) {
                         console.log(profileStartOa)
                         // Look for the <span class="text-primary"></span> element
-                        const hasNotRaced = profileStartOa.querySelector('span.text-primary') !== null;
+                        const hasNotRaced = profileStartOa.querySelector('div span.text-primary') !== null;
                         
                         // If the span is present, the driver has not raced yet
                         if (hasNotRaced) {
