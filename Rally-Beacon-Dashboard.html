@@ -2059,21 +2059,19 @@ function fetchNextRace(url) {
                     // Get the text inside the a tag
                     const raceName = profileStartEvent.querySelector('a').textContent.trim();
                     
-                    // Check if there is an overall position
+                    // Check if there is an overall position element
                     const profileStartOa = profileStartLine.querySelector('.profile-start-oa.font-weight-bold.d-flex.justify-content-start.flex-wrap.flex-column');
                     
                     if (profileStartOa) {
-                        // Extract the overall position from the .profile-start-oa element
-                        const overallPositionText = profileStartOa.textContent.trim();
-                        // Check if the overall position is null or empty
-                        const hasRaced = overallPositionText.includes('') || overallPositionText === '0' || overallPositionText === 'Not Available';
+                        // Look for the <span class="text-primary"></span> element
+                        const hasNotRaced = profileStartOa.querySelector('span.text-primary') !== null;
                         
-                        // If they have raced and there is a place, return null
-                        if (hasRaced) {
-                            return null;
-                        } else {
-                            // If there is no place, return the race name
+                        // If the span is present, the driver has not raced yet
+                        if (hasNotRaced) {
                             return raceName;
+                        } else {
+                            // If the span is not present, the driver has raced and we return null
+                            return null;
                         }
                     } else {
                         // If there is no overall position element, assume they haven't raced yet
@@ -2093,6 +2091,7 @@ function fetchNextRace(url) {
             return null;
         });
 }
+
 
     async function processEntries() {
             generatedData = [];
