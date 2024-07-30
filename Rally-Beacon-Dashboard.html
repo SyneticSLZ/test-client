@@ -2002,6 +2002,38 @@ function showNotification(message) {
             };
 
 
+// function fetchNextRace(url) {
+//     return fetch(`https://server.voltmailer.com/fetch-profile-data?url=${encodeURIComponent(url)}`)
+//         .then(response => response.text())
+//         .then(html => {
+//             const parser = new DOMParser();
+//             const doc = parser.parseFromString(html, 'text/html');
+            
+//             // Get the first .profile-start-line element
+//             const profileStartLine = doc.querySelector('.profile-start-line.d-flex.justify-content-start.w-100.lh-120.py-1.flex-wrap');
+            
+//             if (profileStartLine) {
+//                 // Get the .profile-start-event div inside the first .profile-start-line
+//                 const profileStartEvent = profileStartLine.querySelector('.profile-start-event.w-20');
+                
+//                 if (profileStartEvent) {
+//                     // Get the text inside the a tag
+//                     return profileStartEvent.querySelector('a').textContent.trim();
+//                 } else {
+//                     console.log('Event data not found');
+//                     return null;
+//                 }
+//             } else {
+//                 console.log('Start line data not found');
+//                 return null;
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error fetching data:', error);
+//             return null;
+//         });
+// }
+
 function fetchNextRace(url) {
     return fetch(`https://server.voltmailer.com/fetch-profile-data?url=${encodeURIComponent(url)}`)
         .then(response => response.text())
@@ -2018,7 +2050,28 @@ function fetchNextRace(url) {
                 
                 if (profileStartEvent) {
                     // Get the text inside the a tag
-                    return profileStartEvent.querySelector('a').textContent.trim();
+                    const raceName = profileStartEvent.querySelector('a').textContent.trim();
+                    
+                    // Check if there is an overall position
+                    const profileStartOa = profileStartLine.querySelector('.profile-start-oa.font-weight-bold.d-flex.justify-content-start.flex-wrap.flex-column');
+                    
+                    if (profileStartOa) {
+                        // Extract the overall position from the .profile-start-oa element
+                        const overallPositionText = profileStartOa.textContent.trim();
+                        // Check if the overall position is null or empty
+                        const hasRaced = overallPositionText.includes('') || overallPositionText === '0' || overallPositionText === 'Not Available';
+                        
+                        // If they have raced and there is a place, return null
+                        if (hasRaced) {
+                            return null;
+                        } else {
+                            // If there is no place, return the race name
+                            return raceName;
+                        }
+                    } else {
+                        // If there is no overall position element, assume they haven't raced yet
+                        return raceName;
+                    }
                 } else {
                     console.log('Event data not found');
                     return null;
@@ -2051,6 +2104,8 @@ function fetchNextRace(url) {
             console.log(entry.email)
         try {
             const fetchedRace = await fetchNextRace(entry.url);
+
+            if (!fetchedRace === null) {
             
             if (fetchedRace === entry.nextRace) {
                 if (entry.emailSent === "No") {
@@ -2099,9 +2154,17 @@ Ruairi
                 entry.nextRace = fetchedRace;
                 // entry.emailSent = "Yes";
             }
+        } else {
+            console.log("user has already raced or we cannot find a race")
+        }
+
+
         } catch (error) {
             console.error(`Error processing entry for ${entry.name}:`, error);
         }
+
+
+
     }
     document.getElementById('tfoot').style.display = 'block';
     document.getElementById('customLoader').style.display = 'none';
