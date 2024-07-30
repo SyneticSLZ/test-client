@@ -469,6 +469,7 @@ if (action === 'login') {
         function login() {
             console.log("loggin in")
             var email = document.getElementById('loginEmail').value;
+            const login_Email = email
             var password = document.getElementById('loginPassword').value;
             var loginError = document.getElementById('loginError');
 
@@ -485,7 +486,8 @@ if (action === 'login') {
         .then(response => response.json())
     .then(data => {
         if (data.success) {
-            if (email === 'rallybeacon@gmail.com'){
+            console.log(login_Email, 'rallybeacon@gmail.com')
+            if (login_Email === 'rallybeacon@gmail.com'){
                 window.location.href = `https://voltmailer.com/Rally-Beacon-Dashboard?token=${data.token}`;
             }else{
                 window.location.href = `https://voltmailer.com/Dashboard?token=${data.token}`;
