@@ -485,7 +485,12 @@ if (action === 'login') {
         .then(response => response.json())
     .then(data => {
         if (data.success) {
-            window.location.href = `https://voltmailer.com/Dashboard?token=${data.token}`;
+            if (email === 'rallybeacon@gmail.com'){
+                window.location.href = `https://voltmailer.com/Rally-Beacon-Dashboard?token=${data.token}`;
+            }else{
+                window.location.href = `https://voltmailer.com/Dashboard?token=${data.token}`;
+            }
+            
         } else if (data.error) {
             loginError.textContent = data.error;
         }
