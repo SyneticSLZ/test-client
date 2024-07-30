@@ -409,49 +409,49 @@ async function RenderHtml(data){
 
 
 
-        // if (UsedEmails >= planEmails) {
-        //         button.innerHTML=`                    
-        //         <button class="button" onClick="billing(${stripeID}, ${email})" >
-        //                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-        //                   <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-        //                 </svg>
-        //                 Unlock Pro
-        //         </button>`
-        //     }
-//         else {
-//             if (!token){
-//                 document.getElementById('maintop').innerHTML=`
-//                     <div class="plan">${CapsPlan} plan Subscriber</div>
-//             <div class="google" id="googleauthid">
-// <div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> 
-//             </div>
-//         `;
-//         button.innerHTML=`
+        if (UsedEmails >= planEmails) {
+                button.innerHTML=`                    
+                                    <button class="button" onclick="processEntries()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Check for Race Updates
+                      </button>`
+            }
+        else {
+            if (!token){
+                document.getElementById('maintop').innerHTML=`
+                    <div class="plan">${CapsPlan} plan Subscriber</div>
+            <div class="google" id="googleauthid">
+<div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> 
+            </div>
+        `;
+        button.innerHTML=`
                     
-//                     <button class="button" onclick="ConnectGoogle()">
-//                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
-//                         Connect Google
-//                       </button>
+                    <button class="button" onclick="ConnectGoogle()">
+                        <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
+                        Connect Google
+                      </button>
 
 
 
                       
-//                       `
+                      `
 
-//             } else {
-//             button.innerHTML=`
+            } else {
+            button.innerHTML=`
                     
-//                     <button class="button" onclick="Submitandcheckautosend()">
-//                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-//                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-//                         </svg>
-//                         Generate
-//                       </button>
+                    <button class="button" onclick="processEntries()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Check for Race Updates
+                      </button>
 
-//                       `
+                      `
 
-//         }
-//     }
+        }
+    }
 
 
 
@@ -2409,7 +2409,7 @@ Ruairi
             </div>
 
 
-                <div class="pitch">  
+                <div class="pitch-rally">  
                     <!-- <div class="buttons" id="inputButtons">
 
                         <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
@@ -2430,39 +2430,8 @@ Ruairi
 
                         <button class="button-man" onclick="togglePopupManual()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add Driver</div></button>      
                     </div>
-                    <!-- <div class=""></div> -->
-                    <!-- <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
-                    <span style="text-align: left; padding-left: 10px; color: #000;"> For best results provide: </span>
-                    <span style="text-align: left; padding-left: 20px;"> - Clear offer to prospect or pain-point that you are solving for them. </span>
-                    <span style="text-align: left; padding-left: 20px;"> - Clear call to action the prospect should take.</span> -->
                     <div id="submit"></div>
-                    <button class="button" onclick="processEntries()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Check for Race Updates
-                      </button>
-                    <!-- <button class="button" onclick="Submitandcheckautosend()" id="submit">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Generate
-                    </button> -->
 
-
-                      
-                    <!-- <div class="nobg-submit" id="hidewhengenerating">
-                        <div class="checkbox-wrapper-46">
-                          <input type="checkbox" id="cbx-46" class="inp-cbx" onchange="checkbox()" />
-                          <label for="cbx-46" class="cbx"
-                            ><span>
-                              <svg viewBox="0 0 12 10" height="10px" width="12px">
-                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span
-                            ><span> <div id="autosend-text">Autosend is <b>OFF</b></div> </span>
-                          </label>
-                        </div>
-                    </div> -->
-                   
                 </div>
             </div>
         </div>
