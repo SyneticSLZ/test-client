@@ -2063,9 +2063,9 @@ function fetchNextRace(url) {
                     const profileStartOa = profileStartLine.querySelector('.profile-start-oa.font-weight-bold.d-flex.justify-content-start.flex-wrap.flex-column');
                     
                     if (profileStartOa) {
-                        console.log(profileStartOa)
+                        console.log(profileStartOa.querySelector('div span.text-primary'))
                         // Look for the <span class="text-primary"></span> element
-                        const hasNotRaced = profileStartOa.querySelector('div span.text-primary') !== null;
+                        const hasNotRaced = profileStartOa.querySelector('div span.text-primary');
                         
                         // If the span is present, the driver has not raced yet
                         if (hasNotRaced) {
