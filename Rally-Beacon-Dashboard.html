@@ -2111,8 +2111,8 @@ function fetchNextRace(url) {
             console.log(entry.email)
         try {
             const fetchedRace = await fetchNextRace(entry.url);
-
-            if (!fetchedRace === null) {
+console.log(fetchedRace)
+            if (fetchedRace !== null) {
             
             if (fetchedRace === entry.nextRace) {
                 if (entry.emailSent === "No") {
