@@ -2090,9 +2090,8 @@ function fetchNextRace(url) {
     async function processEntries() {
             generatedData = [];
             document.getElementById('DOMAIN').style.display = "none";
-            document.getElementById('customLoader').style.display = 'flex';
+            // document.getElementById('customLoader').style.display = 'flex';
             const button = document.getElementById('submit');
-            showNewHtml();
             button.innerHTML = `<section class="dots-container">
                         <div class="dot"></div>
                         <div class="dot"></div>
@@ -2100,6 +2099,7 @@ function fetchNextRace(url) {
                         <div class="dot"></div>
                         <div class="dot"></div>
                       </section> `;
+
         for (let entry of submittedData) {
             console.log(entry.email)
         try {
@@ -2167,7 +2167,8 @@ Ruairi
 
     }
     if (generatedData.length > 0) {
-    
+    showNewHtml();
+
     document.getElementById('tfoot').style.display = 'block';
     document.getElementById('customLoader').style.display = 'none';
     button.innerHTML = `
@@ -2183,6 +2184,14 @@ Ruairi
                 `;
                     }
                     else {
+                        document.getElementById('DOMAIN').style.display = "flex";
+            // document.getElementById('customLoader').style.display = 'flex';
+            button.innerHTML = `                    <button class="button" onclick="processEntries()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Check for Race Updates
+                      </button>`;
                         console.log("no new races yet")
                     }
       
