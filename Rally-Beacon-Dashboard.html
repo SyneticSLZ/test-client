@@ -1897,7 +1897,7 @@ async function sendMessage(sender, to, subject, messageText) {
 //         }
 
 async function billing(stripeID, Email) {
-    const response = await fetch('https://server.voltmailer.com/create-billing-portal-session', {
+    const response = await fetch('https://server.voltmailer.com/create-billing-portal-session-rally', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
