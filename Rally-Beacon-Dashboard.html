@@ -31,7 +31,31 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"> 
 <script>
     
-let submittedData = [];
+let submittedData = [
+    {
+        url: "https://www.ewrc-results.com/profile/110269-michael-weiss/",
+        email: "rohanmehmi72@gmail.com",
+        name: "Michael Weiss",
+        nextRace: "Rally Finland",
+        emailSent: "Yes"
+    },
+    {
+        url: "https://www.ewrc-results.com/profile/257095-natya-soodeen/",
+        email: "rohanmehmi72@gmail.com",
+        name: "Natya Soodeen",
+        nextRace: "Rally Germany",
+        emailSent: "No"
+    },
+    {
+        url: "https://www.ewrc-results.com/coprofile/19873-hernan-vargas-pena",
+        email: "rohanmehmi72@gmail.com",
+        name: "Hernan Vargas Peña",
+        nextRace: "Rally Argentina",
+        emailSent: "Yes"
+    }
+];
+
+
 let generatedData = [];
 let U_Username;
 let U_MyEmail;
@@ -71,6 +95,7 @@ async function init() {
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
     init()
+    updateTable()
 
 
     // window.tasks = [
@@ -750,7 +775,7 @@ function togglePopupManual() {
 
 
 function Manual() {
-        const emailInput = document.getElementById('emailinput');
+    const emailInput = document.getElementById('emailinput');
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
         const email_inputted = emailInput.value;
@@ -775,6 +800,7 @@ function Manual() {
             manualError.textContent = "";
         }
 
+
         if (isValidURL(website)){
             manualError.textContent = "Invalid URL format.";
             return;
@@ -783,10 +809,12 @@ function Manual() {
             }
 
         const formData = {
-            email: email_inputted,
-            website: website,
-            name: name
-        };
+    url: website,
+    email, email_inputted,
+    name: name,
+    nextRace: "null",
+    emailSent: "null"
+};
 
         submittedData.push(formData);
         console.log(updateTable());
@@ -798,57 +826,20 @@ function Manual() {
         togglePopupManual()
 }
 
-// function updateTable() {
-//       const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-//       let center = document.getElementById('center');
-//       center.style.display = 'none';
-//       dataTable.innerHTML = ''; // Clear the existing table rows
-//       console.log("working: ", submittedData);
-      
-//       submittedData.forEach((data, index) => {
-//         const row = dataTable.insertRow();
-//         const emailCell = row.insertCell(0);
-//         const websiteCell = row.insertCell(1);
-//         const nameCell = row.insertCell(2);
-//         const actionCell = row.insertCell(3); // Cell for delete button
 
-//         // Create delete button
-//         const deleteButton = document.createElement('button');
-//         deleteButton.style.color = "#000";
-//         deleteButton.textContent = 'X';
-
-//         deleteButton.addEventListener('click', function() {
-//           deleteRow(index); // Call deleteRow function with index
-//         });
-
-//         emailCell.textContent = data.email;
-//         websiteCell.textContent = data.website;
-//         nameCell.textContent = data.name;
-//         actionCell.appendChild(deleteButton); // Append delete button to action cell
-//         row.setAttribute('data-index', index);
-//       });
-//     }
-
-//     function deleteRow(index) {
-//       submittedData.splice(index, 1); // Remove data from array
-//       updateTable(); // Update table to reflect changes
-//     }
-
-    function updateTable() {
+function updateTable() {
     const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
     let center = document.getElementById('center');
     const thead = document.getElementById('dataTable').getElementsByTagName('thead')[0];
-    // document.getElementById("thead").style.display = "inline-block";
     center.style.display = 'none';
     dataTable.innerHTML = ''; // Clear the existing table rows
-
 
     if (!thead || thead.rows.length === 0) {
         if (!thead) {
             thead = table.createTHead();
         }
         const headerRow = thead.insertRow();
-        const headers = ['Email', 'Website', 'Recipient Name', 'Actions'];
+        const headers = ['URL', 'Name', 'Next Race', 'Email Sent', 'Actions'];
 
         headers.forEach(headerText => {
             const th = document.createElement('th');
@@ -857,15 +848,15 @@ function Manual() {
         });
     }
 
-
     console.log("working: ", submittedData);
 
     submittedData.forEach((data, index) => {
         const row = dataTable.insertRow();
-        const emailCell = row.insertCell(0);
-        const websiteCell = row.insertCell(1);
-        const nameCell = row.insertCell(2);
-        const actionCell = row.insertCell(3); // Cell for action buttons
+        const urlCell = row.insertCell(0);
+        const nameCell = row.insertCell(1);
+        const nextRaceCell = row.insertCell(2);
+        const emailSentCell = row.insertCell(3);
+        const actionCell = row.insertCell(4); // Cell for action buttons
 
         // Create edit button
         const editButton = document.createElement('button');
@@ -885,14 +876,16 @@ function Manual() {
             deleteRow(index); // Call deleteRow function with index
         });
 
-        emailCell.textContent = data.email;
-        websiteCell.textContent = data.website;
+        urlCell.textContent = data.url;
         nameCell.textContent = data.name;
+        nextRaceCell.textContent = data.nextRace;
+        emailSentCell.textContent = data.emailSent;
         actionCell.appendChild(editButton); // Append edit button to action cell
         actionCell.appendChild(deleteButton); // Append delete button to action cell
         row.setAttribute('data-index', index);
     });
 }
+
 
 function deleteRow(index) {
     submittedData.splice(index, 1); // Remove data from array
@@ -1034,6 +1027,8 @@ function Submitandcheckautosend(){
             }
           }
         }
+
+
 // SENDING THE EMAILS AUTOMATED (TAB CAN BE CLOSED)
 // async function Autosend() {
 //   const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
@@ -1466,12 +1461,13 @@ async function manualSend() {
 
 function addEmailRow(index) {
     const data = generatedData[index];
+    // console.log(data)
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
 
     const row = document.createElement('tr');
-    console.log(data.content)
+    // console.log(data.content)
     row.innerHTML = `
-        <td>${data.email}</td>
+        <td>${data.name}</td>
         <td class="action-buttons">
             <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
             <div class="tooltip">
@@ -1605,25 +1601,17 @@ async function sendAllEmails() {
     }
 }
 
-
 function populateEmailTable() {
-
-    // if (!generatedData[0]) {
-
-    //                 return;
-    // }
-
-
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
+    tbody.innerHTML = ""; // Clear existing rows
 
-    tbody.innerHTML = "";
-    // tbody.style.overflow = "auto";
     generatedData.forEach((data, index) => {
+        // Main row displaying the name and action buttons
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${data.email}</td>
+            <td>${data.name} | ${data.email}</td>
             <td class="action-buttons">
-                <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
+                <button onclick="sendEmail(${index})" class="button-icon">Send Now</button>
                 <div class="tooltip">
                     <button onclick="toggleDetails(${index})" class="button-icon" id="arrow-${index}">↓</button>
                     <span class="tooltiptext">Show/Hide Details</span>
@@ -1632,8 +1620,9 @@ function populateEmailTable() {
         `;
         tbody.appendChild(row);
 
+        // Row for email details (subject and content)
         const detailsRow = document.createElement('tr');
-        detailsRow.style.display = 'none';
+        detailsRow.style.display = 'none'; // Hidden by default
         detailsRow.id = `details-${index}`;
         detailsRow.innerHTML = `
             <td colspan="2">
@@ -1654,31 +1643,81 @@ function populateEmailTable() {
         tbody.appendChild(detailsRow);
     });
 }
-// else {
-    // document.getElementById('pr').style.display = `none`;
-        // document.getElementById('sending').style.display = 'block';
-        // document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
-                        // New Campaign
-                    // </button>`;
-    // return;
-// }
-// }
 
-// function makeEditable(field, index) {
-//     const displayElement = document.getElementById(`${field}-display-${index}`);
-//     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
-//     const value = displayElement.innerText;
 
-//     if (field === 'content') {
-//         displayElement.innerHTML = `<textarea id="${field}-${index}" rows="4" class="details editable">${value}</textarea>`;
-//     } else {
-//         displayElement.innerHTML = `<input type="text" id="${field}-${index}" value="${value}" class="details editable">`;
-//     }
-//     document.getElementById(`${field}-${index}`).style.pointerEvents = 'auto';
+// function populateEmailTable() {
+
+//     // if (!generatedData[0]) {
+
+//     //                 return;
+//     // }
+
+
+//     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
+
+//     tbody.innerHTML = "";
+//     // tbody.style.overflow = "auto";
+//     generatedData.forEach((data, index) => {
+//         const row = document.createElement('tr');
+//         row.innerHTML = `
+//             <td>${data.email}</td>
+//             <td class="action-buttons">
+//                 <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
+//                 <div class="tooltip">
+//                     <button onclick="toggleDetails(${index})" class="button-icon" id="arrow-${index}">↓</button>
+//                     <span class="tooltiptext">Show/Hide Details</span>
+//                 </div>
+//             </td>
+//         `;
+//         tbody.appendChild(row);
+
+//         const detailsRow = document.createElement('tr');
+//         detailsRow.style.display = 'none';
+//         detailsRow.id = `details-${index}`;
+//         detailsRow.innerHTML = `
+//             <td colspan="2">
+//                 <div class="details">
+//                     <label>Subject:</label>
+//                     <div class="editable-container">
+//                         <div class="editable text-container" id="subject-display-${index}">${data.subject}</div>
+//                         <span class="pencil-icon" id="subject-pencil-${index}" onclick="makeEditable('subject', ${index})">✏️</span>
+//                     </div>
+//                     <label>Content:</label>
+//                     <div class="editable-container">
+//                         <div class="editable text-container" id="content-display-${index}">${data.content}</div>
+//                         <span class="pencil-icon" id="content-pencil-${index}" onclick="makeEditable('content', ${index})">✏️</span>
+//                     </div>
+//                 </div>
+//             </td>
+//         `;
+//         tbody.appendChild(detailsRow);
+//     });
+// }
+// // else {
+//     // document.getElementById('pr').style.display = `none`;
+//         // document.getElementById('sending').style.display = 'block';
+//         // document.getElementById('submit').innerHTML = ` <button class="button-g" onclick="NewCampaign()" id="submit">
+//                         // New Campaign
+//                     // </button>`;
+//     // return;
+// // }
+// // }
+
+// // function makeEditable(field, index) {
+// //     const displayElement = document.getElementById(`${field}-display-${index}`);
+// //     const pencilIcon = document.getElementById(`${field}-pencil-${index}`);
+// //     const value = displayElement.innerText;
+
+// //     if (field === 'content') {
+// //         displayElement.innerHTML = `<textarea id="${field}-${index}" rows="4" class="details editable">${value}</textarea>`;
+// //     } else {
+// //         displayElement.innerHTML = `<input type="text" id="${field}-${index}" value="${value}" class="details editable">`;
+// //     }
+// //     document.getElementById(`${field}-${index}`).style.pointerEvents = 'auto';
     
-//     pencilIcon.innerText = '✔️';
-//     pencilIcon.onclick = function() { saveChanges(field, index); };
-// }
+// //     pencilIcon.innerText = '✔️';
+// //     pencilIcon.onclick = function() { saveChanges(field, index); };
+// // }
 
 
 
@@ -1967,6 +2006,123 @@ function showNotification(message) {
             };
 
 
+function fetchNextRace(url) {
+    return fetch(`https://server.voltmailer.com/fetch-profile-data?url=${encodeURIComponent(url)}`)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Get the first .profile-start-line element
+            const profileStartLine = doc.querySelector('.profile-start-line.d-flex.justify-content-start.w-100.lh-120.py-1.flex-wrap');
+            
+            if (profileStartLine) {
+                // Get the .profile-start-event div inside the first .profile-start-line
+                const profileStartEvent = profileStartLine.querySelector('.profile-start-event.w-20');
+                
+                if (profileStartEvent) {
+                    // Get the text inside the a tag
+                    return profileStartEvent.querySelector('a').textContent.trim();
+                } else {
+                    console.log('Event data not found');
+                    return null;
+                }
+            } else {
+                console.log('Start line data not found');
+                return null;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            return null;
+        });
+}
+
+    async function processEntries() {
+            generatedData = [];
+            document.getElementById('DOMAIN').style.display = "none";
+            document.getElementById('customLoader').style.display = 'flex';
+            const button = document.getElementById('submit');
+            showNewHtml();
+            button.innerHTML = `<section class="dots-container">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                      </section> `;
+        for (let entry of submittedData) {
+            console.log(entry.email)
+        try {
+            const fetchedRace = await fetchNextRace(entry.url);
+            
+            if (fetchedRace === entry.nextRace) {
+                if (entry.emailSent === "No") {
+                    generatedData.push({
+                        email: entry.email,
+                        name: entry.name,
+                        subject: `good luck for ${fetchedRace}`,
+                        content: `
+                        
+Hi ${entry.name},
+
+Hope the prep for rally ${fetchedRace} is going well. Just dropping you a reminder to use Rally Beacon on Recce if that's possible.
+
+Remember to keep your phone open and on the App during recce so it can catch as much info as possible.  Let me know if you have any feedback on it and hoping to show you the app very soon.
+
+All the best,
+Ruairi 
+                        `
+            });
+
+            document.getElementById('loaderText').innerText = `Generating email for ${entry.email}...`;
+            addEmailRow(generatedData.length - 1);
+                    // Update the entry to mark email as sent if needed
+                    // entry.emailSent = "Yes";
+                }
+            } else {
+                generatedData.push({
+                        email: entry.email,
+                        name: entry.name,
+                        subject: `good luck for ${fetchedRace}`,
+                        content: `
+                        
+Hi ${entry.name},
+
+Hope the prep for rally ${fetchedRace} is going well. Just dropping you a reminder to use Rally Beacon on Recce if that's possible.
+
+Remember to keep your phone open and on the App during recce so it can catch as much info as possible.  Let me know if you have any feedback on it and hoping to show you the app very soon.
+
+All the best,
+Ruairi 
+                        `
+            });
+            document.getElementById('loaderText').innerText = `Generating email for ${entry.email}...`;
+            addEmailRow(generatedData.length - 1);
+                // Update the entry with new race and mark email as sent if needed
+                entry.nextRace = fetchedRace;
+                // entry.emailSent = "Yes";
+            }
+        } catch (error) {
+            console.error(`Error processing entry for ${entry.name}:`, error);
+        }
+    }
+    document.getElementById('tfoot').style.display = 'block';
+    document.getElementById('customLoader').style.display = 'none';
+    button.innerHTML = `
+
+
+                        <button class="button" onclick="sendAllEmails()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Send All
+                      </button>
+
+                `;
+
+      
+}
             
     </script>
 </head>
@@ -2009,61 +2165,26 @@ function showNotification(message) {
     <div class="manual-popup-overlay" id="manual-popup-overlay">
         <div class="container">
             <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupManual()">X</button>
-            <h2 style="align-self: center; margin-bottom: 10px;">Manual Lead Entry</h2>
-            <!-- <button id="closePopup" class="close-popup" onclick="togglePopupManual()">X</button> -->
-            <!-- <div class="heading">Add Manually</div> -->
-            <!-- <form class="form" action=""> -->
-              <!-- <div class="input-field">
-                <input
-                  required=""
-                  autocomplete="off"
-                  type="text"
-                  name="text"
-                  id="name"
-                />
-                <label for="username">Name</label>
-              </div> -->
+            <h2 style="align-self: center; margin-bottom: 10px;">Add your Driver</h2>
 
               <div class="coolinput">
                 <label for="input" class="text">Name:</label>
                 <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
-            </div>
-
+            </div>       
+            
             <div class="coolinput">
                 <label for="input" class="text">Email:</label>
                 <input type="text" placeholder="Example@email.com" name="input" class="input" id="emailinput">
                 <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
 
-            </div>              
+            </div>  
             
             <div class="coolinput">
-                <label for="input" class="text">Website:</label>
-                <input type="text" placeholder="Voltmailer.com" name="input" class="input" id="website" >
+                <label for="input" class="text">Profile Url on EWRC:</label>
+                <input type="text" placeholder="https://www.ewrc-results.com/profile/123456-Joe-Bloggs/" name="input" class="input" id="website" >
             </div>
-              <!-- <div class="input-field">
-                <input
-                  required=""
-                  autocomplete="off"
-                  type="text"
-                  name="email"
-                  id="email"
-                />
-                <label for="email">Email</label>
-              </div>
-              <div class="input-field">
-                <input
-                  required=""
-                  autocomplete="off"
-                  type="text"
-                  name="text"
-                  id="website"
-                  value="https://"
-                />
-                <label for="username">Website</label>
-              </div> -->
 
-
-              <button onclick="Manual()">Submit
+            <button onclick="Manual()">Submit
                 <div class="arrow-wrapper">
                     <div class="arrow"></div>
                 </div>
@@ -2124,9 +2245,9 @@ function showNotification(message) {
         </div>
         <div class="menu" id="sidemenu">
             <!-- <div class="menu-item">Menu</div> -->
-             <button onclick="createCampaign()" >+ New Campaign</button>
-            <div class="menu-item active" id="1"><i class="fi fi-ts-house-chimney"></i>Home</div>
-            <div class="menu-item" id="2"> <i class="fi fi-tr-rocket-lunch"></i>New Campaign</div>
+             <!-- <button onclick="createCampaign()" >+ New Campaign</button> -->
+            <div class="menu-item active" id="1"><i class="fi fi-tr-garage-car"></i>Home</div>
+            <div class="menu-item" id="2"> <i class="fi fi-tr-car-tilt"></i>Your Drivers</div>
             <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
             <!-- <div class="menu-item tools">Tools</div> -->
             <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Account</div>
@@ -2255,7 +2376,9 @@ function showNotification(message) {
 
 
                     <div id="currentContent">
+                        
                         <table id="dataTable" >
+                            <h1 style="padding: 20px; padding-bottom: 0; color: #000;">Your Drivers</h1>
                         <div class="center" id="center">
 
                             <!-- <h1>Enter Domain to Search for Emails</h1>
@@ -2291,7 +2414,7 @@ function showNotification(message) {
 
 
                 <div class="pitch">  
-                    <div class="buttons" id="inputButtons">
+                    <!-- <div class="buttons" id="inputButtons">
 
                         <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
         
@@ -2304,26 +2427,25 @@ function showNotification(message) {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
                         
-                    </div>
+                    </div> -->
+
                     <!-- <span>Or</span> -->
                     <div class="buttons" id="inputButtons">
 
-                        <button class="button-man" onclick="togglePopupDomain()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add from Domain</div></button>      
+                        <button class="button-man" onclick="togglePopupManual()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add Driver</div></button>      
                     </div>
                     <!-- <div class=""></div> -->
-                    <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
+                    <!-- <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
                     <span style="text-align: left; padding-left: 10px; color: #000;"> For best results provide: </span>
                     <span style="text-align: left; padding-left: 20px;"> - Clear offer to prospect or pain-point that you are solving for them. </span>
-                    <span style="text-align: left; padding-left: 20px;"> - Clear call to action the prospect should take.</span>
-                    <div id="submit">
-                        
-                        <button class="button" onclick="logout()" id="submit" style="font-size: 18px; text-align: center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                              <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                            </svg>
-                            Your Session has expired <br>Please log in again
-                        </button>
-                    </div>
+                    <span style="text-align: left; padding-left: 20px;"> - Clear call to action the prospect should take.</span> -->
+                    <div id="submit"></div>
+                    <button class="button" onclick="processEntries()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Check for Race Updates
+                      </button>
                     <!-- <button class="button" onclick="Submitandcheckautosend()" id="submit">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
@@ -2333,7 +2455,7 @@ function showNotification(message) {
 
 
                       
-                    <div class="nobg-submit" id="hidewhengenerating">
+                    <!-- <div class="nobg-submit" id="hidewhengenerating">
                         <div class="checkbox-wrapper-46">
                           <input type="checkbox" id="cbx-46" class="inp-cbx" onchange="checkbox()" />
                           <label for="cbx-46" class="cbx"
@@ -2343,8 +2465,7 @@ function showNotification(message) {
                             ><span> <div id="autosend-text">Autosend is <b>OFF</b></div> </span>
                           </label>
                         </div>
-                        <!-- <div id="ca" onclick="reset()" class="Clear-all">Clear all</div> -->
-                    </div>
+                    </div> -->
                    
                 </div>
             </div>
@@ -2626,7 +2747,7 @@ function showNotification(message) {
 
     <div id="notification-container-pop"></div>
     <script>
-        document.getElementById('fileInput').addEventListener('change', handleFile, false);
+        // document.getElementById('fileInput').addEventListener('change', handleFile, false);
         // document.getElementById('fileMIDDLE').addEventListener('change', handleFile, false);
 
         document.getElementById('emailForm').addEventListener('submit', async function(event) {
