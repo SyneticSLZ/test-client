@@ -32,34 +32,34 @@
 <script>
     
 let submittedData = [
-{
-        url: "https://www.ewrc-results.com/profile/81956-takamoto-katsuta/",
-        email: "Vaishalimehmi@yahoo.co.uk",
-        name: "Takamoto Katsuta",
-        nextRace: "not too sure",
-        emailSent: "No"
-    },
-    {
-        url: "https://www.ewrc-results.com/profile/110269-michael-weiss/",
-        email: "Vaishalimehmi@yahoo.co.uk",
-        name: "Michael Weiss",
-        nextRace: "Rally Finland",
-        emailSent: "Yes"
-    },
-    {
-        url: "https://www.ewrc-results.com/profile/257095-natya-soodeen/",
-        email: "rohanmehmi72@gmail.com",
-        name: "Natya Soodeen",
-        nextRace: "Rally Germany",
-        emailSent: "No"
-    },
-    {
-        url: "https://www.ewrc-results.com/coprofile/19873-hernan-vargas-pena/",
-        email: "rohanmehmi72@gmail.com",
-        name: "Hernan Vargas Peña",
-        nextRace: "Rally Argentina",
-        emailSent: "Yes"
-    }
+// {
+//         url: "https://www.ewrc-results.com/profile/81956-takamoto-katsuta/",
+//         email: "Vaishalimehmi@yahoo.co.uk",
+//         name: "Takamoto Katsuta",
+//         nextRace: "not too sure",
+//         emailSent: "No"
+//     },
+//     {
+//         url: "https://www.ewrc-results.com/profile/110269-michael-weiss/",
+//         email: "Vaishalimehmi@yahoo.co.uk",
+//         name: "Michael Weiss",
+//         nextRace: "Rally Finland",
+//         emailSent: "Yes"
+//     },
+//     {
+//         url: "https://www.ewrc-results.com/profile/257095-natya-soodeen/",
+//         email: "rohanmehmi72@gmail.com",
+//         name: "Natya Soodeen",
+//         nextRace: "Rally Germany",
+//         emailSent: "No"
+//     },
+//     {
+//         url: "https://www.ewrc-results.com/coprofile/19873-hernan-vargas-pena/",
+//         email: "rohanmehmi72@gmail.com",
+//         name: "Hernan Vargas Peña",
+//         nextRace: "Rally Argentina",
+//         emailSent: "Yes"
+//     }
 ];
 
 
@@ -116,6 +116,7 @@ async function getDrivers() {
         });
 
         console.log('Updated submittedData:', submittedData);
+        updateTable()
 
         // Display drivers
         // const driverList = document.getElementById('driver-list');
