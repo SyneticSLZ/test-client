@@ -99,8 +99,24 @@ async function init() {
 
         }
 }
+async function getDrivers() {
+            const response = await fetch('https://server.voltmailer.com/get-drivers');
+            const drivers = await response.json();
+            console.log(drivers);
+
+            // Display drivers
+            // const driverList = document.getElementById('driver-list');
+            // driverList.innerHTML = '';
+            // drivers.forEach(driver => {
+            //     const li = document.createElement('li');
+            //     li.textContent = `${driver.name}: ${driver.nextRace}`;
+            //     driverList.appendChild(li);
+            // });
+        }
+
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
+    getDrivers()
     init()
     updateTable()
 
@@ -816,6 +832,8 @@ function Manual() {
     emailSent: "null"
 };
 
+        addDriver(website, name, email_inputted)
+
         submittedData.push(formData);
         console.log(updateTable());
          // Clear input fields manually
@@ -826,6 +844,16 @@ function Manual() {
         togglePopupManual()
 }
 
+async function addDriver(url, driver, email) {
+            const nextRace = null;
+            const emailSent = "No";
+
+            const params = new URLSearchParams({ driver, url, email, nextRace, emailSent });
+            const response = await fetch(`https://server.voltmailer.com/add-driver?${params.toString()}`);
+
+            const result = await response.json();
+            console.log(result.message);
+        }
 
 function updateTable() {
     const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
@@ -2137,6 +2165,7 @@ Ruairi
             addEmailRow(generatedData.length - 1);
                     // Update the entry to mark email as sent if needed
                     // entry.emailSent = "Yes";
+                    
                 }
             } else {
                 generatedData.push({
@@ -2158,7 +2187,7 @@ Ruairi
             document.getElementById('loaderText').innerText = `Generating email for ${entry.email}...`;
             addEmailRow(generatedData.length - 1);
                 // Update the entry with new race and mark email as sent if needed
-                entry.nextRace = fetchedRace;
+                updateDriver(entry.url, "nextRace", fetchedRace)
                 // entry.emailSent = "Yes";
             }
         } else {
@@ -2203,6 +2232,32 @@ Ruairi
                     }
       
 }
+
+
+
+
+        async function updateDriver(url, fieldName, newData) {
+
+            const params = new URLSearchParams({ url, fieldName, newData });
+            const response = await fetch(`https://server.voltmailer.com/update-driver?${params.toString()}`);
+
+            const result = await response.json();
+            console.log(result.message);
+        }
+
+
+
+        async function removeDriver() {
+            const url = prompt("Enter driver URL:");
+
+            const params = new URLSearchParams({ url });
+            const response = await fetch(`https://server.voltmailer.com/remove-driver?${params.toString()}`);
+
+            const result = await response.json();
+            alert(result.message);
+        }
+
+
             
     </script>
 </head>
