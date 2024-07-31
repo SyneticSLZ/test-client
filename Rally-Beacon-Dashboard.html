@@ -453,12 +453,7 @@ async function RenderHtml(data){
 
         if (UsedEmails >= planEmails) {
                 button.innerHTML=`                    
-                                    <button class="button" onclick="processEntries()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Check for Race Updates
-                      </button>`
+                                    <label class="uploadLabel" onclick="processEntries()" ><div class="lead" >Check for Race Updates</div></label>`
             }
         else {
             if (!token){
@@ -483,12 +478,7 @@ async function RenderHtml(data){
             } else {
             button.innerHTML=`
                     
-                    <button class="button" onclick="processEntries()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Check for Race Updates
-                      </button>
+<label class="uploadLabel" onclick="processEntries()" ><div class="lead" >Check for Race Updates</div></label>
 
                       `
 
@@ -2473,7 +2463,7 @@ Ruairi
                 
             </div>
             </div> -->
-            <div class="pitch-row" >
+            <div class="pitch-row-rally">
                 
                 <div class="content-row" >
                 <span id="sending" style="display: none;">Emails are sending, you can close this tab.</span>
@@ -2503,6 +2493,7 @@ Ruairi
 
                     <div id="newContent" style="display: none;">
                         <h1>Your Emails</h1>
+
                         <table id="emailTable">
                             <thead>
                                 <tr>
@@ -2534,7 +2525,22 @@ Ruairi
                     <div id="currentContent">
                         
                         <table id="dataTable" >
-                            <h1 style="padding: 20px; padding-bottom: 0; color: #000;">Your Drivers</h1>
+                            <div style="width: 100%; display:flex; flex-direction: row; justify-content: space-between; align-items: center; overflow: hidden;">
+                                <h1 style="padding: 20px; padding-bottom: 0; color: #000; ">Your Drivers</h1>
+                                <!-- <div class="buttons" id="inputButtons"> -->
+                                <div style="display:flex; flex-direction: row; margin-right: 20px; margin-block: 20px; height: 30px; align-items: center; justify-content: center;">
+                                    <!-- <button class="button-man" onclick="togglePopupManual()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add Driver</div></button>       -->
+                                    <!-- <button class="button-man" onclick="createCampaign()" id="man"><div class="lead"> + New lead</div></button> -->
+                            <!-- </div> -->
+                            <div class="buttons" id="inputButtons" style="margin-bottom: 25px; margin-top: 35px;">
+
+                                <button class="button-man" onclick="togglePopupManual()" id="man" style="margin-right: 20px;"><div class="lead"> + New Driver</div></button>
+                <div id="submit"></div>
+                                
+                                <!-- <input type="file" id="fileInput" accept=".xlsx" style="display: none;"> -->
+                            </div>
+                            </div>
+
                         <div class="center" id="center">
 
                             <!-- <h1>Enter Domain to Search for Emails</h1>
@@ -2569,7 +2575,7 @@ Ruairi
             </div>
 
 
-                <div class="pitch-rally">  
+                <!-- <div class="pitch-rally">   -->
                     <!-- <div class="buttons" id="inputButtons">
 
                         <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
@@ -2586,13 +2592,13 @@ Ruairi
                     </div> -->
 
                     <!-- <span>Or</span> -->
-                    <div class="buttons" id="inputButtons">
+                    <!-- <div class="buttons" id="inputButtons">
 
                         <button class="button-man" onclick="togglePopupManual()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add Driver</div></button>      
                     </div>
-                    <div id="submit"></div>
+                    <div id="submit"></div> -->
 
-                </div>
+                <!-- </div> -->
             </div>
         </div>
 
