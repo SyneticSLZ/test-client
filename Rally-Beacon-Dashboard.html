@@ -831,7 +831,7 @@ async function Manual() {
                 manualError.textContent = "";
             }
 
-        const fetchedRace = await fetchNextRace(website);
+        const fetchedRace = await fetchNextRaceManual(website);
 
         if (!fetchedRace) {
             manualError.textContent = "Invalid URL";
@@ -2138,6 +2138,39 @@ function fetchNextRace(url) {
         });
 }
 
+function fetchNextRaceManual(url) {
+    return fetch(`https://server.voltmailer.com/fetch-profile-data?url=${encodeURIComponent(url)}`)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Get the first .profile-start-line element
+            const profileStartLine = doc.querySelector('.profile-start-line.d-flex.justify-content-start.w-100.lh-120.py-1.flex-wrap');
+            
+            if (profileStartLine) {
+                // Get the .profile-start-event div inside the first .profile-start-line
+                const profileStartEvent = profileStartLine.querySelector('.profile-start-event.w-20');
+                
+                if (profileStartEvent) {
+                    // Get the text inside the a tag
+                    const raceName = profileStartEvent.querySelector('a').textContent.trim();
+                    console.log(raceName)
+                        return raceName;
+                } else {
+                    console.log('Event data not found');
+                    return null;
+                }
+            } else {
+                console.log('Start line data not found');
+                return null;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            return null;
+        });
+}
 
     async function processEntries() {
             generatedData = [];
