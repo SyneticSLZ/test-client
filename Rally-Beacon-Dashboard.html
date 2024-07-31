@@ -831,11 +831,14 @@ async function Manual() {
                 manualError.textContent = "";
             }
 
-        const fetchedRace = await fetchNextRaceManual(website);
+        const fetchedRace = await fetchNextRace(website);
 
         if (!fetchedRace) {
             manualError.textContent = "Invalid URL";
             return;
+        }
+        if (fetchedRace === null) {
+            fetchedRace = "Driver has no Upcoming Race"
         }
 
 
