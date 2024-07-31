@@ -899,10 +899,10 @@ function updateTable() {
 
     submittedData.forEach((data, index) => {
         const row = dataTable.insertRow();
-        const urlCell = row.insertCell(0);
-        const nameCell = row.insertCell(1);
+        const nameCell = row.insertCell(0);
+        const emailCell = row.insertCell(1);
         const nextRaceCell = row.insertCell(2);
-        const emailSentCell = row.insertCell(3);
+        // const emailSentCell = row.insertCell(3);
         const actionCell = row.insertCell(4); // Cell for action buttons
 
         // Create edit button
@@ -923,11 +923,11 @@ function updateTable() {
             deleteRow(index); // Call deleteRow function with index
         });
 
-        urlCell.textContent = data.url;
         nameCell.textContent = data.name;
+        emailCell.textContent = data.email;
         nextRaceCell.textContent = data.nextRace;
-        emailSentCell.textContent = data.emailSent;
-        actionCell.appendChild(editButton); // Append edit button to action cell
+        // emailSentCell.textContent = data.emailSent;
+        // actionCell.appendChild(editButton); // Append edit button to action cell
         actionCell.appendChild(deleteButton); // Append delete button to action cell
         row.setAttribute('data-index', index);
     });
@@ -935,6 +935,8 @@ function updateTable() {
 
 
 function deleteRow(index) {
+    data = submittedData[index]
+    removeDriver(data.url)
     submittedData.splice(index, 1); // Remove data from array
     updateTable(); // Update table to reflect changes
 }
