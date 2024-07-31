@@ -1660,7 +1660,7 @@ function populateEmailTable() {
         // Main row displaying the name and action buttons
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${data.name} | ${data.email}</td>
+            <td>${data.name} | ${data.email} </td>
             <td class="action-buttons">
                 <button onclick="sendEmail(${index})" class="button-icon">Send Now</button>
                 <div class="tooltip">
@@ -1685,7 +1685,7 @@ function populateEmailTable() {
                     </div>
                     <label>Content:</label>
                     <div class="editable-container">
-                        <div class="editable text-container" id="content-display-${index}">${data.content}</div>
+                        <pre class="editable text-container" id="content-display-${index}">${data.content}</pre>
                         <span class="pencil-icon" id="content-pencil-${index}" onclick="makeEditable('content', ${index})">✏️</span>
                     </div>
                 </div>
