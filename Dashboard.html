@@ -71,6 +71,11 @@ async function init() {
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
     init()
+    if (localStorage.getItem('connectedGoogle') ==='Rally') {
+        const urlParams = new URLSearchParams(window.location.search);
+        var googele  = urlParams.get('googletoken');
+        window.location.href = `https://voltmailer.com/Rally-Beacon-Dashboard.html?googletoken=${googele}`
+    }
 
 
     // window.tasks = [
