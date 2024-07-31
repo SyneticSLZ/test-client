@@ -100,19 +100,37 @@ async function init() {
         }
 }
 async function getDrivers() {
-            const response = await fetch('https://server.voltmailer.com/get-drivers');
-            const drivers = await response.json();
-            console.log(drivers);
+    try {
+        const response = await fetch('https://server.voltmailer.com/get-drivers');
+        const drivers = await response.json();
 
-            // Display drivers
-            // const driverList = document.getElementById('driver-list');
-            // driverList.innerHTML = '';
-            // drivers.forEach(driver => {
-            //     const li = document.createElement('li');
-            //     li.textContent = `${driver.name}: ${driver.nextRace}`;
-            //     driverList.appendChild(li);
-            // });
-        }
+        // Append fetched drivers to the submittedData array
+        drivers.forEach(driver => {
+            submittedData.push({
+                url: driver.url,
+                email: driver.email,
+                name: driver.name,
+                nextRace: driver.nextRace,
+                emailSent: driver.emailSent
+            });
+        });
+
+        console.log('Updated submittedData:', submittedData);
+
+        // Display drivers
+        // const driverList = document.getElementById('driver-list');
+        // driverList.innerHTML = '';
+        // submittedData.forEach(driver => {
+        //     const li = document.createElement('li');
+        //     li.textContent = `${driver.name}: ${driver.nextRace}`;
+        //     driverList.appendChild(li);
+        // });
+
+    } catch (error) {
+        console.error('Error fetching drivers:', error);
+    }
+}
+
 
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
