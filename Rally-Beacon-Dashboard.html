@@ -797,7 +797,7 @@ function togglePopupManual() {
 }
 
 
-function Manual() {
+async function Manual() {
     const emailInput = document.getElementById('emailinput');
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
@@ -831,12 +831,20 @@ function Manual() {
                 manualError.textContent = "";
             }
 
+        const fetchedRace = await fetchNextRace(website);
+
+        if (!fetchedRace) {
+            manualError.textContent = "Invalid URL";
+            return;
+        }
+
+
         const formData = {
     url: website,
     email: email_inputted,
     name: name,
-    nextRace: "null",
-    emailSent: "null"
+    nextRace: fetchedRace,
+    emailSent: "No"
 };
 
         addDriver(website, name, email_inputted)
