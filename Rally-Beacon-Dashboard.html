@@ -106,11 +106,13 @@ async function getDrivers() {
 
         // Append fetched drivers to the submittedData array
         drivers.forEach(driver => {
+            let nextRace = fetchNextRaceManual(driver.url)
+            console.log(nextRace)
             submittedData.push({
                 url: driver.url,
                 email: driver.email,
                 name: driver.name,
-                nextRace: driver.nextRace,
+                nextRace: nextRace,
                 emailSent: driver.emailSent
             });
         });
@@ -132,10 +134,23 @@ async function getDrivers() {
     }
 }
 
+async function getLatestRace(website) {
+    let fetchedRace = await fetchNextRace(website);
+
+// if (!fetchedRace) {
+//     manualError.textContent = "Invalid URL";
+//     return;
+// }
+// if (fetchedRace === null) {
+//     fetchedRace = "Driver has no Upcoming Race"
+// }
+
+}
 
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
     getDrivers()
+
     init()
     updateTable()
 
@@ -831,7 +846,7 @@ async function Manual() {
                 manualError.textContent = "";
             }
 
-        const fetchedRace = await fetchNextRace(website);
+        let fetchedRace = await fetchNextRaceManual(website);
 
         if (!fetchedRace) {
             manualError.textContent = "Invalid URL";
@@ -885,7 +900,7 @@ function updateTable() {
             thead = table.createTHead();
         }
         const headerRow = thead.insertRow();
-        const headers = ['Name', 'Email', 'Next Race', 'Actions'];
+        const headers = ['Name', 'Email', 'Next Or Most Recent Race', 'Actions'];
 
         headers.forEach(headerText => {
             const th = document.createElement('th');
