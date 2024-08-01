@@ -1685,7 +1685,7 @@ function populateEmailTable() {
         row.innerHTML = `
             <td>${data.name} | ${data.email} </td>
             <td class="action-buttons">
-                <button onclick="sendEmail(${index})" class="button-icon">Send Now</button>
+                <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
                 <div class="tooltip">
                     <button onclick="toggleDetails(${index})" class="button-icon" id="arrow-${index}">↓</button>
                     <span class="tooltiptext">Show/Hide Details</span>
