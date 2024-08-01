@@ -109,6 +109,7 @@ async function getDrivers() {
             try {
                 const nextRace = await fetchNextRaceManual(driver.url);
                 console.log(driver.name, " : ", nextRace);
+                updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
 
                 submittedData.push({
                     url: driver.url,
@@ -2162,7 +2163,7 @@ function fetchNextRace(url) {
         });
 }
 
-function fetchNextRaceManual(url) {
+function   fetchNextRaceManual(url) {
     return fetch(`https://server.voltmailer.com/fetch-profile-data?url=${encodeURIComponent(url)}`)
         .then(response => response.text())
         .then(html => {
