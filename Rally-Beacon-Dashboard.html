@@ -2215,9 +2215,9 @@ function   fetchNextRaceManual(url) {
             console.log(entry.email)
         try {
             const fetchedRace = await fetchNextRace(entry.url);
-console.log(fetchedRace)
+
             if (fetchedRace !== null) {
-            
+                console.log(entry.driver, " race is next : ", entry.nextRace, "fetched is ", fetchedRace)
             if (fetchedRace === entry.nextRace) {
                 if (entry.emailSent === "No") {
                     generatedData.push({
