@@ -104,18 +104,23 @@ async function getDrivers() {
         const response = await fetch('https://server.voltmailer.com/get-drivers');
         const drivers = await response.json();
 
-        // Append fetched drivers to the submittedData array
-        drivers.forEach(driver => {
-            let nextRace = fetchNextRaceManual(driver.url)
-            console.log(nextRace)
-            submittedData.push({
-                url: driver.url,
-                email: driver.email,
-                name: driver.name,
-                nextRace: nextRace,
-                emailSent: driver.emailSent
-            });
-        });
+        // Use for...of to await each fetchNextRaceManual call
+        for (const driver of drivers) {
+            try {
+                const nextRace = await fetchNextRaceManual(driver.url);
+                console.log(driver.name, " : ", nextRace);
+
+                submittedData.push({
+                    url: driver.url,
+                    email: driver.email,
+                    name: driver.name,
+                    nextRace: nextRace,
+                    emailSent: driver.emailSent
+                });
+            } catch (error) {
+                console.error(`Error fetching next race for driver ${driver.name}:`, error);
+            }
+        }
 
         console.log('Updated submittedData:', submittedData);
         updateTable()
