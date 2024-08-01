@@ -1632,7 +1632,7 @@ else {
 
 
         console.log('Message to ', data.email, ' successfully sent:', result);
-        updateDriver(data.email, "emailSent", "Yes")
+        updateDriverFromEmail(data.email, "emailSent", "Yes")
         showNotification(`Message to ${data.email} successfully sent`);
         removeRow(index);
     } catch (error) {
