@@ -37,11 +37,11 @@ let U_Username;
 let U_MyEmail;
 
 
-window.onload = function() {
-            if (window.innerWidth <= 768) {
-                window.location.href = "https://voltmailer.com/mobile.html";
-            }
-        };
+// window.onload = function() {
+//             if (window.innerWidth <= 768) {
+//                 window.location.href = "https://voltmailer.com/mobile.html";
+//             }
+//         };
 
 
 async function init() {
@@ -1727,6 +1727,16 @@ function saveChanges(field, index) {
     pencilIcon.onclick = function() { makeEditable(field, index); };
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+  const burgerButton = document.getElementById('burger-button');
+  const menuToggle = document.getElementById('menu-toggle');
+
+  burgerButton.addEventListener('click', function () {
+    menuToggle.checked = !menuToggle.checked;
+  });
+});
+
+
 
 function toggleDetails(index) {
     const detailsRow = document.getElementById(`details-${index}`);
@@ -1978,38 +1988,6 @@ function showNotification(message) {
 <body>
     <div class="top-bar"></div>
     <div id="notification-container-pop"></div>
-   <div id="popup" class="popup hidden">
-        <div class="popup-content">
-            <div class="sidebar">
-                <div class="sidebar-item active" id="profileTab">Profile</div>
-                <div class="sidebar-item" id="workspacesTab">Workspaces</div>
-                <div class="sidebar-item" id="sessionsTab">Sessions</div>
-            </div>
-            <div class="main-content">
-                <div id="profileContent" class="content active">
-                    <h2>Account</h2>
-                    <form>
-                        <div class="profile-picture">
-                            <!-- <img src="placeholder.png" alt="Profile Picture"> -->
-                        </div>
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" value="Synetic">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" value="X">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" value="syneticslz@gmail.com">
-                        <p>This email address is associated with your Framer account.</p>
-                        <p>To update your billing email, go to Workspace Settings → Plans.</p>
-                        <div class="button-group">
-                            <button type="button" id="signOut">Sign Out</button>
-                            <button type="button" id="deleteAccount">Delete Account</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <button id="closePopup" class="close-popup">X</button>
-        </div>
-    </div> 
 
     <div class="manual-popup-overlay" id="manual-popup-overlay">
         <div class="container">
@@ -2161,10 +2139,76 @@ function showNotification(message) {
 
 
         <div class="navtop" id="mobile-nav">
-            <img src="volt.png" alt="Logo">
+            <img src="vmb.png" alt="Logo">
             
         <div class="burger">
-            <img src="google.png" alt="google">
+            <!-- <img src="google.png" alt="google"> -->
+<label class="popup-1">
+  <input type="checkbox">
+  <div class="burger" tabindex="0">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="popup-window">
+    <legend>Menu</legend>
+    <ul>
+      <li>
+        <button onclick="GoHome()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle r="4" cy="7" cx="9"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg> -->
+          <i class="fi fi-ts-house-chimney"></i>
+          <p>Home</p>
+        </button>
+      </li>
+      <li>
+        <button onclick="createCampaign()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg> -->
+          <i class="fi fi-tr-rocket-lunch"></i>
+          <p>New Campaign</p>
+        </button>
+      </li>
+      <hr>
+      <li>
+        <button onclick="billing()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <rect ry="2" rx="2" height="13" width="13" y="9" x="9"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg> -->
+          <i class="fi fi-tr-credit-card-eye"></i>
+          <p>Billing</p>
+        </button>
+      </li>
+      <li>
+        <button onclick="OpenAccount()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+          </svg> -->
+          <i class="fi fi-tr-user-pen"></i>
+          <p>Account</p>
+        </button>
+
+      </li>
+      <hr>
+      <li>
+        <button id="burger-button">
+          <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <line y2="18" x2="6" y1="6" x1="18"></line>
+            <line y2="18" x2="18" y1="6" x1="6"></line>
+          </svg>
+          <p>Close Menu</p>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</label>
         </div>
             
         </div>
@@ -2359,21 +2403,21 @@ function showNotification(message) {
         <div  class="contentf" id="main"  >
             <div class="pitch-row" >
                 
-                <div class="content-row" style="border: none; box-shadow: none; overflow-x: hidden; width: 100%;"> 
+                <div class="content-row" style="border: none; box-shadow: none; "> 
 
-                    <div style="margin: 20px; width: calc(100% - 20px); ">
+                    <div >
                         <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">Home</h1>
-                        <h3 style="margin-block: 30px;">Quick Actions  ?</h3>
-                        <div style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 30px;">
-                            <button class="button-man" onclick="OpenAccount()" id="man"><div class="lead"> Account Settings</div></button>
-                            <button class="button-man"  id="billing-man"><div class="lead"> Plan Details</div></button>
-                            <button class="uploadLabel" onclick="createCampaign()" id="man"><div class="lead"> + New lead</div></button>
+                        <h3 style="margin-block: 30px;" class="">Quick Actions  ?</h3>
+                        <div  style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 10px;">
+                            <button class="button-man " onclick="OpenAccount()" id="man" ><div class="lead"> Account Settings</div></button>
+                            <button class="button-man "  id="billing-man" ><div class="lead"> Plan Details  </div></button>
+                            <button class="uploadLabel " onclick="createCampaign()" id="man"><div class="lead"> + New lead</div></button>
                         </div>
                         <div class="plan-usage">
                             <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e" id="metric-label-plan">Premium</b></h2>
-                            <p class="plan-usage-detail" id="plan-usage-detail">100 of 10,000 emails used this month</p>
+                            <p class="plan-usage-detail" id="plan-usage-detail">6,547 of 10,000 emails used this month</p>
                             <div class="progress-text" id="progress-text">
-                              <p>Current: 2</p>
+                              <p>Current: 6,547</p>
                               <p>Total: 1000</p>
                             </div>
                             <div class="progress-bar">
@@ -2382,16 +2426,13 @@ function showNotification(message) {
                             <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
                             <button  id="subscription" >Upgrade</button>
                         </div>
-                        <div style="width: 95%; display: flex; flex-direction: row; gap: 20px; justify-content: space-between; border-radius: 16px;
-                        background: #ffffff;
-                        -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
-                        box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;">
-                            <div style=" width: 70%; margin: 60px;">
-                                <h2 style="margin-bottom: 20px;">Attract and win customers with targeted campaigns</h2>
+                        <div class="attract">
+                            <div class="row-1" >
+                                <h2 class="smaller-mobile" style="margin-bottom: 20px;">Attract and win customers with targeted campaigns</h2>
                                 <button class="button-man" onclick="createCampaign()" id="man"><div class="lead"> + New Campaign</div></button>
                             </div>
-                            <div style= "width: 20%; margin: 20px; display: flex; justify-content: center; align-content: center;">
-                                <img src="mail-inbox.png" alt="" style="height: 200px; width: 200px;">
+                            <div class="mc-img">
+                                <img src="mail-inbox.png" alt="" class="mailchimp">
                             </div>
                             <!-- below when we have metrics to display -->
                             <!-- <div style="border: #ff0000 1px solid; width: 30%; display: flex; flex-direction: column; gap: 20px;">
@@ -2691,6 +2732,13 @@ function showNotification(message) {
             const usageTab = document.getElementById('2');
             usageTab.click();
         }
+        function GoHome() {
+            // Example logic for createCampaign
+            // console.log('Creating campaign...');
+            // Simulate a click on the 'Usage' tab (id 2)
+            const usageTab = document.getElementById('1');
+            usageTab.click();
+        }
         
 
 
@@ -2703,11 +2751,11 @@ function showNotification(message) {
             event.currentTarget.classList.add('active');
 
             // Get the content div
-            const contentDiv = document.querySelector('.content');
+            // const contentDiv = document.querySelector('.content');
 
 
             // Clear current content
-            contentDiv.innerHTML = '';
+            // contentDiv.innerHTML = '';
 
             // Get the id of the clicked menu item
             const id = event.currentTarget.id;

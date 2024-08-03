@@ -16,6 +16,9 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-straight/css/uicons-solid-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+
 </head>
 <style>
 
@@ -250,6 +253,7 @@ body {
         /* border: #00DDEB solid 1px; */
         margin-top: 100px;
         margin-bottom: 50px;
+        width: 100%;
 
     }
     .hero h1{
@@ -924,7 +928,7 @@ margin-top: 0;
 }
 
  .pack_card {
-  position: relative;
+  /* position: relative; */
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
@@ -939,7 +943,7 @@ margin-top: 0;
 }
 .pack_card {
   color: white;
-  position: relative;
+  /* position: relative; */
   font-family: sans-serif;
 }
 
@@ -956,6 +960,7 @@ margin-top: 0;
   height: 6rem;
   top: 30%;
   right: 7%;
+  z-index: -3;
 }
 
 /* .pack_card::after {
@@ -1861,8 +1866,27 @@ flex-direction: column;
         margin: 0 5px;
     }
 
-    
+    .mobile-col{border: red solid 1px; width: 100vw; color: white; display: flex; flex-direction: row; }
 
+    .w-30{
+        width: 30%;
+}
+.w-70{
+        width: 70%;
+}
+
+.mi-80{
+  margin-inline: 80px;
+}
+.mr-80{
+  margin-right: 80px;
+}
+@media(min-width: 768px) {
+  .pack_card::before{
+  display: none;
+}
+
+}
     @media (max-width: 768px) {
 
         .icon-3{
@@ -1892,11 +1916,22 @@ flex-direction: column;
   width: 70px;
 } */
 
+
 #CreateAccount {
   display: none;
 }
-.hero{
-        align-items: start;
+.w-30, .w-70{
+        width: 90%;
+}
+
+.mi-80,.mr-80{
+  margin-inline: 0px;
+  margin-right: 0px;
+}
+.mobile-col{
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero h1{
@@ -1953,6 +1988,194 @@ margin-inline-end: 1em;
     text-align: left;
   }
 }
+
+.step {
+  /* width: 100vw; */
+  text-align: left;
+  font-size: 30px;
+  /* margin-left: 80px; */
+
+  /* gap: 100px; */
+  /* height: 50px; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: space-between; */
+  /* color: white; */
+  /* border: red 1px solid; */
+}
+.btn-container-toggle {
+/* width: 100vw; */
+margin-block: 30px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: row;
+gap: 10px;
+}
+
+.switch-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  justify-content: center;
+  margin: auto;
+  height: 55px;
+}
+
+.switch-button .switch-outer {
+  height: 100%;
+  background: #252532;
+  width: 115px;
+  border-radius: 165px;
+  -webkit-box-shadow: inset 0px 5px 10px 0px #16151c, 0px 3px 6px -2px #403f4e;
+  box-shadow: inset 0px 5px 10px 0px #16151c, 0px 3px 6px -2px #403f4e;
+  border: 1px solid #32303e;
+  padding: 6px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.switch-button .switch-outer input[type="checkbox"] {
+  opacity: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: absolute;
+}
+
+.switch-button .switch-outer .button-toggle {
+  height: 42px;
+  width: 42px;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#3b3a4e),
+    to(#272733)
+  );
+  background: -o-linear-gradient(#3b3a4e, #272733);
+  background: linear-gradient(#3b3a4e, #272733);
+  border-radius: 100%;
+  -webkit-box-shadow: inset 0px 5px 4px 0px #424151, 0px 4px 15px 0px #0f0e17;
+  box-shadow: inset 0px 5px 4px 0px #424151, 0px 4px 15px 0px #0f0e17;
+  position: relative;
+  z-index: 2;
+  -webkit-transition: left 0.3s ease-in;
+  -o-transition: left 0.3s ease-in;
+  transition: left 0.3s ease-in;
+  left: 0;
+}
+
+.switch-button
+  .switch-outer
+  input[type="checkbox"]:checked
+  + .button
+  .button-toggle {
+  left: 58%;
+}
+
+.switch-button
+  .switch-outer
+  input[type="checkbox"]:checked
+  + .button
+  .button-indicator {
+  -webkit-animation: indicator 1s forwards;
+  animation: indicator 1s forwards;
+}
+
+.switch-button .switch-outer .button {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+}
+
+.switch-button .switch-outer .button-indicator {
+  height: 25px;
+  width: 25px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 3px solid rgba(255, 0, 255, 0.719);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  right: 10px;
+  position: relative;
+}
+
+.image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+  }
+
+  .image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+  }
+
+  #div1 {
+    /* border: red solid 1px; */
+    width: 70vw;
+    height: 70vh;
+    display: none;
+    /* margin-block: 30px; */
+  }
+
+  #div2 {
+    /* border: blue solid 1px; */
+    width: 30vw;
+    height: 80vh;
+    display: flex;
+    margin-block: 90px;
+  }
+
+@-webkit-keyframes indicator {
+  30% {
+    opacity: 0;
+  }
+
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    border: 3px solid rgba(0, 255, 255, 0.637);
+    
+    left: -68%;
+  }
+}
+
+@keyframes indicator {
+  30% {
+    opacity: 0;
+  }
+
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    border: 3px solid rgba(0, 255, 255, 0.637);
+    left: -68%;
+  }
+}
+
 
 </style>
 <script>
@@ -2042,6 +2265,7 @@ function renderPlans(plans) {
 
 // Initial render
 document.addEventListener('DOMContentLoaded', () => {
+  initializeDivs()
   const urlParams = new URLSearchParams(window.location.search);    
     var affiliate = urlParams.get('affiliate');  
     
@@ -2072,6 +2296,36 @@ async function addCustomer() {
             console.log("Add Customer Response:", result);
             // alert(JSON.stringify(result));
         }
+
+
+        function toggleDivs() {
+  var checkbox = document.getElementById("switch");
+  var div1 = document.getElementById("div1");
+  var div2 = document.getElementById("div2");
+  
+  if (checkbox.checked) {
+    div1.style.display = "none";
+    div2.style.display = "flex";
+  } else {
+    div1.style.display = "flex";
+    div2.style.display = "none";
+  }
+}
+
+function initializeDivs() {
+  var checkbox = document.getElementById("switch");
+  var div1 = document.getElementById("div1");
+  var div2 = document.getElementById("div2");
+
+  if (checkbox.checked) {
+    div1.style.display = "none";
+    div2.style.display = "flex";
+
+  } else {
+    div1.style.display = "flex";
+    div2.style.display = "none";
+  }
+}
 
 </script>
     
@@ -2125,8 +2379,8 @@ async function addCustomer() {
     </div>
     <div class="container">
         <div class="hero">
-            <h1>Boost Your Outreach with <b>Personalized Emails</b></h1>
-            <h2>Increase open rates and engagement with crafted personalized emails</h2>
+            <h1>Boost Your Outreach with AI-Crafted <b>Personalized Emails</b></h1>
+            <h2>Build / Upload a lead List, Put in a Pitch, Sit back and watch the magic Unfold.</h2>
 
             <div class="col">
             
@@ -2152,15 +2406,96 @@ async function addCustomer() {
             </div>
 
 
-            <div class="input__container">
-              <div class="shadow__input"></div>
-              <button class="input__button__shadow">
-                <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="20px" width="20px">
-                  <path d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z" fill-rule="evenodd" fill="#17202A"></path>
-                </svg>
-              </button>
-              <input type="text" name="text" class="input__search" id="search-input" placeholder="What do you want to search?" readonly>
+
+
+
+            <div class="btn-container-toggle">
+              <i class="fi fi-tr-computer" ></i>
+              <label class="switch-button" for="switch">
+                <div class="switch-outer">
+                  <input id="switch" type="checkbox" onchange="toggleDivs()">
+                  <div class="button">
+                    <span class="button-toggle"></span>
+                    <span class="button-indicator"></span>
+                  </div>
+                </div>
+              </label>
+              <i class="fi fi-tr-mobile-button" style="margin-left:15px;"></i>
+             
             </div>
+
+            <div class="image-container" id="div1">
+              <img src="home.png" alt="Home">
+            </div> 
+            <div class="image-container" id="div2">
+              <img src="mobile-home.png" alt="Mobile Home">
+            </div>
+
+              <div class="input__container">
+                <div class="shadow__input"></div>
+                <button class="input__button__shadow">
+                  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" height="20px" width="20px">
+                    <path d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z" fill-rule="evenodd" fill="#17202A"></path>
+                  </svg>
+                </button>
+                <input type="text" name="text" class="input__search" id="search-input" placeholder="What do you want to search?" readonly>
+              </div>
+
+            <h2>HOW IT WORKS</h2>
+
+            <div class="step">
+             <p style=" font-size: 30px;"><b>Step 1 </b>Upload / Create a lead list</p>
+            </div> 
+
+            <div class="mobile-col">
+       
+<div style=" border: #00DDEB 1px solid; " class="w-30 mi-80">
+  <!-- <li> -->
+  <ol><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ol>
+  <ul><b>CSV</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
+  <ul><b>From Domain</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
+<!-- </li> -->
+</div>
+<div style=" border: #eb00eb 1px solid; " class="w-70 mr-80"></div>
+            </div>
+
+            
+            <div class="step">
+              <p style=" font-size: 30px;"><b>Step 2 </b>Add your Pitch</p>
+             </div> 
+             <div class="mobile-col">
+             <div style=" border: #00DDEB 1px solid; " class="w-30 mi-80">
+              <ul><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
+            </div>
+            <div style=" border: #eb00eb 1px solid; " class="w-30 mr-80">
+              <img src="Pitch.png" alt="" style="width: 100%; height: auto; max-width: 100%; border-radius: 15px;">
+            </div>
+            <div style=" border: #eb00eb 1px solid; " class="w-30 mr-80">
+              <ul><b>Tips to make your pitch Perfect :</b> <br>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
+            </div>
+            
+</div>
+
+<div class="step">
+  <p style=" font-size: 30px;"><b>Step 3 </b>Watch The Magic Happen</p>
+ </div> 
+ <div style="height: 50px; " class="mobile-col">
+ </div>
+
+<div class="step">
+  <p style=" font-size: 30px;"><b>Step 4 </b>Send !!!</p>
+ </div> 
+ <div class="mobile-col">
+
+<div style=" border: #00DDEB 1px solid; " class="w-30 mi-80">
+<ul><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
+<!--  -->
+<!-- <ul><b>From Domain</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul> -->
+</div>
+<div style=" border: #eb00eb 1px solid; " class="w-70 mr-80"></div>
+ </div>
+
             <style>
               html {
             height: 100%;
@@ -2349,7 +2684,7 @@ async function addCustomer() {
           document.addEventListener('DOMContentLoaded', typeAnimation);
             </script>
 
-<!-- <div class="hide">
+<div class="hide" style="margin-block: 100px;">
               <div class="container-glass">
                 <div data-text="Design" style="--r:-15;" class="glass">
                   <i class="fi fi-sr-customize-computer" style="color: white;"></i>
@@ -2369,84 +2704,107 @@ async function addCustomer() {
                   </svg>
                 </div>
               </div>
-            </div> -->
+            </div>
 
             <div class="email-slider-container">
-              <h2>Here are some emails we have generated</h2>
+              <h2>Example Emails created using our tool : </h2>
               <div class="email-slider">
                   <div class="email-slider-wrapper">
-                      <div class="email" style="border-color: #007bff;">
-                          <h2>Subject: Important Update</h2>
-                          <p>Dear John Doe,</p>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, pulvinar facilisis justo mollis, auctor consequat urna.</p>
-                          <p>Morbi a bibendum metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
-                          <p>Best regards,</p>
-                          <p><strong>Jane Smith</strong><br>Company XYZ<br>Email: jane.smith@companyxyz.com</p>
-                      </div>
-                      <div class="email" style="border-color: #ffc107;">
-                          <h2>Subject: Meeting Reminder</h2>
-                          <p>Dear Alice Johnson,</p>
-                          <p>Proin laoreet ex nec lobortis bibendum. Ut sit amet purus euismod, scelerisque mauris a, aliquet risus. Mauris ut vehicula magna.</p>
-                          <p>Fusce eu urna et est euismod ornare nec ut magna. Curabitur sagittis metus id dolor ultricies, sit amet sollicitudin ligula feugiat.</p>
-                          <p>Best regards,</p>
-                          <p><strong>Michael Brown</strong><br>Company ABC<br>Email: michael.brown@companyabc.com</p>
-                      </div>
-                      <div class="email" style="border-color: #000000;">
-                          <h2>Subject: Project Update</h2>
-                          <p>Dear Maria Gonzalez,</p>
-                          <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
-                          <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
-                          <p>Best regards,</p>
-                          <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
-                      </div>
-                      <div class="email" style="border-color: #007bff;">
-                        <h2>Subject: Important Update</h2>
-                        <p>Dear John Doe,</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, pulvinar facilisis justo mollis, auctor consequat urna.</p>
-                        <p>Morbi a bibendum metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
-                        <p>Best regards,</p>
-                        <p><strong>Jane Smith</strong><br>Company XYZ<br>Email: jane.smith@companyxyz.com</p>
-                    </div>
-                    <div class="email" style="border-color: #ffc107;">
-                        <h2>Subject: Meeting Reminder</h2>
-                        <p>Dear Alice Johnson,</p>
-                        <p>Proin laoreet ex nec lobortis bibendum. Ut sit amet purus euismod, scelerisque mauris a, aliquet risus. Mauris ut vehicula magna.</p>
-                        <p>Fusce eu urna et est euismod ornare nec ut magna. Curabitur sagittis metus id dolor ultricies, sit amet sollicitudin ligula feugiat.</p>
-                        <p>Best regards,</p>
-                        <p><strong>Michael Brown</strong><br>Company ABC<br>Email: michael.brown@companyabc.com</p>
-                    </div>
-                    <div class="email" style="border-color: #000000;">
-                        <h2>Subject: Project Update</h2>
-                        <p>Dear Maria Gonzalez,</p>
-                        <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
-                        <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
-                        <p>Best regards,</p>
-                        <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
-                    </div>
-                      <div class="email" style="border-color: #000000;">
-                        <h2>Subject: Project Update</h2>
-                        <p>Dear Maria Gonzalez,</p>
-                        <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
-                        <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
-                        <p>Best regards,</p>
-                        <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
-                    </div>
-                    <div class="email" style="border-color: #000000;">
-                      <h2>Subject: Project Update</h2>
-                      <p>Dear Maria Gonzalez,</p>
-                      <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
-                      <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
+                    <div class="email" style="border-color: #da66d4; background: rgba(24, 23, 23, 0.3); color: white;">
+                      <h2 style="color: white;">Elevate Your Email Outreach with Voltmailer</h2>
+                      <p>Hi Chris,</p>
+                      <p>I hope this email finds you well. My name is Rohan, and I'm reaching out to introduce you to Voltmailer, a powerful tool that uses AI to enhance your email outreach efforts. </p>
+                      <p>Transform your email marketing strategy with Voltmailer's personalized, scalable, and efficient communication approach. I'd love to schedule a demo to show you how Voltmailer can elevate your email campaigns. </p>
+                      <p>Looking forward to collaborating with you.</p>
                       <p>Best regards,</p>
-                      <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+                      <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
                   </div>
-                  <div class="email" style="border-color: #000000;">
-                    <h2>Subject: Project Update</h2>
-                    <p>Dear Maria Gonzalez,</p>
-                    <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
-                    <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
-                    <p>Best regards,</p>
-                    <p><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
-                </div>
+                <div class="email" style="border-color: #f8f8f8; background: rgba(24, 23, 23, 0.3); color: white;">
+                  <h2 style="color: white;">Elevate Your Email Outreach with Voltmailer</h2>
+                  <p>Hi Chris,</p>
+                  <p>I hope this email finds you well. My name is Rohan, and I'm reaching out to introduce you to Voltmailer, a powerful tool that uses AI to enhance your email outreach efforts. </p>
+                  <p>Transform your email marketing strategy with Voltmailer's personalized, scalable, and efficient communication approach. I'd love to schedule a demo to show you how Voltmailer can elevate your email campaigns. </p>
+                  <p>Looking forward to collaborating with you.</p>
+                  <p>Best regards,</p>
+                  <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
+              </div>
+              <div class="email" style="border-color: #4ee2ec; background: rgba(24, 23, 23, 0.3); color: white;">
+                <h2 style="color: white;">Elevate Your Email Outreach</h2>
+                <p>Hi Chris,</p>
+                <p>We understand the importance of personalized communication in reaching your clients. With Voltmailer, you can easily upload your client list to our platform, and we'll generate tailored emails for each contact by scraping their websites. These personalized emails, sent from your account with your signature, are designed to match the unique needs and interests of each recipient, allowing you to effectively engage with hundreds of clients at once.  </p>
+                <p>Additionally, our domain hunt feature enables you to discover new contacts effortlessly, further expanding your outreach possibilities.</p>
+                <p>Best regards,</p>
+                <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
+            </div>
+            <div class="email" style="border-color: #be0e1d; background: rgba(24, 23, 23, 0.3); color: white;">
+              <h2 style="color: white;">Elevate Your Email Outreach with Voltmailer</h2>
+              <p>Hi Chris,</p>
+              <p>I hope this email finds you well. My name is Rohan, and I'm reaching out to introduce you to Voltmailer, a powerful tool that uses AI to enhance your email outreach efforts. </p>
+              <p>Transform your email marketing strategy with Voltmailer's personalized, scalable, and efficient communication approach. I'd love to schedule a demo to show you how Voltmailer can elevate your email campaigns. </p>
+              <p>Looking forward to collaborating with you.</p>
+              <p>Best regards,</p>
+              <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
+          </div>
+            <div class="email" style="border-color: #8a15b8; background: rgba(24, 23, 23, 0.3); color: white;">
+              <h2 style="color: white;">Elevate Your Email Outreach with Personalized AI-Driven Messages</h2>
+              <!-- <p>Dear Maria Gonzalez,</p>
+              <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
+              <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
+              <p>Best regards,</p> -->
+              <pre style="font-family: 'Open Sans', sans-serif;">
+Hi James,
+
+I hope this email finds you well. My name is Rohan, and I am reaching
+out to introduce you to Voltmailer, a platform that can 
+revolutionize your email outreach strategy.
+
+With Voltmailer, we leverage AI technology to transform your client list 
+into a powerful asset. By simply uploading your client list to our 
+platform, we scrape each client's website to craft highly personalized
+emails tailored to their specific needs and interests. These emails are
+sent from your account, including your signature, allowing you to efficiently 
+engage with hundreds of clients simultaneously. 
+
+Looking forward to hearing from you.
+
+Best regards,
+Sam
+
+              </pre>
+              <p style="color: white;"><strong>Sam jordans</strong><br>Company 123<br>Email: samJ@company123.com</p>
+          </div>
+          <div class="email" style="border-color: #b9136f; background: rgba(24, 23, 23, 0.3); color: white;">
+            <h2 style="color: white;">Transform your email marketing with Voltmailer</h2>
+            <p>Hi Richard, </p>
+            <p>I hope this email finds you well. My name is Rohan, and I wanted to introduce you to Voltmailer, a solution designed to revolutionize your email outreach strategy. At Voltmailer, we understand the importance of tailored communication in the digital landscape. That's why we utilize AI technology to transform your client list into a powerful tool for personalized engagement.
+            </p>
+            <p>Transform your email marketing with Voltmailer and experience the power of personalized, scalable, and efficient communication. I would love to discuss how Voltmailer can enhance your email outreach efforts further. </p>
+
+            <p>Best regards,</p>
+            <p style="color: white;"><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+        </div>
+        <div class="email" style="border-color: #b5c021; background: rgba(24, 23, 23, 0.3); color: white;">
+          <h2 style="color: white;">Elevate Your Social Media Presence with Expert Help</h2>
+          <p>Dear Maria</p>
+          <p>I hope this email finds you well. My name is Rohan, and I wanted to reach out to you from Nuro with an exciting opportunity to transform your social media presence.
+
+          <p>  At Nuro, we understand the importance of connecting with your audience effectively. That's why our team specializes in crafting engaging content, optimizing posting schedules, and managing interactions across all platforms. By leveraging data-driven strategies, we not only enhance your online visibility but also foster community engagement and brand loyalty. 
+            <p>Let us take the reins on your social media so you can focus on what truly drives your business forward. I would love to discuss how we can tailor our services to meet your specific needs and goals.</p>
+
+            <p>Looking forward to the possibility of working together.</p>
+            <p>Best regards,</p>
+          <p style="color: white;"><strong>Daisy</strong><br>Company 123<br>Email: daisy.claire@company123.com</p>
+      </div>
+      <div class="email" style="border-color: #3b20d4; background: rgba(24, 23, 23, 0.3); color: white;">
+        <h2 style="color: white;">Emily | Proposal</h2>
+        <p>Dear Emily,</p>
+<p>        <p>Looking forward to the opportunity to discuss how we can elevate your social media presence to new heights. </p></p>
+        <p>Our team of experts excels in crafting engaging content, optimizing posting schedules, and managing interactions across all platforms. By leveraging data-driven strategies, we not only boost online visibility but also foster community engagement and brand loyalty. Let us take the reins of your social media presence so that you can focus on excelling at what you do best – managing your business.</p>
+        <p>Looking forward to the opportunity to discuss how we can elevate your social media presence to new heights. </p>
+        <p>Best regards,</p>
+        <p style="color: white;"><strong>Cleo</strong><br>Company 123<br>Email: Cleo@company123.com</p>
+    </div>
+                  
                   </div>
               </div>
           </div>
@@ -2674,8 +3032,8 @@ async function addCustomer() {
                 </label> -->
                 <!-- <span id="toggleLabelconsumer">Consumer Plans</span> -->
             <!-- </div> -->
-            <div class="c" id="plans">
-                <div class="pack_card ">
+            <div class="c" id="plans" style=" width: 100vw; align-items: center; justify-content: center;">
+                <div class="pack_card "">
                     <div class="box">
                     <div class="pack_name">Starter</div>
                     <p class="description">Try out our service with 20 Free emails on us.</p>
