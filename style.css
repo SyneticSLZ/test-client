@@ -1793,7 +1793,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     margin-left: 20px;
       border-radius: 10px;
       /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-      width: 100%;
+      width: 100vw;
       /* max-width: 1000px; */
       color: rgb(5, 1, 24);
   }
@@ -2093,6 +2093,16 @@ text-align: left;
   height: 30%; 
   /* border: #ff0000 1px solid; */
 }
+.cool-cont {
+  width: 80%; -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+    box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; border-radius: 10px;
+}
+
+#myAccount-content .coolinput{
+
+  width: 30%;
+  margin-bottom: 10px;
+}
   @media (min-width: 768px) {
    .navtop{
      display:none;
@@ -2136,12 +2146,22 @@ text-align: left;
       align-content: center; 
       /* border: 3px blue solid */
     }
+
     .row-1{
       width: 60%; 
       margin: 0px; 
       height: 100%; 
       padding: 20px;
       /* border: #ff0000 1px solid; */
+    }
+    .cool-cont {
+      width: 100%; -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+        box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; border-radius: 10px;
+    }
+    #myAccount-content .coolinput{
+
+      width: 80%;
+      margin-bottom: 10px;
     }
     .welcome-content-row{
     display: flex;
@@ -2293,13 +2313,14 @@ box-shadow: 2.5px 3px 0 #000, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
       margin-right:10px;
     }
     
+    
   }
 
   .coolinput {
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* border: #00tton34de solid 2px; */
+    /* border: red solid 2px; */
     /* position: static; */
   }
   
@@ -2409,11 +2430,7 @@ box-shadow: 2.5px 3px 0 #000, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
 #myAccount-content {
   overflow-y: scroll;
 }
-  #myAccount-content .coolinput{
 
-    width: 30%;
-    margin-bottom: 10px;
-  }
   #myAccount-content button {
     border-radius: 16px;
     margin-bottom: 10px;
