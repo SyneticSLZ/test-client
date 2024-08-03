@@ -1866,7 +1866,7 @@ flex-direction: column;
         margin: 0 5px;
     }
 
-    .mobile-col{border: red solid 1px; width: 100vw; color: white; display: flex; flex-direction: row; }
+    .mobile-col{ width: 100vw; color: white; display: flex; flex-direction: row; margin-block: 50px ; }
 
     .w-30{
         width: 30%;
@@ -1886,8 +1886,29 @@ flex-direction: column;
   display: none;
 }
 
+
+
 }
     @media (max-width: 768px) {
+
+      .mobile-col{
+  display: flex;
+  border: #00DDEB 1px solid;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+.w-30, .w-70{
+        width: 90%;
+}
+
+.mi-80,.mr-80{
+  margin-inline: 0px;
+  margin-right: 0px;
+  width: 90%;
+}
+
 
         .icon-3{
             flex-direction: column;
@@ -1920,19 +1941,9 @@ flex-direction: column;
 #CreateAccount {
   display: none;
 }
-.w-30, .w-70{
-        width: 90%;
-}
 
-.mi-80,.mr-80{
-  margin-inline: 0px;
-  margin-right: 0px;
-}
-.mobile-col{
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+
+
 
 .hero h1{
   text-align: left;
@@ -2121,7 +2132,7 @@ gap: 10px;
     margin-bottom: 50px;
   }
 
-  .image-container img {
+  .image-container img, .image-container video {
     max-width: 100%;
     height: auto;
     border-radius: 15px;
@@ -2447,16 +2458,18 @@ function initializeDivs() {
              <p style=" font-size: 30px;"><b>Step 1 </b>Upload / Create a lead list</p>
             </div> 
 
-            <div class="mobile-col">
+            <div class="mobile-col" style="">
        
-<div style=" border: #00DDEB 1px solid; " class="w-30 mi-80">
+<div style="  " class="w-30 mi-80">
   <!-- <li> -->
   <ol><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ol>
   <ul><b>CSV</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
   <ul><b>From Domain</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
 <!-- </li> -->
 </div>
-<div style=" border: #eb00eb 1px solid; " class="w-70 mr-80"></div>
+<div style=" " class="w-70 mr-80 image-container ">
+  <video src="Leads.mp4" autoplay loop muted playsinline></video>
+</div>
             </div>
 
             
@@ -2464,13 +2477,13 @@ function initializeDivs() {
               <p style=" font-size: 30px;"><b>Step 2 </b>Add your Pitch</p>
              </div> 
              <div class="mobile-col">
-             <div style=" border: #00DDEB 1px solid; " class="w-30 mi-80">
+             <div style="  " class="w-30 mi-80">
               <ul><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
             </div>
-            <div style=" border: #eb00eb 1px solid; " class="w-30 mr-80">
+            <div style=" " class="w-30 mr-80">
               <img src="Pitch.png" alt="" style="width: 100%; height: auto; max-width: 100%; border-radius: 15px;">
             </div>
-            <div style=" border: #eb00eb 1px solid; " class="w-30 mr-80">
+            <div style="  " class="w-30 mr-80">
               <ul><b>Tips to make your pitch Perfect :</b> <br>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
             </div>
@@ -2488,12 +2501,14 @@ function initializeDivs() {
  </div> 
  <div class="mobile-col">
 
-<div style=" border: #00DDEB 1px solid; " class="w-30 mi-80">
+<div style=" " class="w-30 mi-80">
 <ul><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
 <!--  -->
 <!-- <ul><b>From Domain</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul> -->
 </div>
-<div style=" border: #eb00eb 1px solid; " class="w-70 mr-80"></div>
+<div style=" " class="w-70 mr-80 image-container">
+  <video src="Sending.mp4" autoplay loop muted playsinline></video>
+</div>
  </div>
 
             <style>
