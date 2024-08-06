@@ -1902,10 +1902,24 @@ flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0;
+  margin-block: 50px;
 }
 .w-30, .w-70, .w-50{
         width: 90%;
 }
+
+.hero{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        /* height: 92vh; */
+        /* border: #00DDEB solid 1px; */
+        margin-top: 20px;
+        /* margin-bottom: 100px; */
+        width: 100%;
+
+    }
 
 .mi-80,.mr-80{
   margin-inline: 0px;
@@ -2008,6 +2022,7 @@ margin-inline-end: 1em;
   /* width: 100vw; */
   text-align: left;
   font-size: 30px;
+  /* display: none; */
   /* margin-left: 80px; */
 
   /* gap: 100px; */
@@ -2018,6 +2033,7 @@ margin-inline-end: 1em;
   /* color: white; */
   /* border: red 1px solid; */
 }
+
 .btn-container-toggle {
 /* width: 100vw; */
 margin-block: 30px;
@@ -2678,7 +2694,7 @@ function initializeDivs() {
 
 
 
-
+<div class="hide">
             <div class="btn-container-toggle">
               <i class="fi fi-tr-computer" ></i>
               <label class="switch-button" for="switch">
@@ -2691,8 +2707,8 @@ function initializeDivs() {
                 </div>
               </label>
               <i class="fi fi-tr-mobile-button" style="margin-left:15px;"></i>
-             
             </div>
+          
 
             <div class="image-container" id="div1">
               <img src="home.png" alt="Home">
@@ -2700,7 +2716,7 @@ function initializeDivs() {
             <div class="image-container" id="div2">
               <img src="mobile-home.png" alt="Mobile Home">
             </div>
-
+        </div>
               <div class="input__container">
                 <div class="shadow__input"></div>
                 <button class="input__button__shadow">
