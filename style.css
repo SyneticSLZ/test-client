@@ -467,7 +467,7 @@ transition: ease 0.6s;
     margin-top: 20px;
     margin-inline: 20px;
     height: 85vh;
-    width: 85vw;
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -576,11 +576,11 @@ transition: ease 0.6s;
   background: #c90c0c;
   border: 2px solid #fff;
   height: 100%;
-  width: 95%;
+  width: 98%;
   border-radius: 3px;
   /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
   margin: 0 auto; /* Center the content row horizontally */
-  overflow-y: auto;
+  overflow-y: scroll;
   /* border: 1.5px solid #000000a8; */
   border-radius: 0.5rem;
   /* box-shadow: 2.5px 3px 0 #000000a8; */
@@ -2176,7 +2176,8 @@ text-align: left;
     background-color: #fff;
     color: #0000007e;
     border: none;
-    padding: 15px 20px;
+    /* padding: 15px 20px; */
+    width: 25%;
     border-radius: 3px;
     cursor: pointer;
     font-size: 16px;
@@ -2226,7 +2227,8 @@ box-shadow: 2.5px 3px 0 #000, 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     background-color: #fff;
     color: #000000;
     border: none;
-    padding: 15px 15px;
+    /* padding: 15px 15px; */
+    width: 20%;
     border-radius: 3px;
     cursor: pointer;
     font-size: 12px;

@@ -1866,7 +1866,7 @@ flex-direction: column;
         margin: 0 5px;
     }
 
-    .mobile-col{ width: 100vw; color: white; display: flex; flex-direction: row; margin-block: 50px ; }
+    .mobile-col{ width: 100%; color: white; display: flex; flex-direction: row; margin-block: 50px ; }
 
     .w-30{
         width: 30%;
@@ -1881,6 +1881,10 @@ flex-direction: column;
 .mr-80{
   margin-right: 80px;
 }
+
+.w-50{
+  width: 50%;
+}
 @media(min-width: 768px) {
   .pack_card::before{
   display: none;
@@ -1893,13 +1897,13 @@ flex-direction: column;
 
       .mobile-col{
   display: flex;
-  border: #00DDEB 1px solid;
+  /* border: #00DDEB 1px solid; */
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0;
 }
-.w-30, .w-70{
+.w-30, .w-70, .w-50{
         width: 90%;
 }
 
@@ -2153,6 +2157,88 @@ gap: 10px;
     display: flex;
     margin-block: 90px;
   }
+
+  /* From Uiverse.io by gharsh11032000 */ 
+.card_ui {
+  position: relative;
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  /* width: 100%; */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  padding: 32px;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.content_ui {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  color: #e8e8e8;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.content_ui .heading_ui {
+  font-weight: 700;
+  font-size: 32px;
+}
+
+.content .para {
+  line-height: 1.5;
+}
+
+.content_ui .btn_ui {
+  color: #e8e8e8;
+  text-decoration: none;
+  padding: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  /* background: linear-gradient(-45deg, #f89b29 0%, #ff0f7b 100% ); */
+  background: linear-gradient(to bottom, rgba(255, 0, 255, 0.719), rgba(139, 32, 139, 0.719)); 
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card_ui::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  height: 100%;
+  /* background: linear-gradient(-45deg, #f89b29 0%, #ff0f7b 100% ); */
+  background: linear-gradient(to bottom, rgba(255, 0, 255, 0.719), rgba(0, 255, 255, 0.637)); 
+  z-index: -1;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.card_ui:hover::before {
+  width: 100%;
+}
+
+.card_ui:hover {
+  box-shadow: none;
+}
+
+.card_ui:hover .btn_ui {
+  color: #212121;
+  background: #e8e8e8;
+}
+
+.content_ui .btn_ui:hover {
+  outline: 2px solid #e8e8e8;
+  background: transparent;
+  color: #e8e8e8;
+}
+
+.content_ui .btn_ui:active {
+  box-shadow: none;
+}
+
 
 @-webkit-keyframes indicator {
   30% {
@@ -2460,12 +2546,27 @@ function initializeDivs() {
 
             <div class="mobile-col" style="">
        
-<div style="  " class="w-30 mi-80">
+<div class="w-30 mi-80 " style="
+-webkit-border-radius: 16px;
+border-radius: 16px;
+-webkit-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29;
+box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; margin-bottom: 60px;">
   <!-- <li> -->
-  <ol><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ol>
-  <ul><b>CSV</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
-  <ul><b>From Domain</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
+  <div style="margin-bottom: 20px;"><b>1. Manual</b></div> <div style="margin-bottom: 30px;">Add your leads manually into the table by entering your prospects email, website and name(optional).</div>
+  <div style="margin-bottom: 20px;"><b>2. CSV Upload</b> </div> <div style="margin-bottom: 30px;"><br>Upload any CSV files you have containing lead information , from there our systems will then add all the leads within that CSV file to the table.</div>
+  <div style="margin-bottom: 20px;"><b>3. Domain</b></div> <div style="margin-bottom: 30px;"> <br>Simply enter a website domain, we will then find all the corresponding emails to that website and automatically enter it into the table.
+
+    For a visual demonstration of how this works look at this video →</div>
 <!-- </li> -->
+ <!-- <ul> -->
+<!-- <button class="cta none" onclick="window.location.href='/#plan'" > -->
+  <!-- <span class="seeplans">Get Started</span>
+  <svg width="15px" height="10px" viewBox="0 0 13 10">
+    <path d="M1,5 L11,5"></path>
+    <polyline points="8 1 12 5 8 9"></polyline>
+  </svg>
+</button> -->
+<!-- </ul> -->
 </div>
 <div style=" " class="w-70 mr-80 image-container ">
   <video src="Leads.mp4" autoplay loop muted playsinline></video>
@@ -2477,16 +2578,51 @@ function initializeDivs() {
               <p style=" font-size: 30px;"><b>Step 2 </b>Add your Pitch</p>
              </div> 
              <div class="mobile-col">
-             <div style="  " class="w-30 mi-80">
-              <ul><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
-            </div>
+             <div style="-webkit-border-radius: 16px;
+             border-radius: 16px;
+             -webkit-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29;
+             box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px;  " class="w-30 mi-80">
+              <div><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</div>
+            <!-- <div class="image-container">
+              <img src="plan.png" alt="">
+            </div> -->
+          </div>
             <div style=" " class="w-30 mr-80">
-              <img src="Pitch.png" alt="" style="width: 100%; height: auto; max-width: 100%; border-radius: 15px;">
+              <img src="Pitch.png" alt="" style="width: 100%; height: 65vh; max-width: 100%; border-radius: 15px;">
             </div>
-            <div style="  " class="w-30 mr-80">
+            <!-- <div style="  " class="w-30 mr-80">
               <ul><b>Tips to make your pitch Perfect :</b> <br>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
-            </div>
+            </div> -->
+<div class="card_ui w-30">
+  <div class="content_ui">
+    <p class="heading_ui">Tips to make your pitch Perfect :
+    </p>
+    <p class="para">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi
+      laboriosam at voluptas minus culpa deserunt delectus sapiente
+      inventore pariatur
+    </p>
+    <p class="para">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi
+      laboriosam at voluptas minus culpa deserunt delectus sapiente
+      inventore pariatur
+    </p>
+    <p class="para">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi
+      laboriosam at voluptas minus culpa deserunt delectus sapiente
+      inventore pariatur
+    </p>
+    
+    <!-- <ul>
+      <li><p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aspernatur, laudantium!</p></li>
+      <li><p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aspernatur, laudantium!</p></li>
+      <li><p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aspernatur, laudantium!</p></li>
+      <li><p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aspernatur, laudantium!</p></li>
+    </ul> -->
+    <button class="btn_ui">Read more</button>
+  </div>
+</div>
             
 </div>
 
@@ -2501,8 +2637,11 @@ function initializeDivs() {
  </div> 
  <div class="mobile-col">
 
-<div style=" " class="w-30 mi-80">
-<ul><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul>
+<div style="-webkit-border-radius: 16px;
+border-radius: 16px;
+-webkit-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29;
+box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; margin-bottom: 60px; " class="w-30 mi-80">
+<div><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</div>
 <!--  -->
 <!-- <ul><b>From Domain</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul> -->
 </div>
@@ -3048,7 +3187,7 @@ Sam
                 <!-- <span id="toggleLabelconsumer">Consumer Plans</span> -->
             <!-- </div> -->
             <div class="c" id="plans" style=" width: 100vw; align-items: center; justify-content: center;">
-                <div class="pack_card "">
+                <div class="pack_card ">
                     <div class="box">
                     <div class="pack_name">Starter</div>
                     <p class="description">Try out our service with 20 Free emails on us.</p>
