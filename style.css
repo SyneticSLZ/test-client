@@ -306,12 +306,14 @@
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    /* flex-wrap: wrap; */
+    /* gap: 5%; */
   }
 
   .buttons .lead {
     width: 100%;
     text-align: center;
-    font-size: 14px;
+    font-size: 1rem;
     font-weight: 400;
     /* color: rgb(110, 20, 20); */
   }
@@ -348,7 +350,9 @@ input[type="file"] {
     background-color: #fff;
     color: #000000;
     border: none;
-    padding: 20px 50px;
+    /* padding: 20px 50px; */
+    padding: 1.25rem 2.5rem;
+    /* padding: 1.25rem 0; */
     border-radius: 3px;
     cursor: pointer;
     font-size: 16px;
@@ -400,7 +404,9 @@ input[type="file"] {
     background-color: #fff;
     color: #0000007e;
     border: none;
-    padding: 20px 50px;
+    /* padding: 20px 50px; */
+    padding: 1.25rem 2.5rem;
+    /* padding: 1.25rem 0; */
     border-radius: 3px;
     cursor: pointer;
     font-size: 16px;
@@ -462,6 +468,28 @@ transition: ease 0.6s;
   /* border: #000030 1px solid; */
   box-shadow: 5.5px 7px 0 #000030;
 }
+
+@media (max-width: 1566px) {
+  .buttons{
+    width: 100%;
+    /* margin-right: 10px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .buttons .button-man {
+    width: 100%;
+    margin: 0;
+  }
+  .buttons .uploadLabel {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+
 
   .pitch-row{
     margin-top: 20px;
