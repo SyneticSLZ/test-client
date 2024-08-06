@@ -20,6 +20,37 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
 
 </head>
+<script>
+  
+  function toggleDivs() {
+  var checkbox = document.getElementById("switch");
+  var div1 = document.getElementById("div1");
+  var div2 = document.getElementById("div2");
+  
+  if (checkbox.checked) {
+    div1.style.display = "none";
+    div2.style.display = "flex";
+  } else {
+    div1.style.display = "flex";
+    div2.style.display = "none";
+  }
+}
+
+function initializeDivs() {
+  var checkbox = document.getElementById("switch");
+  var div1 = document.getElementById("div1");
+  var div2 = document.getElementById("div2");
+
+  if (checkbox.checked) {
+    div1.style.display = "none";
+    div2.style.display = "flex";
+
+  } else {
+    div1.style.display = "flex";
+    div2.style.display = "none";
+  }
+}
+</script>
 <style>
 
 link[rel="icon"] {
@@ -1885,138 +1916,8 @@ flex-direction: column;
 .w-50{
   width: 50%;
 }
-@media(min-width: 768px) {
-  .pack_card::before{
-  display: none;
-}
 
 
-
-}
-    @media (max-width: 768px) {
-
-      .mobile-col{
-  display: flex;
-  /* border: #00DDEB 1px solid; */
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  margin-block: 50px;
-}
-.w-30, .w-70, .w-50{
-        width: 90%;
-}
-
-.hero{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        /* height: 92vh; */
-        /* border: #00DDEB solid 1px; */
-        margin-top: 20px;
-        /* margin-bottom: 100px; */
-        width: 100%;
-
-    }
-
-.mi-80,.mr-80{
-  margin-inline: 0px;
-  margin-right: 0px;
-  width: 90%;
-}
-
-
-        .icon-3{
-            flex-direction: column;
-            justify-content: start;
-            height: 120vh;
-            width: 100vw;
-        }
-        .card-container{
-            width: 100%;
-            height: 40%;
-            margin-bottom: 2em;
-            justify-content: center;
-        }
-        .icon {
-            margin-top: 0em;
-        }
-        .card {
-        width: 100%;
-        margin: 10px 0;
-    }
-    }
-
-    @media (max-width: 600px) {
-/* .navIMG{
-  height: 70px;
-  width: 70px;
-} */
-
-
-#CreateAccount {
-  display: none;
-}
-
-
-
-
-.hero h1{
-  text-align: left;
-}
- .hero h2{
-  text-align: left;
-}
-
-.container-contact {
-  width: 100%;
-}
-.t{
-  font-size: 1.2em;
-}
-.st{
-  font-size: 1em;
-}
-.container-contact .subtitle{
-  width: 70vw;
-  font-size: 1em;
-}
-.subscriptions{
-  text-align: left;
-}
-.subscriptions h1{
-  margin-left: 0;
-  align-self: start;
-}
-.row-cube{
-    display: none;
-}
-.faq .row{
-width: 100%;
-margin-inline-end: 1em;
-}
-.faq .title{
-    margin-left: 0em;
-}
-.hide{
-  display: none;
-  width: 100%;
-  /* border: #00DDEB 1px solid; */
-}
-.c{
-  flex-direction: column;
-  /* border: #00DDEB 1px solid; */
-}
-  
-.info-container{
-  width: 100%;
-}
-  .info h3, .info p{
-    text-align: left;
-  }
-}
 
 .step {
   /* width: 100vw; */
@@ -2027,8 +1928,10 @@ margin-inline-end: 1em;
 
   /* gap: 100px; */
   /* height: 50px; */
-  /* display: flex; */
-  /* align-items: center; */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
   /* justify-content: space-between; */
   /* color: white; */
   /* border: red 1px solid; */
@@ -2463,6 +2366,144 @@ gap: 10px;
 }
 
 
+@media(min-width: 768px) {
+  .pack_card::before{
+  display: none;
+}
+
+
+
+}
+    @media (max-width: 768px) {
+
+      .mobile-col{
+  display: flex;
+  /* border: #00DDEB 1px solid; */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  margin-block: 50px;
+}
+.w-30, .w-70, .w-50{
+        width: 90%;
+}
+#div1, #div2, .btn-container-toggle {
+  display: none;
+}
+
+.hero{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        /* height: 92vh; */
+        /* border: #00DDEB solid 1px; */
+        margin-top: 20px;
+        /* margin-bottom: 100px; */
+        width: 100%;
+
+    }
+
+.mi-80,.mr-80{
+  margin-inline: 0px;
+  margin-right: 0px;
+  width: 90%;
+}
+
+
+        .icon-3{
+            flex-direction: column;
+            justify-content: start;
+            height: 120vh;
+            width: 100vw;
+        }
+        .card-container{
+            width: 100%;
+            height: 40%;
+            margin-bottom: 2em;
+            justify-content: center;
+        }
+        .icon {
+            margin-top: 0em;
+        }
+        .card {
+        width: 100%;
+        margin: 10px 0;
+    }
+    }
+
+    @media (max-width: 600px) {
+/* .navIMG{
+  height: 70px;
+  width: 70px;
+} */
+
+
+#CreateAccount {
+  display: none;
+}
+
+
+
+
+.hero h1{
+  text-align: left;
+}
+ .hero h2{
+  text-align: left;
+}
+
+.container-contact {
+  width: 100%;
+}
+.t{
+  font-size: 1.2em;
+}
+.st{
+  font-size: 1em;
+}
+.container-contact .subtitle{
+  width: 70vw;
+  font-size: 1em;
+}
+.subscriptions{
+  text-align: left;
+}
+.subscriptions h1{
+  margin-left: 0;
+  align-self: start;
+}
+.row-cube{
+    display: none;
+}
+.faq .row{
+width: 100%;
+margin-inline-end: 1em;
+}
+.faq .title{
+    margin-left: 0em;
+}
+.hide{
+  display: none;
+  width: 100%;
+  /* border: #00DDEB 1px solid; */
+}
+.c{
+  flex-direction: column;
+  /* border: #00DDEB 1px solid; */
+}
+  
+.info-container{
+  width: 100%;
+}
+  .info h3, .info p{
+    text-align: left;
+  }
+}
+
+
+
 </style>
 <script>
 
@@ -2584,34 +2625,6 @@ async function addCustomer() {
         }
 
 
-        function toggleDivs() {
-  var checkbox = document.getElementById("switch");
-  var div1 = document.getElementById("div1");
-  var div2 = document.getElementById("div2");
-  
-  if (checkbox.checked) {
-    div1.style.display = "none";
-    div2.style.display = "flex";
-  } else {
-    div1.style.display = "flex";
-    div2.style.display = "none";
-  }
-}
-
-function initializeDivs() {
-  var checkbox = document.getElementById("switch");
-  var div1 = document.getElementById("div1");
-  var div2 = document.getElementById("div2");
-
-  if (checkbox.checked) {
-    div1.style.display = "none";
-    div2.style.display = "flex";
-
-  } else {
-    div1.style.display = "flex";
-    div2.style.display = "none";
-  }
-}
 
 </script>
     
@@ -2694,7 +2707,7 @@ function initializeDivs() {
 
 
 
-<div class="hide">
+<!-- <div class="hide"> -->
             <div class="btn-container-toggle">
               <i class="fi fi-tr-computer" ></i>
               <label class="switch-button" for="switch">
@@ -2716,7 +2729,7 @@ function initializeDivs() {
             <div class="image-container" id="div2">
               <img src="mobile-home.png" alt="Mobile Home">
             </div>
-        </div>
+        <!-- </div> -->
               <div class="input__container">
                 <div class="shadow__input"></div>
                 <button class="input__button__shadow">
@@ -2731,6 +2744,8 @@ function initializeDivs() {
 
             <div class="step">
              <p style=" font-size: 30px;"><b>Step 1 </b>Upload / Create a lead list</p>
+             <p>Sync a list of leads from your CRM, or prospect from scratch to build  a targeted lead list. Our built in Domain Search tool helps you find the right people in the right companies, all from a Domain name.
+              </p>
             </div> 
 
             <div class="mobile-col" style="">
@@ -2764,14 +2779,14 @@ box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; mar
 
             
             <div class="step">
-              <p style=" font-size: 30px;"><b>Step 2 </b>Add your Pitch</p>
+              <p style=" font-size: 30px;"><b>Step 2 </b> The Pitch</p>
              </div> 
              <div class="mobile-col">
              <div style="-webkit-border-radius: 16px;
              border-radius: 16px;
              -webkit-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29;
              box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px;  " class="w-30 mi-80">
-              <div><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</div>
+              <div style="text-align: center; font-size: 23px; font-weight: 200"><div style="font-weight: 600;">ADD YOUR PITCH</div> <br>Next, Add your business pitch. This pitch will be analyzed by our AI to create a custom email, leveraging your client's web data to ensure find exactly how you can benefit them and personalize the email.</div>
             <!-- <div class="image-container">
               <img src="plan.png" alt="">
             </div> -->
@@ -2807,20 +2822,17 @@ box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; mar
   <div class="content_ui">
     <p class="heading_ui">Tips to make your pitch Perfect :
     </p>
-    <p class="para">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi
-      laboriosam at voluptas minus culpa deserunt delectus sapiente
-      inventore pariatur
+    <p class="para"> <b>Keep it Relevant: </b>
+      Clearly state your business's value proposition.
     </p>
-    <p class="para">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi
-      laboriosam at voluptas minus culpa deserunt delectus sapiente
-      inventore pariatur
+    <p class="para"><b>Be Clear and Concise:</b>
+      Highlight key benefits for your clients.
     </p>
-    <p class="para">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi
-      laboriosam at voluptas minus culpa deserunt delectus sapiente
-      inventore pariatur
+    <p class="para"><b>Show Passion: </b>
+      Let your enthusiasm for your business shine through.
+    </p>
+    <p class="para"><b>Highlight Your Unique Selling Points: </b>
+      Focus on what sets you apart from competitors.
     </p>
     
     <!-- <ul>
@@ -2850,8 +2862,9 @@ box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; mar
 border-radius: 16px;
 -webkit-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29;
 box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; margin-bottom: 60px; " class="w-30 mi-80">
-<div><b>Manual</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</div>
-<!--  -->
+<div style="text-align: left; font-size: 23px; font-weight: 200"><div style="font-weight: 600; text-align: center;">AUTOSEND or MANUAL</div> <br>Finally, choose Manual or AutoSend. With AutoSend, we scrape, generate and send your emails completetly automatically, you can press send, close your computer and chill. </div>
+<div style="text-align: left; font-size: 23px; font-weight: 200; margin-top: 20px;">With Manual, you can see the emails before they are sent, make any adjustments and then send at your own pace. </div>
+              <!-- <div class="image-container"> -->
 <!-- <ul><b>From Domain</b> <br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo debitis deserunt sunt assumenda tempora fuga nam soluta omnis repudiandae quis magnam, exercitationem nesciunt cumque eum suscipit placeat. Ipsam, perspiciatis repellendus?</ul> -->
 </div>
 <div style=" " class="w-70 mr-80 image-container">
