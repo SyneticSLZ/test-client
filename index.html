@@ -2239,6 +2239,179 @@ gap: 10px;
   box-shadow: none;
 }
 
+.letter-div {
+  /* border: #00DDEB 1px solid; */
+  width: 100%;
+  margin-top: 100px;
+  position: relative; /* Added to make the container a reference for absolute positioning */
+  height: auto; /* Ensures the container takes up the full height of the viewport */
+  display: flex; /* Added to center content */
+  align-items: center; /* Added to center content vertically */
+  justify-content: center; /* Added to center content horizontally */
+}
+
+/* From Uiverse.io by vishnu1100 */ 
+.letter-image {
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  position: relative; /* Changed from absolute to relative */
+}
+.animated-mail {
+  position: absolute;
+  height: 150px;
+  width: 200px;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  transition: 0.4s;
+}
+  .body {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 100px 200px;
+    border-color: transparent transparent #a035ca transparent;
+    z-index: 2;
+  }
+
+  .top-fold {
+    position: absolute;
+    top: 50px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 50px 100px 0 100px;
+    -webkit-transform-origin: 50% 0%;
+    -webkit-transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
+    -moz-transform-origin: 50% 0%;
+    -moz-transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
+    transform-origin: 50% 0%;
+    transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
+    border-color: #8a15b8 transparent transparent transparent;
+    z-index: 2;
+  }
+
+  .back-fold {
+    position: absolute;
+    bottom: 0;
+    width: 200px;
+    height: 100px;
+    background: #a71fdd;
+    z-index: 0;
+  }
+
+  .left-fold {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 50px 0 50px 100px;
+    border-color: transparent transparent transparent #a71fdd;
+    z-index: 2;
+  }
+
+  .letter {
+    left: 20px;
+    bottom: 0px;
+    position: absolute;
+    width: 160px;
+    height: 60px;
+    background: white;
+    z-index: 1;
+    overflow: hidden;
+    -webkit-transition: 0.4s 0.2s;
+    -moz-transition: 0.4s 0.2s;
+    transition: 0.4s 0.2s;
+  }
+    .letter-border {
+      height: 10px;
+      width: 100%;
+      background: repeating-linear-gradient(
+        -45deg,
+        #8a15b8,
+        #8a15b8 8px,
+        transparent 8px,
+        transparent 18px
+      );
+    }
+
+    .letter-title {
+      margin-top: 10px;
+      margin-left: 5px;
+      height: 10px;
+      width: 40%;
+      background: #8a15b8;
+    }
+    .letter-context {
+      margin-top: 10px;
+      margin-left: 5px;
+      height: 10px;
+      width: 20%;
+      background: #8a15b8;
+    }
+
+    .letter-stamp {
+      margin-top: 30px;
+      margin-left: 120px;
+      border-radius: 100%;
+      height: 30px;
+      width: 30px;
+      background: #8a15b8;
+      opacity: 0.3;
+    }
+  
+
+.shadow {
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  width: 400px;
+  height: 30px;
+  transition: 0.4s;
+  transform: translateX(-50%);
+  -webkit-transition: 0.4s;
+  -webkit-transform: translateX(-50%);
+  -moz-transition: 0.4s;
+  -moz-transform: translateX(-50%);
+
+  border-radius: 100%;
+  background: radial-gradient(
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.letter-image:hover {
+  .animated-mail {
+    transform: translateY(50px);
+    -webkit-transform: translateY(50px);
+    -moz-transform: translateY(50px);
+  }
+
+  .animated-mail .top-fold {
+    transition: transform 0.4s, z-index 0.2s;
+    transform: rotateX(180deg);
+    -webkit-transition: transform 0.4s, z-index 0.2s;
+    -webkit-transform: rotateX(180deg);
+    -moz-transition: transform 0.4s, z-index 0.2s;
+    -moz-transform: rotateX(180deg);
+    z-index: 0;
+  }
+
+  .animated-mail .letter {
+    height: 180px;
+  }
+
+  .shadow {
+    width: 250px;
+  }
+}
+
+
 
 @-webkit-keyframes indicator {
   30% {
@@ -2586,6 +2759,26 @@ box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; mar
             <!-- <div class="image-container">
               <img src="plan.png" alt="">
             </div> -->
+            <div class="letter-div">
+
+<div class="letter-image">
+  <div class="animated-mail">
+    <div class="back-fold"></div>
+    <div class="letter">
+      <div class="letter-border"></div>
+      <div class="letter-title"></div>
+      <div class="letter-context"></div>
+      <div class="letter-stamp">
+        <div class="letter-stamp-inner"></div>
+      </div>
+    </div>
+    <div class="top-fold"></div>
+    <div class="body"></div>
+    <div class="left-fold"></div>
+  </div>
+  <div class="shadow"></div>
+</div>
+</div>
           </div>
             <div style=" " class="w-30 mr-80">
               <img src="Pitch.png" alt="" style="width: 100%; height: 65vh; max-width: 100%; border-radius: 15px;">
@@ -2864,49 +3057,49 @@ box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; mar
               <h2>Example Emails created using our tool : </h2>
               <div class="email-slider">
                   <div class="email-slider-wrapper">
-                    <div class="email" style="border-color: #da66d4; background: rgba(24, 23, 23, 0.3); color: white;">
+                    <div class="email" style="border-color: #da66d4; background: rgba(24, 23, 23, 0.3); color: white; max-height: 500px;">
                       <h2 style="color: white;">Elevate Your Email Outreach with Voltmailer</h2>
-                      <p>Hi Chris,</p>
+                      <p>Hi Claire,</p>
                       <p>I hope this email finds you well. My name is Rohan, and I'm reaching out to introduce you to Voltmailer, a powerful tool that uses AI to enhance your email outreach efforts. </p>
                       <p>Transform your email marketing strategy with Voltmailer's personalized, scalable, and efficient communication approach. I'd love to schedule a demo to show you how Voltmailer can elevate your email campaigns. </p>
                       <p>Looking forward to collaborating with you.</p>
-                      <p>Best regards,</p>
-                      <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
+                      <pre style="color: white; font-family: 'Open Sans', sans-serif;">Best regards,</pre>
+                      <!-- <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p> -->
                   </div>
-                <div class="email" style="border-color: #f8f8f8; background: rgba(24, 23, 23, 0.3); color: white;">
+                <div class="email" style="border-color: #f8f8f8; background: rgba(24, 23, 23, 0.3); color: white; max-height: 500px;">
                   <h2 style="color: white;">Elevate Your Email Outreach with Voltmailer</h2>
-                  <p>Hi Chris,</p>
+                  <p>Hi James,</p>
                   <p>I hope this email finds you well. My name is Rohan, and I'm reaching out to introduce you to Voltmailer, a powerful tool that uses AI to enhance your email outreach efforts. </p>
                   <p>Transform your email marketing strategy with Voltmailer's personalized, scalable, and efficient communication approach. I'd love to schedule a demo to show you how Voltmailer can elevate your email campaigns. </p>
                   <p>Looking forward to collaborating with you.</p>
-                  <p>Best regards,</p>
-                  <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
+                  <pre style="color: white; font-family: 'Open Sans', sans-serif;">Best regards,</pre>
+                  <!-- <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p> -->
               </div>
-              <div class="email" style="border-color: #4ee2ec; background: rgba(24, 23, 23, 0.3); color: white;">
+              <div class="email" style="border-color: #4ee2ec; background: rgba(24, 23, 23, 0.3); color: white;  max-height: 500px;">
                 <h2 style="color: white;">Elevate Your Email Outreach</h2>
                 <p>Hi Chris,</p>
                 <p>We understand the importance of personalized communication in reaching your clients. With Voltmailer, you can easily upload your client list to our platform, and we'll generate tailored emails for each contact by scraping their websites. These personalized emails, sent from your account with your signature, are designed to match the unique needs and interests of each recipient, allowing you to effectively engage with hundreds of clients at once.  </p>
                 <p>Additionally, our domain hunt feature enables you to discover new contacts effortlessly, further expanding your outreach possibilities.</p>
-                <p>Best regards,</p>
-                <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
+                <pre style="color: white; font-family: 'Open Sans', sans-serif;">Best regards, <br> Sam</pre>
+                <!-- <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p> -->
             </div>
-            <div class="email" style="border-color: #be0e1d; background: rgba(24, 23, 23, 0.3); color: white;">
+            <div class="email" style="border-color: #be0e1d; background: rgba(24, 23, 23, 0.3); color: white;  max-height: 500px;">
               <h2 style="color: white;">Elevate Your Email Outreach with Voltmailer</h2>
-              <p>Hi Chris,</p>
+              <p>Hi Blake,</p>
               <p>I hope this email finds you well. My name is Rohan, and I'm reaching out to introduce you to Voltmailer, a powerful tool that uses AI to enhance your email outreach efforts. </p>
               <p>Transform your email marketing strategy with Voltmailer's personalized, scalable, and efficient communication approach. I'd love to schedule a demo to show you how Voltmailer can elevate your email campaigns. </p>
               <p>Looking forward to collaborating with you.</p>
-              <p>Best regards,</p>
-              <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p>
+              <pre style="color: white; font-family: 'Open Sans', sans-serif;">Best regards,</pre>
+              <!-- <p style="color: white;"><strong>Rohan Mehmi</strong><br>Voltmailer<br>Email: rohanmehmi72@gmail.com</p> -->
           </div>
-            <div class="email" style="border-color: #8a15b8; background: rgba(24, 23, 23, 0.3); color: white;">
+            <div class="email" style="border-color: #8a15b8; background: rgba(24, 23, 23, 0.3); color: white; max-height: 500px;">
               <h2 style="color: white;">Elevate Your Email Outreach with Personalized AI-Driven Messages</h2>
               <!-- <p>Dear Maria Gonzalez,</p>
               <p>Aenean condimentum, libero id vulputate viverra, erat ipsum interdum orci, ac euismod ligula orci eget lorem. Nullam dapibus cursus velit, non rhoncus.</p>
               <p>Nam fermentum nisl quis nisl vehicula, at vehicula magna congue. Duis luctus arcu sit amet libero sollicitudin varius.</p>
               <p>Best regards,</p> -->
               <pre style="font-family: 'Open Sans', sans-serif;">
-Hi James,
+Hi Joe,
 
 I hope this email finds you well. My name is Rohan, and I am reaching
 out to introduce you to Voltmailer, a platform that can 
@@ -2925,19 +3118,19 @@ Best regards,
 Sam
 
               </pre>
-              <p style="color: white;"><strong>Sam jordans</strong><br>Company 123<br>Email: samJ@company123.com</p>
+              <!-- <p style="color: white;"><strong>Sam jordans</strong><br>Company 123<br>Email: samJ@company123.com</p> -->
           </div>
-          <div class="email" style="border-color: #b9136f; background: rgba(24, 23, 23, 0.3); color: white;">
+          <div class="email" style="border-color: #b9136f; background: rgba(24, 23, 23, 0.3); color: white; max-height: 500px;">
             <h2 style="color: white;">Transform your email marketing with Voltmailer</h2>
             <p>Hi Richard, </p>
             <p>I hope this email finds you well. My name is Rohan, and I wanted to introduce you to Voltmailer, a solution designed to revolutionize your email outreach strategy. At Voltmailer, we understand the importance of tailored communication in the digital landscape. That's why we utilize AI technology to transform your client list into a powerful tool for personalized engagement.
             </p>
             <p>Transform your email marketing with Voltmailer and experience the power of personalized, scalable, and efficient communication. I would love to discuss how Voltmailer can enhance your email outreach efforts further. </p>
 
-            <p>Best regards,</p>
-            <p style="color: white;"><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p>
+            <pre style="color: white; font-family: 'Open Sans', sans-serif;">Best regards,</pre>
+            <!-- <p style="color: white;"><strong>David Clark</strong><br>Company 123<br>Email: david.clark@company123.com</p> -->
         </div>
-        <div class="email" style="border-color: #b5c021; background: rgba(24, 23, 23, 0.3); color: white;">
+        <div class="email" style="border-color: #b5c021; background: rgba(24, 23, 23, 0.3); color: white; max-height: 500px;">
           <h2 style="color: white;">Elevate Your Social Media Presence with Expert Help</h2>
           <p>Dear Maria</p>
           <p>I hope this email finds you well. My name is Rohan, and I wanted to reach out to you from Nuro with an exciting opportunity to transform your social media presence.
@@ -2946,17 +3139,17 @@ Sam
             <p>Let us take the reins on your social media so you can focus on what truly drives your business forward. I would love to discuss how we can tailor our services to meet your specific needs and goals.</p>
 
             <p>Looking forward to the possibility of working together.</p>
-            <p>Best regards,</p>
-          <p style="color: white;"><strong>Daisy</strong><br>Company 123<br>Email: daisy.claire@company123.com</p>
+            <pre style="color: white; font-family: 'Open Sans', sans-serif;">Best regards,</pre>
+          <!-- <p style="color: white;"><strong>Daisy</strong><br>Company 123<br>Email: daisy.claire@company123.com</p> -->
       </div>
-      <div class="email" style="border-color: #3b20d4; background: rgba(24, 23, 23, 0.3); color: white;">
+      <div class="email" style="border-color: #3b20d4; background: rgba(24, 23, 23, 0.3); color: white; max-height: 500px;">
         <h2 style="color: white;">Emily | Proposal</h2>
         <p>Dear Emily,</p>
 <p>        <p>Looking forward to the opportunity to discuss how we can elevate your social media presence to new heights. </p></p>
         <p>Our team of experts excels in crafting engaging content, optimizing posting schedules, and managing interactions across all platforms. By leveraging data-driven strategies, we not only boost online visibility but also foster community engagement and brand loyalty. Let us take the reins of your social media presence so that you can focus on excelling at what you do best – managing your business.</p>
         <p>Looking forward to the opportunity to discuss how we can elevate your social media presence to new heights. </p>
-        <p>Best regards,</p>
-        <p style="color: white;"><strong>Cleo</strong><br>Company 123<br>Email: Cleo@company123.com</p>
+        <pre style="color: white; font-family: 'Open Sans', sans-serif;">Best regards,</pre>
+        <!-- <p style="color: white;"><strong>Cleo</strong><br>Company 123<br>Email: Cleo@company123.com</p> -->
     </div>
                   
                   </div>
