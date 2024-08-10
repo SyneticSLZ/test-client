@@ -1570,6 +1570,28 @@ else {
         console.log('Message to ', data.email, ' successfully sent:', result);
         showNotification(`Message to ${data.email} successfully sent`);
         removeRow(index);
+
+        if (generatedData.length === 0) {
+                    // return;
+                    document.getElementById('pr').style.display = `none`;
+        document.getElementById('sending').style.display = 'block';
+        document.getElementById('submit').innerHTML = ` 
+        
+
+                                        <button class="button" onclick="NewCampaign()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                         New Campaign
+                      </button>
+
+
+                        `;
+    return
+    
+
+                    }
+                    
     } catch (error) {
         console.error('Error sending email to', data.email, ':', error);
         showNotification(`Error sending email to ${data.email}`);
@@ -2110,6 +2132,8 @@ function showNotification(message) {
              <button onclick="createCampaign()" >+ New Campaign</button>
             <div class="menu-item active" id="1"><i class="fi fi-ts-house-chimney"></i>Home</div>
             <div class="menu-item" id="2"> <i class="fi fi-tr-rocket-lunch"></i>New Campaign</div>
+            <div class="menu-item" id="5"> <i class="fi fi-tr-rocket-lunch"></i>Email Templates</div>
+         
             <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
             <!-- <div class="menu-item tools">Tools</div> -->
             <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Account</div>
@@ -2518,6 +2542,125 @@ function showNotification(message) {
             </div>
     </div>
 
+    <div  class="contentf" id="template" style="display: none;"  >
+        <div class="pitch-row" >
+            
+            <div class="content-row" style="border: none; box-shadow: none; "> 
+
+                <div >
+                    <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">My Templates</h1>
+                    <h3 style="margin-block: 30px;" class="">Help  ?</h3>
+                    <div  style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 10px;">
+                        <button class="button-man " onclick="OpenAccount()" id="man" ><div class="lead"> Account Settings</div></button>
+                        <button class="button-man "  id="billing-man" ><div class="lead"> Plan Details  </div></button>
+                        <button class="uploadLabel " onclick="createCampaign()" id="man"><div class="lead"> + New lead</div></button>
+                    </div>
+                    <div class="plan-usage">
+                        <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e" id="metric-label-plan">Premium</b></h2>
+                        <p class="plan-usage-detail" id="plan-usage-detail">6,547 of 10,000 emails used this month</p>
+                        <div class="progress-text" id="progress-text">
+                          <p>Current: 6,547</p>
+                          <p>Total: 1000</p>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress" style="width: 57.3%;"></div>
+                        </div>
+                        <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
+                        <button  id="subscription" >Upgrade</button>
+                    </div>
+                    <div class="attract">
+                        <div class="row-1" >
+                            <h2 class="smaller-mobile" style="margin-bottom: 20px;">Attract and win customers with targeted campaigns</h2>
+                            <button class="button-man" onclick="createCampaign()" id="man"><div class="lead"> + New Campaign</div></button>
+                        </div>
+                        <div class="mc-img">
+                            <img src="mail-inbox.png" alt="" class="mailchimp">
+                        </div>
+                        <!-- below when we have metrics to display -->
+                        <div style="border: #ff0000 1px solid; width: 30%; display: flex; flex-direction: column; gap: 20px;">
+                            <div class="metric">
+
+                                <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
+                                <h2 class="metric-value" id="metric-label-total">11 / 1000</h2>
+                            </div>
+                            <div class="metric">
+          
+                                <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
+                                <h2 class="metric-value" id="metric-label-plan">Premium</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <!-- <div class="pitch" style=" background: #ffffff;
+            -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+            box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; display: flex; align-items: center; justify-content: start;">
+            
+            <h3 style="margin-top: 20px;">Your Progress</h3>
+          
+            <div>
+                <h2>75%</h2>
+            </div>
+            <div style="width: 100%; height: 1px; background-color: #5e5e5e49;"></div>
+
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+                <h3>Send your first Email</h3>
+                <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+            </div>
+
+            </div> -->
+
+
+
+            <!-- <div class="pitch" style="background: #ffffff; border-radius: 16px;
+            -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+            box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+            display: flex; flex-direction: column; align-items: center; padding: 20px;">
+    
+            <h3 style="margin-top: 20px;">Your Progress</h3>
+          
+            <div id="progress-circle" style="position: relative; width: 100px; height: 100px;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    <h2 id="progress-percentage">0%</h2>
+                </div>
+            </div>
+            <div style="width: 100%; height: 1px; background-color: #5e5e5e49; margin: 5px 0;"></div>
+    
+            <div class="task" data-task-id="1" >
+                <h3 > Send your first Email</h3>
+                <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-1" style=" cursor: pointer; color: #5e5e5e;"></i>
+            </div>
+            
+            <div class="task-details" data-task-id="1" style="display: none; width: 90%;">
+                <button onclick="createCampaign()">Send Email</button>
+            </div>
+    
+            <div class="task" data-task-id="2" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+                <h3>Create your first Campaign</h3>
+                <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-2"></i>
+            </div>
+            <div class="task-details" data-task-id="2" style="display: none; width: 90%;">
+                <button onclick="createCampaign()">Create Campaign</button>
+            </div>
+    
+            <div class="task" data-task-id="3" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+                <h3>Edit your Username</h3>
+                <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-3"></i>
+            </div>
+            <div class="task-details" data-task-id="3" style="display: none; width: 90%;">
+                <button onclick="editUsername()">Edit Username</button>
+            </div>
+        </div> -->
+    
+          
+        </div>
+</div>
+
+
     <div  class="contentf" id="main-old"  style="display: none;">
 
         <div class="dashboard-usage">
@@ -2787,7 +2930,11 @@ function showNotification(message) {
                     contentDiv.innerHTML = '<h2>Account Content</h2><p>This is the account page content.</p>';
                     break;
                 case '5':
-                    contentDiv.innerHTML = '<h2>Help Content</h2><p>This is the help page content.</p>';
+                    // contentDiv.innerHTML = '<h2>Help Content</h2><p>This is the help page content.</p>';
+                    document.getElementById('template').style.display = 'flex'; 
+                    document.getElementById('myAccount-content').style.display = 'none'; 
+                    document.getElementById('myUsage-content').style.display = 'none';
+                    document.getElementById('main').style.display = 'none';
                     break;
                 default:
                     contentDiv.innerHTML = '<h2>Home Content</h2><p>This is the default home page content.</p>';
