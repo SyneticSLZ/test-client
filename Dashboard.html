@@ -1023,7 +1023,8 @@ function Submitandcheckautosend(){
             // The array is not empty
             console.log('The array is not empty');
             const userPitch = document.getElementById('userPitch').value;
-
+            const UserSubject = document.getElementById('UserSubject').value;
+            const userTemplate = document.getElementById('userTemplate').value;
             if (userPitch.trim() === '') {
                 // The value is empty or only contains whitespace
                 console.log('No value provided');
@@ -1378,6 +1379,10 @@ async function manualSend() {
     document.getElementById('export').style.display = "flex";
     // document.getElementById('ca').style.display = "none"
     const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
+    // const userPitch = document.getElementById('userPitch').value;
+            const UserSubject = document.getElementById('UserSubject').value;
+            const userTemplate = document.getElementById('userTemplate').value;
+
     document.getElementById('customLoader').style.display = 'flex';
     const textarea = document.getElementById('userPitch');
                     const csv = document.getElementById('uploadLabel');
@@ -1415,7 +1420,8 @@ async function manualSend() {
                         website: sddata.website, 
                         userPitch: userPitch, 
                         Uname: U_Username,
-                        To: sddata.name})
+                        To: sddata.name,
+                    Template : userTemplate})
                 });
 
                 if (!response.ok) {
@@ -1423,8 +1429,14 @@ async function manualSend() {
                 }
 
                 const data_new = await response.json();
-
-                const subject_line = separateSubject(data_new.subject_line).subject
+                
+if(UserSubject){
+    const subject_line = UserSubject
+}else{
+    const subject_line = separateSubject(data_new.subject_line).subject
+                
+}
+                // const subject_line = separateSubject(data_new.subject_line).subject
                 
                 console.log(subject_line)
                 const main_message = data_new.body_content
@@ -1591,7 +1603,7 @@ else {
     
 
                     }
-                    
+
     } catch (error) {
         console.error('Error sending email to', data.email, ':', error);
         showNotification(`Error sending email to ${data.email}`);
@@ -2132,7 +2144,7 @@ function showNotification(message) {
              <button onclick="createCampaign()" >+ New Campaign</button>
             <div class="menu-item active" id="1"><i class="fi fi-ts-house-chimney"></i>Home</div>
             <div class="menu-item" id="2"> <i class="fi fi-tr-rocket-lunch"></i>New Campaign</div>
-            <div class="menu-item" id="5"> <i class="fi fi-tr-rocket-lunch"></i>Email Templates</div>
+            <!-- <div class="menu-item" id="5"> <i class="fi fi-tr-rocket-lunch"></i>Email Templates</div> -->
          
             <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
             <!-- <div class="menu-item tools">Tools</div> -->
@@ -2385,9 +2397,13 @@ function showNotification(message) {
                     </div>
                     <!-- <div class=""></div> -->
                     <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here..." required></textarea>
-                    <span style="text-align: left; padding-left: 10px; color: #000;"> For best results provide: </span>
+<h5>Optional</h5>
+<textarea id="UserSubject" class="pitch-text" name="user_pitch" placeholder="Enter a preferred subject line..." required></textarea>
+<textarea id="userTemplate" class="pitch-text" name="user_pitch" placeholder="Add an Email Template..." required></textarea>
+
+                    <!-- <span style="text-align: left; padding-left: 10px; color: #000;"> For best results provide: </span>
                     <span style="text-align: left; padding-left: 20px;"> - Clear offer to prospect or pain-point that you are solving for them. </span>
-                    <span style="text-align: left; padding-left: 20px;"> - Clear call to action the prospect should take.</span>
+                    <span style="text-align: left; padding-left: 20px;"> - Clear call to action the prospect should take.</span> -->
                     <div id="submit">
                         
                         <button class="button" onclick="logout()" id="submit" style="font-size: 18px; text-align: center;">

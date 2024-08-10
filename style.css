@@ -566,7 +566,35 @@ transition: ease 0.6s;
     -webkit-box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
     box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
   }
+  #UserSubject {
+    height: 15%;
+    background: #fff;
+    border: 2px solid #fff;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
+color: #000;
+    /* border: 1.5px solid #000000a8; */
+    border-radius: 0.5rem;
+    /* box-shadow: 2.5px 3px 0 #000000a8; */
+    outline: none;
+    transition: ease 0.25s;
+    text-align: left;
+    background-color: #fff;
+    resize: none;
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    background: #ffffff;
+    -webkit-box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
+    box-shadow: 11px 11px 33px #ababab, -11px -11px 33px #ffffff;
+  }
 
+  .pitch textarea:focus {
+    border: 2px solid #000000;
+  }
   .submit{
     height:18%;
     background: #fff;
@@ -1658,7 +1686,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     margin-left: 60px;
   }
   
-  .manual-popup-overlay input {
+  .manual-popup-overlay input, .subj-input {
     padding: 10px 15px;
     font-size: 1rem;
     border-radius: 8px;
@@ -1670,7 +1698,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   }
   
   .manual-popup-overlay .input-field input:focus,
- .manual-popup-overlay  .input-field input:valid {
+ .manual-popup-overlay  .input-field input:valid, .subj-input:focus, .subj-input:valid {
     outline: none;
     border: solid 1px #2a2a2a;
     background-color: #fff;
