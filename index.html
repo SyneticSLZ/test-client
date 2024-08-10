@@ -1943,7 +1943,7 @@ margin-block: 30px;
 display: flex;
 align-items: center;
 justify-content: center;
-flex-direction: row;
+flex-direction: column;
 gap: 10px;
 }
 
@@ -2053,6 +2053,8 @@ gap: 10px;
     align-items: center;
     justify-content: center;
     margin-bottom: 50px;
+    /* height: 100%; */
+    /* border: 3px solid rgba(255, 0, 255, 0.719); */
   }
 
   .image-container img, .image-container video {
@@ -2168,134 +2170,123 @@ gap: 10px;
   align-items: center; /* Added to center content vertically */
   justify-content: center; /* Added to center content horizontally */
 }
-
-/* From Uiverse.io by vishnu1100 */ 
 .letter-image {
   width: 200px;
   height: 200px;
   cursor: pointer;
-  position: relative; /* Changed from absolute to relative */
+  position: relative;
 }
+
 .animated-mail {
   position: absolute;
   height: 150px;
   width: 200px;
-  -webkit-transition: 0.4s;
-  -moz-transition: 0.4s;
   transition: 0.4s;
 }
-  .body {
-    position: absolute;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 0 100px 200px;
-    border-color: transparent transparent #a035ca transparent;
-    z-index: 2;
-  }
 
-  .top-fold {
-    position: absolute;
-    top: 50px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 50px 100px 0 100px;
-    -webkit-transform-origin: 50% 0%;
-    -webkit-transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
-    -moz-transform-origin: 50% 0%;
-    -moz-transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
-    transform-origin: 50% 0%;
-    transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
-    border-color: #8a15b8 transparent transparent transparent;
-    z-index: 2;
-  }
+.body {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 100px 200px;
+  border-color: transparent transparent #a035ca transparent;
+  z-index: 2;
+}
 
-  .back-fold {
-    position: absolute;
-    bottom: 0;
-    width: 200px;
-    height: 100px;
-    background: #a71fdd;
-    z-index: 0;
-  }
+.top-fold {
+  position: absolute;
+  top: 50px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 100px 0 100px;
+  transform-origin: 50% 0%;
+  transition: transform 0.4s, z-index 0.2s;
+  border-color: #8a15b8 transparent transparent transparent;
+  z-index: 0;
+  transform: rotateX(180deg);
+}
 
-  .left-fold {
-    position: absolute;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 50px 0 50px 100px;
-    border-color: transparent transparent transparent #a71fdd;
-    z-index: 2;
-  }
+.back-fold {
+  position: absolute;
+  bottom: 0;
+  width: 200px;
+  height: 100px;
+  background: #a71fdd;
+  z-index: 0;
+}
 
-  .letter {
-    left: 20px;
-    bottom: 0px;
-    position: absolute;
-    width: 160px;
-    height: 60px;
-    background: white;
-    z-index: 1;
-    overflow: hidden;
-    -webkit-transition: 0.4s 0.2s;
-    -moz-transition: 0.4s 0.2s;
-    transition: 0.4s 0.2s;
-  }
-    .letter-border {
-      height: 10px;
-      width: 100%;
-      background: repeating-linear-gradient(
-        -45deg,
-        #8a15b8,
-        #8a15b8 8px,
-        transparent 8px,
-        transparent 18px
-      );
-    }
+.left-fold {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 0 50px 100px;
+  border-color: transparent transparent transparent #a71fdd;
+  z-index: 2;
+}
 
-    .letter-title {
-      margin-top: 10px;
-      margin-left: 5px;
-      height: 10px;
-      width: 40%;
-      background: #8a15b8;
-    }
-    .letter-context {
-      margin-top: 10px;
-      margin-left: 5px;
-      height: 10px;
-      width: 20%;
-      background: #8a15b8;
-    }
+.letter {
+  left: 20px;
+  bottom: 0px;
+  position: absolute;
+  width: 160px;
+  height: 180px;
+  background: white;
+  z-index: 1;
+  overflow: hidden;
+  transition: 0.4s;
+}
 
-    .letter-stamp {
-      margin-top: 30px;
-      margin-left: 120px;
-      border-radius: 100%;
-      height: 30px;
-      width: 30px;
-      background: #8a15b8;
-      opacity: 0.3;
-    }
-  
+.letter-border {
+  height: 10px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    #8a15b8,
+    #8a15b8 8px,
+    transparent 8px,
+    transparent 18px
+  );
+}
+
+.letter-title {
+  margin-top: 10px;
+  margin-left: 5px;
+  height: 10px;
+  width: 40%;
+  background: #8a15b8;
+}
+
+.letter-context {
+  margin-top: 10px;
+  margin-left: 5px;
+  height: 10px;
+  width: 20%;
+  background: #8a15b8;
+}
+
+.letter-stamp {
+  margin-top: 30px;
+  margin-left: 120px;
+  border-radius: 100%;
+  height: 30px;
+  width: 30px;
+  background: #8a15b8;
+  opacity: 0.3;
+}
 
 .shadow {
   position: absolute;
   top: 200px;
   left: 50%;
-  width: 400px;
+  width: 250px;
   height: 30px;
   transition: 0.4s;
   transform: translateX(-50%);
-  -webkit-transition: 0.4s;
-  -webkit-transform: translateX(-50%);
-  -moz-transition: 0.4s;
-  -moz-transform: translateX(-50%);
-
   border-radius: 100%;
   background: radial-gradient(
     rgba(0, 0, 0, 0.5),
@@ -2304,30 +2295,25 @@ gap: 10px;
   );
 }
 
-.letter-image:hover {
-  .animated-mail {
-    transform: translateY(50px);
-    -webkit-transform: translateY(50px);
-    -moz-transform: translateY(50px);
-  }
+.letter-image:hover .animated-mail {
+  transform: translateY(0);
+  transition: 0.4s;
+}
 
-  .animated-mail .top-fold {
-    transition: transform 0.4s, z-index 0.2s;
-    transform: rotateX(180deg);
-    -webkit-transition: transform 0.4s, z-index 0.2s;
-    -webkit-transform: rotateX(180deg);
-    -moz-transition: transform 0.4s, z-index 0.2s;
-    -moz-transform: rotateX(180deg);
-    z-index: 0;
-  }
+.letter-image:hover .animated-mail .top-fold {
+  transform: rotateX(0deg);
+  transition: transform 0.4s 0.4s, z-index 0.2s 0.4s;
+  z-index: 2;
+}
 
-  .animated-mail .letter {
-    height: 180px;
-  }
+.letter-image:hover .animated-mail .letter {
+  height: 60px;
+  transition: 0.4s 0.2s;
+}
 
-  .shadow {
-    width: 250px;
-  }
+.letter-image:hover .shadow {
+  width: 400px;
+  transition: 0.4s;
 }
 
 
@@ -2374,8 +2360,14 @@ gap: 10px;
 
 
 }
-    @media (max-width: 768px) {
+    @media (max-width: 1456px) {
 
+      .image-container{
+        width: 96vw;
+        margin: 0;
+        padding: 0;
+        margin-block: 50px;
+      }
       .mobile-col{
   display: flex;
   /* border: #00DDEB 1px solid; */
@@ -2386,9 +2378,13 @@ gap: 10px;
   margin-block: 50px;
 }
 .w-30, .w-70, .w-50{
-        width: 90%;
+        width: 100%;
 }
-#div1, #div2, .btn-container-toggle {
+
+#hidden-tablet{
+  display: none;
+}
+#hidden-mobile{
   display: none;
 }
 
@@ -2408,7 +2404,7 @@ gap: 10px;
 .mi-80,.mr-80{
   margin-inline: 0px;
   margin-right: 0px;
-  width: 90%;
+  width: 100%;
 }
 
 
@@ -2439,13 +2435,23 @@ gap: 10px;
   width: 70px;
 } */
 
+#div1, #div2, .btn-container-toggle {
+  display: none;
+}
+
+
 
 #CreateAccount {
   display: none;
 }
 
 
-
+#hidden-tablet{
+  display: flex;
+}
+#hidden-mobile{
+  display: none;
+}
 
 .hero h1{
   text-align: left;
@@ -2709,7 +2715,8 @@ async function addCustomer() {
 
 <!-- <div class="hide"> -->
             <div class="btn-container-toggle">
-              <i class="fi fi-tr-computer" ></i>
+            <div style="display: flex; align-items: center; justify-content: center; flex-direction: row; margin-block: 30px;">
+              <i class="fi fi-tr-computer"  style="margin-right:15px;"></i>
               <label class="switch-button" for="switch">
                 <div class="switch-outer">
                   <input id="switch" type="checkbox" onchange="toggleDivs()">
@@ -2720,6 +2727,7 @@ async function addCustomer() {
                 </div>
               </label>
               <i class="fi fi-tr-mobile-button" style="margin-left:15px;"></i>
+              </div>
             <!-- </div> -->
           
 
@@ -2756,9 +2764,9 @@ async function addCustomer() {
 -webkit-border-radius: 16px;
 border-radius: 16px;
 -webkit-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29;
-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; margin-bottom: 60px;">
+box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; margin-bottom: 20px;">
   <!-- <li> -->
-  <div style="margin-bottom: 20px;"><b>1. Manual</b></div> <div style="margin-bottom: 30px;">Add your leads manually into the table by entering your prospects email, website and name(optional).</div>
+  <div style="margin-bottom: 20px;"><b>1. Manual</b></div> <div style="margin-bottom: 30px; font-size: 16px;">Add your leads manually into the table by entering your prospects email, website and name(optional).</div>
   <div style="margin-bottom: 20px;"><b>2. CSV Upload</b> </div> <div style="margin-bottom: 30px;"><br>Upload any CSV files you have containing lead information , from there our systems will then add all the leads within that CSV file to the table.</div>
   <div style="margin-bottom: 20px;"><b>3. Domain</b></div> <div style="margin-bottom: 30px;"> <br>Simply enter a website domain, we will then find all the corresponding emails to that website and automatically enter it into the table.
 
@@ -2813,7 +2821,8 @@ box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; mar
 </div>
 </div>
           </div>
-            <div style=" " class="w-30 mr-80">
+            <div style=" " class="w-30 mr-80" id="hidden-tablet">
+            
               <img src="Pitch.png" alt="" style="width: 100%; height: 65vh; max-width: 100%; border-radius: 15px;">
             </div>
             <!-- <div style="  " class="w-30 mr-80">
@@ -3260,7 +3269,7 @@ Harry Smith
 
 
 
-<div class="hide">
+<div class="hide" id="hidden-mobile">
         <div class="icon-3">
             <!-- <div> -->
             <div class="parent">
