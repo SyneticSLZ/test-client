@@ -1432,13 +1432,14 @@ async function manualSend() {
 
 if(UserSubject){
     const subject_line = UserSubject
+    console.log("if : ",subject_line)
 }else{
     const subject_line = separateSubject(data_new.subject_line).subject
-                
+    console.log("else : ", subject_line)
 }
                 // const subject_line = separateSubject(data_new.subject_line).subject
                 
-                console.log(subject_line)
+                // console.log(subject_line)
                 const main_message = data_new.body_content
 
                 console.log(main_message)
