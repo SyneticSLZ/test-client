@@ -1429,16 +1429,16 @@ async function manualSend() {
                 }
 
                 const data_new = await response.json();
-
+let subjectline = ""
 if(UserSubject){
-    const subject_line = UserSubject
+     subjectline = UserSubject
     console.log("if : ",subject_line)
 }else{
-    const subject_line = separateSubject(data_new.subject_line).subject
+     subjectline = separateSubject(data_new.subject_line).subject
     console.log("else : ", subject_line)
 }
                 // const subject_line = separateSubject(data_new.subject_line).subject
-                
+                const subject_line = subjectline
                 // console.log(subject_line)
                 const main_message = data_new.body_content
 
