@@ -108,8 +108,11 @@ async function getDrivers() {
         for (const driver of drivers) {
             try {
                 const nextRace = await fetchNextRaceManual(driver.url);
+                console.log(nextRace)
+                
                 console.log(driver.name, " : ", nextRace);
                 updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
+
                 submittedData.push({
                     url: driver.url,
                     email: driver.email,
