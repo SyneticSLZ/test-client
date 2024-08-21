@@ -475,7 +475,7 @@ async function RenderHtml(data){
 
         if (UsedEmails >= planEmails) {
                 button.innerHTML=`                    
-                                    <label class="uploadLabel" onclick="processEntries()" ><div class="lead" >Check for Race Updates</div></label>`
+                                    <label class="uploadLabel" onclick="processEntries()" ><div class="lead" >Send Emails</div></label>`
             }
         else {
             if (!token){
@@ -498,7 +498,7 @@ async function RenderHtml(data){
             } else {
             button.innerHTML=`
                     
-<label class="uploadLabel" onclick="processEntries()" ><div class="lead" >Check for Race Updates</div></label>
+<label class="uploadLabel" onclick="processEntries()" ><div class="lead" >Send Emails</div></label>
 
                       `
 
