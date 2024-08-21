@@ -107,10 +107,9 @@ async function getDrivers() {
         // Use for...of to await each fetchNextRaceManual call
         for (const driver of drivers) {
             try {
-                // const nextRace = await fetchNextRaceManual(driver.url);
-                // console.log(driver.name, " : ", nextRace);
-                // updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
-
+                const nextRace = await fetchNextRaceManual(driver.url);
+                console.log(driver.name, " : ", nextRace);
+                updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
                 submittedData.push({
                     url: driver.url,
                     email: driver.email,
@@ -2165,7 +2164,7 @@ function fetchNextRace(url) {
         });
 }
 
-function   fetchNextRaceManual(url) {
+function fetchNextRaceManual(url) {
     return fetch(`https://server.voltmailer.com/fetch-profile-data?url=${encodeURIComponent(url)}`)
         .then(response => response.text())
         .then(html => {
@@ -2183,19 +2182,38 @@ function   fetchNextRaceManual(url) {
                     // Get the text inside the a tag
                     const raceName = profileStartEvent.querySelector('a').textContent.trim();
                     console.log(raceName)
-                        return raceName;
+                    // Check if there is an overall position element
+                    const profileStartOa = profileStartLine.querySelector('.profile-start-oa.font-weight-bold.d-flex.justify-content-start.flex-wrap.flex-column');
+                    
+                    if (profileStartOa) {
+                        console.log(profileStartOa.querySelector('div span.text-primary'))
+                        // Look for the <span class="text-primary"></span> element
+                        const hasNotRaced = profileStartOa.querySelector('div span.text-primary');
+                        
+                        // If the span is present, the driver has not raced yet
+                        if (hasNotRaced) {
+                            return raceName;
+                        } else {
+                            console.log('the span is not present, the driver has raced and we return null')
+                            return raceName;
+                        }
+                    } else {
+                        // If there is no overall position element, assume they haven't raced yet
+                        let string = raceName + " (done)"
+                        return string;
+                    }
                 } else {
                     console.log('Event data not found');
-                    return null;
+                    return 'Event data not found';
                 }
             } else {
                 console.log('Start line data not found');
-                return null;
+                return 'Start line data not found';
             }
         })
         .catch(error => {
             console.error('Error fetching data:', error);
-            return null;
+            return 'Error fetching data';
         });
 }
 
