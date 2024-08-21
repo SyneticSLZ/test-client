@@ -2143,24 +2143,25 @@ function fetchNextRace(url) {
                             return raceName;
                         } else {
                             console.log('the span is not present, the driver has raced and we return null')
-                            return null;
+                            return raceName;
                         }
                     } else {
                         // If there is no overall position element, assume they haven't raced yet
-                        return raceName;
+                        let string = raceName + " (done)"
+                        return string;
                     }
                 } else {
                     console.log('Event data not found');
-                    return null;
+                    return 'Event data not found';
                 }
             } else {
                 console.log('Start line data not found');
-                return null;
+                return 'Start line data not found';
             }
         })
         .catch(error => {
             console.error('Error fetching data:', error);
-            return null;
+            return 'Error fetching data';
         });
 }
 
@@ -2223,7 +2224,7 @@ function   fetchNextRaceManual(url) {
                     generatedData.push({
                         email: entry.email,
                         name: entry.name,
-                        subject: `${entry.name} | Good luck for ${fetchedRace}`,
+                        subject: `Good luck for ${fetchedRace}`,
                         content: `
                         
 Hi ${entry.name},
