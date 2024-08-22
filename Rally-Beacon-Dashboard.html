@@ -2226,6 +2226,11 @@ function fetchNextRaceManual(url) {
 
     async function processEntries() {
             generatedData = [];
+                    
+    showNewHtml();
+
+document.getElementById('tfoot').style.display = 'block';
+
             document.getElementById('man').style.display = "none";
             // document.getElementById('customLoader').style.display = 'flex';
             const button = document.getElementById('submit');
@@ -2323,21 +2328,19 @@ Ruairi
 
     }
     if (generatedData.length > 0) {
-    showNewHtml();
-
-    document.getElementById('tfoot').style.display = 'block';
-    document.getElementById('customLoader').style.display = 'none';
-    button.innerHTML = `
+                console.log("big")
+                document.getElementById('customLoader').style.display = 'none';
+button.innerHTML = `
 
 
-                        <button class="button" onclick="sendAllEmails()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Send All
-                      </button>
+                    <button class="button" onclick="sendAllEmails()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                      <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                    </svg>
+                    Send All
+                  </button>
 
-                `;
+            `;
                     }
                     else {
                         document.getElementById('DOMAIN').style.display = "flex";
