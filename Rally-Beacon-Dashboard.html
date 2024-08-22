@@ -969,7 +969,7 @@ function updateTable() {
             thead = document.getElementById('dataTable').createTHead();
         }
         const headerRow = thead.insertRow();
-        const headers = ['Name', 'Email', 'Next Or Most Recent Race', 'Race Done', 'Actions'];
+        const headers = ['Name', 'Email', 'Next Or Most Recent Race', 'Race Done', 'Email Sent', 'Actions'];
 
         headers.forEach(headerText => {
             const th = document.createElement('th');
@@ -986,7 +986,8 @@ function updateTable() {
         const emailCell = row.insertCell(1);
         const nextRaceCell = row.insertCell(2);
         const raceDoneCell = row.insertCell(3); // Cell for race done tick
-        const actionCell = row.insertCell(4); // Cell for action buttons
+        const emailSentCell = row.insertCell(4); // Cell for email sent tick/cross
+        const actionCell = row.insertCell(5); // Cell for action buttons
 
         let raceDone = false;
 
@@ -1008,6 +1009,13 @@ function updateTable() {
             raceDoneCell.textContent = ""; // Leave empty if not done
         }
 
+        // Check if email was sent and add corresponding tick or cross
+        if (data.emailSent === "Yes") {
+            emailSentCell.textContent = "✔️";
+        } else if (data.emailSent === "No") {
+            emailSentCell.textContent = "❌";
+        }
+
         // Create edit button
         const editButton = document.createElement('button');
         editButton.style.color = "#000";
@@ -1027,11 +1035,13 @@ function updateTable() {
         });
 
         // Append buttons to the action cell
-        actionCell.appendChild(editButton); 
-        actionCell.appendChild(deleteButton); 
+        actionCell.appendChild(editButton);
+        actionCell.appendChild(deleteButton);
         row.setAttribute('data-index', index);
     });
 }
+
+
 
 
 function deleteRow(index) {
