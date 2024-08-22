@@ -2244,7 +2244,7 @@ function fetchNextRaceManual(url) {
 
             if (fetchedRace !== "no race found") {
                 // Check if the string "(done)" is present
-if (!raceName.includes("(done)")) {
+if (!fetchedRace.includes("(done)")) {
 
 
                 console.log(entry.driver, " race is next : ", entry.nextRace, "fetched is ", fetchedRace)
