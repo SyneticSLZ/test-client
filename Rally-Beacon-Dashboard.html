@@ -2144,13 +2144,14 @@ function fetchNextRace(url) {
                         if (hasNotRaced) {
                             return raceName;
                         } else {
-                            console.log('the span is not present, the driver has raced and we return null')
-                            return raceName;
+                        console.log('the span is not present, the driver has raced and we return null')
+                        let string = raceName + " (done)"
+                        return string;
+
                         }
                     } else {
                         // If there is no overall position element, assume they haven't raced yet
-                        let string = raceName + " (done)"
-                        return string;
+                        return raceName;
                     }
                 } else {
                     console.log('Event data not found');
