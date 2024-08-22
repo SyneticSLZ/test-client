@@ -990,17 +990,17 @@ function updateTable() {
         const actionCell = row.insertCell(5); // Cell for action buttons
 
         let raceDone = false;
-
+        let nod = data.nextRace
         if (data.nextRace.includes("(done)")) {
             raceDone = true;
-            data.nextRace = data.nextRace.replace("(done)", "").trim(); // Remove (done) from the string
+            nod = data.nextRace.replace("(done)", "").trim(); // Remove (done) from the string
             row.style.color = "grey"; // Change text color to grey
         }
 
         // Set cell contents
         nameCell.textContent = data.name;
         emailCell.textContent = data.email;
-        nextRaceCell.textContent = data.nextRace;
+        nextRaceCell.textContent = nod;
 
         // If the race is done, add a tick to the Race Done column
         if (raceDone) {
@@ -2373,7 +2373,8 @@ Ruairi
                     
                     else {
                 updateDriver(entry.url, "nextRace", fetchedRace)
-                updateDriver(entry.emailSent, "emailSent", "No")
+                // updateDriver(entry.emailSent, "emailSent", "No")
+                
                 generatedData.push({
                         email: entry.email,
                         name: entry.name,
