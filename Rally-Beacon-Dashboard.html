@@ -107,11 +107,11 @@ async function getDrivers() {
         // Use for...of to await each fetchNextRaceManual call
         for (const driver of drivers) {
             try {
-                // const nextRace = await fetchNextRaceManual(driver.url); 
-                // console.log(nextRace)
+                const nextRace = await fetchNextRaceManual(driver.url); 
+                console.log(nextRace)
 
-                // console.log(driver.name, " : ", nextRace);
-                // updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
+                console.log(driver.name, " : ", nextRace);
+                updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
 
                 submittedData.push({
                     url: driver.url,
