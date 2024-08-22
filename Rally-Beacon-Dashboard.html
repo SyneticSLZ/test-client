@@ -1002,19 +1002,13 @@ function updateTable() {
         emailCell.textContent = data.email;
         nextRaceCell.textContent = nod;
 
-        // If the race is done, add a tick to the Race Done column
-        if (raceDone) {
-            raceDoneCell.textContent = "✔️";
-        } else {
-            raceDoneCell.textContent = ""; // Leave empty if not done
-        }
+        // Center ticks/crosses and add content to the Race Done column
+        raceDoneCell.style.textAlign = "center";
+        raceDoneCell.textContent = raceDone ? "✔️" : "";
 
-        // Check if email was sent and add corresponding tick or cross
-        if (data.emailSent === "Yes") {
-            emailSentCell.textContent = "✔️";
-        } else if (data.emailSent === "No") {
-            emailSentCell.textContent = "❌";
-        }
+        // Center ticks/crosses and add content to the Email Sent column
+        emailSentCell.style.textAlign = "center";
+        emailSentCell.textContent = data.emailSent === "Yes" ? "✔️" : "❌";
 
         // Create edit button
         const editButton = document.createElement('button');
