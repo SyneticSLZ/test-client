@@ -107,7 +107,7 @@ async function getDrivers() {
         // Use for...of to await each fetchNextRaceManual call
         for (const driver of drivers) {
             try {
-                // const nextRace = await fetchNextRaceManual(driver.url); 
+                const nextRace = await fetchNextRaceManual(driver.url); 
                 // console.log(nextRace)
 
                 // console.log(driver.name, " : ", nextRace);
@@ -2242,8 +2242,13 @@ function fetchNextRaceManual(url) {
         try {
             const fetchedRace = await fetchNextRace(entry.url);
 
-            if (fetchedRace !== null) {
+            if (fetchedRace !== "no race found") {
+                // Check if the string "(done)" is present
+if (!raceName.includes("(done)")) {
+
+
                 console.log(entry.driver, " race is next : ", entry.nextRace, "fetched is ", fetchedRace)
+
             if (fetchedRace === entry.nextRace) {
                 if (entry.emailSent === "No") {
                     generatedData.push({
@@ -2292,6 +2297,10 @@ Ruairi
                 updateDriver(entry.url, "nextRace", fetchedRace)
                 // entry.emailSent = "Yes";
             }
+        } else {
+    // console.log('The race is not done yet.');
+    console.log('The race is done.');
+}
         } else {
             console.log("user has already raced or we cannot find a race")
         }
