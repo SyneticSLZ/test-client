@@ -2238,19 +2238,22 @@ function fetchNextRaceManual(url) {
                       </section> `;
 
         for (let entry of submittedData) {
+
             console.log(entry.email)
-        try {
+            try {
             const fetchedRace = await fetchNextRace(entry.url);
 
-            if (fetchedRace !== "no race found") {
+            
+
+                if (fetchedRace !== "no race found") {
                 // Check if the string "(done)" is present
-if (!fetchedRace.includes("(done)")) {
+                    if (!fetchedRace.includes("(done)")) {
 
 
                 console.log(entry.driver, " race is next : ", entry.nextRace, "fetched is ", fetchedRace)
 
-            if (fetchedRace === entry.nextRace) {
-                if (entry.emailSent === "No") {
+                        if (fetchedRace === entry.nextRace) {
+                            if (entry.emailSent === "No") {
                     generatedData.push({
                         email: entry.email,
                         name: entry.name,
@@ -2273,12 +2276,16 @@ Ruairi
                     // Update the entry to mark email as sent if needed
                     // entry.emailSent = "Yes";
                     
-                }
-            } else {
+                        }
+                    } 
+                    
+                    else {
+                updateDriver(entry.url, "nextRace", fetchedRace)
+                updateDriver(entry.emailSent, "emailSent", "No")
                 generatedData.push({
                         email: entry.email,
                         name: entry.name,
-                        subject: `${entry.name} | Good luck for ${fetchedRace}`,
+                        subject: `Good luck for ${fetchedRace}`,
                         content: `
                         
 Hi ${entry.name},
@@ -2294,9 +2301,11 @@ Ruairi
             document.getElementById('loaderText').innerText = `Generating email for ${entry.email}...`;
             addEmailRow(generatedData.length - 1);
                 // Update the entry with new race and mark email as sent if needed
-                updateDriver(entry.url, "nextRace", fetchedRace)
-                // entry.emailSent = "Yes";
+                
+                
             }
+
+
         } else {
     // console.log('The race is not done yet.');
     console.log('The race is done.');
