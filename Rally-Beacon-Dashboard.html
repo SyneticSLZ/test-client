@@ -1107,6 +1107,7 @@ console.log("editing data :  " , email, data.website, data.name)
 }
 
 async function saveRow(index, row) {
+    console.log(submittedData)
     const emailCell = row.cells[1];
     // const websiteCell = row.cells[];
     const nameCell = row.cells[0];
@@ -1119,7 +1120,7 @@ async function saveRow(index, row) {
 
     // Update the submittedData array
     submittedData[index] = { email: newEmail, name: newName };
-    console.log(submittedData[index])
+    console.log(submittedData[index].url)
 
     // Replace input fields with text
     emailCell.textContent = newEmail;
@@ -1130,7 +1131,7 @@ async function saveRow(index, row) {
 
    const driverData = {
                 name: newName,
-                url: url,
+                url: submittedData[index].url,
                 email: newEmail
             };
 
