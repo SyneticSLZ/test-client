@@ -124,7 +124,7 @@ async function getDrivers() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(newDriverData)
+                    body: JSON.stringify(DriverData)
                 });
 
                 if (response.ok) {
@@ -1161,7 +1161,7 @@ async function saveRow(index, row) {
 
 //    let  url = newWebsite;
 
-   const driverData = {
+   const newdriverData1 = {
                 name: newName,
                 url: submittedData[index].url,
                 email: newEmail
@@ -1173,7 +1173,7 @@ async function saveRow(index, row) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(newDriverData)
+                    body: JSON.stringify(newDriverData1)
                 });
 
                 if (response.ok) {
