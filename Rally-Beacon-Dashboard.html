@@ -64,6 +64,7 @@ let submittedData = [
 
 
 let generatedData = [];
+let driver_array = [];
 let U_Username;
 let U_MyEmail;
 
@@ -104,11 +105,41 @@ async function getDrivers() {
         const response = await fetch('https://server.voltmailer.com/get-drivers');
         const drivers = await response.json();
 
+
+
         // Use for...of to await each fetchNextRaceManual call
         for (const driver of drivers) {
+            driver_array.append(driver)
             try {
                 const nextRace = await fetchNextRaceManual(driver.url); 
                 console.log(nextRace)
+                
+                const driverData = {
+                raceDone: "TRUE",
+            };
+
+            try {
+                const response = await fetch(`https://server.voltmailer.com/update-driver-full?url=${encodeURIComponent(driver.url)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newDriverData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    // alert(result.message); // Display success message
+
+                    
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error); // Display error message
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            }
 
                 console.log(driver.name, " : ", nextRace);
                 updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
@@ -1026,6 +1057,7 @@ function updateTable() {
             raceDone = true;
             nod = data.nextRace.replace("(done)", "").trim(); // Remove (done) from the string
             row.style.color = "grey"; // Change text color to grey
+            
         }
 
         // Set cell contents
