@@ -1052,7 +1052,7 @@ function editRow(index, row, email) {
     const websiteCell = row.cells[1];
     const nameCell = row.cells[2];
     const actionCell = row.cells[3];
-
+console.log("editing data :  " , email, data.website, data.name)
     // Replace text with input fields
     emailCell.innerHTML = `<input type="email" value="${email}" />`;
     websiteCell.innerHTML = `<input type="url" value="${data.website}" />`;
