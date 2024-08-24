@@ -824,7 +824,7 @@ function togglePopupManual() {
         // websiteInput.value = "https://";
         // nameInput.value = "";
       overlay.style.display = 'flex';
-      document.getElementById('acc-text').innerHTML = `<button style="color : red; cursor : pointer;"  onclick="remove(${index})">REMOVE</button>`
+      document.getElementById('acc-text-remove').innerHTML = `<button style="color : red; cursor : pointer;"  onclick="remove(${index})">REMOVE</button>`
 
     }
 
@@ -2670,7 +2670,7 @@ console.log(result.message);
         </div>
         <div class="btn-container">
 
-            <div class="acc-text" id="acc-text">
+            <div class="acc-text" id="acc-text-remove">
 
             </div>
           </div>
