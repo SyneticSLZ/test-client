@@ -114,32 +114,32 @@ async function getDrivers() {
                 const nextRace = await fetchNextRaceManual(driver.url); 
                 console.log(nextRace)
                 
-                const driverData = {
-                raceDone: "TRUE",
-            };
+            //     const driverData = {
+            //     raceDone: "TRUE",
+            // };
 
-            try {
-                const response = await fetch(`https://server.voltmailer.com/update-driver-full?url=${encodeURIComponent(driver.url)}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(driverData)
-                });
+            // try {
+            //     const response = await fetch(`https://server.voltmailer.com/update-driver-full?url=${encodeURIComponent(driver.url)}`, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify(driverData)
+            //     });
 
-                if (response.ok) {
-                    const result = await response.json();
-                    // alert(result.message); // Display success message
+            //     if (response.ok) {
+            //         const result = await response.json();
+            //         // alert(result.message); // Display success message
 
                     
-                } else {
-                    const error = await response.json();
-                    alert('Error: ' + error.error); // Display error message
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An unexpected error occurred.');
-            }
+            //     } else {
+            //         const error = await response.json();
+            //         alert('Error: ' + error.error); // Display error message
+            //     }
+            // } catch (error) {
+            //     console.error('Error:', error);
+            //     alert('An unexpected error occurred.');
+            // }
 
                 console.log(driver.name, " : ", nextRace);
                 updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
@@ -1152,7 +1152,7 @@ async function saveRow(index, row) {
 
     // Update the submittedData array
     submittedData[index] = { email: newEmail, name: newName };
-    console.log(submittedData[index].url)
+    console.log(driver_array[index].url, driver_array[index])
 
     // Replace input fields with text
     emailCell.textContent = newEmail;
