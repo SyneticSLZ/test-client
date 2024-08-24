@@ -1050,15 +1050,15 @@ function deleteRow(index) {
 function editRow(index, row, email) {
     
     const data = submittedData[index];
-    const emailCell = row.cells[0];
-    const websiteCell = row.cells[1];
+    const emailCell = row.cells[1];
+    const websiteCell = row.cells[2];
     const nameCell = row.cells[2];
     const actionCell = row.cells[5];
     actionCell.innerHTML = '';
 console.log("editing data :  " , email, data.website, data.name)
     // Replace text with input fields
     emailCell.innerHTML = `<input type="email" value="${email}" />`;
-    websiteCell.innerHTML = `<input type="url" value="${data.website}" />`;
+    // websiteCell.innerHTML = `<input type="url" value="${data.website}" />`;
     nameCell.innerHTML = `<input type="text" value="${data.name}" />`;
 
     // Change the edit button to a save button
@@ -1075,14 +1075,14 @@ console.log("editing data :  " , email, data.website, data.name)
 }
 
 async function saveRow(index, row) {
-    const emailCell = row.cells[0];
-    const websiteCell = row.cells[1];
+    const emailCell = row.cells[1];
+    // const websiteCell = row.cells[1];
     const nameCell = row.cells[2];
     const actionCell = row.cells[5];
 
     // Get new values from input fields
     const newEmail = emailCell.firstChild.value;
-    const newWebsite = websiteCell.firstChild.value;
+    // const newWebsite = websiteCell.firstChild.value;
     const newName = nameCell.firstChild.value;
 
     // Update the submittedData array
@@ -1090,7 +1090,7 @@ async function saveRow(index, row) {
 
     // Replace input fields with text
     emailCell.textContent = newEmail;
-    websiteCell.textContent = newWebsite;
+    // websiteCell.textContent = newWebsite;
     nameCell.textContent = newName;
    let  url = newWebsite;
 
