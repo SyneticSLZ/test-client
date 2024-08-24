@@ -1011,13 +1011,13 @@ function updateTable() {
         emailSentCell.textContent = data.emailSent === "Yes" ? "✔️" : "❌";
 
         // Create edit button
-    //    const editButton = document.createElement('button');
-    //     editButton.style.color = "#000";
-    //     editButton.textContent = 'Edit';
+        const editButton = document.createElement('button');
+         editButton.style.color = "#000";
+         editButton.textContent = 'Edit';
 
-    //    editButton.addEventListener('click', function () {
-    //        editRow(index, row); // Call editRow function with index
-    //     });
+        editButton.addEventListener('click', function () {
+            editRow(index, row, data.email); // Call editRow function with index
+         });
 
         // Create delete button
         const deleteButton = document.createElement('button');
@@ -1029,7 +1029,7 @@ function updateTable() {
         });
 
         // Append buttons to the action cell
-        // actionCell.appendChild(editButton);
+         actionCell.appendChild(editButton);
         actionCell.appendChild(deleteButton);
         row.setAttribute('data-index', index);
     });
@@ -1046,7 +1046,7 @@ function deleteRow(index) {
 }
 
 
-function editRow(index, row) {
+function editRow(index, row, email) {
     const data = submittedData[index];
     const emailCell = row.cells[0];
     const websiteCell = row.cells[1];
@@ -1054,7 +1054,7 @@ function editRow(index, row) {
     const actionCell = row.cells[3];
 
     // Replace text with input fields
-    emailCell.innerHTML = `<input type="email" value="${data.email}" />`;
+    emailCell.innerHTML = `<input type="email" value="${email}" />`;
     websiteCell.innerHTML = `<input type="url" value="${data.website}" />`;
     nameCell.innerHTML = `<input type="text" value="${data.name}" />`;
 
