@@ -1051,8 +1051,8 @@ function editRow(index, row, email) {
     
     const data = submittedData[index];
     const emailCell = row.cells[1];
-    const websiteCell = row.cells[2];
-    const nameCell = row.cells[2];
+    // const websiteCell = row.cells[2];
+    const nameCell = row.cells[0];
     const actionCell = row.cells[5];
     actionCell.innerHTML = '';
 console.log("editing data :  " , email, data.website, data.name)
@@ -1077,7 +1077,7 @@ console.log("editing data :  " , email, data.website, data.name)
 async function saveRow(index, row) {
     const emailCell = row.cells[1];
     // const websiteCell = row.cells[1];
-    const nameCell = row.cells[2];
+    const nameCell = row.cells[0];
     const actionCell = row.cells[5];
 
     // Get new values from input fields
@@ -1086,7 +1086,7 @@ async function saveRow(index, row) {
     const newName = nameCell.firstChild.value;
 
     // Update the submittedData array
-    submittedData[index] = { email: newEmail, website: newWebsite, name: newName };
+    submittedData[index] = { email: newEmail, name: newName };
 
     // Replace input fields with text
     emailCell.textContent = newEmail;
@@ -1097,7 +1097,7 @@ async function saveRow(index, row) {
    const driverData = {
                 name: newName,
                 url: url,
-                email: email
+                email: newEmail
             };
 
             try {
