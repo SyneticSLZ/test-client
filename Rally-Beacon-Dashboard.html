@@ -811,6 +811,37 @@ function togglePopupManual() {
 
     }
 
+    function togglePopupRemoveOPEN(index) {
+      const overlay = document.getElementById('manual-popup-overlay-remove');
+      
+    //   const emailInput = document.getElementById('email');
+        // const websiteInput = document.getElementById('website');
+        // const nameInput = document.getElementById('name');
+
+
+
+        // emailInput.value = "";
+        // websiteInput.value = "https://";
+        // nameInput.value = "";
+      overlay.style.display = 'flex';
+      document.getElementById("acc-text").innerHTML = `                <span style="color : #ff0000; cursor : pointer;"  onclick="remove(${index})">REMOVE</span>`
+
+    }
+
+function remove( index) {
+    const row = document.getElementById(`details-${index}`).previousElementSibling;
+    row.remove();
+    document.getElementById(`details-${index}`).remove();
+    generatedData.splice(index, 1);
+    updateTable();
+
+}
+function togglePopupRemoveCLOSE() {
+    const overlay = document.getElementById('manual-popup-overlay-remove');
+    overlay.style.display = 'none';
+}
+
+
     function isValidURL(string) {
   try {
     new URL(string);
@@ -1039,11 +1070,12 @@ function updateTable() {
 
 
 function deleteRow(index) {
-    data = submittedData[index]
-    removeDriver(data.url)
-    console.log(data)
-    submittedData.splice(index, 1); // Remove data from array
-    updateTable(); // Update table to reflect changes
+    togglePopupRemoveOPEN(index)
+    // data = submittedData[index]
+    // removeDriver(data.url)
+    // console.log(data)
+    // submittedData.splice(index, 1); // Remove data from array
+    // updateTable(); // Update table to reflect changes
 }
 
 
@@ -1980,10 +2012,7 @@ function toggleDetails(index) {
 }
 
 function removeRow(index) {
-    const row = document.getElementById(`details-${index}`).previousElementSibling;
-    row.remove();
-    document.getElementById(`details-${index}`).remove();
-    generatedData.splice(index, 1);
+    togglePopupRemove(index)
 }
 
 function regenerateAllEmails() {
@@ -2621,6 +2650,28 @@ console.log(result.message);
 
             <div class="acc-text">
                 <span style="color : #ff0000; cursor : pointer;"  id="manualErrorm"></span>
+            </div>
+          </div>
+      </div>
+
+      <div class="manual-popup-overlay domain" id="manual-popup-overlay-remove">
+        <div class="container">
+            <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupRemoveCLOSE()">X</button>
+        <!-- <div class="center" >
+
+            <h1 style="font-size: 20px; margin-bottom:20px;">Are you sure you want to remove this Driver ?</h1>
+            <form id="emailForm" style="display: flex;flex-direction: row;">
+                <input type="text" id="domain" name="domain" placeholder="Enter domain" required style="height: 100%;">
+                <button type="submit" style="margin-top: 0; height: 100%; width: 35%;"><i class="fi fi-rr-arrow-right" style="padding-left: 10px;     height: 14px; width: 14px;"></i></button>
+            </form>
+            <div id="results" style="color: red;"></div>
+
+        </div>  -->
+        </div>
+        <div class="btn-container">
+
+            <div class="acc-text" id="acc-text">
+
             </div>
           </div>
       </div>
