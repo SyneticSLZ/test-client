@@ -109,7 +109,7 @@ async function getDrivers() {
 
         // Use for...of to await each fetchNextRaceManual call
         for (const driver of drivers) {
-            driver_array.append(driver)
+            driver_array.push(driver)
             try {
                 const nextRace = await fetchNextRaceManual(driver.url); 
                 console.log(nextRace)
