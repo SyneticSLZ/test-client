@@ -1053,7 +1053,7 @@ function editRow(index, row, email) {
     const emailCell = row.cells[0];
     const websiteCell = row.cells[1];
     const nameCell = row.cells[2];
-    const actionCell = row.cells[4];
+    const actionCell = row.cells[5];
     actionCell.innerHTML = '';
 console.log("editing data :  " , email, data.website, data.name)
     // Replace text with input fields
@@ -1078,7 +1078,7 @@ async function saveRow(index, row) {
     const emailCell = row.cells[0];
     const websiteCell = row.cells[1];
     const nameCell = row.cells[2];
-    const actionCell = row.cells[3];
+    const actionCell = row.cells[5];
 
     // Get new values from input fields
     const newEmail = emailCell.firstChild.value;
