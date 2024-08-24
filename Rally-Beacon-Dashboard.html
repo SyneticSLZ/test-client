@@ -1041,6 +1041,7 @@ function updateTable() {
 function deleteRow(index) {
     data = submittedData[index]
     removeDriver(data.url)
+    console.log(data)
     submittedData.splice(index, 1); // Remove data from array
     updateTable(); // Update table to reflect changes
 }
