@@ -970,7 +970,7 @@ async function Manual() {
             }
 
         let fetchedRace = await fetchNextRaceManual(website);
-        manualError.textContent = `${fetchedRace}`;  
+        manualError.textContent = `Drivers Next Race : ${fetchedRace}`;  
         if (!fetchedRace) {
             manualError.textContent = "Invalid URL";
             return;
@@ -1000,7 +1000,9 @@ async function Manual() {
                 <label for="input" class="text">Profile Url on EWRC:</label>
                 <input type="text" placeholder="https://www.ewrc-results.com/profile/123456-Joe-Bloggs/" name="input" class="input" id="website" >
             </div>
-
+                <div class="acc-text">
+                    <span style="color : #ff0000; cursor : pointer;"  id="manualError"></span>
+                </div>
             <button onclick="contine()">Continue
                 <div class="arrow-wrapper">
                     <div class="arrow"></div>
@@ -1008,9 +1010,7 @@ async function Manual() {
             </button>
               <div class="btn-container">
 
-                <div class="acc-text">
-                    <span style="color : #ff0000; cursor : pointer;"  id="manualError"></span>
-                </div>
+
               </div>
 
         
@@ -2741,7 +2741,9 @@ console.log(result.message);
                 <label for="input" class="text">Profile Url on EWRC:</label>
                 <input type="text" placeholder="https://www.ewrc-results.com/profile/123456-Joe-Bloggs/" name="input" class="input" id="website" >
             </div>
-
+            <div class="acc-text" style="margin-block: 20px;">
+                <span style="color : black; cursor : pointer;"  id="manualError"></span>
+            </div>
             <button onclick="Manual()">Submit
                 <div class="arrow-wrapper">
                     <div class="arrow"></div>
@@ -2749,9 +2751,7 @@ console.log(result.message);
             </button>
               <div class="btn-container">
 
-                <div class="acc-text">
-                    <span style="color : black; cursor : pointer;"  id="manualError"></span>
-                </div>
+
               </div>
 
 
