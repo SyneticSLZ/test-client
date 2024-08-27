@@ -859,7 +859,7 @@ function togglePopupManual() {
 
     }
 
-    function remove(index) {
+    function Oldremove(index) {
     const detailsElement = document.getElementById(`details-${index}`);
     console.log(`Removing element with id 'details-${index}'`);
     
@@ -880,6 +880,40 @@ function togglePopupManual() {
     generatedData.splice(index, 1);
     updateTable();
 }
+
+function remove(index) {
+    const dataToDelete = submittedData[index];
+    
+    // Remove data from MongoDB
+    fetch(`https://server.voltmailer.com/remove-driver?url=${encodeURIComponent(dataToDelete.url)}`, {
+        method: 'GET', // Use GET method as per your route
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to delete the driver data from the database.');
+        }
+    })
+    .then(result => {
+        console.log(result.message);
+        
+        // Remove the data from the submittedData array
+        submittedData.splice(index, 1);
+
+        // Update the table
+        updateTable();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while trying to delete the data.');
+    });
+}
+
+
 
 
 function togglePopupRemoveCLOSE() {
