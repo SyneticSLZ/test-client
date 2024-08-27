@@ -859,14 +859,29 @@ function togglePopupManual() {
 
     }
 
-function remove( index) {
-    const row = document.getElementById(`details-${index}`).previousElementSibling;
-    row.remove();
-    document.getElementById(`details-${index}`).remove();
+    function remove(index) {
+    const detailsElement = document.getElementById(`details-${index}`);
+    console.log(`Removing element with id 'details-${index}'`);
+    
+    if (!detailsElement) {
+        console.error(`Element with id 'details-${index}' not found.`);
+        return;
+    }
+
+    console.log(`Element found:`, detailsElement);
+    const row = detailsElement.previousElementSibling;
+    console.log(`Previous sibling element:`, row);
+
+    if (row) {
+        row.remove();
+    }
+    
+    detailsElement.remove();
     generatedData.splice(index, 1);
     updateTable();
-
 }
+
+
 function togglePopupRemoveCLOSE() {
     const overlay = document.getElementById('manual-popup-overlay-remove');
     overlay.style.display = 'none';
