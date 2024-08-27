@@ -898,6 +898,8 @@ async function Manual() {
     if (!/^https:\/\//i.test(website)) {
         website = 'https://' + website;
     }
+
+
     console.log(isValidURL(website))
         if (!emailRegex.test(email_inputted)) {
             manualError.textContent = "Invalid email format.";
@@ -918,17 +920,68 @@ async function Manual() {
             }
 
         let fetchedRace = await fetchNextRaceManual(website);
-
+        manualError.textContent = `${fetchedRace}`;  
         if (!fetchedRace) {
             manualError.textContent = "Invalid URL";
             return;
         }
+        ma
         if (fetchedRace === null) {
             fetchedRace = "Driver has no Upcoming Race"
         }
 
+        document.getElementById('continue').innerHTML = `
+                    <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupManual()">X</button>
+            <h2 style="align-self: center; margin-bottom: 10px;">Add your Driver</h2>
 
-        const formData = {
+              <div class="coolinput">
+                <label for="input" class="text">Name:</label>
+                <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
+            </div>       
+            
+            <div class="coolinput">
+                <label for="input" class="text">Email:</label>
+                <input type="text" placeholder="Example@email.com" name="input" class="input" id="emailinput">
+                <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
+
+            </div>  
+            
+            <div class="coolinput">
+                <label for="input" class="text">Profile Url on EWRC:</label>
+                <input type="text" placeholder="https://www.ewrc-results.com/profile/123456-Joe-Bloggs/" name="input" class="input" id="website" >
+            </div>
+
+            <button onclick="contine()">Continue
+                <div class="arrow-wrapper">
+                    <div class="arrow"></div>
+                </div>
+            </button>
+              <div class="btn-container">
+
+                <div class="acc-text">
+                    <span style="color : #ff0000; cursor : pointer;"  id="manualError"></span>
+                </div>
+              </div>
+
+        
+        `
+
+
+
+}
+
+function contine(){
+    const emailInput = document.getElementById('emailinput');
+        const websiteInput = document.getElementById('website');
+        const nameInput = document.getElementById('name');
+        const email_inputted = emailInput.value;
+        let website = websiteInput.value;
+        const name = nameInput.value;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const websiteRegex = /^https:\/\/.+$/;
+
+    const formData = {
     url: website,
     email: email_inputted,
     name: name,
@@ -946,6 +999,8 @@ async function Manual() {
         nameInput.value = "";
         console.log("cleared")
         togglePopupManual()
+
+
 }
 
 async function addDriver(url, driver, email) {
@@ -2616,7 +2671,7 @@ console.log(result.message);
     </div> 
 
     <div class="manual-popup-overlay" id="manual-popup-overlay">
-        <div class="container">
+        <div class="container" id="continue">
             <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupManual()">X</button>
             <h2 style="align-self: center; margin-bottom: 10px;">Add your Driver</h2>
 
