@@ -1255,7 +1255,7 @@ async function saveRow(index, row) {
     editButton.style.color = "#000";
     editButton.textContent = 'Edit';
     editButton.addEventListener('click', function() {
-        editRow(index, row); // Call editRow function with index and row
+        editRow(index, row, newEmail); // Call editRow function with index and row
     });
 
     // Create delete button
