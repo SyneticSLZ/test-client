@@ -111,8 +111,8 @@ async function getDrivers() {
         for (const driver of drivers) {
             driver_array.push(driver)
             try {
-                const nextRace = await fetchNextRaceManual(driver.url); 
-                console.log(nextRace)
+                // const nextRace = await fetchNextRaceManual(driver.url); 
+                // console.log(nextRace)
                 
             //     const driverData = {
             //     raceDone: "TRUE",
@@ -141,15 +141,16 @@ async function getDrivers() {
             //     alert('An unexpected error occurred.');
             // }
 
-                console.log(driver.name, " : ", nextRace);
-                updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
+                // console.log(driver.name, " : ", nextRace);
+                // updatedDriver = await updateDriver(driver.url, "nextRace", nextRace)
 
                 submittedData.push({
                     url: driver.url,
                     email: driver.email,
                     name: driver.name,
                     nextRace: driver.nextRace,
-                    emailSent: driver.emailSent
+                    emailSent: driver.emailSent,
+                    raceDone: driver.raceDone
                 });
                 updateTable()
             } catch (error) {
@@ -1158,12 +1159,21 @@ function updateTable() {
 
         let raceDone = false;
         let nod = data.nextRace
+
+
         if (data.nextRace.includes("(done)")) {
             raceDone = true;
             nod = data.nextRace.replace("(done)", "").trim(); // Remove (done) from the string
             row.style.color = "grey"; // Change text color to grey
             
         }
+        
+        if (data.raceDone === "T") {
+            raceDone = true;
+            row.style.color = "grey"; // Change text color to grey
+            
+        }
+
 
         // Set cell contents
         nameCell.textContent = data.name;
