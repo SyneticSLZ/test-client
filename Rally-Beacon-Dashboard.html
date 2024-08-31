@@ -2541,7 +2541,8 @@ function fetchNextRaceManual(url) {
 
         for (let entry of submittedData) {
 
-            console.log(entry.email)
+            console.log(entry.email, )
+
             try {
             const fetchedRace = await fetchNextRace(entry.url);
 
@@ -2562,7 +2563,7 @@ function fetchNextRaceManual(url) {
                         subject: `Good luck for ${fetchedRace}`,
                         content: `
                         
-Hi ${(entry.name.split())[0] },
+Hi ${entry.name.split(" ")[0] },
 
 Hope the prep for rally ${fetchedRace} is going well. Just dropping you a reminder to use Rally Beacon on Recce if that's possible.
 
@@ -2591,7 +2592,7 @@ Ruairi
                         subject: `Good luck for ${fetchedRace}`,
                         content: `
                         
-Hi ${ (entry.name.split())[0] },
+Hi ${ entry.name.split(" ")[0] },
 
 Hope the prep for rally ${fetchedRace} is going well. Just dropping you a reminder to use Rally Beacon on Recce if that's possible.
 
