@@ -18,7 +18,7 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
-
+<link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
 </head>
 <script>
   
@@ -58,27 +58,7 @@ link[rel="icon"] {
     height: 512px;
   }
 
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-}
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #02021E;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #7C1265;
-  border-radius: 5px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #7C1265;
-  border-radius: 5px;
-}
 @media (min-width: 600px) {
   .c{
   flex-direction: row;
@@ -2945,10 +2925,10 @@ async function addCustomer() {
         }
         .btn {
             display: inline-block;
-            min-width: 84px;
+            /* min-width: 84px; */
             padding: 10px 16px;
             border-radius: 20px;
-            font-weight: 200;
+            font-weight: 100;
             text-align: center;
             text-decoration: none;
             color: #fff;
@@ -2968,13 +2948,13 @@ async function addCustomer() {
         }
         .hero-title {
             font-size: 56px;
-            font-weight: 200;
+            font-weight: bold;
             margin-bottom: 20px;
             flex-wrap: nowrap;
         }
-        #light{
+        /* #light{
           font-weight: 10;
-        }
+        } */
         .highlight {
           background: linear-gradient(to bottom, rgba(255, 0, 255, 0.719), rgba(233, 116, 233, 0.719)); 
             /* color: #ad00ff; */
@@ -2985,17 +2965,23 @@ async function addCustomer() {
         }
         .hero-subtitle {
           /* font-weight: light; */
-            font-size: 32px;
-            font-weight: 100;
+          font-size: calc(20px + 0.390625vw);
+            /* font-weight: 100; */
             margin-bottom: 40px;
             flex-wrap: nowrap;
+            font-weight: 500;
+            /* font-size: 14px; */
+            margin-inline: calc(50px + 0.390625vw);
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .hero-image {
             width: 100%;
             max-width: 1312px;
             height: auto;
-            border-radius: 10px;
-            padding-inline: 50px;
+            border-radius: 20px;
+            /* margin-inline: 50px; */
+            
+            /* padding-right: 50px; */
         }
         .container-why {
             max-width: 1200px;
@@ -3313,7 +3299,7 @@ async function addCustomer() {
           <div class="hero-content">
               <div class="hero-title">Boost Your Outreach with AI-Crafted <span class="highlight">Personalized Emails</span></div>
               <div class="hero-subtitle" id="light">Voltmailer is an AI tool that allows you to dramatically increase your cold outreach volume</div>
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/cdece2cc216bc6638b3e76e992ba8f7dda1f8072bf925aefcf29d0cc83cf5f48?placeholderIfAbsent=true&apiKey=be36b5b357df455988c6a8e92b4834ae" alt="Voltmailer Dashboard Preview" class="hero-image">
+              <img src="home.png" alt="Voltmailer Dashboard Preview" class="hero-image">
           </div>
       </section>
       </div>
