@@ -22,34 +22,34 @@
 </head>
 <script>
   
-  function toggleDivs() {
-  var checkbox = document.getElementById("switch");
-  var div1 = document.getElementById("div1");
-  var div2 = document.getElementById("div2");
+//   function toggleDivs() {
+//   var checkbox = document.getElementById("switch");
+//   var div1 = document.getElementById("div1");
+//   var div2 = document.getElementById("div2");
   
-  if (checkbox.checked) {
-    div1.style.display = "none";
-    div2.style.display = "flex";
-  } else {
-    div1.style.display = "flex";
-    div2.style.display = "none";
-  }
-}
+//   if (checkbox.checked) {
+//     div1.style.display = "none";
+//     div2.style.display = "flex";
+//   } else {
+//     div1.style.display = "flex";
+//     div2.style.display = "none";
+//   }
+// }
 
-function initializeDivs() {
-  var checkbox = document.getElementById("switch");
-  var div1 = document.getElementById("div1");
-  var div2 = document.getElementById("div2");
+// function initializeDivs() {
+//   var checkbox = document.getElementById("switch");
+//   var div1 = document.getElementById("div1");
+//   var div2 = document.getElementById("div2");
 
-  if (checkbox.checked) {
-    div1.style.display = "none";
-    div2.style.display = "flex";
+//   if (checkbox.checked) {
+//     div1.style.display = "none";
+//     div2.style.display = "flex";
 
-  } else {
-    div1.style.display = "flex";
-    div2.style.display = "none";
-  }
-}
+//   } else {
+//     div1.style.display = "flex";
+//     div2.style.display = "none";
+//   }
+// }
 </script>
 <style>
 
@@ -118,6 +118,91 @@ body {
             background-color: white;
             transition: all 0.3s ease;
         }
+        .burger-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+        .burger-icon {
+            cursor: pointer;
+            padding: 10px;
+            background: none;
+            border: none;
+        }
+        .burger-icon span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            transition: 0.4s;
+            border-radius: 50px;
+        }
+        .burger-icon.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+            
+        }
+        .burger-icon.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .burger-icon.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 1000;
+        }
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .menu-item {
+            color: white;
+            font-size: 24px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .menu-item:hover {
+            color: #a855f7;
+        }
+        .menu-overlay  .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        .menu-overlay  .button.primary {
+            background-color: #a855f7;
+            color: white;
+        }
+        .menu-overlay  .button.primary:hover {
+            background-color: #9333ea;
+        }
+        .menu-overlay   .button.secondary {
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .menu-overlay  .button.secondary:hover {
+            background-color: #e5e7eb;
+        }
+
 
         /* Full-screen navigation menu */
         .nav-links-n {
@@ -2954,14 +3039,14 @@ function renderPlans(plans) {
 
 // Initial render
 document.addEventListener('DOMContentLoaded', () => {
-  initializeDivs()
+  // initializeDivs()
   const urlParams = new URLSearchParams(window.location.search);    
     var affiliate = urlParams.get('affiliate');  
     
     if (affiliate){
         localStorage.setItem('affiliate', affiliate);
     }
-    renderPlans(businessPlans);
+    // renderPlans(businessPlans);
 });
 
 async function addCustomer() {
@@ -3378,6 +3463,9 @@ async function addCustomer() {
                 align-items: center;
                 gap: 4rem;
             }
+            .burger-menu{
+              display: none;
+            }
 
             .why-personalize-image {
                 max-width: 50%;
@@ -3416,6 +3504,9 @@ async function addCustomer() {
                 justify-content: space-between;
                 display: none;
             }
+            .burger-menu{
+              display: block;
+            }
             .hero-title {
                 font-size: 40px;
             }
@@ -3446,14 +3537,35 @@ async function addCustomer() {
                   <ul class="nav-links">
                       <li class="nav-link"><a href="#home">Home</a></li>
                       <li class="nav-link"><a href="#features">Features</a></li>
-                      <li class="nav-link"><a href="#pricing">Pricing</a></li>
+                      <li class="nav-link"><a href="#plan">Pricing</a></li>
                       <li class="nav-link"><a href="#about">About</a></li>
                   </ul>
+                  <div class="burger-menu">
+                    <button class="burger-icon" id="burger-toggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
                   <div class="auth-buttons">
                       <a href="#login" class="btn btn-secondary">Log In</a>
                       <a href="#signup" class="btn btn-primary">Sign Up</a>
                   </div>
+        <!-- Full-screen navigation menu -->
+        <div class="menu-overlay" id="menu-overlay">
+          <div class="menu-item"><a href="#home">Home</a></div>
+          <!-- <div class="menu-item">Solutions</div> -->
+          <div class="menu-item"><a href="#features">Features</a></div>
+          <div class="menu-item"><a href="#plan">Pricing</a></div>
+          <div class="menu-item"><a href="#about">About</a></div>
+          <div style="display: flex; align-items: center; justify-content: center; flex-direction: row;">
+            <a href="#login" class="btn btn-secondary">Log In</a>
+            <a href="#signup" class="btn btn-primary">Sign Up</a>
+          </div>
 
+        
+      </div>
+  
               </nav>
 
           </header>
@@ -3537,7 +3649,7 @@ async function addCustomer() {
             </div> -->
         </div>
 
-        <div class="container-claude">
+        <div class="container-claude" id="home">
           <h1>Why Choose Voltmailer?</h1>
           <p class="tagline">Our cutting-edge AI helps you reach more inboxes with personalized messages that resonate.</p>
           <!-- <div style="width: 480px; height: 217px; background: linear-gradient(109deg, rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.20) 100%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 1px rgba(255, 255, 255, 0.60) solid; backdrop-filter: blur(20px)"></div> -->
@@ -3559,7 +3671,7 @@ async function addCustomer() {
               </div>
           </div>
         </div>
-          <div class="container-why">
+          <div class="container-why" id="about">
             <section class="why-personalize">
                 <div class="why-personalize-image">
                     <img src="vecteezy_email-marketing-3d-icon-illustration-for-your-website-user_9418803.png" alt="Illustration showing personalized email communication">
@@ -5009,41 +5121,61 @@ Harry Smith
 
 
     <script>
-          document.getElementById('contactForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+    //       document.getElementById('contactForm').addEventListener('submit', function(event) {
+    //   event.preventDefault();
 
-      const email = document.getElementById('email').value;
-      const website = document.getElementById('web').value;
-      const textarea = document.getElementById('textarea').value;
+    //   const email = document.getElementById('email').value;
+    //   const website = document.getElementById('web').value;
+    //   const textarea = document.getElementById('textarea').value;
 
-      fetch('https://server.voltmailer.com/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          email: email,
-          textarea: textarea,
-          website: website
-        })
-      })
-      .then(response => response.text())
-      .then(result => {
-        document.getElementById('result').innerText = result;
-      })
-      .catch(error => {
-        document.getElementById('result').innerText = 'Error: ' + error;
-      });
-    });
-    document.addEventListener('DOMContentLoaded', animateSteps);
-        const burger = document.getElementById('burger-n');
-        const navLinks = document.getElementById('nav-links-n');
+    //   fetch('https://server.voltmailer.com/send-email', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded',
+    //     },
+    //     body: new URLSearchParams({
+    //       email: email,
+    //       textarea: textarea,
+    //       website: website
+    //     })
+    //   })
+    //   .then(response => response.text())
+    //   .then(result => {
+    //     document.getElementById('result').innerText = result;
+    //   })
+    //   .catch(error => {
+    //     document.getElementById('result').innerText = 'Error: ' + error;
+    //   });
+    // });
+    // document.addEventListener('DOMContentLoaded', animateSteps);
+    //     const burger = document.getElementById('burger-n');
+    //     const navLinks = document.getElementById('nav-links-n');
 
-        burger.addEventListener('click', () => {
-          console.log("clicked")
-            burger.classList.toggle('active');
-            navLinks.classList.toggle('open');
+    //     burger.addEventListener('click', () => {
+    //       console.log("clicked")
+    //         burger.classList.toggle('active');
+    //         navLinks.classList.toggle('open');
+    //     });
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const burgerToggle = document.getElementById('burger-toggle');
+            const menuOverlay = document.getElementById('menu-overlay');
+
+            burgerToggle.addEventListener('click', function() {
+              console.log("asd")
+                this.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking on a menu item
+            document.querySelectorAll('.menu-item, .button').forEach(item => {
+                item.addEventListener('click', function() {
+                    burgerToggle.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                });
+            });
         });
+  
     </script>
 </body>
 </html>
