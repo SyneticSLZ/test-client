@@ -3,139 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How It Works Section</title>
+    <title>Responsive Dropdown Menu</title>
     <style>
-        :root {
-            --primary-color: #120929;
-            --text-color: #ffffff;
-            --accent-color: #6c63ff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--primary-color);
-            color: var(--text-color);
+            background-color: #121212;
+            color: white;
         }
 
-        .how-it-works {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 20px;
-        }
-
-        .section-title {
-            font-size: 48px;
-            text-align: center;
-            margin-bottom: 60px;
-            color: var(--accent-color);
-        }
-
-        .process-steps {
+        .navbar {
             display: flex;
+            justify-content: flex-end; /* Align the burger icon to the right */
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #1e1e1e;
+            position: relative;
+        }
+
+        .burger {
+            display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            flex-wrap: wrap;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            right: 20px; /* Positioned to the top-right corner */
+            z-index: 20; /* Ensures it appears above other content */
         }
 
-        .step {
-            flex-basis: calc(33.333% - 40px);
-            margin-bottom: 60px;
-            text-align: center;
+        .burger .line {
+            width: 100%;
+            height: 4px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        /* Full-screen navigation menu */
+        .nav-links {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1e1e1e;
+            z-index: 10;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: all 0.5s ease;
+            transform: translateY(-100%);
         }
 
-        .step.animate {
+        .nav-links.open {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .step-icon {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
-            background-color: var(--accent-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: var(--primary-color);
+        .nav-links li {
+            list-style: none;
+            margin: 20px 0;
         }
 
-        .step-title {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: var(--accent-color);
-        }
-
-        .step-description {
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 768px) {
-            .step {
-                flex-basis: 100%;
-            }
-        }
-
-        .cta-button {
-            display: block;
-            width: 200px;
-            margin: 60px auto 0;
-            padding: 15px 30px;
-            background-color: var(--accent-color);
-            color: var(--primary-color);
-            text-align: center;
+        .nav-links a {
             text-decoration: none;
+            color: white;
+            font-size: 24px;
+            padding: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #61a9ff;
+        }
+
+        /* Buttons for login and sign up */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .buttons .btn {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
             font-size: 18px;
-            font-weight: bold;
-            border-radius: 5px;
+            width: 80%;
             transition: background-color 0.3s ease;
         }
 
-        .cta-button:hover, .cta-button:focus {
-            background-color: #5651d6;
+        .buttons .btn.signup {
+            background-color: #61a9ff;
+        }
+
+        .buttons .btn:hover {
+            background-color: #444;
+        }
+
+        /* Burger icon animation (transforming into X) */
+        .burger.active .line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .burger.active .line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger.active .line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Responsive styles for screens smaller than iPads */
+        @media (max-width: 768px) {
+            .burger {
+                display: block;
+            }
+
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        /* Hide the menu for larger screens */
+        @media (min-width: 769px) {
+            .burger {
+                display: none;
+            }
+
+            .nav-links,
+            .buttons {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <section class="how-it-works">
-        <h1 class="section-title">How It Works</h1>
-        <div class="process-steps">
-            <div class="step">
-                <div class="step-icon">1</div>
-                <h2 class="step-title">Create Your Lead List</h2>
-                <p class="step-description">Upload a CSV file, enter domains, or manually input lead information to build your targeted list.</p>
-            </div>
-            <div class="step">
-                <div class="step-icon">2</div>
-                <h2 class="step-title">Craft Your Pitch</h2>
-                <p class="step-description">Develop a concise and compelling pitch with a clear call-to-action that resonates with your audience.</p>
-            </div>
-            <div class="step">
-                <div class="step-icon">3</div>
-                <h2 class="step-title">Launch Your Campaign</h2>
-                <p class="step-description">We'll send personalized emails to your leads, aiming to achieve your specified CTA and drive results.</p>
-            </div>
+
+    <nav class="navbar">
+        <!-- Burger icon for small screens -->
+        <div class="burger" id="burger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
         </div>
-        <a href="#" class="cta-button" aria-label="Get Started with Our Service">Get Started</a>
-    </section>
+
+        <!-- Full-screen navigation menu -->
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+
+            <!-- Buttons for login and sign up -->
+            <div class="buttons">
+                <button class="btn login">Login</button>
+                <button class="btn signup">Sign Up</button>
+            </div>
+        </ul>
+    </nav>
 
     <script>
-        function animateSteps() {
-            const steps = document.querySelectorAll('.step');
-            steps.forEach((step, index) => {
-                setTimeout(() => {
-                    step.classList.add('animate');
-                }, index * 200);
-            });
-        }
+        const burger = document.getElementById('burger');
+        const navLinks = document.getElementById('nav-links');
 
-        document.addEventListener('DOMContentLoaded', animateSteps);
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
     </script>
+
 </body>
 </html>
+

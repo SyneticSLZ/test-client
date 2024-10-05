@@ -90,7 +90,139 @@ body {
     background: rgb(2, 2, 31);
     overflow-x: hidden;
     }
-    
+    .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #1e1e1e;
+            position: relative;
+        }
+
+        .burger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            right: 20px; /* Positioned to the top-right corner */
+            z-index: 20; /* Ensures it appears above other content */
+        }
+
+        .burger .line {
+            width: 100%;
+            height: 4px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        /* Full-screen navigation menu */
+        .nav-links-n {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1e1e1e;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.5s ease;
+            transform: translateY(-100%);
+        }
+
+        .nav-links-n.open {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-links-n li {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .nav-links-n a {
+            text-decoration: none;
+            color: white;
+            font-size: 24px;
+            padding: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #61a9ff;
+        }
+
+        /* Buttons for login and sign up */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .buttons .btn {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            font-size: 18px;
+            width: 80%;
+            transition: background-color 0.3s ease;
+        }
+
+        .buttons .btn.signup {
+            background-color: #61a9ff;
+        }
+
+        .buttons .btn:hover {
+            background-color: #444;
+        }
+
+        /* Burger icon animation (transforming into X) */
+        .burger.active .line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .burger.active .line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger.active .line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Responsive styles for screens smaller than iPads */
+        @media (max-width: 768px) {
+            .burger {
+                display: block;
+            }
+
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        /* Hide the menu for larger screens */
+        @media (min-width: 769px) {
+            .burger {
+                display: none;
+            }
+
+            .nav-links,
+            .buttons {
+                display: none;
+            }
+        }
     .coin {
   /* font-size: 100px; */
   width: 20px;
@@ -2861,7 +2993,7 @@ async function addCustomer() {
         });
     }
 
-    document.addEventListener('DOMContentLoaded', animateSteps);
+
 </script>
 <style>
                   :root {
@@ -3176,6 +3308,15 @@ async function addCustomer() {
         .cta-button:hover, .cta-button:focus {
             background-color: #5651d6;
         }
+        .hide-d{
+              display: none;
+            }
+        /* .subscriptions{
+              display: flex;
+            }
+            .subscription-sub{
+              display: none;
+            } */
         @media (max-width: 1200px) {
             .background-dark {
                 padding: 60px 40px 120px;
@@ -3218,8 +3359,11 @@ async function addCustomer() {
             .feature-description {
                 font-size: 24px;
             }
+            .hide-d{
+              display: block;
+            }
         }
-
+  
         @media (min-width: 768px) {
             .why-personalize {
                 flex-direction: row;
@@ -3262,6 +3406,7 @@ async function addCustomer() {
             .auth-buttons {
                 width: 100%;
                 justify-content: space-between;
+                display: none;
             }
             .hero-title {
                 font-size: 40px;
@@ -3277,9 +3422,14 @@ async function addCustomer() {
             .hero-subtitle {
                 font-size: 20px;
             }
+            /* .subscriptions{
+              display: none;
+            } */
+            .subscription-sub{
+              display: flex;
+            }
         }
 </style>
-
     <div class="ncontainer">
       <section class="hero-section">
           <header class="header">
@@ -3295,12 +3445,33 @@ async function addCustomer() {
                       <a href="#login" class="btn btn-secondary">Log In</a>
                       <a href="#signup" class="btn btn-primary">Sign Up</a>
                   </div>
+
               </nav>
+
           </header>
+
           <div class="hero-content">
               <div class="hero-title">Boost Your Outreach with AI-Crafted <span class="highlight">Personalized Emails</span></div>
               <div class="hero-subtitle" id="light">Voltmailer is an AI tool that allows you to dramatically increase your cold outreach volume</div>
               <img src="home.png" alt="Voltmailer Dashboard Preview" class="hero-image">
+              <div class="hide-d">
+              <div class="button-container-row" style="margin-top: 50px; margin-bottom: 30px; margin-inline: 50px;">
+                <button class="cta " onclick="window.location.href='/OldLogin.html?action=signup'" >
+                    <span style="font-size: 14px;">Get Started for Free</span>
+                    
+                  </button>
+                  <!-- <button class="cta none" onclick="window.location.href='/#plan'">
+                    <span class="seeplans">See our Plans</span>
+                    <svg width="15px" height="10px" viewBox="0 0 13 10">
+                      <path d="M1,5 L11,5"></path>
+                      <polyline points="8 1 12 5 8 9"></polyline>
+                    </svg>
+                  </button> -->
+                  </div>
+                  <span>No credit card required. Free plan.</span>
+                  
+                </div>
+                </div>
           </div>
       </section>
       </div>
@@ -3393,28 +3564,29 @@ async function addCustomer() {
             </section>
         </div>
         <h2 class="hpwitworks" style="">Here’s how it works!</h2>
-        <section class="how-it-works">
-          <!-- <h2 class="hpwitworks" style="">Here’s how it works!</h2> -->
-          <!-- <h1 class="section-title">Here’s how it works!</h1> -->
-          <div class="process-steps">
-              <div class="step">
+        <!-- <section class="how-it-works">
+
+          <div class="process-steps" style="display: flex; flex-direction: row; border: #00DDEB solid 1px;">
+              <div class="stp" style="margin: 5px; border: #00DDEB solid 1px;">
                   <div class="step-icon">1</div>
                   <h2 class="step-title">Create Your Lead List</h2>
                   <p class="step-description">Upload a CSV file, enter domains, or manually input lead information to build your targeted list.</p>
               </div>
-              <div class="step">
+              <div class="stp" style="margin: 5px;">
                   <div class="step-icon">2</div>
                   <h2 class="step-title">Craft Your Pitch</h2>
                   <p class="step-description">Develop a concise and compelling pitch with a clear call-to-action that resonates with your audience.</p>
               </div>
-              <div class="step">
+              <div class="stp" style="margin: 5px;">
                   <div class="step-icon">3</div>
                   <h2 class="step-title">Launch Your Campaign</h2>
                   <p class="step-description">We'll send personalized emails to your leads, aiming to achieve your specified CTA and drive results.</p>
               </div>
+              
           </div>
-          <!-- <a href="#" class="cta-button" aria-label="Get Started with Our Service">Get Started</a> -->
-      </section>
+
+      </section> -->
+                <!-- <a href="#" class="cta-button" aria-label="Get Started with Our Service">Get Started</a> -->
 <!--           
           <div class="why-personalize">
               <img src="vecteezy_email-marketing-3d-icon-illustration-for-your-website-user_9418803.png" alt="Personalization concept" style=" height: auto;" class="mobimg">
@@ -3452,7 +3624,7 @@ async function addCustomer() {
 -webkit-border-radius: 16px;
 border-radius: 16px;
 -webkit-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29;
-box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; margin-bottom: 20px;">
+box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; margin-bottom: 20px; display: flex; align-items: start; flex-direction: column; justify-content: start;">
   <!-- <li> -->
     <h2 style=" font-size: 2.1em;">Upload / Create a lead list</h2>
   <!-- <div style="margin-bottom: 20px;"><b>1. Manual</b></div> <div style="margin-bottom: 30px; font-size: 16px;">Add your leads manually into the table by entering your prospects email, website and name(optional).</div>
@@ -3465,6 +3637,7 @@ box-shadow: 11px 11px 33px #0f0c29, -11px -11px 33px #0f0c29; padding: 40px; mar
 
     <li>Add leads by inputting emails,websites and prospect names</li>
   </ul>
+  <a href="#" class="cta-button" aria-label="Get Started with Our Service">Get Started</a>
 
 <!-- </li> -->
  <!-- <ul> -->
@@ -4409,6 +4582,256 @@ Harry Smith
 
             
         </div>
+
+        <style>
+          .container-sub {
+            display: none;
+              max-width: 400px;
+              margin: 0 auto;
+              
+          }
+          .container-sub h1 {
+              font-size: 2rem;
+              text-align: center;
+              margin-bottom: 8px;
+          }
+          .container-sub h2 {
+              font-size: 2rem;
+              text-align: center;
+              margin-bottom: 16px;
+          }
+          .container-sub .super {
+              background: linear-gradient(to right, #60A5FA, #A78BFA);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+          }
+          .container-sub .subtitle {
+              text-align: center;
+              color: #D1D5DB;
+              margin-bottom: 32px;
+              font-size: 0.9rem;
+          }
+          .container-sub .pricing-card {
+              /* background-color: #1F2937; */
+              background-color: #241b38;
+              border-radius: 8px;
+              padding: 24px;
+              margin-bottom: 24px;
+              text-align: center;
+              position: relative;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              min-height: 420px;
+          }
+          .container-sub .pricing-card.popular {
+              border: 2px solid #8B5CF6;
+          }
+          .popular-badge {
+              position: absolute;
+              top: 0;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              background-color: #8B5CF6;
+              color: white;
+              font-size: 0.7rem;
+              font-weight: bold;
+              padding: 4px 12px;
+              border-radius: 9999px;
+          }
+          .container-sub  .card-title {
+              font-size: 1.25rem;
+              font-weight: bold;
+              margin-bottom: 8px;
+          }
+          .container-sub  .card-price {
+              font-size: 1.875rem;
+              font-weight: bold;
+              margin-bottom: 24px;
+          }
+          .container-sub .card-price span {
+              font-size: 0.875rem;
+          }
+          .container-sub .feature-list-container {
+              text-align: left;
+              margin-bottom: 24px;
+          }
+          .container-sub .feature-list {
+              list-style-type: none;
+              padding: 0;
+              margin: 0;
+              display: inline-block;
+          }
+          .container-sub  .feature-item {
+              display: flex;
+              align-items: center;
+              margin-bottom: 12px;
+              font-size: 0.875rem;
+          }
+          .container-sub  .feature-item::before {
+              content: "✓";
+              color: #8B5CF6;
+              margin-right: 8px;
+              font-weight: bold;
+          }
+          .container-sub   .card-button {
+              background-color: #8B5CF6;
+              color: white;
+              border: none;
+              border-radius: 8px;
+              padding: 12px;
+              font-size: 0.875rem;
+              font-weight: bold;
+              cursor: pointer;
+              transition: background-color 0.3s;
+              width: 100%;
+          }
+          .card-button:hover {
+              background-color: #7C3AED;
+          }
+          .floating-button {
+              position: fixed;
+              bottom: 16px;
+              right: 16px;
+              background-color: #8B5CF6;
+              color: white;
+              border: none;
+              border-radius: 9999px;
+              padding: 12px 24px;
+              font-size: 0.875rem;
+              font-weight: bold;
+              cursor: pointer;
+              transition: all 0.3s;
+              animation: pulse 2s infinite;
+          }
+          .floating-button:hover {
+              background-color: #7C3AED;
+              transform: scale(1.05);
+          }
+
+
+
+
+        @media (max-width: 768px) {
+            .subscriptions {
+                display: none;
+            }
+            .container-sub {
+                display: block;
+            }
+        }
+
+          @keyframes pulse {
+              0% {
+                  box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+              }
+              70% {
+                  box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+              }
+              100% {
+                  box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+              }
+          }
+      </style>
+
+      <div class="container-sub">
+          <h1>Our pricing is</h1>
+          <h2><span class="super">SUPER</span> simple.</h2>
+          <p class="subtitle">Choose the right plan for you. Cancel Anytime.</p>
+          <div id="pricing-cards"></div>
+      </div>
+      <button class="floating-button">Let's Go</button>
+  
+      <script>
+          const pricingData = [
+              {
+                  title: "Starter",
+                  price: 0,
+                  features: [
+                      "30 day free trial",
+                      "20 Free Emails",
+                      "Email Personalization",
+                      "Automatic Email Sending"
+                  ],
+                  buttonText: "Start Now",
+                  isPopular: false
+              },
+              {
+                  title: "Premium",
+                  price: 49,
+                  features: [
+                      "10,000/mo Emails",
+                      "Email Personalization",
+                      "Automatic Email Sending",
+                      "Email Tracking",
+                      "Support Line"
+                  ],
+                  buttonText: "Start Now",
+                  isPopular: true
+              },
+              {
+                  title: "Enterprise",
+                  price: "Contact us",
+                  features: [
+                      "50,000 +/mo emails",
+                      "Most Advanced AI Model",
+                      "Advanced Email Tracking",
+                      "Customized System",
+                      "Email Personalization + Tracking"
+                  ],
+                  buttonText: "Get in touch",
+                  isPopular: false
+              }
+          ];
+  
+          function createPricingCard(data) {
+              const card = document.createElement('div');
+              card.className = `pricing-card ${data.isPopular ? 'popular' : ''}`;
+              
+              if (data.isPopular) {
+                  const badge = document.createElement('div');
+                  badge.className = 'popular-badge';
+                  badge.textContent = 'MOST POPULAR';
+                  card.appendChild(badge);
+              }
+  
+              const title = document.createElement('h3');
+              title.className = 'card-title';
+              title.textContent = data.title;
+              card.appendChild(title);
+  
+              const price = document.createElement('p');
+              price.className = 'card-price';
+              price.innerHTML = typeof data.price === 'number' ? `$${data.price}<span>/month</span>` : data.price;
+              card.appendChild(price);
+  
+              const featureListContainer = document.createElement('div');
+              featureListContainer.className = 'feature-list-container';
+              const featureList = document.createElement('ul');
+              featureList.className = 'feature-list';
+              data.features.forEach(feature => {
+                  const li = document.createElement('li');
+                  li.className = 'feature-item';
+                  li.textContent = feature;
+                  featureList.appendChild(li);
+              });
+              featureListContainer.appendChild(featureList);
+              card.appendChild(featureListContainer);
+  
+              const button = document.createElement('button');
+              button.className = 'card-button';
+              button.textContent = data.buttonText;
+              card.appendChild(button);
+  
+              return card;
+          }
+  
+          const pricingCardsContainer = document.getElementById('pricing-cards');
+          pricingData.forEach(data => {
+              const card = createPricingCard(data);
+              pricingCardsContainer.appendChild(card);
+          });
+      </script>
         <div class="info">
             <h3 style="text-align: 
             center;">Why Personalize Your Emails</h3>
@@ -4604,6 +5027,15 @@ Harry Smith
         document.getElementById('result').innerText = 'Error: ' + error;
       });
     });
+    document.addEventListener('DOMContentLoaded', animateSteps);
+        const burger = document.getElementById('burger-n');
+        const navLinks = document.getElementById('nav-links-n');
+
+        burger.addEventListener('click', () => {
+          console.log("clicked")
+            burger.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
     </script>
 </body>
 </html>
