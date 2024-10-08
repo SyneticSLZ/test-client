@@ -76,6 +76,10 @@ link[rel="icon"] {
 }
 
 }
+*{
+  background: rgb(2, 2, 31);
+  background-color: rgb(2, 2, 31);
+}
 
 body {
         background: #c31432;  /* fallback for old browsers */
@@ -3552,8 +3556,8 @@ async function addCustomer() {
                     </button>
                 </div>
                   <div class="auth-buttons">
-                      <a href="#login" class="btn btn-secondary">Log In</a>
-                      <a href="#signup" class="btn btn-primary">Sign Up</a>
+                      <a href="#login" class="btn btn-secondary" onclick="window.location.href='/OldLogin.html?action=login'">Log In</a>
+                      <a href="#signup" class="btn btn-primary" onclick="window.location.href='/OldLogin.html?action=signup'">Sign Up</a>
                   </div>
         <!-- Full-screen navigation menu -->
         <div class="menu-overlay" id="menu-overlay">
