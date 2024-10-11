@@ -313,6 +313,11 @@
                 <input type="text" id="signupEmail" placeholder="Email">
                 <input type="password" id="signupPassword" placeholder="Password">
                 <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
+                <label>
+                    <input type="checkbox" id="user-agreement" name="agreement">
+                    I've read and agreed to the <a href="./TOS.html" target="_blank">Terms of service</a> and 
+                    <a href="./privacy-policy.html" target="_blank">Privacy Policy</a>.
+                </label>
                 <button onclick="signUp()">Sign Up</button>
                 <div id="signupError" class="error"></div>
                 <h4>Already have an account? <a id="loginLinkFromSignup">Login</a></h4>
@@ -559,9 +564,12 @@ if (action === 'login') {
             }
         }
 
+
+
+
         function signUp() {
             console.log("signing in");
-
+            var checkbox = document.getElementById("user-agreement");
             var email = document.getElementById('signupEmail').value;
             var userName = document.getElementById('signupFullName').value;
             var password = document.getElementById('signupPassword').value;
@@ -572,6 +580,11 @@ if (action === 'login') {
             if (!email || !userName || !password || !confirmPassword) {
                 signupError.textContent = "Please fill in all fields.";
                 return;
+            }
+
+            if (!checkbox.checked) {
+                signupError.textContent = "You must agree to the User Agreement and Privacy Policy to proceed.";
+                return false; // Prevent form submission
             }
 
             // Check if passwords match
