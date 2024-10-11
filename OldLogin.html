@@ -561,11 +561,25 @@ if (action === 'login') {
 
         function signUp() {
             console.log("signing in");
+
             var email = document.getElementById('signupEmail').value;
             var userName = document.getElementById('signupFullName').value;
             var password = document.getElementById('signupPassword').value;
             var confirmPassword = document.getElementById('signupConfirmPassword').value;
             var signupError = document.getElementById('signupError');
+
+                // Check for empty fields
+            if (!email || !userName || !password || !confirmPassword) {
+                signupError.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                signupError.textContent = "Passwords do not match.";
+                return;
+            }
+
 
             // Final validation before sending data to the server
             if (signupError.textContent === "") {
@@ -594,7 +608,7 @@ if (action === 'login') {
             }
         }
 
-      function  signUptoFreeTrial() {
+      function signUptoFreeTrial() {
         console.log("signing in");
             var email = document.getElementById('signupEmail').value;
             var userName = document.getElementById('signupFullName').value;
