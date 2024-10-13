@@ -63,8 +63,7 @@ let generatedData = [];
 let U_Username;
 let U_MyEmail;
 //HUNTER 
-document.getElementById('emailForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+async function submitHunter(){
             let domain = document.getElementById('domain').value;
             let newDomain = domain
             if (!/^https:\/\//i.test(domain)) {
@@ -104,7 +103,7 @@ document.getElementById('emailForm').addEventListener('submit', async function(e
                 console.error('Error:', error);
                 document.getElementById('results').textContent = 'An error occurred while fetching emails.';
             }
-        });
+        };
 //INITIAL TABLE LOGIC
 
 // Function to add a new row to the table
@@ -403,87 +402,124 @@ function processData(data) {
 }
 
 
+let pitches = [];
 
-    // <div class="orders-status-table-row">
-    //                     <div id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e" class="flex align-center">
-    //                       <div class="mg-bottom-0 hidden-on-mbl w-form">
-    //                         <form
-    //                           id="email-form"
-    //                           name="email-form"
-    //                           data-name="Email Form"
-    //                           method="get"
-    //                           data-wf-page-id="670a6eaff9d5ba109641cfc4"
-    //                           data-wf-element-id="ffe664cd-effd-fb9f-b3b2-a26245283435"
-    //                         >
-    //                           <label class="w-checkbox checkbox-field-wrapper mg-bottom-0">
-    //                             <div class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"></div>
-    //                             <input
-    //                               type="checkbox"
-    //                               id="checkbox-2"
-    //                               name="checkbox-2"
-    //                               data-name="Checkbox 2"
-    //                               style="
-    //                                 opacity: 0;
-    //                                 position: absolute;
-    //                                 z-index: -1;
-    //                               "
-    //                             />
-    //                             <span
-    //                               class="hidden-on-desktop w-form-label"
-    //                               for="checkbox-2"
-    //                               >#1532</span
-    //                             ></label
-    //                           >
-    //                         </form>
-    //                         <div class="w-form-done">
-    //                           <div>
-    //                             Thank you! Your submission has been received!
-    //                           </div>
-    //                         </div>
-    //                         <div class="w-form-fail">
-    //                           <div>
-    //                             Oops! Something went wrong while submitting the
-    //                             form.
-    //                           </div>
-    //                         </div>
-    //                       </div>
-    //                       <div class="paragraph-small color-neutral-100">
-    //                         #1532
-    //                       </div>
-    //                     </div>
-    //                     <div
-    //                       id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283446-4528342e"
-    //                     >
-    //                       <div
-    //                         id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283447-4528342e"
-    //                         class="paragraph-small color-neutral-100 mg-bottom-2px"
-    //                       >
-    //                         John Carter
-    //                       </div>
-    //                       <div class="paragraph-small">
-    //                         <a
-    //                           href="/cdn-cgi/l/email-protection"
-    //                           class="__cf_email__"
-    //                           data-cfemail="b2dad7dededdf2d8dddadcd1d3c0c6d7c09cd1dddf"
-    //                           >[email&#160;protected]</a
-    //                         >
-    //                       </div>
-    //                     </div>
-    //                     <div class="paragraph-small color-neutral-100">
-    //                       voltmailer.com
-    //                     </div>
-    //                     <div
-    //                       id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346c-4528342e"
-    //                       class="flex align-center gap-column-6px"
-    //                     >
-    //                       <di id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346d-4528342e" class="dashdark-custom-icon edit-icon">
-    //                         
-    //                       </di>
-    //                       <div class="dashdark-custom-icon delete-icon"></div>
-    //                     </div>
-    //                   </div>
+// Show the modal when Add is clicked
+function addPitchBtn() {
+  document.getElementById("pitchModal").style.display = "block";
+};
+
+// Close the modal
+document.getElementsByClassName("close")[0].onclick = function () {
+  document.getElementById("pitchModal").style.display = "none";
+};
+
+// Save the pitch
+document.getElementById("savePitchBtn").onclick = function () {
+  const pitchInput = document.getElementById("pitchInput").value;
+  const currentDate = new Date().toLocaleDateString();
+  
+  if (pitchInput) {
+    pitches.push({ pitch: pitchInput, date: currentDate });
+    updatePitchDropdown();
+    updatePitchTable();
+    document.getElementById("pitchModal").style.display = "none";
+  }
+};
+
+// Update dropdown with pitches
+function updatePitchDropdown() {
+  const dropdown = document.getElementById("pitchDropdown");
+  dropdown.innerHTML = '<option>Select a pitch</option>';
+  
+  pitches.forEach((pitch, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.text = pitch.pitch;
+    dropdown.add(option);
+  });
+}
+
+// Update table with pitches (edit/delete functionality)
+function updatePitchTable() {
+  const table = document.getElementById("pitchTable");
+  table.innerHTML = '';
+  
+  pitches.forEach((pitch, index) => {
+    const row = document.createElement("div");
+    row.classList.add("products-table-row");
+    
+    row.innerHTML = `
+      <div class="flex align-center gap-column-16px">
+        <div class="grid-1-column gap-row-4px">
+          <div class="text-100 semibold color-neutral-100">
+            ${pitch.pitch}
+          </div>
+        </div>
+        <div class="paragraph-small">
+          ${pitch.date}
+        </div>
+        <div class="flex align-center gap-column-6px">
+          <div class="dashdark-custom-icon edit-icon" onclick="editPitch(${index})"></div>
+          <div class="dashdark-custom-icon delete-icon" onclick="deletePitch(${index})"></div>
+        </div>
+      </div>
+    `;
+    
+    table.appendChild(row);
+  });
+}
+
+// Edit pitch
+function editPitch(index) {
+  const newPitch = prompt("Edit Pitch:", pitches[index].pitch);
+  if (newPitch) {
+    pitches[index].pitch = newPitch;
+    updatePitchTable();
+    updatePitchDropdown();
+  }
+}
+
+// Delete pitch
+function deletePitch(index) {
+  pitches.splice(index, 1);
+  updatePitchTable();
+  updatePitchDropdown();
+}
+
+
     </script>
     <style>
+        .modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+.close {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
         /* MANUAL SEND POPUP */
 
 .manual-popup-overlay {
@@ -638,6 +674,19 @@ function processData(data) {
     </style>
   </head>
   <body>
+    <!-- Pitch Modal -->
+  <!-- Modal for Adding a Pitch -->
+  <div id="pitchModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add Pitch</h2>
+      <input type="text" id="pitchInput" placeholder="Enter your pitch" />
+      <input type="text" id="pitchInputname" placeholder="Enter your pitch name" />
+      <button id="savePitchBtn">Save Pitch</button>
+    </div>
+  </div>
+
+
     <div class="manual-popup-overlay" id="manual-popup-overlay">
         <div class="container">
             <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupManual()">X</button>
@@ -720,10 +769,10 @@ function processData(data) {
         <div class="center" >
 
             <h1 style="font-size: 20px; margin-bottom:20px;">Enter Domain to Search for Emails</h1>
-            <form id="emailForm" style="display: flex;flex-direction: row;">
+            <!-- <form id="emailForm" style="display: flex;flex-direction: row;"> -->
                 <input type="text" id="domain" name="domain" placeholder="Enter domain" required style="height: 100%;">
-                <button type="submit" style="margin-top: 0; height: 100%; width: 35%;"><i class="fi fi-rr-arrow-right" style="padding-left: 10px;     height: 14px; width: 14px;"></i></button>
-            </form>
+                <button onclick="submitHunter()"  style="margin-top: 0; height: 100%; width: 35%;"><i class="fi fi-rr-arrow-right" style="padding-left: 10px;     height: 14px; width: 14px;"></i></button>
+            <!-- </form> -->
             <div id="results" style="color: red;"></div>
 
             
@@ -1455,7 +1504,7 @@ function processData(data) {
                         </div>
                       </div>
 
-                      <!-- <div class="orders-status-table-row">
+                      <div class="orders-status-table-row">
                         <div id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e" class="flex align-center">
                           <div class="mg-bottom-0 hidden-on-mbl w-form">
                             <form
@@ -1962,13 +2011,15 @@ function processData(data) {
                           </div>
                           <div class="dashdark-custom-icon delete-icon"></div>
                         </div>
-                      </div> -->
+                      </div> 
 
 
                     </div>
                   </div>
                 </div>
               </div>
+
+
               <div class="mg-bottom-24px">
                 <div class="grid-2-columns _1fr---1-08fr">
                   <div
@@ -1985,11 +2036,13 @@ function processData(data) {
                         </div>
                         <a href="#" class="btn-primary w-inline-block"
                           ><div class="flex-horizontal gap-column-6px">
-                            <div class="text-block-3">Add</div>
+                            <div class="text-block-3" onclick="addPitchBtn()">Add</div>
                           </div></a
                         >
                       </div>
+
                       <div class="table-main-container">
+
                         <div class="products-table-row table-header">
                           <div
                             id="w-node-d6825805-ff38-2a70-ac07-d4fee3dce625-382484fd"
@@ -2016,6 +2069,7 @@ function processData(data) {
                             </div>
                           </div>
                         </div>
+
                         <div class="products-table-row">
                           <div class="flex align-center gap-column-16px">
                             <div class="grid-1-column gap-row-4px">
@@ -2134,6 +2188,7 @@ function processData(data) {
                             </div>
                           </div>
                         </div>
+
                       </div>
                     </div>
                   </div>
