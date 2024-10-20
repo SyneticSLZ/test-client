@@ -9,6 +9,7 @@
 >
   <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
     <title>Products - Dashdark X Webflow Template</title>
     <meta
       content="Take your startup to new heights with Dashdark X 🌑📱! Our Devlink Dark Mode Dashboard Webflow Template is the ultimate solution for stunning SaaS dashboards."
@@ -43,7 +44,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta content="Webflow" name="generator" />
     <link
-      href="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/css/synetics-ultra-awesome-site.webflow.fc70a6e51.css"
+      href="db.css"
       rel="stylesheet"
       type="text/css"
     />
@@ -805,9 +806,9 @@ function deletePitch(index) {
         data-easing="ease"
         data-easing2="ease"
         role="banner"
-        class="sidebar-wrapper w-nav"
+        class="sidebar-wrapper w-nav" 
       >
-        <div class="overflow-hidden">
+        <div class="overflow-hidden" >
           <div class="sidebar-logo-section-container">
             <a href="/" class="sidebar-logo-link w-nav-brand"
               ><img
@@ -1229,1143 +1230,194 @@ function deletePitch(index) {
           </div>
         </div>
       </div>
-      <div class="dashboard-main-section">
+
+      <div class="dashboard-main-section" >
         <div class="sidebar-spacer"></div>
-        <div class="dashboard-content">
+        <div class="dashboard-content" >
           <div class="dashboard-main-content">
-            <div class="container-default w-container">
-              <div class="mg-bottom-32px">
-                <div class="_2-items-wrap-container">
-                  <div
-                    id="w-node-da0f2b07-b468-c505-1f13-1a3bd5556132-9641cfc4"
-                  >
-                    <h1 class="display-4 mg-bottom-4px">Welcome back, John</h1>
-                    <p class="mg-bottom-0">
-                      Sit hendrerit leo egestas risus proin mi leo laoreet.
-                    </p>
-                  </div>
-                  <div
-                    id="w-node-da0f2b07-b468-c505-1f13-1a3bd5556137-9641cfc4"
-                    class="buttons-row"
-                  >
-                    <a href="#" class="btn-secondary w-inline-block"
-                      ><div class="flex-horizontal gap-column-6px">
-                        <div onclick="togglePopupDomain()">Add from Domain</div>
-                        <img
-                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfb5_downward-arrow-btn-icon-dashdark-webflow-ecommerce-template.svg"
-                          loading="eager"
-                          alt=""
-                          class="btn-icon-right max-h-12px"
-                        /></div></a
-                    ><a href="#" class="btn-secondary w-inline-block"
-                      ><div class="flex-horizontal gap-column-6px">
-                        <div onclick="togglePopupManual()">Manual Upload</div>
-                        <img
-                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfb5_downward-arrow-btn-icon-dashdark-webflow-ecommerce-template.svg"
-                          loading="eager"
-                          alt=""
-                          class="btn-icon-right max-h-12px"
-                        /></div></a
-                    ><a href="#" class="btn-primary w-inline-block"
-                      ><div class="flex-horizontal gap-column-6px">
-                        <!-- <div class="text-block-3" >Import / Upload</div> -->
-                        <label for="fileInput" id="uploadLabel" class="uploadLabel" ><div class="lead"> + Import leads</div></label>
-                        <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+            <div class="container-default w-container" >
+
+              <div class="contentf" id="myUsage-content" >
+                <!-- <div class="welcome-content-row">
+                <div class="welcome">
+                <p>Welcome </p>
+                <h2 id="h2name"> </h2> 
+                </div>
+                <div class="buttons" id="inputButtons">
+    
+                    <button class="button-man" onclick="togglePopupManual()" id="man">+ New lead</button>
+    
+                    <label for="fileInput" id="uploadLabel"  > + Import leads</label>
+                    <input type="file" id="fileInput" accept=".xlsx,.csv" style="display: none;">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+                    
+                </div>
+                </div> -->
+                <div class="pitch-row" >
+                    
+                    <div class="content-row" >
+                    <span id="sending" style="display: none;">Emails are sending, you can close this tab.</span>
+                        <div id="pr" >
                         
-                      </div></a
-                    >
-                  </div>
+                        <!-- <div id="newContent" >
+                            <h1>Your Emails</h1>
+                            <table id="emailTable">
+                                <thead >
+                                    <tr>
+                                        <th>Recipient Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                               
+                                </tbody>
+                            </table>
+                            <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
+                            <button onclick="Restart()" >Reset</button>
+                            <div class="custom-loader" id="customLoader" style="display: none;">
+                                <div class="load-inner load-one"></div>
+                                <div class="load-inner load-two"></div>
+                                <div class="load-inner load-three"></div>
+                                <span class="text" id="loaderText"></span>
+                            </div>
+                        </div> -->
+    
+                        <div id="newContent" style="display: none;">
+                            <h1>Your Emails</h1>
+                            <table id="emailTable">
+                                <thead>
+                                    <tr>
+                                        <th>Recipient Email</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows will be populated here -->
+                                </tbody>
+                                <tfoot id="tfoot">
+                                    <tr>
+                                        <td colspan="2">
+                                            <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
+                                            <button onclick="NewCampaign()">Reset</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="custom-loader" id="customLoader" style="display: none;">
+                                <div class="load-inner load-one"></div>
+                                <div class="load-inner load-two"></div>
+                                <div class="load-inner load-three"></div>
+                                <span class="text" id="loaderText"></span>
+                            </div>
+                        </div>
+    
+    
+                        <div id="currentContent">
+                            <table id="dataTable" >
+                            <div class="center" id="center">
+    
+                                <!-- <h1>Enter Domain to Search for Emails</h1>
+                                <form id="emailForm">
+                                    <input type="text" id="domain" name="domain" placeholder="Enter domain" required>
+                                    <button type="submit">Get Emails</button>
+                                </form>
+                                <div id="results"></div> -->
+    
+                                
+                             <label class="custum-file-upload" for="fileMIDDLE">
+                                <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+                                </div>
+                                <div class="text">
+                                   <span>Click to upload Csv</span>
+                                   </div>
+                                   <input type="file" id="fileMIDDLE"  accept=".xlsx" >
+                                </label> 
+    
+                            </div>  
+                            
+                            <thead id="thead" >
+                            </thead>  
+                            <tbody id="tablerows">
+                              
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    </div>
                 </div>
-              </div>
-              <div class="mg-bottom-24px">
-                <div class="grid-1-column">
-                  <div class="card overflow-hidden">
-                    <div class="_2-items-wrap-container pd-32px---28px">
-                      <div class="w-row">
-                        <div class="w-col w-col-3">
-                          <div class="w-layout-blockcontainer w-container">
-                            <div class="text-300 medium color-neutral-100">
-                              New Campaign
-                            </div>
-                          </div>
+    
+    
+                    <div class="pitch">  
+                        <div class="buttons" id="inputButtons">
+    
+                            <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
+            
+                            <label for="fileInput" id="uploadLabel" class="uploadLabel" ><div class="lead"> + Import leads</div></label>
+                            <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+    
+                            <button class="uploadLabel"  onclick="exportToExcel()" id="export" style="display: none; width: 100%;"><div class="lead"> Export Generated Data  </div></button>
+    
+    
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+                            
                         </div>
-                        <div class="w-col w-col-9">
-                          <div class="_2-items-wrap-container gap-12px">
-                            <div class="w-form">
-                              <form
-                                id="email-form-2"
-                                name="email-form-2"
-                                data-name="Email Form 2"
-                                method="get"
-                                data-wf-page-id="670a6eaff9d5ba109641cfc4"
-                                data-wf-element-id="25b3e85a-cabb-ce1d-5f04-567f249326e8"
-                              >
-                                <div class="w-layout-grid grid">
-                                  <div
-                                    data-hover="true"
-                                    data-delay="0"
-                                    data-w-id="9cc462d8-bb30-3faf-01e2-89a59eb05ad4"
-                                    class="mg-sides-0 position-relative---z-index-1 w-dropdown"
-                                  >
-                                    <div
-                                      class="small-dropdown-toggle w-dropdown-toggle"
-                                    >
-                                      <div
-                                        class="flex align-center gap-column-4px"
-                                      >
-                                        <div
-                                          class="dashdark-custom-icon line-height-1em"
-                                        >
-                                          
-                                        </div>
-                                        <div class="text-50 medium">
-                                          Jan 2024
-                                        </div>
-                                      </div>
-                                      <div
-                                        class="line-rounded-icon card-dropdown-arrow"
-                                      >
-                                        
-                                      </div>
-                                    </div>
-                                    <nav
-                                      class="small-dropdown-list w-dropdown-list"
-                                    >
-                                      <div
-                                        class="small-dropdown-links-container"
-                                      >
-                                        <a
-                                          href="#"
-                                          class="small-dropdown-link w-dropdown-link"
-                                          >Dec 2023</a
-                                        ><a
-                                          href="#"
-                                          class="small-dropdown-link w-dropdown-link"
-                                          >Nov 2023</a
-                                        ><a
-                                          href="#"
-                                          class="small-dropdown-link w-dropdown-link"
-                                          >Oct 2023</a
-                                        >
-                                      </div>
-                                    </nav>
-                                  </div>
-                                  <div
-                                    data-hover="true"
-                                    data-delay="0"
-                                    data-w-id="9cc462d8-bb30-3faf-01e2-89a59eb05ad4"
-                                    class="mg-sides-0 position-relative---z-index-1 w-dropdown"
-                                  >
-                                    <div
-                                      class="small-dropdown-toggle w-dropdown-toggle"
-                                    >
-                                      <div
-                                        class="flex align-center gap-column-4px"
-                                      >
-                                        <div
-                                          class="dashdark-custom-icon line-height-1em"
-                                        >
-                                          
-                                        </div>
-                                        <div class="text-50 medium">
-                                          Jan 2024
-                                        </div>
-                                      </div>
-                                      <div
-                                        class="line-rounded-icon card-dropdown-arrow"
-                                      >
-                                        
-                                      </div>
-                                    </div>
-                                    <nav
-                                      class="small-dropdown-list w-dropdown-list"
-                                    >
-                                      <div
-                                        class="small-dropdown-links-container"
-                                      >
-                                        <a
-                                          href="#"
-                                          class="small-dropdown-link w-dropdown-link"
-                                          >Dec 2023</a
-                                        ><a
-                                          href="#"
-                                          class="small-dropdown-link w-dropdown-link"
-                                          >Nov 2023</a
-                                        ><a
-                                          href="#"
-                                          class="small-dropdown-link w-dropdown-link"
-                                          >Oct 2023</a
-                                        >
-                                      </div>
-                                    </nav>
-                                  </div>
-                                  <input
-                                    class="text-field w-node-_362f07a0-7c2b-2d23-1447-9c20c75a58ea-ba0dbefb w-input"
-                                    maxlength="256"
-                                    name="field-5"
-                                    data-name="Field 5"
-                                    placeholder="Example Text"
-                                    type="text"
-                                    id="field-5"
-                                    required=""
-                                  />
-                                  <div
-                                    id="w-node-_6ec5bfc2-0bc0-f872-9147-5b8bd89ab03d-ba0dbefb"
-                                    class="w-layout-blockcontainer w-container"
-                                  >
-                                    <a
-                                      href="#"
-                                      class="btn-secondary w-inline-block"
-                                      ><div
-                                        class="flex-horizontal gap-column-6px"
-                                      >
-                                        <div>Add from Domain</div>
-                                        <img
-                                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfb5_downward-arrow-btn-icon-dashdark-webflow-ecommerce-template.svg"
-                                          loading="eager"
-                                          alt=""
-                                          class="btn-icon-right max-h-12px"
-                                        /></div
-                                    ></a>
-                                  </div>
-                                </div>
-                              </form>
-                              <div class="w-form-done">
-                                <div>
-                                  Thank you! Your submission has been received!
-                                </div>
-                              </div>
-                              <div class="w-form-fail">
-                                <div>
-                                  Oops! Something went wrong while submitting
-                                  the form.
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                        <!-- <span>Or</span> -->
+                        <div class="buttons" id="inputButtons">
+    
+                            <button class="button-man" onclick="togglePopupDomain()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add from Domain</div></button>      
                         </div>
-                      </div>
+                        <!-- <div class=""></div> -->
+                        <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here, including your company name..." required></textarea>
+    <h5>Optional</h5>
+    <textarea id="UserSubject" class="pitch-text" name="user_pitch" placeholder="Enter a preferred subject line..." required></textarea>
+    <textarea id="userTemplate" class="pitch-text" name="user_pitch" placeholder="Add an Email Template..." required></textarea>
+    
+                        <!-- <span style="text-align: left; padding-left: 10px; color: #000;"> For best results provide: </span>
+                        <span style="text-align: left; padding-left: 20px;"> - Clear offer to prospect or pain-point that you are solving for them. </span>
+                        <span style="text-align: left; padding-left: 20px;"> - Clear call to action the prospect should take.</span> -->
+                        <div id="submit">
+                            
+                            <button class="button" onclick="logout()" id="submit" style="font-size: 18px; text-align: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                                  <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                                </svg>
+                                Your Session has expired <br>Please log in again
+                            </button>
+                        </div>
+                        <!-- <button class="button" onclick="Submitandcheckautosend()" id="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                              <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                            </svg>
+                            Generate
+                        </button> -->
+    
+    
+                          
+                        <div class="nobg-submit" id="hidewhengenerating">
+                            <div class="checkbox-wrapper-46">
+                              <input type="checkbox" id="cbx-46" class="inp-cbx" onchange="checkbox()" />
+                              <label for="cbx-46" class="cbx"
+                                ><span>
+                                  <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span
+                                ><span> <div id="autosend-text">Autosend is <b>OFF</b></div> </span>
+                              </label>
+                            </div>
+                            <!-- <div id="ca" onclick="reset()" class="Clear-all">Clear all</div> -->
+                        </div>
+                       
                     </div>
-
-
-                    <div class="table-main-container">
-                      <div class="orders-status-table-row table-header">
-                        <div
-                          id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <img
-                            src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfe3_order-table-header-icon-dashdark-webflow-template.svg"
-                            loading="eager"
-                            alt=""
-                          />
-                          <div class="text-50 semibold color-neutral-100">
-                            Order
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <img
-                            src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfe9_client-table-header-icon-dashdark-webflow-template.svg"
-                            loading="eager"
-                            alt=""
-                          />
-                          <div class="text-50 semibold color-neutral-100">
-                            Client
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <img
-                            src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfe2_date-table-header-icon-dashdark-webflow-template.svg"
-                            loading="eager"
-                            alt=""
-                          />
-                          <div class="text-50 semibold color-neutral-100">
-                            Website
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <img
-                            src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfe8_country-table-header-icon-dashdark-webflow-template.svg"
-                            loading="eager"
-                            alt=""
-                          />
-                          <div class="text-50 semibold color-neutral-100">
-                            Actions
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="orders-status-table-row">
-                        <div id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e" class="flex align-center">
-                          <div class="mg-bottom-0 hidden-on-mbl w-form">
-                            <form
-                              id="email-form"
-                              name="email-form"
-                              data-name="Email Form"
-                              method="get"
-                              data-wf-page-id="670a6eaff9d5ba109641cfc4"
-                              data-wf-element-id="ffe664cd-effd-fb9f-b3b2-a26245283435"
-                            >
-                              <label class="w-checkbox checkbox-field-wrapper mg-bottom-0">
-                                <div class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"></div>
-                                <input
-                                  type="checkbox"
-                                  id="checkbox-2"
-                                  name="checkbox-2"
-                                  data-name="Checkbox 2"
-                                  style="
-                                    opacity: 0;
-                                    position: absolute;
-                                    z-index: -1;
-                                  "
-                                />
-                                <span
-                                  class="hidden-on-desktop w-form-label"
-                                  for="checkbox-2"
-                                  >#1532</span
-                                ></label
-                              >
-                            </form>
-                            <div class="w-form-done">
-                              <div>
-                                Thank you! Your submission has been received!
-                              </div>
-                            </div>
-                            <div class="w-form-fail">
-                              <div>
-                                Oops! Something went wrong while submitting the
-                                form.
-                              </div>
-                            </div>
-                          </div>
-                          <div class="paragraph-small color-neutral-100">
-                            #1532
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283446-4528342e"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283447-4528342e"
-                            class="paragraph-small color-neutral-100 mg-bottom-2px"
-                          >
-                            John Carter
-                          </div>
-                          <div class="paragraph-small">
-                            <a
-                              href="/cdn-cgi/l/email-protection"
-                              class="__cf_email__"
-                              data-cfemail="b2dad7dededdf2d8dddadcd1d3c0c6d7c09cd1dddf"
-                              >[email&#160;protected]</a
-                            >
-                          </div>
-                        </div>
-                        <div class="paragraph-small color-neutral-100">
-                          voltmailer.com
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346c-4528342e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <di id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346d-4528342e" class="dashdark-custom-icon edit-icon">
-                            
-                          </di>
-                          <div class="dashdark-custom-icon delete-icon"></div>
-                        </div>
-                      </div>
-                      <div class="orders-status-table-row">
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e"
-                          class="flex align-center"
-                        >
-                          <div class="mg-bottom-0 hidden-on-mbl w-form">
-                            <form
-                              id="email-form"
-                              name="email-form"
-                              data-name="Email Form"
-                              method="get"
-                              data-wf-page-id="670a6eaff9d5ba109641cfc4"
-                              data-wf-element-id="ffe664cd-effd-fb9f-b3b2-a26245283435"
-                            >
-                              <label
-                                class="w-checkbox checkbox-field-wrapper mg-bottom-0"
-                                ><div
-                                  class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"
-                                ></div>
-                                <input
-                                  type="checkbox"
-                                  id="checkbox-2"
-                                  name="checkbox-2"
-                                  data-name="Checkbox 2"
-                                  style="
-                                    opacity: 0;
-                                    position: absolute;
-                                    z-index: -1;
-                                  "
-                                /><span
-                                  class="hidden-on-desktop w-form-label"
-                                  for="checkbox-2"
-                                  >#1532</span
-                                ></label
-                              >
-                            </form>
-                            <div class="w-form-done">
-                              <div>
-                                Thank you! Your submission has been received!
-                              </div>
-                            </div>
-                            <div class="w-form-fail">
-                              <div>
-                                Oops! Something went wrong while submitting the
-                                form.
-                              </div>
-                            </div>
-                          </div>
-                          <div class="paragraph-small color-neutral-100">
-                            #1531
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283446-4528342e"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283447-4528342e"
-                            class="paragraph-small color-neutral-100 mg-bottom-2px"
-                          >
-                            Sophie Moore
-                          </div>
-                          <div class="paragraph-small">
-                            <a
-                              href="/cdn-cgi/l/email-protection"
-                              class="__cf_email__"
-                              data-cfemail="fe9d91908a9f9d8abe8d918e96979b9391918c9bd09d9193"
-                              >[email&#160;protected]</a
-                            >
-                          </div>
-                        </div>
-                        <div class="paragraph-small color-neutral-100">
-                          Jan 27, 2024
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346c-4528342e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346d-4528342e"
-                            class="dashdark-custom-icon edit-icon"
-                          >
-                            
-                          </div>
-                          <div class="dashdark-custom-icon delete-icon"></div>
-                        </div>
-                      </div>
-                      <div class="orders-status-table-row">
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e"
-                          class="flex align-center"
-                        >
-                          <div class="mg-bottom-0 hidden-on-mbl w-form">
-                            <form
-                              id="email-form"
-                              name="email-form"
-                              data-name="Email Form"
-                              method="get"
-                              data-wf-page-id="670a6eaff9d5ba109641cfc4"
-                              data-wf-element-id="ffe664cd-effd-fb9f-b3b2-a26245283435"
-                            >
-                              <label
-                                class="w-checkbox checkbox-field-wrapper mg-bottom-0"
-                                ><div
-                                  class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"
-                                ></div>
-                                <input
-                                  type="checkbox"
-                                  id="checkbox-2"
-                                  name="checkbox-2"
-                                  data-name="Checkbox 2"
-                                  style="
-                                    opacity: 0;
-                                    position: absolute;
-                                    z-index: -1;
-                                  "
-                                /><span
-                                  class="hidden-on-desktop w-form-label"
-                                  for="checkbox-2"
-                                  >#1532</span
-                                ></label
-                              >
-                            </form>
-                            <div class="w-form-done">
-                              <div>
-                                Thank you! Your submission has been received!
-                              </div>
-                            </div>
-                            <div class="w-form-fail">
-                              <div>
-                                Oops! Something went wrong while submitting the
-                                form.
-                              </div>
-                            </div>
-                          </div>
-                          <div class="paragraph-small color-neutral-100">
-                            #1530
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283446-4528342e"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283447-4528342e"
-                            class="paragraph-small color-neutral-100 mg-bottom-2px"
-                          >
-                            Matt Cannon
-                          </div>
-                          <div class="paragraph-small">
-                            <a
-                              href="/cdn-cgi/l/email-protection"
-                              class="__cf_email__"
-                              data-cfemail="93fafdf5fcd3fef2e7e7f0f2fdfdfcfdbdf0fcfe"
-                              >[email&#160;protected]</a
-                            >
-                          </div>
-                        </div>
-                        <div class="paragraph-small color-neutral-100">
-                          Jan 24, 2024
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346c-4528342e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346d-4528342e"
-                            class="dashdark-custom-icon edit-icon"
-                          >
-                            
-                          </div>
-                          <div class="dashdark-custom-icon delete-icon"></div>
-                        </div>
-                      </div>
-                      <div class="orders-status-table-row">
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e"
-                          class="flex align-center"
-                        >
-                          <div class="mg-bottom-0 hidden-on-mbl w-form">
-                            <form
-                              id="email-form"
-                              name="email-form"
-                              data-name="Email Form"
-                              method="get"
-                              data-wf-page-id="670a6eaff9d5ba109641cfc4"
-                              data-wf-element-id="ffe664cd-effd-fb9f-b3b2-a26245283435"
-                            >
-                              <label
-                                class="w-checkbox checkbox-field-wrapper mg-bottom-0"
-                                ><div
-                                  class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"
-                                ></div>
-                                <input
-                                  type="checkbox"
-                                  id="checkbox-2"
-                                  name="checkbox-2"
-                                  data-name="Checkbox 2"
-                                  style="
-                                    opacity: 0;
-                                    position: absolute;
-                                    z-index: -1;
-                                  "
-                                /><span
-                                  class="hidden-on-desktop w-form-label"
-                                  for="checkbox-2"
-                                  >#1532</span
-                                ></label
-                              >
-                            </form>
-                            <div class="w-form-done">
-                              <div>
-                                Thank you! Your submission has been received!
-                              </div>
-                            </div>
-                            <div class="w-form-fail">
-                              <div>
-                                Oops! Something went wrong while submitting the
-                                form.
-                              </div>
-                            </div>
-                          </div>
-                          <div class="paragraph-small color-neutral-100">
-                            #1529
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283446-4528342e"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283447-4528342e"
-                            class="paragraph-small color-neutral-100 mg-bottom-2px"
-                          >
-                            Graham Hills
-                          </div>
-                          <div class="paragraph-small">
-                            <a
-                              href="/cdn-cgi/l/email-protection"
-                              class="__cf_email__"
-                              data-cfemail="99f1f0d9feebf8f1f8f4f1f0f5f5eab7faf6f4"
-                              >[email&#160;protected]</a
-                            >
-                          </div>
-                        </div>
-                        <div class="paragraph-small color-neutral-100">
-                          Jan 21, 2024
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346c-4528342e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346d-4528342e"
-                            class="dashdark-custom-icon edit-icon"
-                          >
-                            
-                          </div>
-                          <div class="dashdark-custom-icon delete-icon"></div>
-                        </div>
-                      </div>
-                      <div class="orders-status-table-row">
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e"
-                          class="flex align-center"
-                        >
-                          <div class="mg-bottom-0 hidden-on-mbl w-form">
-                            <form
-                              id="email-form"
-                              name="email-form"
-                              data-name="Email Form"
-                              method="get"
-                              data-wf-page-id="670a6eaff9d5ba109641cfc4"
-                              data-wf-element-id="ffe664cd-effd-fb9f-b3b2-a26245283435"
-                            >
-                              <label
-                                class="w-checkbox checkbox-field-wrapper mg-bottom-0"
-                                ><div
-                                  class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"
-                                ></div>
-                                <input
-                                  type="checkbox"
-                                  id="checkbox-2"
-                                  name="checkbox-2"
-                                  data-name="Checkbox 2"
-                                  style="
-                                    opacity: 0;
-                                    position: absolute;
-                                    z-index: -1;
-                                  "
-                                /><span
-                                  class="hidden-on-desktop w-form-label"
-                                  for="checkbox-2"
-                                  >#1532</span
-                                ></label
-                              >
-                            </form>
-                            <div class="w-form-done">
-                              <div>
-                                Thank you! Your submission has been received!
-                              </div>
-                            </div>
-                            <div class="w-form-fail">
-                              <div>
-                                Oops! Something went wrong while submitting the
-                                form.
-                              </div>
-                            </div>
-                          </div>
-                          <div class="paragraph-small color-neutral-100">
-                            #1528
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283446-4528342e"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283447-4528342e"
-                            class="paragraph-small color-neutral-100 mg-bottom-2px"
-                          >
-                            Sandy Houston
-                          </div>
-                          <div class="paragraph-small">
-                            <a
-                              href="/cdn-cgi/l/email-protection"
-                              class="__cf_email__"
-                              data-cfemail="a1c2cecfd5c0c2d5e1d2c0cfc5d8c9ced4d2d5cecf8fc2cecc"
-                              >[email&#160;protected]</a
-                            >
-                          </div>
-                        </div>
-                        <div class="paragraph-small color-neutral-100">
-                          Jan 18, 2024
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346c-4528342e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346d-4528342e"
-                            class="dashdark-custom-icon edit-icon"
-                          >
-                            
-                          </div>
-                          <div class="dashdark-custom-icon delete-icon"></div>
-                        </div>
-                      </div>
-                      <div class="orders-status-table-row">
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283433-4528342e"
-                          class="flex align-center"
-                        >
-                          <div class="mg-bottom-0 hidden-on-mbl w-form">
-                            <form
-                              id="email-form"
-                              name="email-form"
-                              data-name="Email Form"
-                              method="get"
-                              data-wf-page-id="670a6eaff9d5ba109641cfc4"
-                              data-wf-element-id="ffe664cd-effd-fb9f-b3b2-a26245283435"
-                            >
-                              <label
-                                class="w-checkbox checkbox-field-wrapper mg-bottom-0"
-                                ><div
-                                  class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"
-                                ></div>
-                                <input
-                                  type="checkbox"
-                                  id="checkbox-2"
-                                  name="checkbox-2"
-                                  data-name="Checkbox 2"
-                                  style="
-                                    opacity: 0;
-                                    position: absolute;
-                                    z-index: -1;
-                                  "
-                                /><span
-                                  class="hidden-on-desktop w-form-label"
-                                  for="checkbox-2"
-                                  >#1532</span
-                                ></label
-                              >
-                            </form>
-                            <div class="w-form-done">
-                              <div>
-                                Thank you! Your submission has been received!
-                              </div>
-                            </div>
-                            <div class="w-form-fail">
-                              <div>
-                                Oops! Something went wrong while submitting the
-                                form.
-                              </div>
-                            </div>
-                          </div>
-                          <div class="paragraph-small color-neutral-100">
-                            #1527
-                          </div>
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283446-4528342e"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a26245283447-4528342e"
-                            class="paragraph-small color-neutral-100 mg-bottom-2px"
-                          >
-                            Andy Smith
-                          </div>
-                          <div class="paragraph-small">
-                            <a
-                              href="/cdn-cgi/l/email-protection"
-                              class="__cf_email__"
-                              data-cfemail="c2aaa7aeaead82a3aca6bbb1afabb6aaeca1adaf"
-                              >[email&#160;protected]</a
-                            >
-                          </div>
-                        </div>
-                        <div class="paragraph-small color-neutral-100">
-                          Jan 15, 2024
-                        </div>
-                        <div
-                          id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346c-4528342e"
-                          class="flex align-center gap-column-6px"
-                        >
-                          <div
-                            id="w-node-ffe664cd-effd-fb9f-b3b2-a2624528346d-4528342e"
-                            class="dashdark-custom-icon edit-icon"
-                          >
-                            
-                          </div>
-                          <div class="dashdark-custom-icon delete-icon"></div>
-                        </div>
-                      </div> 
-
-
-                    </div>
-                  </div>
                 </div>
-              </div>
-
-
-              <div class="mg-bottom-24px">
-                <div class="grid-2-columns _1fr---1-08fr">
-                  <div
-                    id="w-node-f5fe3890-9c69-02ca-c075-c262382484fd-382484fd"
-                    class="grid-1-column"
-                  >
-                    <div
-                      id="w-node-c18ded7c-12b5-f944-afb2-356e0aeb281c-382484fd"
-                      class="card overflow-hidden"
-                    >
-                      <div class="_2-items-wrap-container pd-28px">
-                        <div class="text-300 medium color-neutral-100">
-                          Pitch
-                        </div>
-                        <a href="#" class="btn-primary w-inline-block"
-                          ><div class="flex-horizontal gap-column-6px">
-                            <div class="text-block-3" onclick="addPitchBtn()">Add</div>
-                          </div></a
-                        >
-                      </div>
-
-                      <div class="table-main-container">
-
-                        <div class="products-table-row table-header">
-                          <div
-                            id="w-node-d6825805-ff38-2a70-ac07-d4fee3dce625-382484fd"
-                          >
-                            <div
-                              id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                              class="flex align-center gap-column-6px"
-                            >
-                              <div class="text-50 semibold color-neutral-100">
-                                Products
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            id="w-node-c5ee6d80-511e-302d-6034-6c9ca68545d1-382484fd"
-                          >
-                            <div
-                              id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                              class="flex align-center gap-column-6px"
-                            >
-                              <div class="text-50 semibold color-neutral-100">
-                                Category
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="products-table-row">
-                          <div class="flex align-center gap-column-16px">
-                            <div class="grid-1-column gap-row-4px">
-                              <div
-                                id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e31-05ee7e29"
-                                class="_2-items-wrap-container gap-8px wrap-reverse"
-                              >
-                                <div
-                                  class="text-100 semibold color-neutral-100"
-                                >
-                                  iPhone 14 Pro Max
-                                </div>
-                                <div class="status-badge yellow">
-                                  <img
-                                    src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfe7_star-icon-dashdark-webflow-template.svg"
-                                    loading="eager"
-                                    alt=""
-                                  />
-                                  <div class="text-25 medium color-neutral-100">
-                                    Popular
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e3e-05ee7e29"
-                            class="paragraph-small"
-                          >
-                            Smartphone
-                          </div>
-                          <div
-                            id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d6339-05ee7e29"
-                            class="flex align-center gap-column-6px"
-                          >
-                            <div
-                              id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d633a-05ee7e29"
-                              class="dashdark-custom-icon edit-icon"
-                            >
-                              
-                            </div>
-                            <div class="dashdark-custom-icon delete-icon">
-                              
-                            </div>
-                          </div>
-                        </div>
-                        <div class="products-table-row">
-                          <div class="flex align-center gap-column-16px">
-                            <div class="grid-1-column gap-row-4px">
-                              <div
-                                id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e31-05ee7e29"
-                                class="_2-items-wrap-container gap-8px wrap-reverse"
-                              >
-                                <div
-                                  class="text-100 semibold color-neutral-100"
-                                >
-                                  Apple Watch S8
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e3e-05ee7e29"
-                            class="paragraph-small"
-                          >
-                            Smartwatch
-                          </div>
-                          <div
-                            id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d6339-05ee7e29"
-                            class="flex align-center gap-column-6px"
-                          >
-                            <div
-                              id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d633a-05ee7e29"
-                              class="dashdark-custom-icon edit-icon"
-                            >
-                              
-                            </div>
-                            <div class="dashdark-custom-icon delete-icon">
-                              
-                            </div>
-                          </div>
-                        </div>
-                        <div class="products-table-row">
-                          <div class="flex align-center gap-column-16px">
-                            <div class="grid-1-column gap-row-4px">
-                              <div
-                                id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e31-05ee7e29"
-                                class="_2-items-wrap-container gap-8px wrap-reverse"
-                              >
-                                <div
-                                  class="text-100 semibold color-neutral-100"
-                                >
-                                  iPad Air (5th Gen)
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e3e-05ee7e29"
-                            class="paragraph-small"
-                          >
-                            Tablet
-                          </div>
-                          <div
-                            id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d6339-05ee7e29"
-                            class="flex align-center gap-column-6px"
-                          >
-                            <div
-                              id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d633a-05ee7e29"
-                              class="dashdark-custom-icon edit-icon"
-                            >
-                              
-                            </div>
-                            <div class="dashdark-custom-icon delete-icon">
-                              
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      id="w-node-f5fe3890-9c69-02ca-c075-c262382484fd-382484fd"
-                      class="grid-1-column"
-                    >
-                      <div
-                        id="w-node-c18ded7c-12b5-f944-afb2-356e0aeb281c-382484fd"
-                        class="card overflow-hidden"
-                      >
-                        <div class="_2-items-wrap-container pd-28px">
-                          <div class="text-300 medium color-neutral-100">
-                            Templates
-                          </div>
-                          <a href="#" class="btn-primary w-inline-block"
-                            ><div class="flex-horizontal gap-column-6px">
-                              <div class="text-block-3">Add</div>
-                            </div></a
-                          >
-                        </div>
-                        <div class="table-main-container">
-                          <div class="products-table-row table-header">
-                            <div
-                              id="w-node-d6825805-ff38-2a70-ac07-d4fee3dce625-382484fd"
-                            >
-                              <div
-                                id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                                class="flex align-center gap-column-6px"
-                              >
-                                <div class="text-50 semibold color-neutral-100">
-                                  Products
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              id="w-node-c5ee6d80-511e-302d-6034-6c9ca68545d1-382484fd"
-                            >
-                              <div
-                                id="w-node-_81082dec-aeb1-55cb-ca1b-8966496bda6e-496bda6e"
-                                class="flex align-center gap-column-6px"
-                              >
-                                <div class="text-50 semibold color-neutral-100">
-                                  Category
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="products-table-row">
-                            <div class="flex align-center gap-column-16px">
-                              <div class="grid-1-column gap-row-4px">
-                                <div
-                                  id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e31-05ee7e29"
-                                  class="_2-items-wrap-container gap-8px wrap-reverse"
-                                >
-                                  <div
-                                    class="text-100 semibold color-neutral-100"
-                                  >
-                                    iPhone 14 Pro Max
-                                  </div>
-                                  <div class="status-badge yellow">
-                                    <img
-                                      src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfe7_star-icon-dashdark-webflow-template.svg"
-                                      loading="eager"
-                                      alt=""
-                                    />
-                                    <div
-                                      class="text-25 medium color-neutral-100"
-                                    >
-                                      Popular
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e3e-05ee7e29"
-                              class="paragraph-small"
-                            >
-                              Smartphone
-                            </div>
-                            <div
-                              id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d6339-05ee7e29"
-                              class="flex align-center gap-column-6px"
-                            >
-                              <div
-                                id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d633a-05ee7e29"
-                                class="dashdark-custom-icon edit-icon"
-                              >
-                                
-                              </div>
-                              <div class="dashdark-custom-icon delete-icon">
-                                
-                              </div>
-                            </div>
-                          </div>
-                          <div class="products-table-row">
-                            <div class="flex align-center gap-column-16px">
-                              <div class="grid-1-column gap-row-4px">
-                                <div
-                                  id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e31-05ee7e29"
-                                  class="_2-items-wrap-container gap-8px wrap-reverse"
-                                >
-                                  <div
-                                    class="text-100 semibold color-neutral-100"
-                                  >
-                                    Apple Watch S8
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e3e-05ee7e29"
-                              class="paragraph-small"
-                            >
-                              Smartwatch
-                            </div>
-                            <div
-                              id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d6339-05ee7e29"
-                              class="flex align-center gap-column-6px"
-                            >
-                              <div
-                                id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d633a-05ee7e29"
-                                class="dashdark-custom-icon edit-icon"
-                              >
-                                
-                              </div>
-                              <div class="dashdark-custom-icon delete-icon">
-                                
-                              </div>
-                            </div>
-                          </div>
-                          <div class="products-table-row">
-                            <div class="flex align-center gap-column-16px">
-                              <div class="grid-1-column gap-row-4px">
-                                <div
-                                  id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e31-05ee7e29"
-                                  class="_2-items-wrap-container gap-8px wrap-reverse"
-                                >
-                                  <div
-                                    class="text-100 semibold color-neutral-100"
-                                  >
-                                    iPad Air (5th Gen)
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              id="w-node-_534e9d3d-2c63-6ad2-cb6d-315f05ee7e3e-05ee7e29"
-                              class="paragraph-small"
-                            >
-                              Tablet
-                            </div>
-                            <div
-                              id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d6339-05ee7e29"
-                              class="flex align-center gap-column-6px"
-                            >
-                              <div
-                                id="w-node-_72d44ea3-3dff-b00d-36ad-c0edc62d633a-05ee7e29"
-                                class="dashdark-custom-icon edit-icon"
-                              >
-                                
-                              </div>
-                              <div class="dashdark-custom-icon delete-icon">
-                                
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+
+              
+            </div>
+
           </div>
+
+
           <div class="dashboard-footer-wrapper">
             <div class="container-default w-container">
               <div class="text-200 medium">
