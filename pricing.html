@@ -122,6 +122,15 @@ function parseJWT(token) {
 // Initial render
 document.addEventListener('DOMContentLoaded', () => {
   const token = getTokenFromUrl();
+  const params = new URLSearchParams(window.location.search)
+  let plan = params.get('plan')
+  if (plan === "p") {
+            Premium();
+  } else if (plan === "pro") {
+            Pro();
+  } else if (plan === "s") {
+            Starter();
+        }
     if (token) {
         const userData = parseJWT(token);
         console.log('User Data:', userData);
@@ -129,15 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Store the token in localStorage or use it directly for sending emails
         localStorage.setItem('authToken', token);
 
-        const params = new URLSearchParams(window.location.search)
-        let plan = params.get('plan')
-        if (plan === "p") {
-            Premium();
-        } else if (plan === "pro") {
-            Pro();
-        } else if (plan === "s") {
-            Starter();
-        }
+
     }
 
 
