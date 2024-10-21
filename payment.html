@@ -1322,6 +1322,7 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
             } else {
 
             if (session){
+                const newplan = decodeURIComponent(params.get('newplan') || '');
         
         // handle the html 
         
@@ -1337,7 +1338,7 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
                         document.getElementById('processing').classList.add('hidden');
                         document.getElementById('success').classList.remove('hidden');
                         document.getElementById('success').classList.add('active');
-                        addCustomer(sessionData.first_price_id, plan)
+                        addCustomer(sessionData.first_price_id, newplan)
                     }
                 else{
                         document.getElementById('processing').classList.remove('active');
