@@ -404,6 +404,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const action = urlParams.get('action'); 
     var token  = urlParams.get('token');  
     var Google = urlParams.get('google');  
+    var plan = urlParams.get('plan');
+    console.log("plan is : ", plan)
     // res.redirect(`https://voltmailer.com/Oldlogin.html?email=${encodeURIComponent(userInfo.data.email)}&password=null&google=${jwtToken}`);
 
     if (Google) {
