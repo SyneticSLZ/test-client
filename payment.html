@@ -1221,7 +1221,7 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
         
         }
 
-        async function addCustomer(PriceID){
+        async function addCustomer(PriceID, planParam){
         
             const params = new URLSearchParams(window.location.search);
             let email = params.get('email');
@@ -1238,13 +1238,27 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
         
                         // Determine plan and total_emails based on price ID
                         let plan, plan_emails;
-                        if (PriceID === 'price_1Pdqx3KJeZAyw8f4T0AfWCIJ') {
-                            plan = 'Premium';
-                            plan_emails = 1000;
-                        } else {
-                            plan = 'Free';
+
+                        if (planParam === "p") {
+                 plan = 'Premium';
+                            plan_emails = 10000;
+        } else if (planParam === "pro") {
+                plan = 'Pro';
+            plan_emails = 30000;
+        } else  {
+            plan = 'Free';
                             plan_emails = 20;
-                        }
+        }
+
+                        // if (PriceID === 'price_1Pdqx3KJeZAyw8f4T0AfWCIJ') {
+                        //     plan = 'Premium';
+                        //     plan_emails = 1000;
+                        // } else {
+                        //     plan = 'Free';
+                        //     plan_emails = 20;
+                        // }
+
+
         
                         const customerData = {
                             stripeID: sessionData.customer.id,
@@ -1323,7 +1337,7 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
                         document.getElementById('processing').classList.add('hidden');
                         document.getElementById('success').classList.remove('hidden');
                         document.getElementById('success').classList.add('active');
-                        addCustomer(sessionData.first_price_id)
+                        addCustomer(sessionData.first_price_id, plan)
                     }
                 else{
                         document.getElementById('processing').classList.remove('active');
@@ -1341,8 +1355,10 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
             if (plan === "f") { 
                     planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
                 }
-                else{
+                else if(plan === "p") {
                     planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
+                }  else if(plan === "pro") {
+                    planElement.innerHTML = `Selected Plan:  <b>Pro</b>`;
                 }
         
             if (loggedin === "true") {
@@ -1369,7 +1385,18 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
                     document.getElementById('Checkout-full').style.border = "none";
 
                         // Checkout();
-                        PremiumEmail(email, password, username);
+                        
+
+                        if (plan === "f") { 
+                    planElement.innerHTML = `Selected Plan:  <b>Starter</b>`;
+                }
+                else if(plan === "p") {
+                    planElement.innerHTML = `Selected Plan:  <b>Premium</b>`;
+                    PremiumEmail(email, password, username);
+                }  else if(plan === "pro") {
+                    planElement.innerHTML = `Selected Plan:  <b>Pro</b>`;
+                    Pro(email, password, username);
+                }
 
                 // }
                 // else {
@@ -1480,6 +1507,34 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
                     const stripe = Stripe('pk_live_51MNx4UKJeZAyw8f4Lec7u9jtEoGifaJPvGAsW5OOUP3v943UwPN07TloLoOKJPJm85dpGPhGaufUXAU10IepmPVp00Z98Rt01D');
                     const fetchClientSecret = async (email) => {
                         const response = await fetch('https://server.voltmailer.com/create-checkout-session', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email: emailx, password: password, name: name })  // Pass the email in the request body
+                        });
+                        const data = await response.json();
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                            throw new Error(data.error);
+                        }
+                        return data.clientSecret;
+                    };
+                    try {
+                        const checkout = await stripe.initEmbeddedCheckout({
+                            clientSecret: await fetchClientSecret(),
+                        });
+                        checkout.mount('#checkout');
+                    } catch (e) {
+                        console.error('Error initializing embedded checkout:', e);
+                    }
+        };
+
+        async function ProEmail(emailx, password, name) {
+            console.log("running premium email")
+                    const stripe = Stripe('pk_live_51MNx4UKJeZAyw8f4Lec7u9jtEoGifaJPvGAsW5OOUP3v943UwPN07TloLoOKJPJm85dpGPhGaufUXAU10IepmPVp00Z98Rt01D');
+                    const fetchClientSecret = async (email) => {
+                        const response = await fetch('https://server.voltmailer.com/create-checkout-session-pro', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
