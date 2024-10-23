@@ -329,6 +329,8 @@ async function GetMetrics(email) {
 async function RenderHtml(data){
     document.getElementById('sending').style.display = 'none';
     const planEmails = data.plan_emails
+    
+    
     const name = data.name
     U_Username = name
     const email = U_MyEmail
@@ -363,6 +365,9 @@ async function RenderHtml(data){
     document.getElementById('billing-man').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('progress').style.width = percentageUsed + '%'; 
 
+    if (plan === "free" or plan === "pro"){
+        document.getElementById('DOMAIN').style.display = "none"
+    }
     document.getElementById('myAccount-content').innerHTML = `
     
     <div class="dashboard-usage">
