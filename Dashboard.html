@@ -365,7 +365,7 @@ async function RenderHtml(data){
     document.getElementById('billing-man').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('progress').style.width = percentageUsed + '%'; 
 
-    if (plan === "free" or plan === "pro"){
+    if (plan === "free" || plan === "pro"){
         document.getElementById('DOMAIN').style.display = "none"
     }
     document.getElementById('myAccount-content').innerHTML = `
