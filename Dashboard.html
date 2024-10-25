@@ -1626,10 +1626,11 @@ else {
 
                     }
 
-    // } catch (error) {
+    } catch (error) {
+            removeRow(index);
     //     console.error('Error sending email to', data.email, ':', error);
     //     showNotification(`Error sending email to ${data.email}`);
-    // }
+    }
 }
 
 
