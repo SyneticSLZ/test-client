@@ -1196,6 +1196,7 @@ document.getElementById('toggleinitPassword').addEventListener('click', function
                             plan_emails: plan_emails,
                             affiliate: affiliate
                         };
+                        
                         console.log(customerData)
                         // Send customer data to your backend to add to the database
                         const addCustomerResponse = await fetch('https://server.voltmailer.com/add-customer-to-db', {
