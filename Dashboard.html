@@ -1596,7 +1596,7 @@ else {
 
     // Implement send logic here
     try {
-        updateRowStatus(index, 'Sending');
+        // updateRowStatus(index, 'Sending');
 
         const result = await sendMessage('me', data.email, subject, content);
 
@@ -1626,10 +1626,10 @@ else {
 
                     }
 
-    } catch (error) {
-        console.error('Error sending email to', data.email, ':', error);
-        showNotification(`Error sending email to ${data.email}`);
-    }
+    // } catch (error) {
+    //     console.error('Error sending email to', data.email, ':', error);
+    //     showNotification(`Error sending email to ${data.email}`);
+    // }
 }
 
 
