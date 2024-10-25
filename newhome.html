@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<!-- This site was created in Webflow. https://webflow.com --><!-- Last Published: Sun Oct 20 2024 04:50:23 GMT+0000 (Coordinated Universal Time) -->
+<html
+  data-wf-domain="synetics-ultra-awesome-site.webflow.io"
+  data-wf-page="670a6eaff9d5ba109641cf2e"
+  data-wf-site="670a6eaff9d5ba109641ceec"
+  data-wf-status="1"
+  lang="en"
+>
+  <head>
+    <meta charset="utf-8" />
+    <title>Dashdark X Webflow Template</title>
+    <meta
+      content="Take your startup to new heights with Dashdark X 🌑📱! Our Devlink Dark Mode Dashboard Webflow Template is the ultimate solution for stunning SaaS dashboards."
+      name="description"
+    />
+    <meta content="Dashdark X Webflow Template" property="og:title" />
+    <meta
+      content="Take your startup to new heights with Dashdark X 🌑📱! Our Devlink Dark Mode Dashboard Webflow Template is the ultimate solution for stunning SaaS dashboards."
+      property="og:description"
+    />
+    <meta
+      content="https://cdn.prod.website-files.com/641a0c8100e68df2708b96bf/642312766efb2c24caff692e_featured-image-dashdark-webflow-template.png"
+      property="og:image"
+    />
+    <meta content="Dashdark X Webflow Template" property="twitter:title" />
+    <meta
+      content="Take your startup to new heights with Dashdark X 🌑📱! Our Devlink Dark Mode Dashboard Webflow Template is the ultimate solution for stunning SaaS dashboards."
+      property="twitter:description"
+    />
+    <meta
+      content="https://cdn.prod.website-files.com/641a0c8100e68df2708b96bf/642312766efb2c24caff692e_featured-image-dashdark-webflow-template.png"
+      property="twitter:image"
+    />
+    <meta property="og:type" content="website" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="Webflow" name="generator" />
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link
+      href="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/css/synetics-ultra-awesome-site.webflow.368727cc8.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script type="text/javascript">
+      !(function (o, c) {
+        var n = c.documentElement,
+          t = " w-mod-";
+        (n.className += t + "js"),
+          ("ontouchstart" in o ||
+            (o.DocumentTouch && c instanceof DocumentTouch)) &&
+            (n.className += t + "touch");
+      })(window, document);
+    </script>
+    <link
+      href="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfa8_favicon-dashdark-webflow-template.svg"
+      rel="shortcut icon"
+      type="image/x-icon"
+    />
+    <link
+      href="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfa9_webclip-dashdark-webflow-template.svg"
+      rel="apple-touch-icon"
+    />
+    <style>
+      .w-webflow-badge {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="top-bar"></div>
+    <div id="notification-container-pop"></div>
+
+    <div class="manual-popup-overlay" id="manual-popup-overlay">
+        <div class="container">
+            <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupManual()">X</button>
+            <h2 style="align-self: center; margin-bottom: 10px;">Manual Lead Entry</h2>
+            <!-- <button id="closePopup" class="close-popup" onclick="togglePopupManual()">X</button> -->
+            <!-- <div class="heading">Add Manually</div> -->
+            <!-- <form class="form" action=""> -->
+              <!-- <div class="input-field">
+                <input
+                  required=""
+                  autocomplete="off"
+                  type="text"
+                  name="text"
+                  id="name"
+                />
+                <label for="username">Name</label>
+              </div> -->
+
+              <div class="coolinput">
+                <label for="input" class="text">Name:</label>
+                <input type="text" placeholder="Joe Smith" name="input" class="input" id="name">
+            </div>
+
+            <div class="coolinput">
+                <label for="input" class="text">Email:</label>
+                <input type="text" placeholder="Example@email.com" name="input" class="input" id="emailinput">
+                <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
+
+            </div>              
+            
+            <div class="coolinput">
+                <label for="input" class="text">Website:</label>
+                <input type="text" placeholder="Voltmailer.com" name="input" class="input" id="website" >
+            </div>
+              <!-- <div class="input-field">
+                <input
+                  required=""
+                  autocomplete="off"
+                  type="text"
+                  name="email"
+                  id="email"
+                />
+                <label for="email">Email</label>
+              </div>
+              <div class="input-field">
+                <input
+                  required=""
+                  autocomplete="off"
+                  type="text"
+                  name="text"
+                  id="website"
+                  value="https://"
+                />
+                <label for="username">Website</label>
+              </div> -->
+
+
+              <button onclick="Manual()">Submit
+                <div class="arrow-wrapper">
+                    <div class="arrow"></div>
+                </div>
+            </button>
+              <div class="btn-container">
+
+                <div class="acc-text">
+                    <span style="color : #ff0000; cursor : pointer;"  id="manualError"></span>
+                </div>
+              </div>
+
+
+
+            <!-- </form> -->
+          </div>
+          
+      </div>
+
+      <div class="manual-popup-overlay domain" id="manual-popup-overlay-domain">
+        <div class="container">
+            <button style="top: 0px; left:10px; background: none; color: #000;" onclick="togglePopupDomain()">X</button>
+        <div class="center" >
+
+            <h1 style="font-size: 20px; margin-bottom:20px;">Enter Domain to Search for Emails</h1>
+            <form id="emailForm" style="display: flex;flex-direction: row;">
+                <input type="text" id="domain" name="domain" placeholder="Enter domain" required style="height: 100%;">
+                <button type="submit" style="margin-top: 0; height: 100%; width: 35%;"><i class="fi fi-rr-arrow-right" style="padding-left: 10px;     height: 14px; width: 14px;"></i></button>
+            </form>
+            <div id="results" style="color: red;"></div>
+
+            
+         <!-- <label class="custum-file-upload" for="fileMIDDLE">
+            <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+            </div>
+            <div class="text">
+               <span>Click to upload Csv</span>
+               </div>
+               <input type="file" id="fileMIDDLE"  accept=".xlsx" >
+            </label>  -->
+
+        </div> 
+        </div>
+        <div class="btn-container">
+
+            <div class="acc-text">
+                <span style="color : #ff0000; cursor : pointer;"  id="manualErrorm"></span>
+            </div>
+          </div>
+      </div>
+
+    <div class="sidebar">
+        <div class="div">
+        <div class="logo">
+            <!-- <img src="Volt.png" alt="Logo"> -->
+            <img  src='vmb.png' alt="google" style="width: 170px; height: 90px;">
+            <!-- <div>Voltmailer</div> -->
+        </div>
+        <div class="menu" id="sidemenu">
+            <!-- <div class="menu-item">Menu</div> -->
+             <button onclick="createCampaign()" >+ New Campaign</button>
+            <div class="menu-item active" id="1"><i class="fi fi-ts-house-chimney"></i>Home</div>
+            <div class="menu-item" id="2"> <i class="fi fi-tr-rocket-lunch"></i>New Campaign</div>
+            <!-- <div class="menu-item" id="5"> <i class="fi fi-tr-rocket-lunch"></i>Email Templates</div> -->
+         
+            <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
+            <!-- <div class="menu-item tools">Tools</div> -->
+            <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Account</div>
+            <!-- <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div> -->
+        </div>
+    </div>
+        <!-- upsell ?? -->
+        <!-- <div class="upsell">
+            <div class="upsell-content">
+                <span>Upgrade</span>
+                <div class="upsell-close">
+                    <span>&times;</span>
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="bottom3"> -->
+
+            <!-- #help -->
+            <!-- #setting -->
+            <!-- #signout -->
+        <!-- </div> -->
+        <div class="menu-item logout" id="5" onclick="logout()" style=" padding-left: 0; margin-left: 0; "><i class="fi fi-tr-arrow-square-right"></i>Logout</div>
+    </div>
+
+
+    <div class="dashboard">
+
+
+        <div class="navtop" id="mobile-nav">
+            <img src="vmb.png" alt="Logo">
+            
+        <div class="burger">
+            <!-- <img src="google.png" alt="google"> -->
+<label class="popup-1">
+  <input type="checkbox">
+  <div class="burger" tabindex="0">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="popup-window">
+    <legend>Menu</legend>
+    <ul>
+      <li>
+        <button onclick="GoHome()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle r="4" cy="7" cx="9"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg> -->
+          <i class="fi fi-ts-house-chimney"></i>
+          <p>Home</p>
+        </button>
+      </li>
+      <li>
+        <button onclick="createCampaign()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg> -->
+          <i class="fi fi-tr-rocket-lunch"></i>
+          <p>New Campaign</p>
+        </button>
+      </li>
+      <hr>
+      <li>
+        <button onclick="billing()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <rect ry="2" rx="2" height="13" width="13" y="9" x="9"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg> -->
+          <i class="fi fi-tr-credit-card-eye"></i>
+          <p>Billing</p>
+        </button>
+      </li>
+      <li>
+        <button onclick="OpenAccount()">
+          <!-- <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+          </svg> -->
+          <i class="fi fi-tr-user-pen"></i>
+          <p>Account</p>
+        </button>
+
+      </li>
+      <hr>
+      <li>
+        <button id="burger-button">
+          <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="14" width="14" xmlns="http://www.w3.org/2000/svg">
+            <line y2="18" x2="6" y1="6" x1="18"></line>
+            <line y2="18" x2="18" y1="6" x1="6"></line>
+          </svg>
+          <p>Close Menu</p>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</label>
+        </div>
+            
+        </div>
+
+        <div class="top" id="maintop">
+            <div class="plan">New Campaign</div>
+            <div class="google" id="googleauthid">
+                <!-- <div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> -->
+
+                <!-- <button class="button" onclick="ConnectGoogle()">
+                    <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
+                    Connect Google
+                </button> -->
+
+                <!-- <img  src='../static/google.png' alt="google"> -->
+                <!-- {{ email }} -->
+            </div>
+        </div>
+
+
+
+        <div  class="contentf" id="main"  >
+            <div class="pitch-row" >
+                
+                <div class="content-row" style="border: none; box-shadow: none; "> 
+
+                  
+        <div class="dashboard-content">
+          <div class="dashboard-main-content sales-page">
+            <div class="container-default w-container">
+              <div class="mg-bottom-140px">
+                <div class="text-center mg-bottom-48px">
+                  <div class="inner-container _764px center">
+                    <img
+                      src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641d000_webflow-devlink-logo-dashdark-webflow-template.svg"
+                      loading="eager"
+                      style="opacity: 0"
+                      data-w-id="1aef72c2-116c-c314-e494-12c842340a8e"
+                      alt="Webflow Devlink - Dashdark X Webflow Template"
+                      class="mg-bottom-8px"
+                    />
+                    <h1
+                      data-w-id="8f1442fd-5729-fb94-cef7-96c4c4b9f370"
+                      style="opacity: 0"
+                      class="display-2"
+                    >
+                      Bring the power of AI to Cold Email Outreach using
+                      Voltmailer Automation.
+                    </h1>
+                    <p
+                      data-w-id="10e46652-5b20-ff4a-1583-24819cbe6c9e"
+                      style="opacity: 0"
+                      class="paragraph-large mg-bottom-32px"
+                    >
+                      Presenting Dashdark X, the ultimate dark mode dashboard
+                      Webflow Template.
+                    </p>
+                    <div
+                      data-w-id="eaa9b713-2916-3c9d-d7ef-5e38f5e44a70"
+                      style="opacity: 0"
+                    >
+                      <a href="#" class="btn-primary large w-inline-block"
+                        ><div class="flex-horizontal gap-column-8px">
+                          <div class="text-block-2">
+                            Create your first Campaign<br />
+                          </div>
+                          <img
+                            src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfb1_btn-arrow-right-dashdark-webflow-template.svg"
+                            loading="eager"
+                            alt=""
+                            class="btn-icon-right max-h-16px"
+                          /></div
+                      ></a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  data-w-id="d6462bc4-1377-95de-75e5-1ac7ec9ba3ff"
+                  style="opacity: 0"
+                  class="sales-home-hero-images-container"
+                >
+                  <img
+                    src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff9_sales-home-hero-image-left-dashdark-webflow-template.png"
+                    loading="eager"
+                    sizes="(max-width: 479px) 67vw, (max-width: 991px) 55vw, (max-width: 1439px) 43vw, 606.671875px"
+                    srcset="
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff9_sales-home-hero-image-left-dashdark-webflow-template-p-500.png   500w,
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff9_sales-home-hero-image-left-dashdark-webflow-template-p-800.png   800w,
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff9_sales-home-hero-image-left-dashdark-webflow-template-p-1080.png 1080w,
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff9_sales-home-hero-image-left-dashdark-webflow-template-p-1600.png 1600w,
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff9_sales-home-hero-image-left-dashdark-webflow-template.png        2432w
+                    "
+                    alt="Bring The Power Of Webflow To React JS - Dashdark X Webflow Template"
+                    class="sales-home-hero-image-left"
+                  /><img
+                    src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffd_sales-home-hero-image-right-dashdark-webflow-template.png"
+                    loading="eager"
+                    sizes="(max-width: 479px) 70vw, (max-width: 991px) 57vw, (max-width: 1439px) 44vw, 610px"
+                    srcset="
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffd_sales-home-hero-image-right-dashdark-webflow-template-p-500.png   500w,
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffd_sales-home-hero-image-right-dashdark-webflow-template-p-800.png   800w,
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffd_sales-home-hero-image-right-dashdark-webflow-template-p-1080.png 1080w,
+                      https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffd_sales-home-hero-image-right-dashdark-webflow-template.png        2432w
+                    "
+                    alt="Bring The Power Of Webflow To React JS - Dashdark X Webflow Template"
+                    class="sales-home-hero-image-right"
+                  />
+                </div>
+              </div>
+              <div class="mg-bottom-180px">
+                <div
+                  data-w-id="097d2f67-5d70-0a7b-4366-b5f9f6faf936"
+                  style="opacity: 0"
+                  class="inner-container _310px center"
+                >
+                  <h3 class="display-3 text-center mg-bottom-24px">
+                    Check out our blog for tips and tricks.
+                  </h3>
+                </div>
+                <div
+                  data-w-id="273c71fd-8738-7eb5-818f-10ca2c438a7f"
+                  style="opacity: 0"
+                  class="mg-bottom-32px"
+                >
+                  <div
+                    class="w-layout-grid grid-3-columns _1-col-tablet gap-20px"
+                  >
+                    <a
+                      id="w-node-fb514822-0e5c-02dc-94d8-e2e50efe10fb-9641cf2e"
+                      data-w-id="fb514822-0e5c-02dc-94d8-e2e50efe10fb"
+                      href="/reports"
+                      class="card sales-home-page w-inline-block"
+                      ><div
+                        class="position-relative---z-index-1 overflow-hidden"
+                      >
+                        <img
+                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffa_dashdark-x-reports-page-dashboard-webflow-template.png"
+                          alt="Dashdark X - Reports Page - Dashboard Webflow Template"
+                          sizes="(max-width: 479px) 100vw, (max-width: 991px) 95vw, (max-width: 1439px) 24vw, 333.328125px"
+                          srcset="
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffa_dashdark-x-reports-page-dashboard-webflow-template-p-500.png  500w,
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffa_dashdark-x-reports-page-dashboard-webflow-template-p-800.png  800w,
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffa_dashdark-x-reports-page-dashboard-webflow-template.png       1344w
+                          "
+                          class="card-sales-home-image"
+                        />
+                      </div>
+                      <div class="card-sales-home-content">
+                        <div class="text-400 medium">
+                          Dashboard V1 - Reports
+                        </div>
+                        <div class="text-300 medium color-accent-1">
+                          View page
+                        </div>
+                      </div></a
+                    ><a
+                      id="w-node-_09a3907e-db4a-6ca5-b943-a8a4f5f0e60e-9641cf2e"
+                      data-w-id="09a3907e-db4a-6ca5-b943-a8a4f5f0e60e"
+                      href="/products"
+                      class="card sales-home-page w-inline-block"
+                      ><div
+                        class="position-relative---z-index-1 overflow-hidden"
+                      >
+                        <img
+                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffc_dashdark-x-products-page-dashboard-webflow-template.png"
+                          alt="Dashdark X - Products Page - Dashboard Webflow Template"
+                          sizes="(max-width: 479px) 100vw, (max-width: 991px) 95vw, (max-width: 1439px) 24vw, 333.328125px"
+                          srcset="
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffc_dashdark-x-products-page-dashboard-webflow-template-p-500.png  500w,
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffc_dashdark-x-products-page-dashboard-webflow-template-p-800.png  800w,
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffc_dashdark-x-products-page-dashboard-webflow-template.png       1344w
+                          "
+                          class="card-sales-home-image"
+                        />
+                      </div>
+                      <div class="card-sales-home-content">
+                        <div class="text-400 medium">
+                          Dashboard V2 - Products
+                        </div>
+                        <div class="text-300 medium color-accent-1">
+                          View page
+                        </div>
+                      </div></a
+                    ><a
+                      id="w-node-d35e68b7-ebbf-f6e8-59d5-aa67646aac86-9641cf2e"
+                      data-w-id="d35e68b7-ebbf-f6e8-59d5-aa67646aac86"
+                      href="/pricing"
+                      class="card sales-home-page w-inline-block"
+                      ><div
+                        class="position-relative---z-index-1 overflow-hidden"
+                      >
+                        <img
+                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff8_dashdark-x-pricing-page-dashboard-webflow-template.png"
+                          alt="Dashdark X - Pricing Page - Dashboard Webflow Template"
+                          sizes="(max-width: 479px) 100vw, (max-width: 991px) 95vw, (max-width: 1439px) 24vw, 333.34375px"
+                          srcset="
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff8_dashdark-x-pricing-page-dashboard-webflow-template-p-500.png  500w,
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff8_dashdark-x-pricing-page-dashboard-webflow-template-p-800.png  800w,
+                            https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff8_dashdark-x-pricing-page-dashboard-webflow-template.png       1344w
+                          "
+                          class="card-sales-home-image"
+                        />
+                      </div>
+                      <div class="card-sales-home-content">
+                        <div class="text-400 medium">Pricing</div>
+                        <div class="text-300 medium color-accent-1">
+                          View page
+                        </div>
+                      </div></a
+                    >
+                  </div>
+                </div>
+                <div
+                  data-w-id="9fbe39a0-31e8-3965-e6a5-80916ac83492"
+                  style="opacity: 0"
+                  class="flex-horizontal position-relative---z-index-2"
+                >
+                  <a href="#" class="btn-primary large w-inline-block"
+                    ><div class="flex-horizontal gap-column-8px">
+                      <div class="text-block-2">All Posts</div>
+                      <img
+                        src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfb1_btn-arrow-right-dashdark-webflow-template.svg"
+                        loading="eager"
+                        alt=""
+                        class="btn-icon-right max-h-16px"
+                      /></div
+                  ></a>
+                </div>
+              </div>
+              <div class="mg-bottom-180px">
+                <div class="grid-2-columns _1fr---1-52fr gap-row-64px">
+                  <div
+                    id="w-node-d5938d09-7ae0-a0d6-5077-72ee295afa19-9641cf2e"
+                    data-w-id="d5938d09-7ae0-a0d6-5077-72ee295afa19"
+                    style="opacity: 0"
+                  >
+                    <h2 class="display-3 mg-bottom-12px">
+                      Find New leads fast with our domain search tool.
+                    </h2>
+                    <a href="#" class="btn-primary large w-inline-block"
+                      ><div class="flex-horizontal gap-column-8px">
+                        <div class="text-block-2">Try it out</div>
+                        <img
+                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfb1_btn-arrow-right-dashdark-webflow-template.svg"
+                          loading="eager"
+                          alt=""
+                          class="btn-icon-right max-h-16px"
+                        /></div
+                    ></a>
+                  </div>
+                  <div
+                    id="w-node-b8af0d7b-4820-8ea5-2701-a4a4169f1aa6-9641cf2e"
+                    data-w-id="b8af0d7b-4820-8ea5-2701-a4a4169f1aa6"
+                    style="opacity: 0"
+                    class="position-relative---z-index-1"
+                  >
+                    <img
+                      src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffb_the-ultimate-webflow-react-tool-dashdark-webflow-template.png"
+                      loading="eager"
+                      sizes="(max-width: 479px) 100vw, (max-width: 767px) 95vw, (max-width: 991px) 56vw, (max-width: 1439px) 44vw, 616.453125px"
+                      srcset="
+                        https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffb_the-ultimate-webflow-react-tool-dashdark-webflow-template-p-500.png   500w,
+                        https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffb_the-ultimate-webflow-react-tool-dashdark-webflow-template-p-800.png   800w,
+                        https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffb_the-ultimate-webflow-react-tool-dashdark-webflow-template-p-1080.png 1080w,
+                        https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffb_the-ultimate-webflow-react-tool-dashdark-webflow-template.png        1890w
+                      "
+                      alt="The Ultimate Tool For Webflow + React Users - Dashdark X Webflow Template"
+                      class="width-100"
+                    /><img
+                      src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cffe_sales-home-bg-blob-large-dashdark-webflow-template.svg"
+                      loading="eager"
+                      alt=""
+                      class="sales-hero-bg-blob-right"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="mg-bottom-140px">
+                <div class="grid-2-columns _1-86fr---1fr">
+                  <div
+                    id="w-node-bd52d540-cba1-2e5e-9871-7819522ff1fb-9641cf2e"
+                    data-w-id="bd52d540-cba1-2e5e-9871-7819522ff1fb"
+                    style="opacity: 0"
+                    class="inner-container _608px _100-mbl"
+                  >
+                    <div class="position-relative---z-index-1 flex-horizontal">
+                      <img
+                        src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff7_components-you-can-use-dashdark-webflow-template.png"
+                        loading="eager"
+                        sizes="(max-width: 479px) 100vw, (max-width: 767px) 95vw, (max-width: 991px) 60vw, (max-width: 1439px) 45vw, 608px"
+                        srcset="
+                          https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff7_components-you-can-use-dashdark-webflow-template-p-500.png   500w,
+                          https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff7_components-you-can-use-dashdark-webflow-template-p-800.png   800w,
+                          https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff7_components-you-can-use-dashdark-webflow-template-p-1080.png 1080w,
+                          https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff7_components-you-can-use-dashdark-webflow-template.png        1824w
+                        "
+                        alt="Components You Can Use Again And Again - Dashdark X Webflow Template"
+                        class="width-100"
+                      /><img
+                        src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cff6_sales-home-bg-blob-small-dashdark-webflow-template.svg"
+                        loading="eager"
+                        alt=""
+                        class="sales-hero-bg-blob-left"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    id="w-node-_15618bb2-96c1-bd7c-3968-e53a5d4560e7-9641cf2e"
+                    data-w-id="15618bb2-96c1-bd7c-3968-e53a5d4560e7"
+                    style="opacity: 0"
+                  >
+                    <h2 class="display-3 mg-bottom-8px">
+                      Track your metrics to see how you can optimise and
+                      streamline your efforts.
+                    </h2>
+                    <a href="#" class="btn-primary large w-inline-block"
+                      ><div class="flex-horizontal gap-column-8px">
+                        <div class="text-block-2">View Reporting</div>
+                        <img
+                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfb1_btn-arrow-right-dashdark-webflow-template.svg"
+                          loading="eager"
+                          alt=""
+                          class="btn-icon-right max-h-16px"
+                        /></div
+                    ></a>
+                  </div>
+                </div>
+              </div>
+              <div class="mg-bottom-140px">
+                <div
+                  data-w-id="f8b6bee1-ca81-920b-5257-187c563b5b8d"
+                  style="opacity: 0"
+                  class="text-center mg-bottom-32px"
+                >
+                  <div class="inner-container _524px center">
+                    <h2 class="display-3 mg-bottom-8px">
+                      And many more advantages
+                    </h2>
+                  </div>
+                </div>
+                <div class="inner-container _780px center">
+                  <div class="grid-3-columns _1-col-tablet mg-bottom-48px">
+                    <div
+                      id="w-node-_1f4d5c29-ae84-0413-9ab3-1abce938c990-9641cf2e"
+                      data-w-id="1f4d5c29-ae84-0413-9ab3-1abce938c990"
+                      style="opacity: 0"
+                      class="card content-center---icon-top"
+                    >
+                      <img
+                        src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641d00d_design-icon-circle-dashdark-webflow-template.svg"
+                        loading="eager"
+                        alt="Design While You Develop - Dashdark X Webflow Template"
+                        class="mg-bottom-16px"
+                      />
+                      <h3 class="text-200 semibold mg-bottom-4px">
+                        No code AI Solution
+                      </h3>
+                    </div>
+                    <div
+                      id="w-node-b2e761d3-29b8-b6f2-eaba-afac013b6e1a-9641cf2e"
+                      data-w-id="b2e761d3-29b8-b6f2-eaba-afac013b6e1a"
+                      style="opacity: 0"
+                      class="card content-center---icon-top"
+                    >
+                      <img
+                        src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641cfff_interactions-icon-circle-dashdark-webflow-template.svg"
+                        loading="eager"
+                        alt="Build Powerful Interactions - Dashdark X Webflow Template"
+                        class="mg-bottom-16px"
+                      />
+                      <h3 class="text-200 semibold mg-bottom-4px">
+                        Runs in the background
+                      </h3>
+                    </div>
+                    <div
+                      id="w-node-_8df3fbdc-988a-a7f9-360d-8705c0826f1a-9641cf2e"
+                      data-w-id="8df3fbdc-988a-a7f9-360d-8705c0826f1a"
+                      style="opacity: 0"
+                      class="card content-center---icon-top"
+                    >
+                      <img
+                        src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641d00c_sync-icon-circle-dashdark-webflow-template.svg"
+                        loading="eager"
+                        alt="Sync In Real Time - Dashdark X Webflow Template"
+                        class="mg-bottom-16px"
+                      />
+                      <h3 class="text-200 semibold mg-bottom-4px">
+                        Real time company analysis
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  data-w-id="ffdc2fad-2a4a-8d13-b978-3a5144bc00df"
+                  style="opacity: 0"
+                  class="w-layout-grid grid-2-columns-2 _1-col-tablet"
+                >
+                  <a
+                    id="w-node-ffdc2fad-2a4a-8d13-b978-3a5144bc00e0-9641cf2e"
+                    href="#"
+                    class="card-cta buy-now w-inline-block"
+                    ><div class="card-home-pages-wrapper">
+                      <div>
+                        <img
+                          src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641d02b_webflow-logo.svg"
+                          alt=""
+                          class="cta-square-logo"
+                        />
+                        <h2 class="color-neutral-601 mg-bottom-12px">
+                          Get now on Webflow
+                        </h2>
+                        <p
+                          class="paragraph-large mg-bottom-32px color-neutral-100"
+                        >
+                          Get the Dashdark X Webflow Template today, and take
+                          your website design to the next level.
+                        </p>
+                        <div class="btn-primary large white">
+                          <div class="flex-horizontal gap-column-8px">
+                            <div>Get template</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div></a
+                  ><a
+                    id="w-node-ffdc2fad-2a4a-8d13-b978-3a5144bc00eb-9641cf2e"
+                    href="https://brixtemplates.com/more-webflow-templates"
+                    class="card-cta buy-now white w-inline-block"
+                    ><div class="card-home-pages-wrapper">
+                      <img
+                        src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641d02d_brix-templates-logo-webfow-templates-brix-templates.svg"
+                        alt="BRIX Templates - Logo"
+                        class="cta-square-logo border"
+                      />
+                      <h2 class="mg-bottom-12px">Browse all templates</h2>
+                      <p
+                        class="paragraph-large mg-bottom-32px color-neutral-200"
+                      >
+                        Looking for more templates? Browse our collection of
+                        100+ Webflow Templates on BRIXTemplates.com
+                      </p>
+                      <div class="btn-primary large white">
+                        <div class="flex-horizontal gap-column-8px">
+                          <div>Browse more templates</div>
+                        </div>
+                      </div>
+                    </div></a
+                  >
+                </div>
+              </div>
+            </div>
+            <img
+              src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/670a6eaff9d5ba109641d00e_sales-home-hero-bg-dashdark-webflow-template.svg"
+              loading="eager"
+              alt=""
+              class="sales-home-hero-bg-image"
+            />
+          </div>
+          <div class="dashboard-footer-wrapper">
+            <div class="container-default w-container">
+              <div class="text-200 medium">
+                Copyright © Voltmailer | Designed by
+                <a
+                  href="https://brixtemplates.com/"
+                  target="_blank"
+                  class="text-decoration-none"
+                  >the team @ Voltmailer
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+    <div class="contentf" id="myUsage-content" style="display: none;">
+        <!-- <div class="welcome-content-row">
+        <div class="welcome">
+        <p>Welcome </p>
+        <h2 id="h2name"> </h2> 
+        </div>
+        <div class="buttons" id="inputButtons">
+
+            <button class="button-man" onclick="togglePopupManual()" id="man">+ New lead</button>
+
+            <label for="fileInput" id="uploadLabel"  > + Import leads</label>
+            <input type="file" id="fileInput" accept=".xlsx,.csv" style="display: none;">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+            
+        </div>
+        </div> -->
+        <div class="pitch-row" >
+            
+            <div class="content-row" >
+            <span id="sending" style="display: none;">Emails are sending, you can close this tab.</span>
+                <div id="pr" >
+                
+                <!-- <div id="newContent" >
+                    <h1>Your Emails</h1>
+                    <table id="emailTable">
+                        <thead >
+                            <tr>
+                                <th>Recipient Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                       
+                        </tbody>
+                    </table>
+                    <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
+                    <button onclick="Restart()" >Reset</button>
+                    <div class="custom-loader" id="customLoader" style="display: none;">
+                        <div class="load-inner load-one"></div>
+                        <div class="load-inner load-two"></div>
+                        <div class="load-inner load-three"></div>
+                        <span class="text" id="loaderText"></span>
+                    </div>
+                </div> -->
+
+                <div id="newContent" style="display: none;">
+                    <h1>Your Emails</h1>
+                    <table id="emailTable">
+                        <thead>
+                            <tr>
+                                <th>Recipient Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be populated here -->
+                        </tbody>
+                        <tfoot id="tfoot">
+                            <tr>
+                                <td colspan="2">
+                                    <button id="regenerateAllBtn" onclick='regenerateAllEmails()'>Regenerate All Emails</button>
+                                    <button onclick="NewCampaign()">Reset</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="custom-loader" id="customLoader" style="display: none;">
+                        <div class="load-inner load-one"></div>
+                        <div class="load-inner load-two"></div>
+                        <div class="load-inner load-three"></div>
+                        <span class="text" id="loaderText"></span>
+                    </div>
+                </div>
+
+
+                <div id="currentContent">
+                    <table id="dataTable" >
+                    <div class="center" id="center">
+
+                        <!-- <h1>Enter Domain to Search for Emails</h1>
+                        <form id="emailForm">
+                            <input type="text" id="domain" name="domain" placeholder="Enter domain" required>
+                            <button type="submit">Get Emails</button>
+                        </form>
+                        <div id="results"></div> -->
+
+                        
+                     <label class="custum-file-upload" for="fileMIDDLE">
+                        <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+                        </div>
+                        <div class="text">
+                           <span>Click to upload Csv</span>
+                           </div>
+                           <input type="file" id="fileMIDDLE"  accept=".xlsx" >
+                        </label> 
+
+                    </div>  
+                    
+                    <thead id="thead" >
+                    </thead>  
+                    <tbody id="tablerows">
+                      
+                    </tbody>
+                </table>
+            </div>
+
+            </div>
+        </div>
+
+
+            <div class="pitch">  
+                <div class="buttons" id="inputButtons">
+
+                    <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
+    
+                    <label for="fileInput" id="uploadLabel" class="uploadLabel" ><div class="lead"> + Import leads</div></label>
+                    <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+
+                    <button class="uploadLabel"  onclick="exportToExcel()" id="export" style="display: none; width: 100%;"><div class="lead"> Export Generated Data  </div></button>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+                    
+                </div>
+                <!-- <span>Or</span> -->
+                <div class="buttons" id="inputButtons">
+
+                    <button class="button-man" onclick="togglePopupDomain()" id="DOMAIN" style="width: 100%;"><div class="lead"> + Add from Domain</div></button>      
+                </div>
+                <!-- <div class=""></div> -->
+                <textarea id="userPitch" class="pitch-text" name="user_pitch" placeholder="Enter your pitch here, including your company name..." required></textarea>
+<h5>Optional</h5>
+<textarea id="UserSubject" class="pitch-text" name="user_pitch" placeholder="Enter a preferred subject line..." required></textarea>
+<textarea id="userTemplate" class="pitch-text" name="user_pitch" placeholder="Add an Email Template..." required></textarea>
+
+                <!-- <span style="text-align: left; padding-left: 10px; color: #000;"> For best results provide: </span>
+                <span style="text-align: left; padding-left: 20px;"> - Clear offer to prospect or pain-point that you are solving for them. </span>
+                <span style="text-align: left; padding-left: 20px;"> - Clear call to action the prospect should take.</span> -->
+                <div id="submit">
+                    
+                    <button class="button" onclick="logout()" id="submit" style="font-size: 18px; text-align: center;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Your Session has expired <br>Please log in again
+                    </button>
+                </div>
+                <!-- <button class="button" onclick="Submitandcheckautosend()" id="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                      <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                    </svg>
+                    Generate
+                </button> -->
+
+
+                  
+                <div class="nobg-submit" id="hidewhengenerating">
+                    <div class="checkbox-wrapper-46">
+                      <input type="checkbox" id="cbx-46" class="inp-cbx" onchange="checkbox()" />
+                      <label for="cbx-46" class="cbx"
+                        ><span>
+                          <svg viewBox="0 0 12 10" height="10px" width="12px">
+                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span
+                        ><span> <div id="autosend-text">Autosend is <b>OFF</b></div> </span>
+                      </label>
+                    </div>
+                    <!-- <div id="ca" onclick="reset()" class="Clear-all">Clear all</div> -->
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+
+
+<div  class="contentf" id="template" style="display: none;"  >
+    <div class="pitch-row" >
+        
+        <div class="content-row" style="border: none; box-shadow: none; "> 
+
+            <div >
+                <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">My Templates</h1>
+                <h3 style="margin-block: 30px;" class="">Help  ?</h3>
+                <div  style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 10px;">
+                    <button class="button-man " onclick="OpenAccount()" id="man" ><div class="lead"> Account Settings</div></button>
+                    <button class="button-man "  id="billing-man" ><div class="lead"> Plan Details  </div></button>
+                    <button class="uploadLabel " onclick="createCampaign()" id="man"><div class="lead"> + New lead</div></button>
+                </div>
+                <div class="plan-usage">
+                    <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e" id="metric-label-plan">Premium</b></h2>
+                    <p class="plan-usage-detail" id="plan-usage-detail">6,547 of 10,000 emails used this month</p>
+                    <div class="progress-text" id="progress-text">
+                      <p>Current: 6,547</p>
+                      <p>Total: 1000</p>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress" style="width: 57.3%;"></div>
+                    </div>
+                    <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
+                    <button  id="subscription" >Upgrade</button>
+                </div>
+                <div class="attract">
+                    <div class="row-1" >
+                        <h2 class="smaller-mobile" style="margin-bottom: 20px;">Attract and win customers with targeted campaigns</h2>
+                        <button class="button-man" onclick="createCampaign()" id="man"><div class="lead"> + New Campaign</div></button>
+                    </div>
+                    <div class="mc-img">
+                        <img src="mail-inbox.png" alt="" class="mailchimp">
+                    </div>
+                    <!-- below when we have metrics to display -->
+                    <div style="border: #ff0000 1px solid; width: 30%; display: flex; flex-direction: column; gap: 20px;">
+                        <div class="metric">
+
+                            <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
+                            <h2 class="metric-value" id="metric-label-total">11 / 1000</h2>
+                        </div>
+                        <div class="metric">
+      
+                            <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
+                            <h2 class="metric-value" id="metric-label-plan">Premium</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <!-- <div class="pitch" style=" background: #ffffff;
+        -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+        box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; display: flex; align-items: center; justify-content: start;">
+        
+        <h3 style="margin-top: 20px;">Your Progress</h3>
+      
+        <div>
+            <h2>75%</h2>
+        </div>
+        <div style="width: 100%; height: 1px; background-color: #5e5e5e49;"></div>
+
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+            <h3>Send your first Email</h3>
+            <i class="fi fi-ss-hexagon-check" id="accountTick"></i>
+        </div>
+
+        </div> -->
+
+
+
+        <!-- <div class="pitch" style="background: #ffffff; border-radius: 16px;
+        -webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+        box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+        display: flex; flex-direction: column; align-items: center; padding: 20px;">
+
+        <h3 style="margin-top: 20px;">Your Progress</h3>
+      
+        <div id="progress-circle" style="position: relative; width: 100px; height: 100px;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <h2 id="progress-percentage">0%</h2>
+            </div>
+        </div>
+        <div style="width: 100%; height: 1px; background-color: #5e5e5e49; margin: 5px 0;"></div>
+
+        <div class="task" data-task-id="1" >
+            <h3 > Send your first Email</h3>
+            <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-1" style=" cursor: pointer; color: #5e5e5e;"></i>
+        </div>
+        
+        <div class="task-details" data-task-id="1" style="display: none; width: 90%;">
+            <button onclick="createCampaign()">Send Email</button>
+        </div>
+
+        <div class="task" data-task-id="2" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+            <h3>Create your first Campaign</h3>
+            <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-2"></i>
+        </div>
+        <div class="task-details" data-task-id="2" style="display: none; width: 90%;">
+            <button onclick="createCampaign()">Create Campaign</button>
+        </div>
+
+        <div class="task" data-task-id="3" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 90%;">
+            <h3>Edit your Username</h3>
+            <i class="fi fi-ss-hexagon" onclick="toggleDetailsx(this)" id="task-icon-3"></i>
+        </div>
+        <div class="task-details" data-task-id="3" style="display: none; width: 90%;">
+            <button onclick="editUsername()">Edit Username</button>
+        </div>
+    </div> -->
+
+      
+    </div>
+</div>
+
+
+<div  class="contentf" id="main-old"  style="display: none;">
+
+    <div class="dashboard-usage">
+        <div class="welcome-content-row">
+        <div class="welcome">
+          <p>Welcome </p>
+          <h2 id="h2name"> HARRY</h2> 
+          </div>
+          </div>
+
+        <div class="metrics">
+              <div class="metric">
+
+                  <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Emails Used</p>
+                  <!-- <h2 class="metric-value" id="metric-label-total">11 / 1000</h2> -->
+              </div>
+              <div class="metric">
+
+                  <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Plan</p>
+                  <!-- <h2 class="metric-value" id="metric-label-plan">Premium</h2> -->
+              </div>
+          <!-- </div>
+          <div class="half">
+
+          </div> -->
+
+            
+            <!-- <div class="metric">
+
+                <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Appointments</p>
+                <h2 class="metric-value">5</h2>
+            </div>
+            <div class="metric">
+                <p class="metric-label"><i class="fi fi-rr-credit-card"></i>Total Sales</p>
+                <h2 class="metric-value">$148.94</h2>
+            </div> -->
+        </div>
+        <!-- <div class="row-2"> -->
+        <div class="plan-usage">
+            <!-- <p class="plan-usage-detail" id="plan-usage-detail">{{ total_emails }} of {{plan_emails}} emails / mo</p> -->
+            <div class="progress-text" id="progress-text">
+              <p>Current: 2</p>
+              <p>Total: 1000</p>
+            </div>
+            <div class="progress-bar">
+                <div id="progress" style="width: 57.3%;"></div>
+            </div>
+            <!-- <button class="button-man " id="subscription" >Upgrade</button> -->
+            <button  id="subscription" >Upgrade</button>
+        </div>
+      </div>
+</div>
+
+
+
+<div   id="myAccount-content"  style="display: none;">
+
+    <div class="ACC_dashboard-usage" style="overflow-y: scroll;">
+        <!-- <h1>Dashboard</h1> -->
+        <!-- <h4>A detailed overview of your metrics, usage, plan and more</h4> -->
+        <div class="welcome-content-row">
+        <div class="welcome">
+          <!-- <p>Account Settings</p> -->
+          <h1 style="color: black; font-size: 40px; margin-bottom: 10px; margin-left: 20px;">Account Settings</h1>
+          <!-- <h2 id="h2name"> HARRY</h2>  -->
+          </div>
+          </div>
+<!-- <div style="display: flex; width: 80%; flex-direction: row;  margin-block:10px ;  gap: 60px; padding: 20px;"> -->
+<div style="" class="cool-cont ">
+    <h2 style="padding-left: 20px; padding-top: 20px;">Name</h2>
+    <h4 style="padding-left: 20px;">This is the name your emails are sent from.</h4>
+     <div class="coolinput" style="padding-left: 20px;">
+        <input type="text" placeholder="Joe Smith" name="input" class="input" id="UPDATE_name">
+    </div> 
+    <h5 id="errorMessagename" style="padding-left: 10px;"></h5>
+    <button class="button-man" onclick="updateNameForm()" style="margin-left: 20px;">Save</button>
+    <br>
+</div>
+
+<div class="cool-cont">
+<!-- <br> -->
+    <h2 style="padding-left: 20px; padding-top: 20px;">Email</h2>
+    <h4 style="padding-left: 20px;">The email associated with your account.</h4>
+    <div class="coolinput" style="padding-left: 20px;">
+        <input type="text" placeholder="Name@email.com" name="input" class="input" id="emailinput">
+    </div>     
+    <h5 id="errorMessageemail" style="padding-left: 20px;"></h5>         
+    <button class="button-man" style="padding-left: 20px;">Save</button>
+    <br>
+</div>
+<!-- </div> -->
+
+<div class="cool-cont">
+<!-- <br> -->
+          <h2 class="password-reset" style="margin: 20px; margin-top: 30px;">Reset Password</h2>
+
+          <div class="coolinput" style="margin: 20px;">
+              <input type="text" placeholder="New Password" name="input" class="input" id="newPassword" >
+          </div>
+
+          <div class="coolinput" style="margin: 20px;">
+              <!-- <label for="input" class="text">Website:</label> -->
+              <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
+          </div>
+          <h5 id="errorMessage"></h5>
+          <button class="button-man" style="margin: 20px;">Save</button>
+          <br>
+        </div>
+    </div>
+</div>
+
+
+<div id="myAccount-content" style="display: none;" class="contentf">
+    <div class="dashboard-usage">
+        <h1>Your Account</h1>
+        <h4>A detailed overview of your metrics, usage, plan and more</h4>
+        <h2>Name</h2>
+        <h4>This is the name your emails are sent from.</h4>
+        <div class="coolinput">
+            <!-- <label for="input" class="text">Name:</label> -->
+            <input type="text" placeholder="Joe Smith" name="input" class="input" id="UPDATE_name">
+        </div>
+        <h5 id="errorMessagename"></h5>
+        <button id="subscription" onclick="updateNameForm()">Save</button>
+        
+        <h2>Email</h2>
+        <h4>The Email associated with your account, not necessarily the email used to send your emails.</h4>
+        <div class="coolinput">
+            <!-- <label for="input" class="text">Email:</label> -->
+            <input type="text" placeholder="Name@email.com" name="input" class="input" id="emailinput">
+            <!-- <input placeholder="Email address" class="input" name="text" type="email" placeholder="CoolGuy1@email.com"/> -->
+        </div>     
+        <h5 id="errorMessageemail"></h5>         
+        <button id="subscription">Save</button>
+        <h2 class="password-reset">Reset Password</h2>
+
+        <div class="coolinput">
+            <input type="text" placeholder="New Password" name="input" class="input" id="newPassword" >
+        </div>
+
+        <div class="coolinput">
+            <!-- <label for="input" class="text">Website:</label> -->
+            <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
+        </div>
+        <h5 id="errorMessage"></h5>
+        <button id="subscription">Save</button>
+      </div>
+</div>
+
+<div id="notification-container-pop"></div>
+    <script
+      src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=670a6eaff9d5ba109641ceec"
+      type="text/javascript"
+      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.prod.website-files.com/670a6eaff9d5ba109641ceec/js/webflow.0dd543d5a.js"
+      type="text/javascript"
+    ></script>
+  </body>
+</html>
