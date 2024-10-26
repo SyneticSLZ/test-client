@@ -1259,6 +1259,7 @@ const campaignDetails = {
 campaignId = await Campaign(campaignDetails);
 
 console.log(campaignId)
+localStorage.setItem('currentCampaignId', campaignId);
 
             const requestBody = {
                 submittedData: submittedData,
@@ -1479,6 +1480,7 @@ const campaignDetails = {
 campaignId = await Campaign(campaignDetails);
 
 console.log(campaignId)
+localStorage.setItem('currentCampaignId', campaignId);
 
 
     for (let index = 0; index < submittedData.length; index++) {
@@ -1531,7 +1533,7 @@ if(UserSubject){
             document.getElementById('loaderText').innerText = `Generating email for ${data.email}...`;
             await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
 
-            addEmailRow(generatedData.length - 1, campaignId);
+            addEmailRow(generatedData.length - 1);
             // populateEmailTable();
 
         } catch (error) {
@@ -1548,7 +1550,7 @@ if(UserSubject){
     button.innerHTML = `
 
 
-                        <button class="button" onclick="sendAllEmails(${campaignId})">
+                        <button class="button" onclick="sendAllEmails()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
@@ -1559,7 +1561,7 @@ if(UserSubject){
     // populateEmailTable();
 }
 
-function addEmailRow(index, campaignId) {
+function addEmailRow(index) {
     const data = generatedData[index];
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
 
@@ -1568,7 +1570,7 @@ function addEmailRow(index, campaignId) {
     row.innerHTML = `
         <td>${data.email}</td>
         <td class="action-buttons">
-            <button onclick="sendEmailindex(${index},${campaignId})" class="button-icon">Send Now</button>
+            <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
             <div class="tooltip">
                 <button onclick="toggleDetails(${index})" class="button-icon" id="arrow-${index}">↓</button>
                 <span class="tooltiptext">Show/Hide Details</span>
@@ -1604,7 +1606,7 @@ function addEmailRow(index, campaignId) {
 
 
 
-async function sendEmailindex(index, campaignId) {
+async function sendEmailindex(index) {
 
     if (generatedData.length === 0) {
 
@@ -1653,7 +1655,7 @@ else {
     // Implement send logic here
     try {
         // updateRowStatus(index, 'Sending');
-
+        const campaignId = localStorage.getItem('currentCampaignId');
         const result = await sendMessage('me', data.email, subject, content, campaignId);
 
 
@@ -1756,8 +1758,9 @@ async function Campaign(campaignDetails) {
 
 
 
-async function sendAllEmails(campaignId) {
-    const promises = generatedData.map((_, index) => sendEmailindex(index, campaignId));
+async function sendAllEmails() {
+    
+    const promises = generatedData.map((_, index) => sendEmailindex(index));
 
     try {
         await Promise.all(promises);
