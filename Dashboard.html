@@ -781,7 +781,7 @@ function togglePopupManual() {
 }
 
 
-function Manual() {
+async function Manual() {
         const emailInput = document.getElementById('emailinput');
         const websiteInput = document.getElementById('website');
         const nameInput = document.getElementById('name');
@@ -827,6 +827,19 @@ function Manual() {
         websiteInput.value = "https://";
         nameInput.value = "";
         console.log("cleared")
+
+        const campaignName = generateUniqueCampaignName();
+    // Example usage:
+const campaignDetails = {
+    email: "rohanmehmi72@gmail.com",
+    campaignName: "campaignName",
+    template:"userTemplate",
+    pitch:"userPitch"
+};
+
+campaign = await createCampaign(campaignDetails);
+
+
         togglePopupManual()
 }
 
@@ -1253,7 +1266,7 @@ const campaignDetails = {
     pitch:userPitch
 };
 
-createCampaign(campaignDetails);
+campaign = await createCampaign(campaignDetails);
 
             // document.getElementById('statusMessage').textContent = 'Emails are being sent. You can close the tab.';
             showNotification('Emails are being sent. You can close the tab.')
@@ -1459,7 +1472,7 @@ const campaignDetails = {
     pitch:userPitch
 };
 
-createCampaign(campaignDetails);
+campaign = await createCampaign(campaignDetails);
 
 
     for (let index = 0; index < submittedData.length; index++) {
