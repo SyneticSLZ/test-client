@@ -1246,16 +1246,6 @@ async function Autosend_new(){
             const userPitch = document.getElementById('userPitch').value; 
             // const token = 'YOUR_JWT_TOKEN'; // Replace with your actual JWT token
             const token = localStorage.getItem('authToken');
-
-            const requestBody = {
-                submittedData: submittedData,
-                userPitch: userPitch,
-                Uname: U_Username,
-                token: token,
-                myemail: U_MyEmail
-            };
-            
-            // Example usage:
             const userTemplate = document.getElementById('userTemplate').value;
     const campaignName = generateUniqueCampaignName();
     // Example usage:
@@ -1267,6 +1257,22 @@ const campaignDetails = {
 };
 
 campaign = await Campaign(campaignDetails);
+
+campaignId = campaign.campaignId;
+
+console.log(campaignId)
+
+            const requestBody = {
+                submittedData: submittedData,
+                userPitch: userPitch,
+                Uname: U_Username,
+                token: token,
+                myemail: U_MyEmail,
+                campaignId: campaignId
+            };
+            
+            // Example usage:
+
 
             // document.getElementById('statusMessage').textContent = 'Emails are being sent. You can close the tab.';
             showNotification('Emails are being sent. You can close the tab.')
@@ -1474,7 +1480,9 @@ const campaignDetails = {
 
 campaign = await Campaign(campaignDetails);
 
-console.log(campaign)
+campaignId = campaign.campaignId;
+
+console.log(campaignId)
 
 
     for (let index = 0; index < submittedData.length; index++) {
@@ -1527,7 +1535,7 @@ if(UserSubject){
             document.getElementById('loaderText').innerText = `Generating email for ${data.email}...`;
             await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
 
-            addEmailRow(generatedData.length - 1);
+            addEmailRow(generatedData.length - 1, campaignId);
             // populateEmailTable();
 
         } catch (error) {
@@ -1544,7 +1552,7 @@ if(UserSubject){
     button.innerHTML = `
 
 
-                        <button class="button" onclick="sendAllEmails()">
+                        <button class="button" onclick="sendAllEmails(${campaignId})">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                         </svg>
@@ -1555,7 +1563,7 @@ if(UserSubject){
     // populateEmailTable();
 }
 
-function addEmailRow(index) {
+function addEmailRow(index, campaignId) {
     const data = generatedData[index];
     const tbody = document.getElementById('emailTable').getElementsByTagName('tbody')[0];
 
@@ -1564,7 +1572,7 @@ function addEmailRow(index) {
     row.innerHTML = `
         <td>${data.email}</td>
         <td class="action-buttons">
-            <button onclick="sendEmailindex(${index})" class="button-icon">Send Now</button>
+            <button onclick="sendEmailindex(${index},${campaignId})" class="button-icon">Send Now</button>
             <div class="tooltip">
                 <button onclick="toggleDetails(${index})" class="button-icon" id="arrow-${index}">↓</button>
                 <span class="tooltiptext">Show/Hide Details</span>
@@ -1600,7 +1608,7 @@ function addEmailRow(index) {
 
 
 
-async function sendEmailindex(index) {
+async function sendEmailindex(index, campaignId) {
 
     if (generatedData.length === 0) {
 
@@ -1650,7 +1658,7 @@ else {
     try {
         // updateRowStatus(index, 'Sending');
 
-        const result = await sendMessage('me', data.email, subject, content);
+        const result = await sendMessage('me', data.email, subject, content, campaignId);
 
 
         console.log('Message to ', data.email, ' successfully sent:', result);
@@ -1751,8 +1759,8 @@ async function Campaign(campaignDetails) {
 
 
 
-async function sendAllEmails() {
-    const promises = generatedData.map((_, index) => sendEmailindex(index));
+async function sendAllEmails(campaignId) {
+    const promises = generatedData.map((_, index) => sendEmailindex(index, campaignId));
 
     try {
         await Promise.all(promises);
@@ -1983,7 +1991,7 @@ async function CallThisWhenAutosend() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function sendMessage(sender, to, subject, messageText) {
+async function sendMessage(sender, to, subject, messageText, campaignId) {
 
     const token = localStorage.getItem('authToken');
     const response = await fetch('https://server.voltmailer.com/send-bulk-manual', {
@@ -1991,7 +1999,7 @@ async function sendMessage(sender, to, subject, messageText) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token: token , email: to, subject: subject, content: messageText, myemail: U_MyEmail })
+        body: JSON.stringify({ token: token , email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId })
     });
 
 
