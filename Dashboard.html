@@ -828,16 +828,16 @@ async function Manual() {
         nameInput.value = "";
         console.log("cleared")
 
-        const campaignName = generateUniqueCampaignName();
-    // Example usage:
-const campaignDetails = {
-    email: "rohanmehmi72@gmail.com",
-    campaignName: "campaignName",
-    template:"userTemplate",
-    pitch:"userPitch"
-};
+//         const campaignName = generateUniqueCampaignName();
+//     // Example usage:
+// const campaignDetails = {
+//     email: "rohanmehmi72@gmail.com",
+//     campaignName: "campaignName",
+//     template:"userTemplate",
+//     pitch:"userPitch"
+// };
 
-campaign = await createCampaign(campaignDetails);
+// campaign = await Campaign(campaignDetails);
 
 
         togglePopupManual()
@@ -1266,7 +1266,7 @@ const campaignDetails = {
     pitch:userPitch
 };
 
-campaign = await createCampaign(campaignDetails);
+campaign = await Campaign(campaignDetails);
 
             // document.getElementById('statusMessage').textContent = 'Emails are being sent. You can close the tab.';
             showNotification('Emails are being sent. You can close the tab.')
@@ -1472,7 +1472,7 @@ const campaignDetails = {
     pitch:userPitch
 };
 
-campaign = await createCampaign(campaignDetails);
+campaign = await Campaign(campaignDetails);
 
 
     for (let index = 0; index < submittedData.length; index++) {
@@ -1723,7 +1723,7 @@ else {
 
 
 
-async function createCampaign(campaignDetails) {
+async function Campaign(campaignDetails) {
     try {
         const response = await fetch('https://server.voltmailer.com/api/campaigns/create', {
             method: 'POST',
