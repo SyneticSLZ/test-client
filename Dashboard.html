@@ -1412,7 +1412,8 @@ function separateSubject(input) {
 }
 
 function generateUniqueCampaignName() {
-    return `Campaign-${crypto.randomBytes(4).toString('hex')}`;
+    // Create a random string using `Math.random` and convert it to a hex-like format
+    return `Campaign-${Math.random().toString(36).substring(2, 10)}`;
 }
 
 
