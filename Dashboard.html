@@ -1709,7 +1709,7 @@ else {
 
 async function createCampaign(campaignDetails) {
     try {
-        const response = await fetch('/api/campaigns/create', {
+        const response = await fetch('https://server.voltmailer.com/api/campaigns/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
