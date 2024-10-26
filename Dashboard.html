@@ -1241,6 +1241,18 @@ async function Autosend_new(){
                 token: token,
                 myemail: U_MyEmail
             };
+            
+            // Example usage:
+            const userTemplate = document.getElementById('userTemplate').value;
+    const campaignName = generateUniqueCampaignName();
+    // Example usage:
+const campaignDetails = {
+    campaignName: campaignName,
+    template:userTemplate,
+    pitch:userPitch
+};
+
+createCampaign(campaignDetails);
 
             // document.getElementById('statusMessage').textContent = 'Emails are being sent. You can close the tab.';
             showNotification('Emails are being sent. You can close the tab.')
@@ -1399,6 +1411,11 @@ function separateSubject(input) {
     }
 }
 
+function generateUniqueCampaignName() {
+    return `Campaign-${crypto.randomBytes(4).toString('hex')}`;
+}
+
+
 async function manualSend() {
     document.getElementById('uploadLabel').style.display = "none";
     document.getElementById('DOMAIN').style.display = "none";
@@ -1430,6 +1447,17 @@ async function manualSend() {
                       </section> `;
 
     generatedData = [];
+
+    const campaignName = generateUniqueCampaignName();
+    // Example usage:
+const campaignDetails = {
+    campaignName: campaignName,
+    template:userTemplate,
+    pitch:userPitch
+};
+
+createCampaign(campaignDetails);
+
 
     for (let index = 0; index < submittedData.length; index++) {
         
@@ -1643,6 +1671,67 @@ else {
 
 
 }
+
+// async function addEmailToCampaign(campaignId, emailDetails) {
+//     try {
+//         const response = await fetch(`/api/campaigns/${campaignId}/add-email`, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(emailDetails)
+//         });
+
+//         const data = await response.json();
+//         if (response.ok) {
+//             console.log('Email added:', data.message);
+//         } else {
+//             console.error('Failed to add email:', data.message);
+//         }
+//     } catch (error) {
+//         console.error('Error:', error);
+//     }
+// }
+
+// // Example usage:
+// const emailDetails = {
+//     recipientEmail: 'test@example.com',
+//     subject: 'Welcome Email',
+//     messageId: '12345',
+//     threadId: '67890',
+//     sentTime: '2024-10-25T10:00:00Z',
+//     status: 'sent'
+// };
+
+// addEmailToCampaign('campaign_id_here', emailDetails);
+
+
+
+async function createCampaign(campaignDetails) {
+    try {
+        const response = await fetch('/api/campaigns/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(campaignDetails)
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            console.log('Campaign created successfully:', data.campaignId);
+        } else {
+            console.error('Failed to create campaign:', data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+
+
+
 
 async function sendAllEmails() {
     const promises = generatedData.map((_, index) => sendEmailindex(index));
