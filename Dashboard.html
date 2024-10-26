@@ -1256,9 +1256,7 @@ const campaignDetails = {
     pitch:userPitch
 };
 
-campaign = await Campaign(campaignDetails);
-
-campaignId = campaign.campaignId;
+campaignId = await Campaign(campaignDetails);
 
 console.log(campaignId)
 
@@ -1478,9 +1476,7 @@ const campaignDetails = {
     pitch:userPitch
 };
 
-campaign = await Campaign(campaignDetails);
-
-campaignId = campaign.campaignId;
+campaignId = await Campaign(campaignDetails);
 
 console.log(campaignId)
 
@@ -1746,6 +1742,7 @@ async function Campaign(campaignDetails) {
         const data = await response.json();
         if (response.ok) {
             console.log('Campaign created successfully:', data.campaignId);
+            return data.campaignId
         } else {
             console.error('Failed to create campaign:', data.message);
         }
