@@ -780,7 +780,7 @@ function togglePopupManual() {
   }
 }
 
-async function addEmailToCampaign(campaignId, emailDetails) {
+async function aaaaddEmailToCampaign(campaignId, emailDetails) {
     try {
         const response = await fetch(`https://server.voltmailer.com/api/campaigns/${campaignId}/add-email`, {
             method: 'POST',
@@ -864,7 +864,7 @@ const testEmailDetails = {
     responseCount: 0
 };
 
-addEmailToCampaign(campaignId, testEmailDetails);
+aaaaddEmailToCampaign(campaignId, testEmailDetails);
 
 
         togglePopupManual()
