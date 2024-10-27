@@ -2001,6 +2001,26 @@ background: #ffffff;
 box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
   
   }
+
+  .reports{
+    margin-top: 20px;
+    width: 95%; 
+    padding: 20px ;
+    padding-left:0px ;
+
+  
+  }
+
+  .report-card{
+    background-color: #fff;
+    -webkit-border-radius: 16px;
+border-radius: 16px;
+background: #ffffff;
+-webkit-box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
+  }
+
+
   .plan-usage-detail {
       font-size: 14px;
       color: #666;
@@ -2009,7 +2029,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
       
   }
   
-  .progress-bar {
+  .progress-barx {
     margin-top: 0;
     padding-top: 0;
       background-color: #08022b77;
@@ -2026,7 +2046,7 @@ box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff;
     width: 100%;
     margin-top: 20px;
   }
-  #progress {
+  #progressx {
       background-color: #880088;
       border-radius: 5px;
       height: 100%;
