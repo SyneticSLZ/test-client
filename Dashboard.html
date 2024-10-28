@@ -787,26 +787,36 @@ function togglePopupManual() {
   }
 }
 
-async function aaaaddEmailToCampaign(campaignId, emailDetails) {
+async function aaddEmailToCampaign(customerEmail, campaignId, newEmailDetails) {
     try {
-        const response = await fetch(`https://server.voltmailer.com/api/campaigns/${campaignId}/add-email`, {
+        const response = await fetch('https://server.voltmailer.com/api/campaigns/addEmail', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(emailDetails)
+            body: JSON.stringify({
+                email: customerEmail,
+                campaignId: campaignId,
+                newEmail: newEmailDetails
+            }),
         });
 
+        const result = await response.json();
+
         if (response.ok) {
-            const result = await response.json();
-            console.log(result.message);
+            console.log("Email added successfully:", result);
+            alert("Email added to campaign successfully!");
         } else {
-            console.error('Failed to add email to campaign:', response.statusText);
+            console.error("Failed to add email:", result.message);
+            alert(`Error: ${result.message}`);
         }
     } catch (error) {
-        console.error('Error adding email to campaign:', error);
+        console.error("Error adding email to campaign:", error);
+        alert("An error occurred while adding the email.");
     }
 }
+
+
 
 
 
@@ -861,17 +871,33 @@ async function Manual() {
 
 // Usage example:
 const campaignId = localStorage.getItem('currentCampaignId'); // Assuming this is set
-const testEmailDetails = {
-    recipientEmail: 'test@example.com',
-    subject: 'Hello World',
-    messageId: 'msg123',
-    threadId: 'thread456',
-    status: 'sent',
+// const testEmailDetails = {
+//     recipientEmail: 'test@example.com',
+//     subject: 'Hello World',
+//     messageId: 'msg123',
+//     threadId: 'thread456',
+//     status: 'sent',
+//     bounces: false,
+//     responseCount: 0
+// };
+
+// aaaaddEmailToCampaign(campaignId, testEmailDetails);
+
+// Example usage:
+const customerEmail = "rohanmehmi72@gmail.com";
+const newEmailDetails = {
+    recipientEmail: "recipient@example.com",
+    subject: "Your subject here",
+    messageId: "unique-message-id",
+    threadId: "unique-thread-id",
+    sentTime: new Date(),
+    status: "sent",
     bounces: false,
     responseCount: 0
 };
 
-aaaaddEmailToCampaign(campaignId, testEmailDetails);
+aaddEmailToCampaign(customerEmail, campaignId, newEmailDetails);
+
 
 
         togglePopupManual()
