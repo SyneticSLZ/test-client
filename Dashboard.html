@@ -362,7 +362,7 @@ async function RenderHtml(data){
     document.getElementById('h2name').innerHTML=`${name}`;
     // document.getElementById('metric-label-plan').innerHTML = `${plan}`;
     // document.getElementById('metric-label-total').innerHTML = `${UsedEmails}`;
-    // document.getElementById('plan-usage-detail').innerHTML = `${UsedEmails} of ${planEmails} emails used this month`;
+    document.getElementById('plan-usage-detail').innerHTML = `${UsedEmails} of ${planEmails} emails used this month`;
     // document.getElementById('metric-label-br').innerHTML = `${data.bounceRate}`;
     // document.getElementById('metric-label-rr').innerHTML = `${data.totalReplies}`;
     document.getElementById('cs').innerHTML = `${data.campaigns.length}`;
@@ -376,7 +376,7 @@ async function RenderHtml(data){
     document.getElementById('subscription').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('billing-man').onclick = function() { billing(data.stripeID, data.email) };
-    document.getElementById('progress').style.width = percentageUsed + '%'; 
+    document.getElementById('progressx').style.width = percentageUsed + '%'; 
 
     if (plan === "free" || plan === "pro"){
         document.getElementById('DOMAIN').style.display = "none"
@@ -2697,12 +2697,12 @@ function showNotification(message) {
                                   <div class="flex align-center gap-column-6px">
                                     <div class="display-4" id="ed">50.8K</div>
                                     <div>
-                                      <div class="status-badge green">
+                                      <!-- <div class="status-badge green">
                                         <div class="flex align-center gap-column-4px">
                                           <div class="paragraph-small">28.4%</div>
                                         </div>
                                         <div class="dashdark-custom-icon icon-size-9px"></div>
-                                      </div>
+                                      </div> -->
                                     </div>
                                   </div>
                                 </div>
@@ -2753,12 +2753,12 @@ function showNotification(message) {
                                   <div class="flex align-center gap-column-6px">
                                     <div class="display-4" id="cs">756</div>
                                     <div>
-                                      <div class="status-badge green">
+                                      <!-- <div class="status-badge green">
                                         <div class="flex align-center gap-column-4px">
                                           <div class="paragraph-small">3.1%</div>
                                         </div>
                                         <div class="dashdark-custom-icon icon-size-9px"></div>
-                                      </div>
+                                      </div> -->
                                     </div>
                                   </div>
                                 </div>
@@ -2781,12 +2781,12 @@ function showNotification(message) {
                                   <div class="flex align-center gap-column-6px">
                                     <div class="display-4" id="br">2.3K</div>
                                     <div>
-                                      <div class="status-badge green">
+                                      <!-- <div class="status-badge green">
                                         <div class="flex align-center gap-column-4px">
                                           <div class="paragraph-small">11.3%</div>
                                         </div>
                                         <div class="dashdark-custom-icon icon-size-9px"></div>
-                                      </div>
+                                      </div> -->
                                     </div>
                                   </div>
                                 </div>
