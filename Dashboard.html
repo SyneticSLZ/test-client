@@ -503,7 +503,9 @@ async function googleAuth() {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
+                window.location.replace("https://voltmailer.com");
                 console.error('Error fetching user data:', data.error);
+                
             } else {
                 // Customize the page using user data
                 // document.getElementById('userEmail').textContent = data.email;
