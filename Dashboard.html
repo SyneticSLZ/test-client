@@ -337,8 +337,9 @@ async function RenderHtml(data){
     const name = data.name
     U_Username = name
     const email = U_MyEmail
-    GetMetrics(email)
+    // GetMetrics(email)
     const UserEmail = data.email
+
     const plan = data.plan
     const CapsPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
     const UsedEmails = data.total_emails
@@ -364,8 +365,9 @@ async function RenderHtml(data){
     // document.getElementById('plan-usage-detail').innerHTML = `${UsedEmails} of ${planEmails} emails used this month`;
     // document.getElementById('metric-label-br').innerHTML = `${data.bounceRate}`;
     // document.getElementById('metric-label-rr').innerHTML = `${data.totalReplies}`;
+    document.getElementById('cs').innerHTML = `${data.campaigns.length}`;
     document.getElementById('rr').innerHTML = `${data.totalReplies}`;
-    document.getElementById('br').innerHTML = `${data.bounceRate}`;
+    document.getElementById('br').innerHTML = `${data.bounceRate}%`;
     document.getElementById('ed').innerHTML = `${UsedEmails}`;
 
 
