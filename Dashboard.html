@@ -2199,26 +2199,26 @@ function initialize() {
         // initialize();
 
 function showNotification(message) {
-              const name = "{{ name }}";
-                const container = document.getElementById('notification-container-pop');
-                const notification = document.createElement('div');
-                notification.className = 'notification-pop';
+            //   const name = "{{ name }}";
+            //     const container = document.getElementById('notification-container-pop');
+            //     const notification = document.createElement('div');
+            //     notification.className = 'notification-pop';
                 
-                const closeButton = document.createElement('span');
-                closeButton.className = 'close-button';
-                closeButton.textContent = '×';
-                closeButton.onclick = () => notification.remove();
+            //     const closeButton = document.createElement('span');
+            //     closeButton.className = 'close-button';
+            //     closeButton.textContent = '×';
+            //     closeButton.onclick = () => notification.remove();
 
-                notification.appendChild(closeButton);
-                notification.appendChild(document.createTextNode(message));
+            //     notification.appendChild(closeButton);
+            //     notification.appendChild(document.createTextNode(message));
 
-                container.appendChild(notification);
+            //     container.appendChild(notification);
 
-                setTimeout(() => {
-                    notification.style.opacity = 0;
-                    notification.style.transform = 'translateY(-20px)';
-                    notification.addEventListener('transitionend', () => notification.remove());
-                }, 5000);
+            //     setTimeout(() => {
+            //         notification.style.opacity = 0;
+            //         notification.style.transform = 'translateY(-20px)';
+            //         notification.addEventListener('transitionend', () => notification.remove());
+            //     }, 5000);
             };
 
 
