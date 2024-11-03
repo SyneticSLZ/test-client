@@ -330,6 +330,44 @@ async function GetMetrics(email) {
     }
 }
 
+
+async function updateNameForm(name){
+
+console.log("name", U_MyEmail)
+
+// const email = prompt('Please enter your email to update your name:');
+const errorMessages = document.getElementById('errorMessagename');
+
+errorMessages.innerHTML = '';
+
+try {
+const response = await fetch('https://server.voltmailer.com/update-customer-by-email', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        email: U_MyEmail,
+        updateField: 'name',
+        newData: name
+    }),
+});
+
+const data = await response.json();
+
+if (response.ok) {
+    errorMessages.innerHTML = `<p>${data.message}</p>`;
+    init()
+} else {
+    errorMessages.innerHTML = `<p>Error: ${data.message}</p>`;
+}
+} catch (error) {
+console.error('Error:', error);
+errorMessages.innerHTML = '<p>An error occurred while updating the name.</p>';
+}
+};
+
+
 async function RenderHtml(data){
     
     document.getElementById('sending').style.display = 'none';
@@ -397,8 +435,9 @@ async function RenderHtml(data){
 
     // Save title
     saveIcon.addEventListener("click", () => {
-        pageTitle = titleInput.value.trim() || "Home"; // Default to "Home" if empty
+        pageTitle = titleInput.value.trim() || "Please Enter Your Name"; // Default to "Home" if empty
         updateDisplay();
+        updateNameForm(titleInput.value.trim())
 
         saveIcon.style.display = "none";
         editIcon.style.display = "inline";
