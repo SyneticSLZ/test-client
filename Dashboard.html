@@ -24,7 +24,8 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-thin-rounded/css/uicons-thin-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.5.1/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -369,7 +370,7 @@ async function RenderHtml(data){
     // Initial title (default to "Home" if not set)
     let pageTitle = name;
 
-    if (pageTitle){
+    if (pageTitle != "null"){
         titleDisplay.textContent = pageTitle;
     }
     else {
@@ -2733,19 +2734,7 @@ function showNotification(message) {
                                 <i class="fas fa-check"></i>
                             </span>
                         </div>
-                        <div class="user-name-container">
-                            <span id="nameDisplay" class="name-display"></span>
-                            <input type="text" id="nameInput" class="name-input" placeholder="Enter your name" />
-                            
-                            <span id="editIcon" class="icon">
-                                <i class="fas fa-pencil-alt"></i>
-                                <span class="tooltip">This is the name your emails are sent from</span>
-                            </span>
-                            
-                            <span id="saveIcon" class="icon" style="display: none;">
-                                <i class="fas fa-check"></i>
-                            </span>
-                        </div>                    
+                   
                         <h3 style="margin-block: 30px;" class="">Quick Actions  ?</h3>
                         <div  style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 10px;">
                             <button class="button-man " onclick="OpenAccount()" id="man" ><div class="lead"> Account Settings</div></button>
