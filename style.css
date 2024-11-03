@@ -42,22 +42,22 @@
     font-weight: bold;
     padding: 5px;
     border: none;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #8320aa;
     outline: none;
     color: #333;
     background: #f9f9f9;
 }
 
 .icon {
-    font-size: 1.3em;
+    font-size: 1em;
     cursor: pointer;
-    color: #007bff;
+    color: #880088;
     margin-left: 10px;
     transition: color 0.3s ease;
 }
 
 .icon:hover {
-    color: #0056b3;
+    color: #8320aa;
 }
 
 .tooltip {
@@ -70,7 +70,7 @@
     color: #fff;
     padding: 6px 8px;
     border-radius: 5px;
-    font-size: 0.8em;
+    font-size: 0.5em;
     white-space: nowrap;
     opacity: 0;
     transition: opacity 0.3s ease;
