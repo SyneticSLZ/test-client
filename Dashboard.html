@@ -71,6 +71,7 @@ async function init() {
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
     init()
+    
     if (localStorage.getItem('connectedGoogle') ==='Rally') {
         const urlParams = new URLSearchParams(window.location.search);
         var googele  = urlParams.get('googletoken');
@@ -358,6 +359,58 @@ async function RenderHtml(data){
     let percentageUsed = (UsedEmails / planEmails) * 100;
 
     percentageUsed = Math.min(100, percentageUsed); // Ensure it doesn't go over 100%
+
+
+    const titleDisplay = document.getElementById("titleDisplay");
+    const titleInput = document.getElementById("titleInput");
+    const editIcon = document.getElementById("TeditIcon");
+    const saveIcon = document.getElementById("TsaveIcon");
+
+    // Initial title (default to "Home" if not set)
+    let pageTitle = name;
+
+    if (pageTitle){
+        titleDisplay.textContent = pageTitle;
+    }
+    else {
+        titleDisplay.textContent = "Please Enter Your Name";
+    }
+
+    // Function to update the display
+    function updateDisplay() {
+        titleDisplay.textContent = pageTitle;
+        titleDisplay.style.display = "inline";
+        titleInput.style.display = "none";
+    }
+
+    // Edit title
+    editIcon.addEventListener("click", () => {
+        titleInput.value = pageTitle; // Set input to current title
+        titleDisplay.style.display = "none";
+        titleInput.style.display = "inline";
+        titleInput.focus();
+        
+        editIcon.style.display = "none";
+        saveIcon.style.display = "inline";
+    });
+
+    // Save title
+    saveIcon.addEventListener("click", () => {
+        pageTitle = titleInput.value.trim() || "Home"; // Default to "Home" if empty
+        updateDisplay();
+
+        saveIcon.style.display = "none";
+        editIcon.style.display = "inline";
+    });
+
+    // Handle Enter key to save the title
+    titleInput.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+            saveIcon.click();
+        }
+    });
+
+
     
     document.getElementById('h2name').innerHTML=`${name}`;
     // document.getElementById('metric-label-plan').innerHTML = `${plan}`;
@@ -2666,7 +2719,33 @@ function showNotification(message) {
                 <div class="content-row" style="border: none; box-shadow: none; "> 
 
                     <div >
-                        <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">Home</h1>
+                        <!-- <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">Home</h1> -->
+                        <div class="title-container">
+                            <h1 id="titleDisplay" class="title-display">Home</h1>
+                            <input type="text" id="titleInput" class="title-input" placeholder="Edit title" />
+                            
+                            <span id="editIcon" class="icon">
+                                <i class="fas fa-pencil-alt"></i>
+                                <span class="tooltip">Click to edit title</span>
+                            </span>
+                            
+                            <span id="saveIcon" class="icon" style="display: none;">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        </div>
+                        <div class="user-name-container">
+                            <span id="nameDisplay" class="name-display"></span>
+                            <input type="text" id="nameInput" class="name-input" placeholder="Enter your name" />
+                            
+                            <span id="editIcon" class="icon">
+                                <i class="fas fa-pencil-alt"></i>
+                                <span class="tooltip">This is the name your emails are sent from</span>
+                            </span>
+                            
+                            <span id="saveIcon" class="icon" style="display: none;">
+                                <i class="fas fa-check"></i>
+                            </span>
+                        </div>                    
                         <h3 style="margin-block: 30px;" class="">Quick Actions  ?</h3>
                         <div  style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 10px;">
                             <button class="button-man " onclick="OpenAccount()" id="man" ><div class="lead"> Account Settings</div></button>
