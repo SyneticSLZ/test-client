@@ -406,49 +406,49 @@ async function RenderHtml(data){
     // const saveIcon = document.getElementById("TsaveIcon");
 
     // Initial title (default to "Home" if not set)
-    let pageTitle = name;
+    // let pageTitle = name;
 
-    if (pageTitle != "null"){
-        titleDisplay.textContent = pageTitle;
-    }
-    else {
-        titleDisplay.textContent = "Please Enter Your Name";
-    }
+    // if (pageTitle != "null"){
+    //     titleDisplay.textContent = pageTitle;
+    // }
+    // else {
+    //     titleDisplay.textContent = "Please Enter Your Name";
+    // }
 
-    // Function to update the display
-    function updateDisplay() {
-        titleDisplay.textContent = pageTitle;
-        titleDisplay.style.display = "inline";
-        titleInput.style.display = "none";
-    }
+    // // Function to update the display
+    // function updateDisplay() {
+    //     titleDisplay.textContent = pageTitle;
+    //     titleDisplay.style.display = "inline";
+    //     titleInput.style.display = "none";
+    // }
 
-    // Edit title
-    editIcon.addEventListener("click", () => {
-        titleInput.value = pageTitle; // Set input to current title
-        titleDisplay.style.display = "none";
-        titleInput.style.display = "inline";
-        titleInput.focus();
+    // // Edit title
+    // editIcon.addEventListener("click", () => {
+    //     titleInput.value = pageTitle; // Set input to current title
+    //     titleDisplay.style.display = "none";
+    //     titleInput.style.display = "inline";
+    //     titleInput.focus();
         
-        editIcon.style.display = "none";
-        saveIcon.style.display = "inline";
-    });
+    //     editIcon.style.display = "none";
+    //     saveIcon.style.display = "inline";
+    // });
 
-    // Save title
-    saveIcon.addEventListener("click", () => {
-        pageTitle = titleInput.value.trim() || "Please Enter Your Name"; // Default to "Home" if empty
-        updateDisplay();
-        updateNameForm(titleDisplay.textContent)
+    // // Save title
+    // saveIcon.addEventListener("click", () => {
+    //     pageTitle = titleInput.value.trim() || "Please Enter Your Name"; // Default to "Home" if empty
+    //     updateDisplay();
+    //     updateNameForm(titleDisplay.textContent)
 
-        saveIcon.style.display = "none";
-        editIcon.style.display = "inline";
-    });
+    //     saveIcon.style.display = "none";
+    //     editIcon.style.display = "inline";
+    // });
 
-    // Handle Enter key to save the title
-    titleInput.addEventListener("keyup", (event) => {
-        if (event.key === "Enter") {
-            saveIcon.click();
-        }
-    });
+    // // Handle Enter key to save the title
+    // titleInput.addEventListener("keyup", (event) => {
+    //     if (event.key === "Enter") {
+    //         saveIcon.click();
+    //     }
+    // });
 
 
     
