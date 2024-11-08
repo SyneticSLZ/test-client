@@ -400,10 +400,10 @@ async function RenderHtml(data){
     percentageUsed = Math.min(100, percentageUsed); // Ensure it doesn't go over 100%
 
 
-    const titleDisplay = document.getElementById("titleDisplay");
-    const titleInput = document.getElementById("titleInput");
-    const editIcon = document.getElementById("TeditIcon");
-    const saveIcon = document.getElementById("TsaveIcon");
+    // const titleDisplay = document.getElementById("titleDisplay");
+    // const titleInput = document.getElementById("titleInput");
+    // const editIcon = document.getElementById("TeditIcon");
+    // const saveIcon = document.getElementById("TsaveIcon");
 
     // Initial title (default to "Home" if not set)
     let pageTitle = name;
@@ -2759,8 +2759,8 @@ function showNotification(message) {
                 <div class="content-row" style="border: none; box-shadow: none; "> 
 
                     <div >
-                        <!-- <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">Home</h1> -->
-                        <div class="title-container">
+                        <h1 style="color: black; font-size: 40px; margin-bottom: 10px;">Home</h1>
+                        <!-- <div class="title-container">
                             <h1 id="titleDisplay" class="title-display">Home</h1>
                             <input type="text" id="titleInput" class="title-input" placeholder="Edit title" />
                             
@@ -2772,7 +2772,7 @@ function showNotification(message) {
                             <span id="TsaveIcon" class="icon" style="display: none;">
                                 <i class="fas fa-check"></i>
                             </span>
-                        </div>
+                        </div> -->
                    
                         <h3 style="margin-block: 30px;" class="">Quick Actions  ?</h3>
                         <div  style="display: flex; align-items: center; justify-content: start; flex-direction: row; width: 95%; gap: 10px;">
