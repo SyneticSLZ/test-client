@@ -4280,6 +4280,7 @@ document.getElementById('addMailboxForm').addEventListener('submit', async (e) =
 const formatMailboxData = (formData) => {
     return {
         smtp: {
+            email:U_MyEmail,
             host: formData.smtpHost,  // The SMTP server host (e.g., smtp.example.com)
             port: parseInt(formData.smtpPort),  // The SMTP server port (e.g., 465)
             secure: formData.smtpPort === '465', // Assuming secure for 465, else false (can be adjusted)
