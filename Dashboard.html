@@ -853,7 +853,7 @@ const fetchActiveMailbox = async (email) => {
         if (response.ok) {
             console.log('Active mailbox:', result);
             // Return the email address of the active mailbox
-            return result.smtp.user; // Assuming the email is stored in the "smtp.user" field
+            return result; // Assuming the email is stored in the "smtp.user" field
         } else if (result.message === 'No active mailbox found') {
             console.log('No active mailbox found');
             return null; // Return null if no active mailbox was found
@@ -1034,7 +1034,7 @@ async function RenderHtml(data){
             }
         else {
 
-            if (!HasActive){
+            if (HasActive == null){
                 document.getElementById('maintop').innerHTML=`
                     <div class="plan">${CapsPlan} plan Subscriber</div>
             <div class="google" id="googleauthid">
