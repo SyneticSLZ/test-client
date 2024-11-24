@@ -4271,26 +4271,50 @@ async function handleAddMailbox(event) {
     };
 
 
-    async function verifySmtpDetails(details) {
+
+
+const formatMailboxData = (formData) => {
+    return {
+        smtp: {
+            host: formData.smtpHost,  // The SMTP server host (e.g., smtp.example.com)
+            port: parseInt(formData.smtpPort),  // The SMTP server port (e.g., 465)
+            secure: formData.smtpPort === '465', // Assuming secure for 465, else false (can be adjusted)
+            user: formData.username,  // The SMTP username (e.g., email@example.com)
+            pass: formData.password   // The SMTP password
+        },
+        // isActive can be omitted here, as it's set on the server side
+    };
+};
+
+
+
+        async function verifySmtpDetails(details) {
+            try {
             // Simulate API call
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({ success: true, message: 'Verification email sent' });
-                }, 1500);
-            });
+            smtpDetails = await formatMailboxData(details)
+
+        const response = await fetch('http://server.voltmailer.com/verify-smtp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(smtpDetails),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to verify SMTP details');
         }
 
+        return { success: true, message: 'SMTP details verified successfully' };
+    } catch (error) {
+        console.error('Error verifying SMTP details:', error);
+        return { success: false, message: error.message || 'Error verifying SMTP details' };
+    }
+};
 
-
-
-
-
-
-
-
-
-
-                    // Tab Switching
+// Tab Switching
                     const tabs = document.querySelectorAll('.tab');
                 const tabContents = document.querySelectorAll('.tab-content');
         
