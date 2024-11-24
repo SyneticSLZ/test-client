@@ -4294,15 +4294,7 @@ const formatMailboxData = (formData) => {
 
         async function verifySmtpDetails(details) {
             try {
-                const smtpDetails = {
-    host: 'smtp.example.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: 'user@example.com',
-        pass: 'password123',
-    },
-};
+                const smtpDetails = formatMailboxData(details)
 
         const response = await fetch('https://server.voltmailer.com/verify-smtp', {
             method: 'POST',
