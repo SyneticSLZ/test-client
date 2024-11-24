@@ -852,12 +852,11 @@ const fetchActiveMailbox = async (email) => {
 
         if (response.ok) {
             console.log('Active mailbox:', result);
-            // Do something with the active mailbox data (e.g., display in the UI)
-            displayActiveMailbox(result);
-            return true; // Return true if the active mailbox is found
+            // Return the email address of the active mailbox
+            return result.smtp.user; // Assuming the email is stored in the "smtp.user" field
         } else if (result.message === 'No active mailbox found') {
             console.log('No active mailbox found');
-            return false; // Return false if no active mailbox was found
+            return null; // Return null if no active mailbox was found
         } else {
             throw new Error(result.message || 'Failed to fetch active mailbox');
         }
@@ -1055,6 +1054,11 @@ async function RenderHtml(data){
                       `
 
             } else {
+                document.getElementById('googleauthid').innerHTML=`
+
+Your Active Mailbox is : ${HasActive}
+
+`;
             button.innerHTML=`
                     
                     <button class="button" onclick="Submitandcheckautosend()">
@@ -1108,11 +1112,11 @@ async function googleAuth() {
 
                 const UserEmail = data.email
                 const UserStripeID = data.email
-                        document.getElementById('googleauthid').innerHTML=`
+        //                 document.getElementById('googleauthid').innerHTML=`
 
-                    Emails Sent From : ${UserEmail}
+        //             Emails Sent From : ${UserEmail}
 
-        `;
+        // `;
                 RenderHtml(data);
 
                 // Add more customization based on user data
@@ -1137,9 +1141,9 @@ async function connectedgoogleAuth() {
         console.log('User Data:', userData);
         U_MyEmail = userData.email;
         localStorage.setItem('authToken', connectedGoogletoken);
-        document.getElementById('googleauthid').innerHTML=`
-                    Emails Sent From : ${userData.email}
-        `;
+        // document.getElementById('googleauthid').innerHTML=`
+        //             Emails Sent From : ${userData.email}
+        // `;
 
         button.innerHTML=`
                     
