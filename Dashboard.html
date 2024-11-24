@@ -4293,7 +4293,7 @@ const formatMailboxData = (formData) => {
             // Simulate API call
             smtpDetails = await formatMailboxData(details)
 
-        const response = await fetch('http://server.voltmailer.com/verify-smtp', {
+        const response = await fetch('https://server.voltmailer.com/verify-smtp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
