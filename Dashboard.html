@@ -256,6 +256,8 @@ let U_Username;
 let U_MyEmail;
 
 
+
+
 window.onload = function() {
             if (window.innerWidth <= 768) {
                 window.location.href = "https://voltmailer.com/mobile.html";
@@ -836,6 +838,34 @@ errorMessages.innerHTML = '<p>An error occurred while updating the name.</p>';
 }
 };
 
+const fetchActiveMailbox = async (email) => {
+    try {
+        // Make a GET request to the backend API to fetch the active mailbox for the provided email
+        const response = await fetch(`https://server.voltmailer.com/api/mailboxes/active?email=${email}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const result = await response.json(); // Parse the response
+
+        if (response.ok) {
+            console.log('Active mailbox:', result);
+            // Do something with the active mailbox data (e.g., display in the UI)
+            displayActiveMailbox(result);
+            return true; // Return true if the active mailbox is found
+        } else if (result.message === 'No active mailbox found') {
+            console.log('No active mailbox found');
+            return false; // Return false if no active mailbox was found
+        } else {
+            throw new Error(result.message || 'Failed to fetch active mailbox');
+        }
+    } catch (error) {
+        console.error('Error fetching active mailbox:', error);
+        sNotification('Error fetching active mailbox: ' + error.message, 'error');
+    }
+};
 
 async function RenderHtml(data){
     
@@ -849,6 +879,7 @@ async function RenderHtml(data){
     // GetMetrics(email)
     const UserEmail = data.email
     fetchMailboxes();
+    HasActive = fetchActiveMailbox(email)
 
     const plan = data.plan
     const CapsPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
@@ -1003,18 +1034,19 @@ async function RenderHtml(data){
                 </button>`
             }
         else {
-            if (!token){
+
+            if (!HasActive){
                 document.getElementById('maintop').innerHTML=`
                     <div class="plan">${CapsPlan} plan Subscriber</div>
             <div class="google" id="googleauthid">
-<div onclick="ConnectGoogle()" style="cursor: pointer; text-decoration: underline;"> Please connect your gmail Account</div> 
+<div onclick="OpenMailboxes()" style="cursor: pointer; text-decoration: underline;"> Please Add A MailBox</div> 
             </div>
         `;
         button.innerHTML=`
                     
-                    <button class="button" onclick="ConnectGoogle()">
+                    <button class="button" onclick="OpenMailboxes()">
                         <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
-                        Connect Google
+                        Add a Mailbox
                       </button>
 
 
@@ -3963,6 +3995,10 @@ function showNotification(message) {
             usageTab.click();
         }
         
+        function OpenMailboxes(){
+            const usageTab = document.getElementById('5');
+            usageTab.click();
+        }
 
 
         function switchTab(event) {
