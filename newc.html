@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mailbox Manager</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--gray-800);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            color: var(--gray-300);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .button-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .button svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+        }
+
+        .mailbox-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .mailbox-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+
+        .mailbox-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .mailbox-info {
+            flex: 1;
+        }
+
+        .mailbox-email {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .mailbox-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-verified {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .button-secondary {
+            background-color: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .button-secondary:hover {
+            background-color: var(--gray-200);
+        }
+
+        .active-badge {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="mailboxContainer"></div>
+    </div>
+
+    <!-- Add Mailbox Modal -->
+    <div id="addMailboxModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Mailbox</h2>
+                <button class="close-button" onclick="closeModal()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="mailboxForm" onsubmit="handleAddMailbox(event)">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="smtpHost">SMTP Host</label>
+                    <input type="text" id="smtpHost" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="smtpPort">SMTP Port</label>
+                    <input type="number" id="smtpPort" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-input" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button button-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="button button-primary">Add Mailbox</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let mailboxes = [];
+        let activeMailboxId = null;
+
+        // Mock API functions
+        async function verifySmtpDetails(details) {
+            // Simulate API call
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ success: true, message: 'Verification email sent' });
+                }, 1500);
+            });
+        }
+
+        // UI rendering functions
+        function renderMailboxes() {
+            const container = document.getElementById('mailboxContainer');
+            
+            if (mailboxes.length === 0) {
+                container.innerHTML = `
+                    <div class="card empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h3>No mailboxes configured</h3>
+                        <p>Add your first mailbox to start sending emails</p>
+                        <button class="button button-primary" onclick="openModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Add Mailbox
+                        </button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h2>Your Mailboxes</h2>
+                            <button class="button button-primary" onclick="openModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Add Mailbox
+                            </button>
+                        </div>
+                        <div class="mailbox-list">
+                            ${mailboxes.map(mailbox => `
+                                <div class="mailbox-item">
+                                    <div class="mailbox-info">
+                                        <div class="mailbox-email">
+                            ${mailbox.email}
+                                            ${mailbox.id === activeMailboxId ? '<span class="active-badge">Active</span>' : ''}
+                                        </div>
+                                        <div class="mailbox-status ${mailbox.verified ? 'status-verified' : 'status-pending'}">
+                                            ${mailbox.verified ? 'Verified' : 'Pending Verification'}
+                                        </div>
+                                    </div>
+                                    ${mailbox.verified && mailbox.id !== activeMailboxId ? `
+                                        <button class="button button-secondary" onclick="setActiveMailbox('${mailbox.id}')">
+                                            Make Active
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function openModal() {
+            document.getElementById('addMailboxModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('addMailboxModal').classList.remove('active');
+            document.getElementById('mailboxForm').reset();
+        }
+
+        async function handleAddMailbox(event) {
+            event.preventDefault();
+            
+            const formData = {
+                email: document.getElementById('email').value,
+                smtpHost: document.getElementById('smtpHost').value,
+                smtpPort: document.getElementById('smtpPort').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+            };
+
+            // Show loading state
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = 'Verifying...';
+            submitButton.disabled = true;
+
+            try {
+                const result = await verifySmtpDetails(formData);
+                
+                if (result.success) {
+                    const newMailbox = {
+                        id: Date.now().toString(),
+                        ...formData,
+                        verified: false
+                    };
+
+                    mailboxes.push(newMailbox);
+                    
+                    // If this is the first mailbox, make it active once verified
+                    if (mailboxes.length === 1) {
+                        activeMailboxId = newMailbox.id;
+                    }
+
+                    closeModal();
+                    renderMailboxes();
+
+                    // Simulate verification after 3 seconds
+                    setTimeout(() => {
+                        const mailbox = mailboxes.find(m => m.id === newMailbox.id);
+                        if (mailbox) {
+                            mailbox.verified = true;
+                            renderMailboxes();
+                        }
+                    }, 3000);
+                }
+            } catch (error) {
+                alert('Failed to verify SMTP details. Please check your inputs and try again.');
+            } finally {
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }
+        }
+
+        function setActiveMailbox(id) {
+            activeMailboxId = id;
+            renderMailboxes();
+        }
+
+        // Initial render
+        renderMailboxes();
+    </script>
+</body>
+</html>

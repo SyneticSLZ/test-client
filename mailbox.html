@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mailbox Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+            animation: fadeInOut 3s ease-in-out;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mailbox-card {
+            transition: all 0.3s ease;
+        }
+        .mailbox-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .badge-pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+        .badge-verified {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+        .badge-active {
+            background-color: #EEF2FF;
+            color: #4F46E5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto py-10 px-4 max-w-4xl ">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold">Mailbox Management</h2>
+            <p class="text-gray-600">Manage your verified mailboxes and set your active sending address</p>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden bg-white rounded-lg shadow-sm p-8 text-center">
+            <div class="max-w-md mx-auto">
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <h3 class="text-lg font-semibold mb-2">No Mailboxes Added</h3>
+                <p class="text-gray-600 mb-6">Add your first mailbox to start sending emails from your verified address</p>
+                <button onclick="showAddMailboxModal()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                    Add Your First Mailbox
+                </button>
+            </div>
+        </div>
+
+        <!-- Mailbox List -->
+        <div id="mailboxList" class="space-y-4">
+            <!-- Action Bar -->
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold">Your Mailboxes</h3>
+                <button onclick="showAddMailboxModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Add Mailbox
+                </button>
+            </div>
+
+            <!-- Mailbox Cards -->
+            <div id="mailboxCards" class="grid gap-4 grid-cols-1 md:grid-cols-2">
+                <!-- Cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Add Mailbox Modal -->
+        <div id="addMailboxModal" class="modal">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Add New Mailbox</h3>
+                    <button onclick="hideAddMailboxModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <form id="addMailboxForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your email address">
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="hideAddMailboxModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                            Add Mailbox
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script>
+        // Sample data - replace with your actual data
+        let mailboxes = [
+            { id: 1, email: 'work@example.com', status: 'verified', isActive: true },
+            { id: 2, email: 'personal@example.com', status: 'verified', isActive: false },
+            { id: 3, email: 'new@example.com', status: 'pending', isActive: false }
+        ];
+
+        // UI State Management
+        const updateUI = () => {
+            const emptyState = document.getElementById('emptyState');
+            const mailboxList = document.getElementById('mailboxList');
+            const mailboxCards = document.getElementById('mailboxCards');
+
+            if (mailboxes.length === 0) {
+                emptyState.classList.remove('hidden');
+                mailboxList.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                mailboxList.classList.remove('hidden');
+                
+                // Clear and rebuild mailbox cards
+                mailboxCards.innerHTML = '';
+                mailboxes.forEach(mailbox => {
+                    const card = createMailboxCard(mailbox);
+                    mailboxCards.appendChild(card);
+                });
+            }
+        };
+
+        // Create Mailbox Card
+        const createMailboxCard = (mailbox) => {
+            const div = document.createElement('div');
+            div.className = 'mailbox-card bg-white rounded-lg shadow-sm p-6 relative';
+            
+            const statusClass = mailbox.status === 'pending' ? 'badge-pending' : 'badge-verified';
+            const statusText = mailbox.status === 'pending' ? 'Pending Verification' : 'Verified';
+            
+            div.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="font-medium text-gray-900">${mailbox.email}</h4>
+                        <div class="flex gap-2 mt-2">
+                            <span class="badge ${statusClass}">${statusText}</span>
+                            ${mailbox.isActive ? '<span class="badge badge-active">Active</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${mailbox.status === 'verified' && !mailbox.isActive ? `
+                            <button onclick="setActiveMailbox(${mailbox.id})" 
+                                class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
+                                Set as Active
+                            </button>
+                        ` : ''}
+                        <button onclick="removeMailbox(${mailbox.id})" 
+                            class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return div;
+        };
+
+        // Modal Management
+        const showAddMailboxModal = () => {
+            document.getElementById('addMailboxModal').classList.add('active');
+        };
+
+        const hideAddMailboxModal = () => {
+            document.getElementById('addMailboxModal').classList.remove('active');
+            document.getElementById('addMailboxForm').reset();
+        };
+
+        // Notification Management
+        const showNotification = (message, type = 'success') => {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.className = 'notification ' + 
+                (type === 'success' ? 'bg-green-500' : 'bg-yellow-500') + 
+                ' text-white';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        };
+
+        // Mailbox Actions
+        const addMailbox = (email) => {
+            const newMailbox = {
+                id: Date.now(),
+                email,
+                status: 'pending',
+                isActive: false
+            };
+            mailboxes.push(newMailbox);
+            updateUI();
+            showNotification('Verification email sent to ' + email);
+        };
+
+        const setActiveMailbox = (id) => {
+            mailboxes = mailboxes.map(mailbox => ({
+                ...mailbox,
+                isActive: mailbox.id === id
+            }));
+            updateUI();
+            showNotification('Active mailbox updated');
+        };
+
+        const removeMailbox = (id) => {
+            if (confirm('Are you sure you want to remove this mailbox?')) {
+                mailboxes = mailboxes.filter(mailbox => mailbox.id !== id);
+                updateUI();
+                showNotification('Mailbox removed');
+            }
+        };
+
+        // Form Handling
+        document.getElementById('addMailboxForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            addMailbox(email);
+            hideAddMailboxModal();
+        });
+
+        // Initialize UI
+        updateUI();
+    </script>
+</body>
+</html>

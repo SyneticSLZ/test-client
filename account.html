@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem;
+            background-color: #34D399;
+            color: white;
+            border-radius: 0.5rem;
+            display: none;
+            animation: fadeInOut 3s ease-in-out;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4F46E5;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="container mx-auto py-10 px-4 max-w-4xl">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold">Account Settings</h2>
+            <p class="text-gray-600">Manage your account settings and preferences</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="mb-6">
+            <div class="flex space-x-4 border-b">
+                <button class="tab active px-4 py-2 rounded-t-lg" data-tab="profile">Profile</button>
+                <button class="tab px-4 py-2 rounded-t-lg" data-tab="notifications">Notifications</button>
+                <button class="tab px-4 py-2 rounded-t-lg" data-tab="billing">Billing</button>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content active space-y-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
+                <form id="profileForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">First Name</label>
+                            <input type="text" class="w-full p-2 border rounded" name="firstName">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Last Name</label>
+                            <input type="text" class="w-full p-2 border rounded" name="lastName">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" class="w-full p-2 border rounded" name="email">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Sending Name</label>
+                        <input type="text" class="w-full p-2 border rounded" name="sendingName">
+                    </div>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                        Save Changes
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-4">Change Password</h3>
+                <form id="passwordForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Current Password</label>
+                        <input type="password" class="w-full p-2 border rounded" name="currentPassword">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">New Password</label>
+                        <input type="password" class="w-full p-2 border rounded" name="newPassword">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Confirm Password</label>
+                        <input type="password" class="w-full p-2 border rounded" name="confirmPassword">
+                    </div>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                        Update Password
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div id="notifications" class="tab-content bg-white p-6 rounded-lg shadow">
+            <h3 class="text-xl font-semibold mb-4">Notification Preferences</h3>
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="font-medium">Email Notifications</h4>
+                        <p class="text-sm text-gray-600">Receive emails about your account activity</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="font-medium">Marketing Emails</h4>
+                        <p class="text-sm text-gray-600">Receive emails about new features and updates</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveNotifications()">
+                    Save Preferences
+                </button>
+            </div>
+        </div>
+
+        <!-- Billing Tab -->
+        <div id="billing" class="tab-content bg-white p-6 rounded-lg shadow">
+            <h3 class="text-xl font-semibold mb-4">Billing Information</h3>
+            <div class="space-y-6">
+                <div>
+                    <h4 class="font-medium mb-2">Payment Method</h4>
+                    <div class="border p-4 rounded flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                            </svg>
+                            <div>
+                                <p>•••• •••• •••• 4242</p>
+                                <p class="text-sm text-gray-600">Expires 12/24</p>
+                            </div>
+                        </div>
+                        <button class="border px-4 py-2 rounded hover:bg-gray-50">Update</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-medium mb-2">Billing Address</h4>
+                    <form id="billingForm" class="space-y-4">
+                        <input type="text" class="w-full p-2 border rounded" placeholder="Street Address">
+                        <div class="grid grid-cols-3 gap-4">
+                            <input type="text" class="p-2 border rounded" placeholder="City">
+                            <input type="text" class="p-2 border rounded" placeholder="State">
+                            <input type="text" class="p-2 border rounded" placeholder="ZIP">
+                        </div>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                            Save Billing Info
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script>
+        // Tab Switching
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show active content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === tabId) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Form Submissions
+        const showNotification = (message) => {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        };
+
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add your API call here
+            showNotification('Profile updated successfully');
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newPassword = e.target.newPassword.value;
+            const confirmPassword = e.target.confirmPassword.value;
+
+            if (newPassword !== confirmPassword) {
+                showNotification('Passwords do not match');
+                return;
+            }
+            // Add your API call here
+            showNotification('Password updated successfully');
+        });
+
+        document.getElementById('billingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add your API call here
+            showNotification('Billing information updated successfully');
+        });
+
+        const saveNotifications = () => {
+            // Add your API call here
+            showNotification('Notification preferences saved');
+        };
+
+        // Initial form population (simulate fetching user data)
+        const populateUserData = () => {
+            // Simulate API call to get user data
+            const userData = {
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john@example.com',
+                sendingName: 'John Doe (Company)'
+            };
+
+            const profileForm = document.getElementById('profileForm');
+            Object.keys(userData).forEach(key => {
+                const input = profileForm.querySelector(`[name="${key}"]`);
+                if (input) input.value = userData[key];
+            });
+        };
+
+        // Call on page load
+        populateUserData();
+    </script>
+</body>
+</html>
