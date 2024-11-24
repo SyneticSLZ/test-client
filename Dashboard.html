@@ -3586,7 +3586,7 @@ function showNotification(message) {
                     </svg>
                 </button>
             </div>
-            <form id="addMailboxForm" onsubmit="handleAddMailbox(event)">
+            <form id="addMailboxForm">
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
                     <input type="email" id="email" class="form-input" required>
@@ -4209,8 +4209,8 @@ async function updateEmailForm(){
     }
 };
 
-async function handleAddMailbox(event) {
-        event.preventDefault();
+document.getElementById('addMailboxForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
         const formData = {
                 email: document.getElementById('email').value,
                 smtpHost: document.getElementById('smtpHost').value,
@@ -4268,7 +4268,7 @@ async function handleAddMailbox(event) {
         // addMailbox(email);
         // hideAddMailboxModal();
 
-    };
+    });
 
 
 
