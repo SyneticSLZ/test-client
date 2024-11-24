@@ -4210,7 +4210,7 @@ async function updateEmailForm(){
 };
 
 async function handleAddMailbox(event) {
-        e.preventDefault();
+        event.preventDefault();
         const formData = {
                 email: document.getElementById('email').value,
                 smtpHost: document.getElementById('smtpHost').value,
