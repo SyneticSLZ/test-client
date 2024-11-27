@@ -3633,7 +3633,7 @@ function showNotification(message) {
     <div id="addMailboxModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Add New Mailbox</h2>
+                <h2 class="modal-title">Add New Gmail Mailbox</h2>
                 <button class="close-button" onclick="hideAddMailboxModal()">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3641,7 +3641,7 @@ function showNotification(message) {
                 </button>
             </div>
             <form id="addMailboxForm">
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
                     <input type="email" id="email" class="form-input" required>
                 </div>
@@ -3652,7 +3652,7 @@ function showNotification(message) {
                 <div class="form-group">
                     <label class="form-label" for="smtpPort">SMTP Port</label>
                     <input type="number" id="smtpPort" class="form-input" required>
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label class="form-label" for="username">Username</label>
                     <input type="text" id="username" class="form-input" required>
@@ -3662,8 +3662,8 @@ function showNotification(message) {
                     <input type="password" id="password" class="form-input" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="button button-secondary" onclick="hideAddMailboxModal()">Cancel</button>
-                    <button type="submit" class="button button-primary">Add Mailbox</button>
+                    <button type="button" class=" button-secondary" onclick="hideAddMailboxModal()">Cancel</button>
+                    <button type="submit" class=" button-primary">Add Mailbox</button>
                 </div>
             </form>
         </div>
