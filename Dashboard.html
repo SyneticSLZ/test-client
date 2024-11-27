@@ -245,6 +245,54 @@
         background-color: #EEF2FF;
         color: #880088;
     }
+
+    /* Top bar dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: #4CAF50; /* Adjust color to your theme */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #45a049;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 </style>
 <script>
     // Sample data - replace with your actual data
@@ -903,18 +951,24 @@ const fetchActiveMailbox = async (email) => {
         const result = await response.json(); // Parse the response
 
         if (response.ok) {
-            console.log('Active mailbox:', result);
-            // Return the email address of the active mailbox
-            return result; // Assuming the email is stored in the "smtp.user" field
+            if (result.length === 0) {
+                console.log('No active mailboxes found');
+                return []; // Return an empty array if no active mailboxes are found
+            }
+
+            console.log('Active mailboxes:', result);
+            // Return the array of SMTP user email addresses
+            return result;
         } else if (result.message === 'No active mailbox found') {
             console.log('No active mailbox found');
-            return null; // Return null if no active mailbox was found
+            return []; // Return null if no active mailbox was found
         } else {
             throw new Error(result.message || 'Failed to fetch active mailbox');
         }
     } catch (error) {
         console.error('Error fetching active mailbox:', error);
         sNotification('Error fetching active mailbox: ' + error.message, 'error');
+        return []
     }
 };
 
@@ -1086,7 +1140,7 @@ async function RenderHtml(data){
             }
         else {
 
-            if (HasActive == null){
+            if (HasActive.length === 0){
                 document.getElementById('maintop').innerHTML=`
                     <div class="plan">${CapsPlan} plan Subscriber</div>
             <div class="google" id="googleauthid">
@@ -1108,7 +1162,14 @@ async function RenderHtml(data){
             } else {
                 document.getElementById('googleauthid').innerHTML=`
 
-Your Active Mailbox is : ${HasActive}
+        <div class="dropdown">
+            <button class="dropbtn">Your Active Mailboxes</button>
+            <div class="dropdown-content">
+                ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
+            </div>
+        </div>
+
+    
 
 `;
             button.innerHTML=`
