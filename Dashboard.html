@@ -1114,58 +1114,7 @@ async function initializeMailboxes(email) {
     const MAILBOXES = await fetchActiveMailboxes(email); // Populate MAILBOXES dynamically
     console.log('Initialized MAILBOXES:', MAILBOXES);
 
-    if (MAILBOXES.length === 0) {
-        console.warn('No active mailboxes available for this user.');
-        document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${CapsPlan} plan Subscriber</div>
-            <div class="google" id="googleauthid">
-<div onclick="OpenMailboxes()" style="cursor: pointer; text-decoration: underline;"> Please Add A MailBox</div> 
-            </div>
-        `;
-        button.innerHTML=`
-                    
-                    <button class="button" onclick="OpenMailboxes()">
-                        <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
-                        Add a Mailbox
-                      </button>
-
-
-
-                      
-                      `
-
-    } else {
-        // Use MAILBOXES for your dropdown or UI logic
-        document.getElementById('googleauthid').innerHTML=`
-<div class="topbar">
-<div class="dropdown">
-        <button class="dropbtn">
-            Your Active Mailboxes 
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <!-- Dynamic mailbox list -->
-            ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
-        </div>
-    </div>
-</div>
-
-
     
-
-`;
-            button.innerHTML=`
-                    
-                    <button class="button" onclick="Submitandcheckautosend()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Generate
-                      </button>
-
-                      `
-
-    }
 }
 
 async function RenderHtml(data){
@@ -1335,14 +1284,67 @@ async function RenderHtml(data){
                         Unlock Pro
                 </button>`
             }
-    //     else {
+        else {
+            if (MAILBOXES.length === 0) {
+        console.warn('No active mailboxes available for this user.');
+        document.getElementById('maintop').innerHTML=`
+                    <div class="plan">${CapsPlan} plan Subscriber</div>
+            <div class="google" id="googleauthid">
+<div onclick="OpenMailboxes()" style="cursor: pointer; text-decoration: underline;"> Please Add A MailBox</div> 
+            </div>
+        `;
+        button.innerHTML=`
+                    
+                    <button class="button" onclick="OpenMailboxes()">
+                        <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
+                        Add a Mailbox
+                      </button>
+
+
+
+                      
+                      `
+
+    } else {
+        // Use MAILBOXES for your dropdown or UI logic
+        document.getElementById('googleauthid').innerHTML=`
+<div class="topbar">
+<div class="dropdown">
+        <button class="dropbtn">
+            Your Active Mailboxes 
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <!-- Dynamic mailbox list -->
+            ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
+        </div>
+    </div>
+</div>
+
+
+    
+
+`;
+            button.innerHTML=`
+                    
+                    <button class="button" onclick="Submitandcheckautosend()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Generate
+                      </button>
+
+                      `
+
+    }
 
     //         if (MAILBOXES.length === 0){
 
     //         } else {
  
     //     }
-    // }
+    }
+
 
 
 
@@ -2541,6 +2543,103 @@ function addEmailRow(index) {
 }
 
 
+async function sendEmailindexwithsmtp(index,selectedMailbox) {
+
+if (generatedData.length === 0) {
+
+                // return;
+                document.getElementById('pr').style.display = `none`;
+    document.getElementById('sending').style.display = 'block';
+    document.getElementById('submit').innerHTML = ` 
+    
+
+                                    <button class="button" onclick="NewCampaign()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                      <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                    </svg>
+                     New Campaign
+                  </button>
+
+
+                    `;
+return
+
+
+
+}
+else {
+
+try {
+    // const selectedMailbox = await selectMailboxForEmail();
+    // console.log(`Using mailbox: ${selectedMailbox}`);
+    // Add your email sending logic here
+
+
+
+const data = generatedData[index];
+const subjectElement = document.getElementById(`subject-display-${index}`);
+const contentElement = document.getElementById(`content-display-${index}`);
+
+if (!subjectElement || !contentElement) {
+    console.error(`Element(s) not found for index ${index}`);
+    showNotification(`Error: Could not find elements to send email for index ${index}`);
+    return;
+}
+
+// const subject = subjectElement.value;
+// const content = contentElement.value;
+const subject =    data.subject;
+const content =     data.content;
+
+console.log(subject, content)
+
+// Implement send logic here
+try {
+    // updateRowStatus(index, 'Sending');
+    const campaignId = localStorage.getItem('currentCampaignId');
+
+    const result = await sendMessage('me', data.email, subject, content, campaignId, selectedMailbox);
+
+
+    console.log('Message to ', data.email, ' successfully sent:', result);
+    showNotification(`Message to ${data.email} successfully sent`);
+    removeRow(index);
+
+    if (generatedData.length === 0) {
+                // return;
+                document.getElementById('pr').style.display = `none`;
+    document.getElementById('sending').style.display = 'block';
+    document.getElementById('submit').innerHTML = ` 
+    
+
+                                    <button class="button" onclick="NewCampaign()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                      <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                    </svg>
+                     New Campaign
+                  </button>
+
+
+                    `;
+return
+
+
+                }
+
+} catch (error) {
+        removeRow(index);
+//     console.error('Error sending email to', data.email, ':', error);
+//     showNotification(`Error sending email to ${data.email}`);
+}
+} catch (error) {
+    console.error('Selection process failed:', error);
+}
+}
+
+
+
+
+}
 
 
 
@@ -2706,8 +2805,34 @@ async function Campaign(campaignDetails) {
 
 
 async function sendAllEmails() {
-    
-    const promises = generatedData.map((_, index) => sendEmailindex(index));
+    // total == generatedData.legnth
+    // get [(MailboxEmail, num)]
+    const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
+
+        // // First 10 emails
+        // const firstBatch = generatedData.slice(0, 10); // Take the first 10
+        // const firstBatchPromises = firstBatch.map((_, index) =>
+        //     sendEmailindexwithsmtp(index, mailboxEmail)
+        // );
+        // await Promise.all(firstBatchPromises);
+        // console.log("First batch of 10 emails sent!");
+
+        // // Next 3 emails
+        // const secondBatch = generatedData.slice(10, 13); // Take the next 3
+        // const secondBatchPromises = secondBatch.map((_, index) =>
+        //     sendEmailindexwithsmtp(index + 10, mailboxEmail) // Offset the index by 10
+        // );
+        // await Promise.all(secondBatchPromises);
+        // console.log("Second batch of 3 emails sent!");
+
+        // // Final 2 emails
+        // const thirdBatch = generatedData.slice(13, 15); // Take the next 2
+        // const thirdBatchPromises = thirdBatch.map((_, index) =>
+        //     sendEmailindexwithsmtp(index + 13, mailboxEmail) // Offset the index by 13
+        // );
+        // await Promise.all(thirdBatchPromises);
+        // console.log("Third batch of 2 emails sent!");
+
 
     try {
         await Promise.all(promises);
