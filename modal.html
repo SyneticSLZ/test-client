@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sender Modals</title>
+    <style>
+        /* :root {
+            --primary-purple: #6A5ACD;
+            --light-purple: #9370DB;
+            --background-light: #f4f4f8;
+            --text-dark: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        } */
+
+        .modal-overlay-s {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-s {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            animation: slide-up 0.3s ease-out;
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header-s {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .modal-header-s h2 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .modal-body-s {
+            margin-bottom: 20px;
+        }
+
+        .form-group-s {
+            margin-bottom: 15px;
+        }
+
+        .form-group-s label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-control-s {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn-s {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-s {
+            background-color: #6A5ACD;
+            color: white;
+        }
+
+        .btn-primary-s:hover {
+            background-color: #9370DB;
+        }
+
+        .btn-secondary-s {
+            background-color: #f1f1f1;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        .btn-secondary-s:hover {
+            background-color: #e1e1e1;
+        }
+
+        .modal-footer-s {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-s:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="singleEmailBtn" class="btn btn-primary">Send Single Email</button>
+        <button id="multiEmailBtn" class="btn btn-primary">Send Multiple Emails</button>
+    </div>
+
+    <!-- Single Email Modal -->
+    <div id="singleEmailModal" class="modal-overlay-s">
+        <div class="modal-s">
+            <div class="modal-header-s">
+                <h2>Send Single Email</h2>
+            </div>
+            <div class="modal-body-s">
+                <div class="form-group-s">
+                    <label for="singleMailbox">Select Mailbox</label>
+                    <select id="singleMailbox" class="form-control-s">
+                        <option value="">Choose a Mailbox</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer-s">
+                <button id="singleEmailCancel" class="btn-s btn-secondary-s">Cancel</button>
+                <button id="singleEmailSend" class="btn-s btn-primary-s" disabled>Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiple Email Modal -->
+    <div id="multiEmailModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Send Multiple Emails</h2>
+            </div>
+            <div class="modal-body" id="multiEmailDistribution">
+                <!-- Mailbox distribution will be dynamically added here -->
+            </div>
+            <div class="modal-footer">
+                <button id="multiEmailCancel" class="btn btn-secondary">Cancel</button>
+                <button id="multiEmailSend" class="btn btn-primary" disabled>Send Emails</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mailbox Configuration
+        const MAILBOXES = [
+            { id: 'work', name: 'Work Email', email: 'john.doe@company.com' },
+            { id: 'personal', name: 'Personal Email', email: 'john.doe@gmail.com' },
+            { id: 'project', name: 'Project Email', email: 'john.projectmanager@company.com' }
+        ];
+
+        // Modal Management Utility
+        class ModalManager {
+            static openModal(modalId) {
+                document.getElementById(modalId).style.display = 'flex';
+            }
+
+            static closeModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+        }
+
+        // Single Email Modal Logic
+        function initSingleEmailModal() {
+            const singleMailboxSelect = document.getElementById('singleMailbox');
+            const singleEmailSendBtn = document.getElementById('singleEmailSend');
+            const singleEmailCancelBtn = document.getElementById('singleEmailCancel');
+
+            // Populate mailbox options
+            MAILBOXES.forEach(mailbox => {
+                const option = document.createElement('option');
+                option.value = mailbox.id;
+                option.textContent = `${mailbox.name} (${mailbox.email})`;
+                singleMailboxSelect.appendChild(option);
+            });
+
+            // Enable/Disable send button based on selection
+            singleMailboxSelect.addEventListener('change', (e) => {
+                singleEmailSendBtn.disabled = !e.target.value;
+            });
+
+            // Open modal
+            document.getElementById('singleEmailBtn').addEventListener('click', () => {
+                ModalManager.openModal('singleEmailModal');
+            });
+
+            // Close modal
+            singleEmailCancelBtn.addEventListener('click', () => {
+                ModalManager.closeModal('singleEmailModal');
+            });
+
+            // Send email
+            singleEmailSendBtn.addEventListener('click', () => {
+                const selectedMailbox = singleMailboxSelect.value;
+                console.log(`Sending email from: ${selectedMailbox}`);
+                // Add your email sending logic here
+                ModalManager.closeModal('singleEmailModal');
+            });
+        }
+
+        // Multiple Email Modal Logic
+        function initMultipleEmailModal() {
+            const multiEmailDistribution = document.getElementById('multiEmailDistribution');
+            const multiEmailSendBtn = document.getElementById('multiEmailSend');
+            const multiEmailCancelBtn = document.getElementById('multiEmailCancel');
+
+            // Create distribution inputs
+            MAILBOXES.forEach(mailbox => {
+                const distributionGroup = document.createElement('div');
+                distributionGroup.classList.add('form-group');
+
+                const label = document.createElement('label');
+                label.textContent = `${mailbox.name} (${mailbox.email})`;
+
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.min = '0';
+                input.classList.add('form-control');
+                input.dataset.mailboxId = mailbox.id;
+                input.placeholder = `Number of emails from ${mailbox.email}`;
+
+                distributionGroup.appendChild(label);
+                distributionGroup.appendChild(input);
+                multiEmailDistribution.appendChild(distributionGroup);
+
+                // Validate total emails
+                input.addEventListener('input', validateMultiEmailDistribution);
+            });
+
+            function validateMultiEmailDistribution() {
+                const inputs = multiEmailDistribution.querySelectorAll('input');
+                const total = Array.from(inputs).reduce((sum, input) => 
+                    sum + (parseInt(input.value) || 0), 0
+                );
+                multiEmailSendBtn.disabled = total === 0;
+            }
+
+            // Open modal
+            document.getElementById('multiEmailBtn').addEventListener('click', () => {
+                ModalManager.openModal('multiEmailModal');
+            });
+
+            // Close modal
+            multiEmailCancelBtn.addEventListener('click', () => {
+                ModalManager.closeModal('multiEmailModal');
+            });
+
+            // Send emails
+            multiEmailSendBtn.addEventListener('click', () => {
+                const distribution = Array.from(
+                    multiEmailDistribution.querySelectorAll('input')
+                ).map(input => ({
+                    mailboxId: input.dataset.mailboxId,
+                    emails: parseInt(input.value) || 0
+                }));
+
+                console.log('Email Distribution:', distribution);
+                // Add your multiple email sending logic here
+                ModalManager.closeModal('multiEmailModal');
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initSingleEmailModal();
+            initMultipleEmailModal();
+        });
+    </script>
+</body>
+</html>
