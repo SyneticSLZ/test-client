@@ -440,6 +440,7 @@
     ];
     let submittedData = [];
 let generatedData = [];
+let MAILBOXES = [];
 let U_Username;
 let U_MyEmail;
 
@@ -1085,29 +1086,87 @@ const fetchActiveMailbox = async (email) => {
             }
         });
 
-        const result = await response.json(); // Parse the response
+        const result = await response.json(); // Parse the JSON response
 
-        if (response.ok) {
-            if (result.length === 0) {
-                console.log('No active mailboxes found');
-                return []; // Return an empty array if no active mailboxes are found
-            }
+        if (response.ok && Array.isArray(result)) {
+            console.log('Active mailboxes fetched:', result);
 
-            console.log('Active mailboxes:', result);
-            // Return the array of SMTP user email addresses
-            return result;
-        } else if (result.message === 'No active mailbox found') {
-            console.log('No active mailbox found');
-            return []; // Return null if no active mailbox was found
+            // Transform the result into the desired MAILBOXES format
+            const MAILBOXES = result.map((mailbox, index) => ({
+                id: `mailbox-${index + 1}`, // Generate a unique ID
+                name: mailbox.name || `Mailbox ${index + 1}`, // Use name or default
+                email: mailbox.smtp.user, // Use the mailbox email
+            }));
+
+            console.log('Formatted MAILBOXES:', MAILBOXES);
+            return MAILBOXES; // Return the formatted MAILBOXES array
         } else {
-            throw new Error(result.message || 'Failed to fetch active mailbox');
+            console.warn('No active mailboxes found or response format invalid.');
+            return []; // Return an empty array if no active mailboxes
         }
     } catch (error) {
-        console.error('Error fetching active mailbox:', error);
-        sNotification('Error fetching active mailbox: ' + error.message, 'error');
-        return []
+        console.error('Error fetching active mailboxes:', error);
+        return []; // Return an empty array on error
     }
-};
+}
+
+async function initializeMailboxes(email) {
+    const MAILBOXES = await fetchActiveMailboxes(email); // Populate MAILBOXES dynamically
+    console.log('Initialized MAILBOXES:', MAILBOXES);
+
+    if (MAILBOXES.length === 0) {
+        console.warn('No active mailboxes available for this user.');
+        document.getElementById('maintop').innerHTML=`
+                    <div class="plan">${CapsPlan} plan Subscriber</div>
+            <div class="google" id="googleauthid">
+<div onclick="OpenMailboxes()" style="cursor: pointer; text-decoration: underline;"> Please Add A MailBox</div> 
+            </div>
+        `;
+        button.innerHTML=`
+                    
+                    <button class="button" onclick="OpenMailboxes()">
+                        <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
+                        Add a Mailbox
+                      </button>
+
+
+
+                      
+                      `
+
+    } else {
+        // Use MAILBOXES for your dropdown or UI logic
+        document.getElementById('googleauthid').innerHTML=`
+<div class="topbar">
+<div class="dropdown">
+        <button class="dropbtn">
+            Your Active Mailboxes 
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <!-- Dynamic mailbox list -->
+            ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
+        </div>
+    </div>
+</div>
+
+
+    
+
+`;
+            button.innerHTML=`
+                    
+                    <button class="button" onclick="Submitandcheckautosend()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                        </svg>
+                        Generate
+                      </button>
+
+                      `
+
+    }
+}
 
 async function RenderHtml(data){
     
@@ -1121,7 +1180,8 @@ async function RenderHtml(data){
     // GetMetrics(email)
     const UserEmail = data.email
     fetchMailboxes();
-    HasActive = await fetchActiveMailbox(email)
+    // HasActive = await fetchActiveMailbox(email)
+    initializeMailboxes(email)
 
     const plan = data.plan
     const CapsPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
@@ -1275,59 +1335,14 @@ async function RenderHtml(data){
                         Unlock Pro
                 </button>`
             }
-        else {
+    //     else {
 
-            if (HasActive.length === 0){
-                document.getElementById('maintop').innerHTML=`
-                    <div class="plan">${CapsPlan} plan Subscriber</div>
-            <div class="google" id="googleauthid">
-<div onclick="OpenMailboxes()" style="cursor: pointer; text-decoration: underline;"> Please Add A MailBox</div> 
-            </div>
-        `;
-        button.innerHTML=`
-                    
-                    <button class="button" onclick="OpenMailboxes()">
-                        <img  src='google.png' alt="google" style="height= 30px; width: 30px;">
-                        Add a Mailbox
-                      </button>
+    //         if (MAILBOXES.length === 0){
 
-
-
-                      
-                      `
-
-            } else {
-                document.getElementById('googleauthid').innerHTML=`
-<div class="topbar">
-<div class="dropdown">
-        <button class="dropbtn">
-            Your Active Mailboxes 
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <!-- Dynamic mailbox list -->
-            ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
-        </div>
-    </div>
-</div>
-
-
-    
-
-`;
-            button.innerHTML=`
-                    
-                    <button class="button" onclick="Submitandcheckautosend()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                        Generate
-                      </button>
-
-                      `
-
-        }
-    }
+    //         } else {
+ 
+    //     }
+    // }
 
 
 
@@ -4691,11 +4706,11 @@ const formatMailboxData = (formData) => {
                 // Call on page load
                 populateUserData();
 
-                const MAILBOXES = [
-            { id: 'work', name: 'Work Email', email: 'john.doe@company.com' },
-            { id: 'personal', name: 'Personal Email', email: 'john.doe@gmail.com' },
-            { id: 'project', name: 'Project Email', email: 'john.projectmanager@company.com' }
-        ];
+        //         const MAILBOXES = [
+        //     { id: 'work', name: 'Work Email', email: 'john.doe@company.com' },
+        //     { id: 'personal', name: 'Personal Email', email: 'john.doe@gmail.com' },
+        //     { id: 'project', name: 'Project Email', email: 'john.projectmanager@company.com' }
+        // ];
 
         // Modal Management Utility
         class ModalManager {
@@ -4759,8 +4774,8 @@ async function selectMailboxForEmail() {
         // Populate mailbox options dynamically
         MAILBOXES.forEach(mailbox => {
             const option = document.createElement('option');
-            option.value = mailbox.id;
-            option.textContent = `${mailbox.name} (${mailbox.email})`;
+            option.value = mailbox.email;
+            option.textContent = `${mailbox.email}`;
             singleMailboxSelect.appendChild(option);
         });
 
