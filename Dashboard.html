@@ -466,7 +466,7 @@ window.onload = function() {
             //     isActive: mailbox.isActive 
             // }));
             mailboxes = mailboxes.map(mailbox => 
-        mailbox.email === targetEmail
+        mailbox.email === email
             ? { ...mailbox, isActive: true }
             : mailbox
     );
@@ -498,7 +498,7 @@ const setinActiveMailbox = async (email) => {
             //     isActive: mailbox.isActive 
             // }));
             mailboxes = mailboxes.map(mailbox => 
-        mailbox.email === targetEmail
+        mailbox.email === email
             ? { ...mailbox, isActive: false }
             : mailbox
     );
