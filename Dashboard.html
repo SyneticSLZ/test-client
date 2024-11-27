@@ -2556,7 +2556,13 @@ async function sendEmailindex(index) {
 }
 else {
 
-
+    try {
+        const selectedMailbox = await selectMailboxForEmail();
+        console.log(`Using mailbox: ${selectedMailbox}`);
+        // Add your email sending logic here
+    } catch (error) {
+        console.error('Selection process failed:', error);
+    }
 
     
     const data = generatedData[index];
@@ -4702,43 +4708,92 @@ const formatMailboxData = (formData) => {
             }
         }
 
-        // Single Email Modal Logic
-        function initSingleEmailModal() {
-            const singleMailboxSelect = document.getElementById('singleMailbox');
-            const singleEmailSendBtn = document.getElementById('singleEmailSend');
-            const singleEmailCancelBtn = document.getElementById('singleEmailCancel');
+        // // Single Email Modal Logic
+        // function initSingleEmailModal() {
+        //     const singleMailboxSelect = document.getElementById('singleMailbox');
+        //     const singleEmailSendBtn = document.getElementById('singleEmailSend');
+        //     const singleEmailCancelBtn = document.getElementById('singleEmailCancel');
 
-            // Populate mailbox options
-            MAILBOXES.forEach(mailbox => {
-                const option = document.createElement('option');
-                option.value = mailbox.id;
-                option.textContent = `${mailbox.name} (${mailbox.email})`;
-                singleMailboxSelect.appendChild(option);
-            });
+        //     // Populate mailbox options
+        //     MAILBOXES.forEach(mailbox => {
+        //         const option = document.createElement('option');
+        //         option.value = mailbox.id;
+        //         option.textContent = `${mailbox.name} (${mailbox.email})`;
+        //         singleMailboxSelect.appendChild(option);
+        //     });
 
-            // Enable/Disable send button based on selection
-            singleMailboxSelect.addEventListener('change', (e) => {
-                singleEmailSendBtn.disabled = !e.target.value;
-            });
+        //     // Enable/Disable send button based on selection
+        //     singleMailboxSelect.addEventListener('change', (e) => {
+        //         singleEmailSendBtn.disabled = !e.target.value;
+        //     });
 
-            // Open modal
-            document.getElementById('singleEmailBtn').addEventListener('click', () => {
-                ModalManager.openModal('singleEmailModal');
-            });
+        //     // Open modal
+        //     function singleEmailModal(){
+        //         ModalManager.openModal('singleEmailModal');
+        //     };
 
-            // Close modal
-            singleEmailCancelBtn.addEventListener('click', () => {
+        //     // Close modal
+        //     singleEmailCancelBtn.addEventListener('click', () => {
+        //         ModalManager.closeModal('singleEmailModal');
+        //     });
+
+        //     // Send email
+        //     singleEmailSendBtn.addEventListener('click', () => {
+        //         const selectedMailbox = singleMailboxSelect.value;
+        //         console.log(`Sending email from: ${selectedMailbox}`);
+        //         // Add your email sending logic here
+        //         ModalManager.closeModal('singleEmailModal');
+        //     });
+        // }
+
+        // Function to open the modal and get the selected mailbox
+async function selectMailboxForEmail() {
+    return new Promise((resolve, reject) => {
+        const singleMailboxSelect = document.getElementById('singleMailbox');
+        const singleEmailSendBtn = document.getElementById('singleEmailSend');
+        const singleEmailCancelBtn = document.getElementById('singleEmailCancel');
+
+        // Clear previous options
+        singleMailboxSelect.innerHTML = '';
+
+        // Populate mailbox options dynamically
+        MAILBOXES.forEach(mailbox => {
+            const option = document.createElement('option');
+            option.value = mailbox.id;
+            option.textContent = `${mailbox.name} (${mailbox.email})`;
+            singleMailboxSelect.appendChild(option);
+        });
+
+        // Enable/Disable send button based on selection
+        singleMailboxSelect.addEventListener('change', (e) => {
+            singleEmailSendBtn.disabled = !e.target.value;
+        });
+
+        // Handle "Send Email" button click
+        singleEmailSendBtn.addEventListener('click', () => {
+            const selectedMailbox = singleMailboxSelect.value;
+
+            if (selectedMailbox) {
+                console.log(`Selected Mailbox: ${selectedMailbox}`);
                 ModalManager.closeModal('singleEmailModal');
-            });
+                resolve(selectedMailbox); // Resolve the selected mailbox
+            } else {
+                reject('No mailbox selected.');
+            }
+        });
 
-            // Send email
-            singleEmailSendBtn.addEventListener('click', () => {
-                const selectedMailbox = singleMailboxSelect.value;
-                console.log(`Sending email from: ${selectedMailbox}`);
-                // Add your email sending logic here
-                ModalManager.closeModal('singleEmailModal');
-            });
-        }
+        // Handle "Cancel" button click
+        singleEmailCancelBtn.addEventListener('click', () => {
+            ModalManager.closeModal('singleEmailModal');
+            reject('User cancelled selection.');
+        });
+
+        // Open the modal
+        ModalManager.openModal('singleEmailModal');
+    });
+}
+
+
 
         document.addEventListener('DOMContentLoaded', () => {
             initSingleEmailModal();
