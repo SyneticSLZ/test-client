@@ -2575,9 +2575,7 @@ else {
         const selectedMailbox = await selectMailboxForEmail();
         console.log(`Using mailbox: ${selectedMailbox}`);
         // Add your email sending logic here
-    } catch (error) {
-        console.error('Selection process failed:', error);
-    }
+
 
     
     const data = generatedData[index];
@@ -2602,7 +2600,7 @@ else {
         // updateRowStatus(index, 'Sending');
         const campaignId = localStorage.getItem('currentCampaignId');
 
-        const result = await sendMessage('me', data.email, subject, content, campaignId);
+        const result = await sendMessage('me', data.email, subject, content, campaignId, selectedMailbox);
 
 
         console.log('Message to ', data.email, ' successfully sent:', result);
@@ -2634,6 +2632,9 @@ else {
             removeRow(index);
     //     console.error('Error sending email to', data.email, ':', error);
     //     showNotification(`Error sending email to ${data.email}`);
+    }
+} catch (error) {
+        console.error('Selection process failed:', error);
     }
 }
 
@@ -2937,15 +2938,15 @@ async function CallThisWhenAutosend() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function sendMessage(sender, to, subject, messageText, campaignId) {
+async function sendMessage(sender, to, subject, messageText, campaignId, selectedMailbox) {
 
-    const token = localStorage.getItem('authToken');
+    // const token = localStorage.getItem('authToken');
     const response = await fetch('https://server.voltmailer.com/send-bulk-manual', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token: token , email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId })
+        body: JSON.stringify({ selectedMailbox: selectedMailbox , email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId })
     });
 
 
