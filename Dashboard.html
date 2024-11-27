@@ -2374,6 +2374,7 @@ else {
     try {
         // updateRowStatus(index, 'Sending');
         const campaignId = localStorage.getItem('currentCampaignId');
+
         const result = await sendMessage('me', data.email, subject, content, campaignId);
 
 
@@ -3662,8 +3663,8 @@ function showNotification(message) {
                     <input type="password" id="password" class="form-input" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class=" button-secondary" onclick="hideAddMailboxModal()">Cancel</button>
-                    <button type="submit" class=" button-primary" style="background-color: #8320aa; padding: 10px 10px;" >Add Mailbox</button>
+                    <button type="button" class=" button-secondary" style=" padding: 10px 10px;" onclick="hideAddMailboxModal()">Cancel</button>
+                    <button type="submit" class=" button-primary" style="background-color: #8320aa; padding: 10px 10px; color: white;" >Add Mailbox</button>
                 </div>
             </form>
         </div>
