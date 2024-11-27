@@ -410,7 +410,7 @@ window.onload = function() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ U_MyEmail, smtp: smtpDetails })
+            body: JSON.stringify({ email: U_MyEmail, smtp: smtpDetails })
         });
 
         const result = await response.json();
