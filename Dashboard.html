@@ -461,10 +461,15 @@ window.onload = function() {
 
         const result = await response.json();
         if (response.ok) {
-            mailboxes = mailboxes.map(mailbox => ({
-                ...mailbox,
-                isActive: mailbox.isActive 
-            }));
+            // mailboxes = mailboxes.map(mailbox => ({
+            //     ...mailbox,
+            //     isActive: mailbox.isActive 
+            // }));
+            mailboxes = mailboxes.map(mailbox => 
+        mailbox.email === targetEmail
+            ? { ...mailbox, isActive: true }
+            : mailbox
+    );
             updateUI();
             sNotification('Active mailbox updated successfully!');
         } else {
@@ -488,10 +493,15 @@ const setinActiveMailbox = async (email) => {
 
         const result = await response.json();
         if (response.ok) {
-            mailboxes = mailboxes.map(mailbox => ({
-                ...mailbox,
-                isActive: mailbox.isActive 
-            }));
+            // mailboxes = mailboxes.map(mailbox => ({
+            //     ...mailbox,
+            //     isActive: mailbox.isActive 
+            // }));
+            mailboxes = mailboxes.map(mailbox => 
+        mailbox.email === targetEmail
+            ? { ...mailbox, isActive: false }
+            : mailbox
+    );
             updateUI();
             sNotification('Active mailbox updated successfully!');
         } else {
