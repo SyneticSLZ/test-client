@@ -879,7 +879,7 @@ async function RenderHtml(data){
     // GetMetrics(email)
     const UserEmail = data.email
     fetchMailboxes();
-    HasActive = fetchActiveMailbox(email)
+    HasActive = await fetchActiveMailbox(email)
 
     const plan = data.plan
     const CapsPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
