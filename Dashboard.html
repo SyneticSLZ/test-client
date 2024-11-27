@@ -246,51 +246,79 @@
         color: #880088;
     }
 
-    /* Top bar dropdown */
+/* Dropdown Container */
 .dropdown {
     position: relative;
     display: inline-block;
+    font-family: 'Arial', sans-serif;
 }
 
+/* Dropdown Button */
 .dropbtn {
-    background-color: #4CAF50; /* Adjust color to your theme */
+    background-color: #4CAF50; /* Green to match your button */
     color: white;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 10px 15px;
+    font-size: 14px;
     border: none;
-    cursor: pointer;
     border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between text and arrow */
 }
 
-.dropdown:hover .dropbtn {
+/* Caret Icon Styling */
+.dropbtn i {
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+/* Hover Effect */
+.dropbtn:hover {
     background-color: #45a049;
 }
 
+/* Dropdown Content Styling */
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: white;
     min-width: 200px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 5px;
     overflow: hidden;
+    margin-top: 5px; /* Space between button and menu */
 }
 
+/* Links within Dropdown */
 .dropdown-content a {
-    color: black;
+    color: #333;
     padding: 10px 15px;
     text-decoration: none;
     display: block;
-    transition: background-color 0.3s;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
+/* Hover on Links */
 .dropdown-content a:hover {
-    background-color: #ddd;
+    background-color: #f1f1f1;
+    color: #000;
 }
 
+/* Show Dropdown Content on Hover */
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+/* Align with Surrounding UI */
+.topbar {
+    display: flex;
+    justify-content: flex-start; /* Align with other elements */
+    gap: 10px;
+    padding: 10px;
+    background-color: #f4f4f4; /* Match the top bar's background */
 }
 
 /* MODAL SINGLE */
@@ -1270,16 +1298,20 @@ async function RenderHtml(data){
 
             } else {
                 document.getElementById('googleauthid').innerHTML=`
-
-        <div class="dropdown">
-            <button class="dropbtn">Your Active Mailboxes</button>
-            <div class="dropdown-content">
-                ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
-            </div>
+<div class="topbar">
+<div class="dropdown">
+        <button class="dropbtn">
+            Your Active Mailboxes 
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <!-- Dynamic mailbox list -->
+            ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
         </div>
+    </div>
+</div>
 
 
-                <button id="singleEmailBtn" class="btn btn-primary">Send Single Email</button>
     
 
 `;
@@ -3060,7 +3092,7 @@ function showNotification(message) {
     <div class="top-bar"></div>
     <div id="notification-container-pop"></div>
 
-
+    <button id="singleEmailBtn" class="btn btn-primary">Send Single Email</button>
         <!-- Single Email Modal -->
         <div id="singleEmailModal" class="modal-overlay-s">
             <div class="modal-s">
