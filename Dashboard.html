@@ -1129,7 +1129,7 @@ async function RenderHtml(data){
     // GetMetrics(email)
     const UserEmail = data.email
     fetchMailboxes();
-    // HasActive = await fetchActiveMailbox(email)
+    HasActive = await fetchActiveMailbox(email)
     initializeMailboxes(email)
 
     const plan = data.plan
@@ -1285,7 +1285,7 @@ async function RenderHtml(data){
                 </button>`
             }
         else {
-            if (MAILBOXES.length === 0) {
+            if (HasActive.length === 0) {
         console.warn('No active mailboxes available for this user.');
         document.getElementById('maintop').innerHTML=`
                     <div class="plan">${CapsPlan} plan Subscriber</div>
