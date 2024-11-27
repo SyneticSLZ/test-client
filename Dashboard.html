@@ -4265,10 +4265,17 @@ async function updateEmailForm(){
 
 document.getElementById('addMailboxForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-        const formData = {
-                email: document.getElementById('email').value,
-                smtpHost: document.getElementById('smtpHost').value,
-                smtpPort: document.getElementById('smtpPort').value,
+        // const formData = {
+        //         email: document.getElementById('email').value,
+        //         smtpHost: document.getElementById('smtpHost').value,
+        //         smtpPort: document.getElementById('smtpPort').value,
+        //         username: document.getElementById('username').value,
+        //         password: document.getElementById('password').value,
+        //     };
+            const formData = {
+                email: "exe@gmail.com",
+                smtpHost: "gmail",
+                smtpPort: "586",
                 username: document.getElementById('username').value,
                 password: document.getElementById('password').value,
             };
