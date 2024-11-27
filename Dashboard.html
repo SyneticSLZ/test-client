@@ -404,6 +404,7 @@ window.onload = function() {
             user: username,         // From the form input
             pass: password          // From the form input
         };
+        console.log(U_MyEmail)
         const response = await fetch('https://server.voltmailer.com/api/mailboxes/create', {
             method: 'POST',
             headers: {
