@@ -1312,6 +1312,8 @@ async function RenderHtml(data){
                       `
 
     } else {
+        MAILBOXES = HasActive;
+        console.log('Initialized MAILBOXES:', MAILBOXES);
         // Use MAILBOXES for your dropdown or UI logic
         document.getElementById('googleauthid').innerHTML=`
             <div class="topbar">
