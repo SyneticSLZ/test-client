@@ -3010,8 +3010,10 @@ async function Campaign(campaignDetails) {
 async function sendAllEmails() {
     // total == generatedData.legnth
     // get [(MailboxEmail, num)]
-    modal = new MultiEmailDistributor();
-    window.multiEmailDistributor.openModal();
+    // modal = new MultiEmailDistributor();
+    // window.multiEmailDistributor.openModal();
+    emails = await fetchActiveMailboxe()
+    console.log(emails)
     const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
 
         // // First 10 emails
