@@ -3012,7 +3012,7 @@ async function sendAllEmails() {
     // get [(MailboxEmail, num)]
     // modal = new MultiEmailDistributor();
     // window.multiEmailDistributor.openModal();
-    emails = await fetchActiveMailbox()
+    emails = await fetchActiveMailbox(U_MyEmail)
     console.log(emails)
     const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
 
@@ -5135,7 +5135,7 @@ const formatMailboxData = (formData) => {
 
         // Function to open the modal and get the selected mailbox
 async function selectMailboxForEmail() {
-    emails = await fetchActiveMailbox()
+    emails = await fetchActiveMailbox(U_MyEmail)
     console.log(emails)
 
     return new Promise((resolve, reject) => {
