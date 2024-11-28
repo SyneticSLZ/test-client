@@ -2874,6 +2874,7 @@ async function sendEmailindex(index) {
 else {
 
     try {
+
         const selectedMailbox = await selectMailboxForEmail();
         console.log(`Using mailbox: ${selectedMailbox}`);
         // Add your email sending logic here
@@ -3287,7 +3288,8 @@ async function sendMessage(sender, to, subject, messageText, campaignId, selecte
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ to: email, email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId, selectedMailbox: selectedMailbox })
+        // body: JSON.stringify({ to: email, email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId, selectedMailbox: selectedMailbox })
+        body: JSON.stringify({ email: U_MyEmail, to: to, subject: subject, text: messageText,  mailbox: selectedMailbox })
     });
 
 
