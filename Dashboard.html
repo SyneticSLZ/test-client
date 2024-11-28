@@ -3467,7 +3467,7 @@ function showNotification(message) {
                 </div>
             </div>
         </div>
-
+<!-- 
         <div id="multiEmailModal" class="modal-overlay-m">
             <div class="modal-m">
                 <div class="modal-header-m">
@@ -3476,7 +3476,7 @@ function showNotification(message) {
                 </div>
     
                 <div class="email-distribution-container-m" id="emailDistributionContainer">
-                    <!-- Mailbox distribution will be dynamically added here -->
+                     Mailbox distribution will be dynamically added here 
                 </div>
     
                 <button id="addMailboxBtn" class="btn btn-add-mailbox-m">
@@ -3506,7 +3506,7 @@ function showNotification(message) {
                 </div>
             </div>
         </div>
-
+ -->
 
 
     <div class="manual-popup-overlay" id="manual-popup-overlay">
@@ -5180,171 +5180,171 @@ async function selectMailboxForEmail() {
     });
 }
 
-class MultiEmailDistributor {
-            constructor() {
-                // Use an array to store mailboxes instead of localStorage
-                this.mailboxes = [
-                    { name: 'Default Work', email: 'work@example.com', limit: 100 },
-                    { name: 'Personal Email', email: 'personal@example.com', limit: 50 }
-                ];
-                this.initializeDOM();
-                this.bindEvents();
-                this.renderMailboxes();
-            }
+// class MultiEmailDistributor {
+//             constructor() {
+//                 // Use an array to store mailboxes instead of localStorage
+//                 this.mailboxes = [
+//                     { name: 'Default Work', email: 'work@example.com', limit: 100 },
+//                     { name: 'Personal Email', email: 'personal@example.com', limit: 50 }
+//                 ];
+//                 this.initializeDOM();
+//                 this.bindEvents();
+//                 this.renderMailboxes();
+//             }
 
-            initializeDOM() {
-                this.modal = document.getElementById('multiEmailModal');
-                this.addMailboxModal = document.getElementById('addMailboxModal');
-                this.distributionContainer = document.getElementById('emailDistributionContainer');
-                this.totalEmailsIndicator = document.getElementById('totalEmailsIndicator');
-                this.sendButton = document.getElementById('multiEmailSend');
-                this.cancelButton = document.getElementById('multiEmailCancel');
-                this.addMailboxButton = document.getElementById('addMailboxBtn');
+//             initializeDOM() {
+//                 this.modal = document.getElementById('multiEmailModal');
+//                 this.addMailboxModal = document.getElementById('addMailboxModal');
+//                 this.distributionContainer = document.getElementById('emailDistributionContainer');
+//                 this.totalEmailsIndicator = document.getElementById('totalEmailsIndicator');
+//                 this.sendButton = document.getElementById('multiEmailSend');
+//                 this.cancelButton = document.getElementById('multiEmailCancel');
+//                 this.addMailboxButton = document.getElementById('addMailboxBtn');
 
-                // Add Mailbox Modal Elements
-                this.mailboxNameInput = document.getElementById('mailboxNameInput');
-                this.mailboxEmailInput = document.getElementById('mailboxEmailInput');
-                this.mailboxLimitInput = document.getElementById('mailboxLimitInput');
-                this.cancelAddMailboxButton = document.getElementById('cancelAddMailbox');
-                this.confirmAddMailboxButton = document.getElementById('confirmAddMailbox');
-            }
+//                 // Add Mailbox Modal Elements
+//                 this.mailboxNameInput = document.getElementById('mailboxNameInput');
+//                 this.mailboxEmailInput = document.getElementById('mailboxEmailInput');
+//                 this.mailboxLimitInput = document.getElementById('mailboxLimitInput');
+//                 this.cancelAddMailboxButton = document.getElementById('cancelAddMailbox');
+//                 this.confirmAddMailboxButton = document.getElementById('confirmAddMailbox');
+//             }
 
-            openModal() {
-        this.modal.classList.add('show');
-    }
+//             openModal() {
+//         this.modal.classList.add('show');
+//     }
 
-    closeModal() {
-        this.modal.classList.remove('show');
-    }
+//     closeModal() {
+//         this.modal.classList.remove('show');
+//     }
 
-            renderMailboxes() {
-                this.distributionContainer.innerHTML = '';
+//             renderMailboxes() {
+//                 this.distributionContainer.innerHTML = '';
 
-                this.mailboxes.forEach((mailbox, index) => {
-                    const distributionEl = document.createElement('div');
-                    distributionEl.classList.add('mailbox-distribution');
+//                 this.mailboxes.forEach((mailbox, index) => {
+//                     const distributionEl = document.createElement('div');
+//                     distributionEl.classList.add('mailbox-distribution');
 
-                    distributionEl.innerHTML = `
-                        <div class="mailbox-header">
-                            <div class="name">${mailbox.name}</div>
-                            <div class="mailbox-remove" data-index="${index}">✖</div>
-                        </div>
-                        <div class="mailbox-info">
-                            <div class="email">${mailbox.email}</div>
-                            <div class="limit">Sending Limit: ${mailbox.limit} emails</div>
-                        </div>
-                        <input 
-                            type="number" 
-                            min="0" 
-                            max="${mailbox.limit}" 
-                            data-mailbox-index="${index}" 
-                            class="email-input" 
-                            placeholder="# of Emails"
-                        >
-                    `;
+//                     distributionEl.innerHTML = `
+//                         <div class="mailbox-header">
+//                             <div class="name">${mailbox.name}</div>
+//                             <div class="mailbox-remove" data-index="${index}">✖</div>
+//                         </div>
+//                         <div class="mailbox-info">
+//                             <div class="email">${mailbox.email}</div>
+//                             <div class="limit">Sending Limit: ${mailbox.limit} emails</div>
+//                         </div>
+//                         <input 
+//                             type="number" 
+//                             min="0" 
+//                             max="${mailbox.limit}" 
+//                             data-mailbox-index="${index}" 
+//                             class="email-input" 
+//                             placeholder="# of Emails"
+//                         >
+//                     `;
 
-                    const input = distributionEl.querySelector('.email-input');
-                    input.addEventListener('input', () => this.updateTotalEmails());
+//                     const input = distributionEl.querySelector('.email-input');
+//                     input.addEventListener('input', () => this.updateTotalEmails());
 
-                    const removeButton = distributionEl.querySelector('.mailbox-remove');
-                    removeButton.addEventListener('click', () => this.removeMailbox(index));
+//                     const removeButton = distributionEl.querySelector('.mailbox-remove');
+//                     removeButton.addEventListener('click', () => this.removeMailbox(index));
 
-                    this.distributionContainer.appendChild(distributionEl);
-                });
+//                     this.distributionContainer.appendChild(distributionEl);
+//                 });
 
-                this.updateTotalEmails();
-            }
+//                 this.updateTotalEmails();
+//             }
 
-            updateTotalEmails() {
-                const inputs = this.distributionContainer.querySelectorAll('.email-input');
-                const total = Array.from(inputs).reduce((sum, input) => 
-                    sum + (parseInt(input.value) || 0), 0
-                );
+//             updateTotalEmails() {
+//                 const inputs = this.distributionContainer.querySelectorAll('.email-input');
+//                 const total = Array.from(inputs).reduce((sum, input) => 
+//                     sum + (parseInt(input.value) || 0), 0
+//                 );
 
-                this.totalEmailsIndicator.textContent = `${total} Emails`;
-                this.sendButton.disabled = total === 0;
+//                 this.totalEmailsIndicator.textContent = `${total} Emails`;
+//                 this.sendButton.disabled = total === 0;
 
-                // Validate individual mailbox limits
-                inputs.forEach(input => {
-                    const index = input.dataset.mailboxIndex;
-                    const mailbox = this.mailboxes[index];
-                    const value = parseInt(input.value) || 0;
+//                 // Validate individual mailbox limits
+//                 inputs.forEach(input => {
+//                     const index = input.dataset.mailboxIndex;
+//                     const mailbox = this.mailboxes[index];
+//                     const value = parseInt(input.value) || 0;
 
-                    if (value > mailbox.limit) {
-                        input.value = mailbox.limit;
-                        this.updateTotalEmails();
-                    }
-                });
-            }
+//                     if (value > mailbox.limit) {
+//                         input.value = mailbox.limit;
+//                         this.updateTotalEmails();
+//                     }
+//                 });
+//             }
 
-            removeMailbox(index) {
-                // Prevent removing the last mailbox
-                if (this.mailboxes.length > 1) {
-                    this.mailboxes.splice(index, 1);
-                    this.renderMailboxes();
-                } else {
-                    alert('You must have at least one mailbox');
-                }
-            }
+//             removeMailbox(index) {
+//                 // Prevent removing the last mailbox
+//                 if (this.mailboxes.length > 1) {
+//                     this.mailboxes.splice(index, 1);
+//                     this.renderMailboxes();
+//                 } else {
+//                     alert('You must have at least one mailbox');
+//                 }
+//             }
 
-            bindEvents() {
-                document.getElementById('multiEmailBtn').addEventListener('click', () => {
-                    this.modal.classList.add('show');
-                });
+//             bindEvents() {
+//                 document.getElementById('multiEmailBtn').addEventListener('click', () => {
+//                     this.modal.classList.add('show');
+//                 });
 
-                this.cancelButton.addEventListener('click', () => {
-                    this.modal.classList.remove('show');
-                });
+//                 this.cancelButton.addEventListener('click', () => {
+//                     this.modal.classList.remove('show');
+//                 });
 
-                this.sendButton.addEventListener('click', () => {
-                    const distribution = Array.from(
-                        this.distributionContainer.querySelectorAll('.email-input')
-                    ).map((input, index) => ({
-                        mailboxId: this.mailboxes[index].email,
-                        emails: parseInt(input.value) || 0
-                    }));
+//                 this.sendButton.addEventListener('click', () => {
+//                     const distribution = Array.from(
+//                         this.distributionContainer.querySelectorAll('.email-input')
+//                     ).map((input, index) => ({
+//                         mailboxId: this.mailboxes[index].email,
+//                         emails: parseInt(input.value) || 0
+//                     }));
 
-                    console.log('Email Distribution:', distribution);
-                    this.modal.classList.remove('show');
-                });
+//                     console.log('Email Distribution:', distribution);
+//                     this.modal.classList.remove('show');
+//                 });
 
-                // Add Mailbox Modal Events
-                this.addMailboxButton.addEventListener('click', () => {
-                    this.addMailboxModal.classList.add('show');
-                });
+//                 // Add Mailbox Modal Events
+//                 this.addMailboxButton.addEventListener('click', () => {
+//                     this.addMailboxModal.classList.add('show');
+//                 });
 
-                this.cancelAddMailboxButton.addEventListener('click', () => {
-                    this.addMailboxModal.classList.remove('show');
-                });
+//                 this.cancelAddMailboxButton.addEventListener('click', () => {
+//                     this.addMailboxModal.classList.remove('show');
+//                 });
 
-                this.confirmAddMailboxButton.addEventListener('click', () => {
-                    const name = this.mailboxNameInput.value.trim();
-                    const email = this.mailboxEmailInput.value.trim();
-                    const limit = parseInt(this.mailboxLimitInput.value);
+//                 this.confirmAddMailboxButton.addEventListener('click', () => {
+//                     const name = this.mailboxNameInput.value.trim();
+//                     const email = this.mailboxEmailInput.value.trim();
+//                     const limit = parseInt(this.mailboxLimitInput.value);
 
-                    // Basic email validation
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (name && email && emailRegex.test(email) && limit > 0) {
-                        this.mailboxes.push({ name, email, limit });
-                        this.renderMailboxes();
-                        this.addMailboxModal.classList.remove('show');
+//                     // Basic email validation
+//                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//                     if (name && email && emailRegex.test(email) && limit > 0) {
+//                         this.mailboxes.push({ name, email, limit });
+//                         this.renderMailboxes();
+//                         this.addMailboxModal.classList.remove('show');
 
-                        // Reset inputs
-                        this.mailboxNameInput.value = '';
-                        this.mailboxEmailInput.value = '';
-                        this.mailboxLimitInput.value = '';
-                    } else {
-                        alert('Please fill in all fields correctly. Ensure a valid email and positive limit.');
-                    }
-                });
-            }
-            getEmailDistribution() {
-        return Array.from(this.distributionContainer.querySelectorAll('.email-input')).map((input, index) => ({
-            email: this.mailboxes[index].email,
-            numEmails: parseInt(input.value) || 0
-        }));
-    }
-        }
+//                         // Reset inputs
+//                         this.mailboxNameInput.value = '';
+//                         this.mailboxEmailInput.value = '';
+//                         this.mailboxLimitInput.value = '';
+//                     } else {
+//                         alert('Please fill in all fields correctly. Ensure a valid email and positive limit.');
+//                     }
+//                 });
+//             }
+//             getEmailDistribution() {
+//         return Array.from(this.distributionContainer.querySelectorAll('.email-input')).map((input, index) => ({
+//             email: this.mailboxes[index].email,
+//             numEmails: parseInt(input.value) || 0
+//         }));
+//     }
+//         }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
