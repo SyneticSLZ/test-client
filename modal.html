@@ -23,7 +23,7 @@
         }
 
         body {
-            background-color: var(--background-color);
+            background-color: #F5F5F5;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -31,7 +31,7 @@
             padding: 20px;
         }
 
-        .modal-overlay {
+        .modal-overlay-m {
             position: fixed;
             top: 0;
             left: 0;
@@ -46,12 +46,12 @@
             transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.show {
+        .modal-overlay-m.show {
             display: flex;
             opacity: 1;
         }
 
-        .modal {
+        .modal-m {
             background: white;
             border-radius: 16px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
@@ -63,30 +63,30 @@
             flex-direction: column;
         }
 
-        .modal-header {
+        .modal-header-m {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid #E0E0E0;
             padding-bottom: 15px;
         }
 
-        .modal-header h2 {
-            color: var(--text-color);
+        .modal-header-m h2 {
+            color: #333;
             font-size: 1.8rem;
             font-weight: 600;
         }
 
-        .total-emails-indicator {
-            background-color: var(--primary-color);
+        .total-emails-indicator-m {
+            background-color: #5B34A5;
             color: white;
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: bold;
         }
 
-        .email-distribution-container {
+        .email-distribution-container-m {
             max-height: 500px;
             overflow-y: auto;
             display: grid;
@@ -96,30 +96,30 @@
             padding-right: 10px;
         }
 
-        .mailbox-distribution {
+        .mailbox-distribution-m {
             display: flex;
             flex-direction: column;
             background-color: #F9F9FC;
-            border: 1px solid var(--border-color);
+            border: 1px solid #E0E0E0;
             border-radius: 10px;
             padding: 15px;
             transition: all 0.3s ease;
             position: relative;
         }
 
-        .mailbox-distribution:hover {
+        .mailbox-distribution-m:hover {
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border-color: var(--primary-color);
+            border-color: #5B34A5;
         }
 
-        .mailbox-header {
+        .mailbox-header-m {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
 
-        .mailbox-remove {
+        .mailbox-remove-m {
             color: red;
             cursor: pointer;
             font-weight: bold;
@@ -127,33 +127,33 @@
             transition: opacity 0.3s ease;
         }
 
-        .mailbox-remove:hover {
+        .mailbox-remove-m:hover {
             opacity: 1;
         }
 
-        .mailbox-info .name {
+        .mailbox-info-m .name-m {
             font-weight: 600;
-            color: var(--text-color);
+            color: #333;
             margin-bottom: 5px;
         }
 
-        .mailbox-info .email {
+        .mailbox-info-m .email-m {
             color: #666;
             font-size: 0.9rem;
             margin-bottom: 10px;
             word-break: break-all;
         }
 
-        .email-input {
+        .email-input-m {
             width: 100%;
             padding: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #E0E0E0;
             border-radius: 6px;
             text-align: center;
             margin-top: 10px;
         }
 
-        .btn {
+        .btn-m {
             display: inline-block;
             padding: 12px 20px;
             border: none;
@@ -164,24 +164,24 @@
             transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background-color: var(--primary-color);
+        .btn-primary-m {
+            background-color: #5B34A5;
             color: white;
         }
 
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
+        .btn-primary-m:hover {
+            background-color: #9370DB;
         }
 
-        .btn-secondary {
+        .btn-secondary-m {
             background-color: #F1F1F1;
-            color: var(--text-color);
+            color: #333;
             margin-right: 10px;
         }
 
-        .btn-add-mailbox {
+        .btn-add-mailbox-m {
             background-color: #E0E0E0;
-            color: var(--text-color);
+            color: #333;
             margin-top: 15px;
             display: flex;
             align-items: center;
@@ -189,29 +189,29 @@
             gap: 10px;
         }
 
-        .btn:disabled {
+        .btn-m:disabled {
             background-color: #CCC;
             cursor: not-allowed;
         }
 
-        .modal-footer {
+        .modal-footer-m {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 2px solid var(--border-color);
+            border-top: 2px solid #E0E0E0;
             padding-top: 20px;
         }
 
-        .mailbox-limit-input {
+        .mailbox-limit-input-m {
             width: 100%;
             padding: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #E0E0E0;
             border-radius: 6px;
             margin-top: 10px;
         }
 
         @media (max-width: 600px) {
-            .email-distribution-container {
+            .email-distribution-container-m {
                 grid-template-columns: 1fr;
             }
         }
@@ -222,40 +222,40 @@
         <button id="multiEmailBtn" class="btn btn-primary">Distribute Emails</button>
     </div>
 
-    <div id="multiEmailModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
+    <div id="multiEmailModal" class="modal-overlay-m">
+        <div class="modal-m">
+            <div class="modal-header-m">
                 <h2>Email Distribution</h2>
-                <div id="totalEmailsIndicator" class="total-emails-indicator">0 Emails</div>
+                <div id="totalEmailsIndicator" class="total-emails-indicator-m">0 Emails</div>
             </div>
 
-            <div class="email-distribution-container" id="emailDistributionContainer">
+            <div class="email-distribution-container-m" id="emailDistributionContainer">
                 <!-- Mailbox distribution will be dynamically added here -->
             </div>
 
-            <button id="addMailboxBtn" class="btn btn-add-mailbox">
+            <button id="addMailboxBtn" class="btn btn-add-mailbox-m">
                 ➕ Add Mailbox
             </button>
 
-            <div class="modal-footer">
-                <button id="multiEmailCancel" class="btn btn-secondary">Cancel</button>
-                <button id="multiEmailSend" class="btn btn-primary" disabled>Send Emails</button>
+            <div class="modal-footer-m">
+                <button id="multiEmailCancel" class="btn-m btn-secondary-m">Cancel</button>
+                <button id="multiEmailSend" class="btn-m btn-primary-m" disabled>Send Emails</button>
             </div>
         </div>
     </div>
 
-    <div id="addMailboxModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
+    <div id="addMailboxModal" class="modal-overlay-m">
+        <div class="modal-m">
+            <div class="modal-header-m">
                 <h2>Add New Mailbox</h2>
             </div>
             <div style="padding: 20px;">
-                <input type="text" id="mailboxNameInput" placeholder="Mailbox Name" class="mailbox-limit-input" style="margin-bottom: 10px;">
-                <input type="email" id="mailboxEmailInput" placeholder="Email Address" class="mailbox-limit-input" style="margin-bottom: 10px;">
-                <input type="number" id="mailboxLimitInput" placeholder="Email Sending Limit" class="mailbox-limit-input">
-                <div class="modal-footer" style="border-top: none; padding-top: 10px;">
-                    <button id="cancelAddMailbox" class="btn btn-secondary">Cancel</button>
-                    <button id="confirmAddMailbox" class="btn btn-primary">Add Mailbox</button>
+                <input type="text" id="mailboxNameInput" placeholder="Mailbox Name" class="mailbox-limit-input-m" style="margin-bottom: 10px;">
+                <input type="email" id="mailboxEmailInput" placeholder="Email Address" class="mailbox-limit-input-m" style="margin-bottom: 10px;">
+                <input type="number" id="mailboxLimitInput" placeholder="Email Sending Limit" class="mailbox-limit-input-m">
+                <div class="modal-footer-m" style="border-top: none; padding-top: 10px;">
+                    <button id="cancelAddMailbox" class="btn-m btn-secondary-m">Cancel</button>
+                    <button id="confirmAddMailbox" class="btn-m btn-primary-m">Add Mailbox</button>
                 </div>
             </div>
         </div>
