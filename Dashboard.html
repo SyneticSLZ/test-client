@@ -3010,6 +3010,7 @@ async function Campaign(campaignDetails) {
 async function sendAllEmails() {
     // total == generatedData.legnth
     // get [(MailboxEmail, num)]
+    window.multiEmailDistributor.openModal();
     const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
 
         // // First 10 emails
@@ -5205,6 +5206,14 @@ class MultiEmailDistributor {
                 this.confirmAddMailboxButton = document.getElementById('confirmAddMailbox');
             }
 
+            openModal() {
+        this.modal.classList.add('show');
+    }
+
+    closeModal() {
+        this.modal.classList.remove('show');
+    }
+
             renderMailboxes() {
                 this.distributionContainer.innerHTML = '';
 
@@ -5326,6 +5335,12 @@ class MultiEmailDistributor {
                     }
                 });
             }
+            getEmailDistribution() {
+        return Array.from(this.distributionContainer.querySelectorAll('.email-input')).map((input, index) => ({
+            email: this.mailboxes[index].email,
+            numEmails: parseInt(input.value) || 0
+        }));
+    }
         }
 
         // Initialize on page load
