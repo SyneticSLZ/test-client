@@ -3014,7 +3014,16 @@ async function sendAllEmails() {
     // window.multiEmailDistributor.openModal();
     emails = await fetchActiveMailbox(U_MyEmail)
     console.log(emails)
-    const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
+    // const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
+
+    const promises = generatedData.map((data, index) => {
+    // Determine which email to use based on index
+    const selectedEmail = emails[index % emails.length];
+    console.log(index, selectedEmail)
+    return sendEmailindexwithsmtp(index, selectedEmail);
+});
+
+// await Promise.all(promises); // Wait for all emails to be sent
 
         // // First 10 emails
         // const firstBatch = generatedData.slice(0, 10); // Take the first 10
