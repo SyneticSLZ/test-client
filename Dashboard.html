@@ -1088,8 +1088,19 @@ const fetchActiveMailbox = async (email) => {
 
         const result = await response.json(); // Parse the JSON response
 
-        if (response.ok && Array.isArray(result)) {
-            console.log('Active mailboxes fetched:', result);
+        if (response.ok) {
+
+            if (result.length === 0) {
+                console.log('No active mailboxes found');
+                return []; // Return an empty array if no active mailboxes are found
+            }
+
+            console.log('Active mailboxes:', result);
+            // Return the array of SMTP user email addresses
+            return result;
+
+
+            // console.log('Active mailboxes fetched:', result);
 
             // Transform the result into the desired MAILBOXES format
             // const MAILBOXES = result.map((mailbox, index) => ({
@@ -1098,11 +1109,11 @@ const fetchActiveMailbox = async (email) => {
             //     email: mailbox.smtp.user, // Use the mailbox email
             // }));
 
-            return result.map((mailbox, index) => ({
-                id: `mailbox-${index + 1}`, // Generate a unique ID
-                name: mailbox.name || `Mailbox ${index + 1}`, // Use name or default
-                email: mailbox.smtp.user, // Use the mailbox email
-            }));
+            // return result.map((mailbox, index) => ({
+            //     id: `mailbox-${index + 1}`, // Generate a unique ID
+            //     name: mailbox.name || `Mailbox ${index + 1}`, // Use name or default
+            //     email: mailbox.smtp.user, // Use the mailbox email
+            // }));
 
             // console.log('Formatted MAILBOXES:', MAILBOXES);
             // return MAILBOXES; // Return the formatted MAILBOXES array
@@ -1136,7 +1147,7 @@ async function RenderHtml(data){
     const UserEmail = data.email
     fetchMailboxes();
     HasActive = await fetchActiveMailbox(email)
-    initializeMailboxes(email)
+    // initializeMailboxes(email)
 
     const plan = data.plan
     const CapsPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
@@ -1312,8 +1323,8 @@ async function RenderHtml(data){
                       `
 
     } else {
-        MAILBOXES = HasActive;
-        console.log('Initialized MAILBOXES:', MAILBOXES);
+        // MAILBOXES = HasActive;
+        console.log('Initialized MAILBOXES:', HasActive);
         // Use MAILBOXES for your dropdown or UI logic
         document.getElementById('googleauthid').innerHTML=`
             <div class="topbar">
@@ -1324,7 +1335,7 @@ async function RenderHtml(data){
                     </button>
                     <div class="dropdown-content">
                         <!-- Dynamic mailbox list -->
-                        ${MAILBOXES.map(mailbox => `<a href="#">${mailbox.name} (${mailbox.email})</a>`).join('')}
+                        ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
                     </div>
                 </div>
             </div>
