@@ -1092,14 +1092,20 @@ const fetchActiveMailbox = async (email) => {
             console.log('Active mailboxes fetched:', result);
 
             // Transform the result into the desired MAILBOXES format
-            const MAILBOXES = result.map((mailbox, index) => ({
+            // const MAILBOXES = result.map((mailbox, index) => ({
+            //     id: `mailbox-${index + 1}`, // Generate a unique ID
+            //     name: mailbox.name || `Mailbox ${index + 1}`, // Use name or default
+            //     email: mailbox.smtp.user, // Use the mailbox email
+            // }));
+
+            return result.map((mailbox, index) => ({
                 id: `mailbox-${index + 1}`, // Generate a unique ID
                 name: mailbox.name || `Mailbox ${index + 1}`, // Use name or default
                 email: mailbox.smtp.user, // Use the mailbox email
             }));
 
-            console.log('Formatted MAILBOXES:', MAILBOXES);
-            return MAILBOXES; // Return the formatted MAILBOXES array
+            // console.log('Formatted MAILBOXES:', MAILBOXES);
+            // return MAILBOXES; // Return the formatted MAILBOXES array
         } else {
             console.warn('No active mailboxes found or response format invalid.');
             return []; // Return an empty array if no active mailboxes
@@ -1308,21 +1314,19 @@ async function RenderHtml(data){
     } else {
         // Use MAILBOXES for your dropdown or UI logic
         document.getElementById('googleauthid').innerHTML=`
-<div class="topbar">
-<div class="dropdown">
-        <button class="dropbtn">
-            Your Active Mailboxes 
-            <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-            <!-- Dynamic mailbox list -->
-            ${HasActive.map(mailbox => `<a href="#">${mailbox}</a>`).join('')}
-        </div>
-    </div>
-</div>
-
-
-    
+            <div class="topbar">
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        Your Active Mailboxes 
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <!-- Dynamic mailbox list -->
+                        ${MAILBOXES.map(mailbox => `<a href="#">${mailbox.name} (${mailbox.email})</a>`).join('')}
+                    </div>
+                </div>
+            </div>
+        
 
 `;
             button.innerHTML=`
