@@ -5135,6 +5135,9 @@ const formatMailboxData = (formData) => {
 
         // Function to open the modal and get the selected mailbox
 async function selectMailboxForEmail() {
+    emails = await fetchActiveMailbox()
+    console.log(emails)
+
     return new Promise((resolve, reject) => {
         const singleMailboxSelect = document.getElementById('singleMailbox');
         const singleEmailSendBtn = document.getElementById('singleEmailSend');
@@ -5144,10 +5147,10 @@ async function selectMailboxForEmail() {
         singleMailboxSelect.innerHTML = '';
 
         // Populate mailbox options dynamically
-        MAILBOXES.forEach(mailbox => {
+        emails.forEach(mailbox => {
             const option = document.createElement('option');
-            option.value = mailbox.email;
-            option.textContent = `${mailbox.email}`;
+            option.value = mailbox;
+            option.textContent = `${mailbox}`;
             singleMailboxSelect.appendChild(option);
         });
 
