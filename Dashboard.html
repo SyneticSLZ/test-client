@@ -3287,7 +3287,7 @@ async function sendMessage(sender, to, subject, messageText, campaignId, selecte
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ selectedMailbox: selectedMailbox , email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId })
+        body: JSON.stringify({ email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId, selectedMailbox: selectedMailbox })
     });
 
 
