@@ -3282,8 +3282,8 @@ async function CallThisWhenAutosend() {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function sendMessage(sender, to, subject, messageText, campaignId, selectedMailbox) {
 
-    // const token = localStorage.getItem('authToken');
-    const response = await fetch('https://server.voltmailer.com/send-bulk-manual', {
+    // const token = localStorage.getItem('authToken');  https://server.voltmailer.com/send-bulk-manual 
+    const response = await fetch('https://server.voltmailer.com/api/mailboxes/send', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
