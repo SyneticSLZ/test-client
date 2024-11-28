@@ -3010,6 +3010,7 @@ async function Campaign(campaignDetails) {
 async function sendAllEmails() {
     // total == generatedData.legnth
     // get [(MailboxEmail, num)]
+    modal = new MultiEmailDistributor();
     window.multiEmailDistributor.openModal();
     const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
 
