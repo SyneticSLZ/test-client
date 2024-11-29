@@ -3067,7 +3067,7 @@ async function sendAllEmails() {
     NewCampaign()
     sNotification('Emails are sending in background');
     const emails = await fetchActiveMailbox(U_MyEmail);
-    console.log(emails);
+    console.log(emails, generatedData);
 
     const delay = 3000 // Adjust this based on emails/hour
     console.log( "delay is :" ,delay , "gen data len :", generatedData.length )
