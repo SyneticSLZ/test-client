@@ -2720,7 +2720,7 @@ if(UserSubject){
                 subject: subject_line,
                 content: main_message
             });
-
+console.log(generatedData)
             document.getElementById('loaderText').innerText = `Generating email for ${data.email}...`;
             await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
 
@@ -2732,6 +2732,7 @@ if(UserSubject){
             showNotification(`Error generating email for ${data.email}`);
         }
     }
+    console.log(generatedData)
     document.getElementById('tfoot').style.display = 'block';
     document.getElementById('customLoader').style.display = 'none';
     // <button class="button" onclick="sendAllEmails()">
