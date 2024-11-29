@@ -61,7 +61,7 @@
 }
 
 .tooltip {
-    display: none;
+    /* display: none; */
     position: absolute;
     bottom: 125%; /* Position above icon */
     left: 50%;
