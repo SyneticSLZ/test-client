@@ -3022,23 +3022,76 @@ async function Campaign(campaignDetails) {
 
 
 
-
+function calculateDelay(emailsPerHour) {
+    return Math.ceil(3600 / emailsPerHour) * 1000; // Delay in milliseconds
+}
 
 async function sendAllEmails() {
-    // total == generatedData.legnth
-    // get [(MailboxEmail, num)]
-    // modal = new MultiEmailDistributor();
-    // window.multiEmailDistributor.openModal();
-    emails = await fetchActiveMailbox(U_MyEmail)
-    console.log(emails)
-    // const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
+    const emails = await fetchActiveMailbox(U_MyEmail);
+    console.log(emails);
 
-    const promises = generatedData.map((data, index) => {
-    // Determine which email to use based on index
-    const selectedEmail = emails[index % emails.length];
-    console.log(index, selectedEmail)
-    return sendEmailindexwithsmtp(index, selectedEmail);
-});
+    const delay = calculateDelay(generatedData.length); // Adjust this based on emails/hour
+    let errorOccurred = false;
+
+    for (let index = 0; index < generatedData.length; index++) {
+        const data = generatedData[index];
+        const selectedEmail = emails[index % emails.length]; // Distribute emails across mailboxes
+        
+        try {
+            console.log(`Sending email #${index + 1} using ${selectedEmail}`);
+            await sendEmailindexwithsmtp(index, selectedEmail); // Send email
+        } catch (error) {
+            console.error(`Failed to send email for index ${index}:`, error);
+            errorOccurred = true;
+        }
+
+        // Introduce delay between sending emails
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    // Handle notifications after all emails are processed
+    if (errorOccurred) {
+        showNotification('Error sending one or more emails');
+    } else {
+        showNotification('All emails sent successfully');
+    }
+
+    document.getElementById('pr').style.display = `none`;
+    document.getElementById('sending').style.display = 'block';
+    document.getElementById('submit').innerHTML = `
+        <button class="button" onclick="NewCampaign()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+            </svg>
+            New Campaign
+        </button>
+    `;
+    console.log('All emails processed.');
+}
+
+
+
+
+// async function sendAllEmails() {
+//     // total == generatedData.legnth
+//     // get [(MailboxEmail, num)]
+//     // modal = new MultiEmailDistributor();
+//     // window.multiEmailDistributor.openModal();
+//     emails = await fetchActiveMailbox(U_MyEmail)
+//     console.log(emails)
+//     // const promises = generatedData.map((_, index) => sendEmailindexwithsmtp(index, MailboxEmail));
+// // Function to calculate delay based on desired emails per hour
+
+
+// // Assuming you want to send 100 emails/hour:
+//    const delay = calculateDelay(generatedData.length);
+//     const promises = generatedData.map((data, index) => {
+//         // await new Promise(resolve => setTimeout(resolve, delay)); // Simulate delay
+//     // Determine which email to use based on index
+//     const selectedEmail = emails[index % emails.length];
+//     console.log(index, selectedEmail)
+//     return sendEmailindexwithsmtp(index, selectedEmail);
+// });
 
 // await Promise.all(promises); // Wait for all emails to be sent
 
@@ -3067,31 +3120,7 @@ async function sendAllEmails() {
         // console.log("Third batch of 2 emails sent!");
 
 
-    try {
-        await Promise.all(promises);
-        showNotification('All emails sent successfully');
-        document.getElementById('pr').style.display = `none`;
-        document.getElementById('sending').style.display = 'block';
-        document.getElementById('submit').innerHTML = ` 
-        
-        
 
-
-                                        <button class="button" onclick="NewCampaign()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                         New Campaign
-                      </button>
-
-                    
-                    `;
-        // initialize()
-    } catch (error) {
-        console.error('Error sending one or more emails:', error);
-        showNotification('Error sending one or more emails');
-    }
-}
 
 
 function populateEmailTable() {
