@@ -2067,7 +2067,7 @@ async function Manual() {
         const deleteButton = document.createElement('button');
         deleteButton.style.color = "#000";
         deleteButton.textContent = 'X';
-        editButton.classList.add('btn-s', 'btn-primary-s'); 
+        deleteButton.classList.add('btn-s', 'btn-secondary-s'); 
 
         deleteButton.addEventListener('click', function() {
             
@@ -2105,6 +2105,7 @@ function editRow(index, row) {
     const saveButton = document.createElement('button');
     saveButton.style.color = "#000";
     saveButton.textContent = 'Save';
+    saveButton.classList.add('btn-s', 'btn-secondary-s'); 
 
     saveButton.addEventListener('click', function() {
         saveRow(index, row); // Call saveRow function with index and row
@@ -2152,6 +2153,7 @@ function saveRow(index, row) {
     const deleteButton = document.createElement('button');
     deleteButton.style.color = "#000";
     deleteButton.textContent = 'X';
+    deleteButton.classList.add('btn-s', 'btn-secondary-s'); 
     deleteButton.addEventListener('click', function() {
         deleteRow(index); // Call deleteRow function with index
     });
