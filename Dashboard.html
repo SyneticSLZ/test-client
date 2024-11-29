@@ -2413,9 +2413,16 @@ campaignId = await Campaign(campaignDetails);
 
 console.log(campaignId)
 localStorage.setItem('currentCampaignId', campaignId);
-
+let requestBody = {
+                submittedData: submittedData,
+                userPitch: userPitch,
+                Uname: U_Username,
+                token: token,
+                myemail: U_MyEmail,
+                campaignId: campaignId,
+            }
 if(UserSubject) {
-    const requestBody = {
+     requestBody = {
                 submittedData: submittedData,
                 userPitch: userPitch,
                 Uname: U_Username,
@@ -2423,16 +2430,16 @@ if(UserSubject) {
                 myemail: U_MyEmail,
                 campaignId: campaignId,
                 UserSubject: UserSubject
-            };
+            }
 }else {
-    const requestBody = {
+    requestBody = {
                 submittedData: submittedData,
                 userPitch: userPitch,
                 Uname: U_Username,
                 token: token,
                 myemail: U_MyEmail,
                 campaignId: campaignId,
-            };
+            }
 }
 
             
