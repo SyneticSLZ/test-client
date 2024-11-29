@@ -3,130 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lead Capture</title>
+    <title>Lead Capture Modals</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen flex items-center justify-center">
-    <button onclick="togglePopupManual()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition">
-        Open Lead Capture
-    </button>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="space-x-4">
+        <button onclick="toggleModal('fullLeadModal')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+            Full Lead Capture
+        </button>
+        <button onclick="toggleModal('domainModal')" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+            Domain Capture
+        </button>
+    </div>
 
-    <div id="manual-popup-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 p-4 hidden">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-200 transform transition-transform hover:scale-[1.02] relative">
-            <div class="p-8">
-                <button onclick="togglePopupManual()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    <!-- Domain Capture Modal -->
+    <div id="domainModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-30 p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-200 p-8 relative transform transition-transform hover:scale-[1.02]">
+            <button onclick="toggleModal('domainModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Enter Domain</h2>
+
+            <div class="space-y-4">
+                <input 
+                    type="text" 
+                    id="domainInput" 
+                    placeholder="example.com" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                <button 
+                    onclick="submitDomain()" 
+                    class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition flex items-center justify-center"
+                >
+                    Submit Domain
+                    <svg class="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
-
-                <h2 class="text-3xl font-bold text-center text-gray-800 mb-6 tracking-tight">
-                    Capture Your Lead
-                </h2>
-
-                <div class="space-y-6">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                        <input 
-                            type="text" 
-                            id="name" 
-                            placeholder="Enter full name" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                        >
-                    </div>
-
-                    <div>
-                        <label for="emailinput" class="block text-sm font-medium text-gray-700 mb-2">Business Email</label>
-                        <input 
-                            type="email" 
-                            id="emailinput" 
-                            placeholder="you@company.com" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                        >
-                    </div>
-
-                    <div>
-                        <label for="website" class="block text-sm font-medium text-gray-700 mb-2">Company Website</label>
-                        <input 
-                            type="text" 
-                            id="website" 
-                            placeholder="www.yourcompany.com" 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-                        >
-                    </div>
-
-                    <button 
-                        onclick="Manual()" 
-                        id="submitBtn"
-                        class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-all duration-300 flex items-center justify-center space-x-2 group"
-                    >
-                        <span>Submit Lead</span>
-                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-
-                    <div id="manualError" class="text-center text-red-500 mt-2 h-6"></div>
-                </div>
+                <div id="domainError" class="text-center text-red-500 h-6"></div>
             </div>
         </div>
     </div>
 
     <script>
-        function togglePopupManual() {
-            var popup = document.getElementById('manual-popup-overlay');
-            popup.classList.toggle('hidden');
-            
-            if (popup.classList.contains('hidden')) {
-                resetForm();
-            }
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
         }
 
-        function resetForm() {
-            document.getElementById('name').value = '';
-            document.getElementById('emailinput').value = '';
-            document.getElementById('website').value = '';
-            document.getElementById('manualError').textContent = '';
-        }
+        function submitFullLead() {
+            const name = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('fullEmail').value.trim();
+            const website = document.getElementById('fullWebsite').value.trim();
+            const errorElement = document.getElementById('fullLeadError');
 
-        function Manual() {
-            var nameInput = document.getElementById('name');
-            var emailInput = document.getElementById('emailinput');
-            var websiteInput = document.getElementById('website');
-            var errorElement = document.getElementById('manualError');
-
-            // Reset previous error
             errorElement.textContent = '';
 
-            // Validation
-            if (!nameInput.value.trim() || !emailInput.value.trim() || !websiteInput.value.trim()) {
-                errorElement.textContent = 'Please fill in all fields';
+            if (!name || !email || !website) {
+                errorElement.textContent = 'Please fill all fields';
                 return;
             }
 
-            // Email validation
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput.value.trim())) {
-                errorElement.textContent = 'Please enter a valid email address';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorElement.textContent = 'Invalid email address';
                 return;
             }
 
-            // Ensure website starts with http:// or https://
-            var website = websiteInput.value.trim();
-            if (!website.startsWith('http://') && !website.startsWith('https://')) {
-                website = 'https://' + website;
-                websiteInput.value = website;
+            console.log('Full Lead Submitted:', { name, email, website });
+            toggleModal('fullLeadModal');
+        }
+
+        function submitDomain() {
+            const domain = document.getElementById('domainInput').value.trim();
+            const errorElement = document.getElementById('domainError');
+
+            errorElement.textContent = '';
+
+            if (!domain) {
+                errorElement.textContent = 'Please enter a domain';
+                return;
             }
 
-            // Log submission (replace with actual API call)
-            console.log('Submitting:', { 
-                name: nameInput.value.trim(), 
-                email: emailInput.value.trim(), 
-                website: website 
-            });
+            const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!domainRegex.test(domain)) {
+                errorElement.textContent = 'Invalid domain format';
+                return;
+            }
 
-            // Close popup
-            togglePopupManual();
+            console.log('Domain Submitted:', domain);
+            toggleModal('domainModal');
         }
     </script>
 </body>
