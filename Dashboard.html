@@ -2720,9 +2720,9 @@ if(UserSubject){
                 subject: subject_line,
                 content: main_message
             });
-console.log(generatedData)
+          console.log( 'generated data', generatedData)
             document.getElementById('loaderText').innerText = `Generating email for ${data.email}...`;
-            await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
+            // await new Promise(resolve => setTimeout(resolve, 500)); // Simulate delay
 
             addEmailRow(generatedData.length - 1);
             // populateEmailTable();
@@ -2732,7 +2732,7 @@ console.log(generatedData)
             showNotification(`Error generating email for ${data.email}`);
         }
     }
-    console.log(generatedData)
+    console.log( 'generated data : ', generatedData)
     document.getElementById('tfoot').style.display = 'block';
     document.getElementById('customLoader').style.display = 'none';
     // <button class="button" onclick="sendAllEmails()">
