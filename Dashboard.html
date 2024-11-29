@@ -3039,9 +3039,10 @@ async function sendAllEmails() {
     console.log(emails);
 
     const delay = calculateDelay(generatedData.length); // Adjust this based on emails/hour
+    console.log(delay,generatedData.length )
     let errorOccurred = false;
 
-    for (let index = 1; index < generatedData.length; index++) {
+    for (let index = 0; index < generatedData.length; index++) {
         const data = generatedData[index];
         const selectedEmail = emails[index % emails.length]; // Distribute emails across mailboxes
         
