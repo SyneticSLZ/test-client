@@ -2056,8 +2056,10 @@ async function Manual() {
         const editButton = document.createElement('button');
         editButton.style.color = "#000";
         editButton.textContent = 'Edit';
+        editButton.classList.add('btn-s', 'btn-secondary-s'); 
 
         editButton.addEventListener('click', function() {
+            editButton.remove();
             editRow(index, row); // Call editRow function with index
         });
 
@@ -2065,8 +2067,10 @@ async function Manual() {
         const deleteButton = document.createElement('button');
         deleteButton.style.color = "#000";
         deleteButton.textContent = 'X';
+        editButton.classList.add('btn-s', 'btn-primary-s'); 
 
         deleteButton.addEventListener('click', function() {
+            
             deleteRow(index); // Call deleteRow function with index
         });
 
@@ -2101,6 +2105,7 @@ function editRow(index, row) {
     const saveButton = document.createElement('button');
     saveButton.style.color = "#000";
     saveButton.textContent = 'Save';
+
     saveButton.addEventListener('click', function() {
         saveRow(index, row); // Call saveRow function with index and row
     });
@@ -2134,11 +2139,14 @@ function saveRow(index, row) {
 
     // Create edit button
     const editButton = document.createElement('button');
-    editButton.style.color = "#000";
-    editButton.textContent = 'Edit';
-    editButton.addEventListener('click', function() {
-        editRow(index, row); // Call editRow function with index and row
-    });
+        editButton.style.color = "#000";
+        editButton.textContent = 'Edit';
+        editButton.classList.add('btn-s', 'btn-secondary-s'); 
+
+        editButton.addEventListener('click', function() {
+            editButton.remove();
+            editRow(index, row); // Call editRow function with index
+        });
 
     // Create delete button
     const deleteButton = document.createElement('button');
