@@ -2351,12 +2351,13 @@ function NewCampaign() {
                     document.getElementById('DOMAIN').style.display = "flex";
     document.getElementById('man').style.display = "flex";
     document.getElementById('export').style.display = "none";
+    // let center = document.getElementById('center');
+    // center.style.display = 'block';
                     // disable textarea 
                     // disable buttons 
                     // const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
                     // dataTable.style.display = "none"
-                    let center = document.getElementById('center');
-                    center.style.display = 'flex'
+
 
                     document.getElementById('currentContent').style.display = 'flex';
                     document.getElementById('newContent').style.display = 'none';
@@ -2379,6 +2380,8 @@ function NewCampaign() {
                     const textarea = document.getElementById('userPitch');
                     textarea.disabled = false;
                     // document.getElementById('ca').style.display = "block"
+                    let center = document.getElementById('center');
+                    center.style.display = 'flex'
 }
 
 
@@ -2450,33 +2453,37 @@ if(UserSubject) {
                 });
 
                 if (response.ok) {
-                    console.log('Email sending process started.');
-                    document.getElementById('pr').style.display = `none`;
-                    document.getElementById('sending').style.display = 'block';
-                    //disable textarea 
-                    // disable buttons 
 
-                        // Get references to the button and textarea
-                    // document.getElementById('inputButtons').style.display = "none";
-                    const textarea = document.getElementById('userPitch');
-                    const csv = document.getElementById('uploadLabel');
-                    const man = document.getElementById('man');
-                    textarea.disabled = true;
-                    csv.disabled = true;
-                    man.disabled = true;
-                    // document.getElementById('hidewhengenerating').style.display = 'none';
-                    document.getElementById('submit').innerHTML = ` 
+                    NewCampaign()
+                    sNotification('Emails are sending in background');
+
+//                     console.log('Email sending process started.');
+//                     document.getElementById('pr').style.display = `none`;
+//                     document.getElementById('sending').style.display = 'block';
+//                     //disable textarea 
+//                     // disable buttons 
+
+//                         // Get references to the button and textarea
+//                     // document.getElementById('inputButtons').style.display = "none";
+//                     const textarea = document.getElementById('userPitch');
+//                     const csv = document.getElementById('uploadLabel');
+//                     const man = document.getElementById('man');
+//                     textarea.disabled = true;
+//                     csv.disabled = true;
+//                     man.disabled = true;
+//                     // document.getElementById('hidewhengenerating').style.display = 'none';
+//                     document.getElementById('submit').innerHTML = ` 
                     
                     
                     
 
-                                        <button class="button" onclick="NewCampaign()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
-                          <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
-                        </svg>
-                         New Campaign
-                      </button>
-`
+//                                         <button class="button" onclick="NewCampaign()">
+//                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+//                           <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+//                         </svg>
+//                          New Campaign
+//                       </button>
+// `
 
 
                 } else {
@@ -3037,6 +3044,8 @@ function calculateDelay(emailsPerHour) {
 }
 
 async function sendAllEmails() {
+    NewCampaign()
+    sNotification('Emails are sending in background');
     const emails = await fetchActiveMailbox(U_MyEmail);
     console.log(emails);
 
