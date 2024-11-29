@@ -3,299 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Settings</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <style>
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .tab.active {
-            background-color: #4F46E5;
-            color: white;
-        }
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 1rem;
-            background-color: #34D399;
-            color: white;
-            border-radius: 0.5rem;
-            display: none;
-            animation: fadeInOut 3s ease-in-out;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #4F46E5;
-        }
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-    </style>
+    <title>Lead Capture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen flex items-center justify-center">
+    <button onclick="togglePopupManual()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition">
+        Open Lead Capture
+    </button>
 
-<body class="bg-gray-50">
-    <div class="container mx-auto py-10 px-4 max-w-4xl">
-        <div class="mb-8">
-            <h2 class="text-3xl font-bold">Account Settings</h2>
-            <p class="text-gray-600">Manage your account settings and preferences</p>
-        </div>
-
-        <!-- Tabs -->
-        <div class="mb-6">
-            <div class="flex space-x-4 border-b">
-                <button class="tab active px-4 py-2 rounded-t-lg" data-tab="profile">Profile</button>
-                <button class="tab px-4 py-2 rounded-t-lg" data-tab="notifications">Notifications</button>
-                <button class="tab px-4 py-2 rounded-t-lg" data-tab="billing">Billing</button>
-            </div>
-        </div>
-
-        <!-- Profile Tab -->
-        <div id="profile" class="tab-content active space-y-6">
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
-                <form id="profileForm" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-1">First Name</label>
-                            <input type="text" class="w-full p-2 border rounded" name="firstName">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Last Name</label>
-                            <input type="text" class="w-full p-2 border rounded" name="lastName">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Email</label>
-                        <input type="email" class="w-full p-2 border rounded" name="email">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Sending Name</label>
-                        <input type="text" class="w-full p-2 border rounded" name="sendingName">
-                    </div>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                        Save Changes
-                    </button>
-                </form>
-            </div>
-
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-xl font-semibold mb-4">Change Password</h3>
-                <form id="passwordForm" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Current Password</label>
-                        <input type="password" class="w-full p-2 border rounded" name="currentPassword">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">New Password</label>
-                        <input type="password" class="w-full p-2 border rounded" name="newPassword">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Confirm Password</label>
-                        <input type="password" class="w-full p-2 border rounded" name="confirmPassword">
-                    </div>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                        Update Password
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Notifications Tab -->
-        <div id="notifications" class="tab-content bg-white p-6 rounded-lg shadow">
-            <h3 class="text-xl font-semibold mb-4">Notification Preferences</h3>
-            <div class="space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h4 class="font-medium">Email Notifications</h4>
-                        <p class="text-sm text-gray-600">Receive emails about your account activity</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h4 class="font-medium">Marketing Emails</h4>
-                        <p class="text-sm text-gray-600">Receive emails about new features and updates</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveNotifications()">
-                    Save Preferences
+    <div id="manual-popup-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-gray-200 transform transition-transform hover:scale-[1.02] relative">
+            <div class="p-8">
+                <button onclick="togglePopupManual()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
-            </div>
-        </div>
 
-        <!-- Billing Tab -->
-        <div id="billing" class="tab-content bg-white p-6 rounded-lg shadow">
-            <h3 class="text-xl font-semibold mb-4">Billing Information</h3>
-            <div class="space-y-6">
-                <div>
-                    <h4 class="font-medium mb-2">Payment Method</h4>
-                    <div class="border p-4 rounded flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                            </svg>
-                            <div>
-                                <p>•••• •••• •••• 4242</p>
-                                <p class="text-sm text-gray-600">Expires 12/24</p>
-                            </div>
-                        </div>
-                        <button class="border px-4 py-2 rounded hover:bg-gray-50">Update</button>
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-6 tracking-tight">
+                    Capture Your Lead
+                </h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            placeholder="Enter full name" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                        >
                     </div>
-                </div>
 
-                <div>
-                    <h4 class="font-medium mb-2">Billing Address</h4>
-                    <form id="billingForm" class="space-y-4">
-                        <input type="text" class="w-full p-2 border rounded" placeholder="Street Address">
-                        <div class="grid grid-cols-3 gap-4">
-                            <input type="text" class="p-2 border rounded" placeholder="City">
-                            <input type="text" class="p-2 border rounded" placeholder="State">
-                            <input type="text" class="p-2 border rounded" placeholder="ZIP">
-                        </div>
-                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                            Save Billing Info
-                        </button>
-                    </form>
+                    <div>
+                        <label for="emailinput" class="block text-sm font-medium text-gray-700 mb-2">Business Email</label>
+                        <input 
+                            type="email" 
+                            id="emailinput" 
+                            placeholder="you@company.com" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="website" class="block text-sm font-medium text-gray-700 mb-2">Company Website</label>
+                        <input 
+                            type="text" 
+                            id="website" 
+                            placeholder="www.yourcompany.com" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                        >
+                    </div>
+
+                    <button 
+                        onclick="Manual()" 
+                        id="submitBtn"
+                        class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-all duration-300 flex items-center justify-center space-x-2 group"
+                    >
+                        <span>Submit Lead</span>
+                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    <div id="manualError" class="text-center text-red-500 mt-2 h-6"></div>
                 </div>
             </div>
         </div>
-
-        <!-- Notification Toast -->
-        <div id="notification" class="notification"></div>
     </div>
 
     <script>
-        // Tab Switching
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.dataset.tab;
-                
-                // Update active tab
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Show active content
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                    if (content.id === tabId) {
-                        content.classList.add('active');
-                    }
-                });
-            });
-        });
-
-        // Form Submissions
-        const showNotification = (message) => {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
+        function togglePopupManual() {
+            var popup = document.getElementById('manual-popup-overlay');
+            popup.classList.toggle('hidden');
             
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        };
+            if (popup.classList.contains('hidden')) {
+                resetForm();
+            }
+        }
 
-        document.getElementById('profileForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Add your API call here
-            showNotification('Profile updated successfully');
-        });
+        function resetForm() {
+            document.getElementById('name').value = '';
+            document.getElementById('emailinput').value = '';
+            document.getElementById('website').value = '';
+            document.getElementById('manualError').textContent = '';
+        }
 
-        document.getElementById('passwordForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newPassword = e.target.newPassword.value;
-            const confirmPassword = e.target.confirmPassword.value;
+        function Manual() {
+            var nameInput = document.getElementById('name');
+            var emailInput = document.getElementById('emailinput');
+            var websiteInput = document.getElementById('website');
+            var errorElement = document.getElementById('manualError');
 
-            if (newPassword !== confirmPassword) {
-                showNotification('Passwords do not match');
+            // Reset previous error
+            errorElement.textContent = '';
+
+            // Validation
+            if (!nameInput.value.trim() || !emailInput.value.trim() || !websiteInput.value.trim()) {
+                errorElement.textContent = 'Please fill in all fields';
                 return;
             }
-            // Add your API call here
-            showNotification('Password updated successfully');
-        });
 
-        document.getElementById('billingForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Add your API call here
-            showNotification('Billing information updated successfully');
-        });
+            // Email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value.trim())) {
+                errorElement.textContent = 'Please enter a valid email address';
+                return;
+            }
 
-        const saveNotifications = () => {
-            // Add your API call here
-            showNotification('Notification preferences saved');
-        };
+            // Ensure website starts with http:// or https://
+            var website = websiteInput.value.trim();
+            if (!website.startsWith('http://') && !website.startsWith('https://')) {
+                website = 'https://' + website;
+                websiteInput.value = website;
+            }
 
-        // Initial form population (simulate fetching user data)
-        const populateUserData = () => {
-            // Simulate API call to get user data
-            const userData = {
-                firstName: 'John',
-                lastName: 'Doe',
-                email: 'john@example.com',
-                sendingName: 'John Doe (Company)'
-            };
-
-            const profileForm = document.getElementById('profileForm');
-            Object.keys(userData).forEach(key => {
-                const input = profileForm.querySelector(`[name="${key}"]`);
-                if (input) input.value = userData[key];
+            // Log submission (replace with actual API call)
+            console.log('Submitting:', { 
+                name: nameInput.value.trim(), 
+                email: emailInput.value.trim(), 
+                website: website 
             });
-        };
 
-        // Call on page load
-        populateUserData();
+            // Close popup
+            togglePopupManual();
+        }
     </script>
 </body>
 </html>
