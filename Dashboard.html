@@ -3033,7 +3033,7 @@ async function sendAllEmails() {
     const delay = calculateDelay(generatedData.length); // Adjust this based on emails/hour
     let errorOccurred = false;
 
-    for (let index = 0; index < generatedData.length; index++) {
+    for (let index = 1; index < generatedData.length; index++) {
         const data = generatedData[index];
         const selectedEmail = emails[index % emails.length]; // Distribute emails across mailboxes
         
