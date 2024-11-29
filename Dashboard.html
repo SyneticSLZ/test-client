@@ -3065,8 +3065,7 @@ function calculateDelay(emailsPerHour) {
 }
 
 async function sendAllEmails() {
-    NewCampaign()
-    sNotification('Emails are sending in background');
+
     const emails = await fetchActiveMailbox(U_MyEmail);
     console.log(emails, generatedData);
 
@@ -3107,6 +3106,8 @@ async function sendAllEmails() {
     //         New Campaign
     //     </button>
     // `;
+    NewCampaign()
+    sNotification('Emails are sending in background');
     console.log('All emails processed.');
 }
 
