@@ -2022,7 +2022,11 @@ async function Manual() {
     function updateTable() {
     const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
     let center = document.getElementById('center');
+
+                        const theader = document.getElementById('thead').style.display = 'block';
+                        const thbos = document.getElementById('tablerows').style.display = 'block';
     const thead = document.getElementById('dataTable').getElementsByTagName('thead')[0];
+
     // document.getElementById("thead").style.display = "inline-block";
     center.style.display = 'none';
     dataTable.innerHTML = ''; // Clear the existing table rows
@@ -2382,6 +2386,8 @@ function NewCampaign() {
                     // document.getElementById('ca').style.display = "block"
                     let center = document.getElementById('center');
                     center.style.display = 'flex'
+                    const theader = document.getElementById('thead').style.display = 'none';
+                    const thbos = document.getElementById('tablerows').style.display = 'none';
 }
 
 
