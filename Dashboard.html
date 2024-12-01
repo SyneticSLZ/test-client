@@ -1673,6 +1673,19 @@ async function connectedgoogleAuth() {
 
 // CSV LOGIC
 
+
+// await fetchUnsubscribedEmails(U_MyEmail); // Fetch all unsubscribed emails once
+//     const isNotUnsubscribed = isEmailNotUnsubscribed(email_inputted);
+
+//     if (isNotUnsubscribed) {
+//         console.log(`${email_inputted} is not unsubscribed and can be added.`);
+//     } else {
+//         console.log(`${email_inputted} is unsubscribed and cannot be added.`);
+//         manualError.textContent = `${email_inputted} is unsubscribed and cannot be added.`;
+//         return;
+//     }
+
+
 function ShowCsv(){
     const csvBTN = document.getElementById('csvBTN');
     const input = document.getElementById('csvFile');
@@ -1913,6 +1926,20 @@ async function Manual() {
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const websiteRegex = /^https:\/\/.+$/;
+
+
+
+    await fetchUnsubscribedEmails(U_MyEmail); // Fetch all unsubscribed emails once
+    const isNotUnsubscribed = isEmailNotUnsubscribed(email_inputted);
+
+    if (isNotUnsubscribed) {
+        console.log(`${email_inputted} is not unsubscribed and can be added.`);
+    } else {
+        console.log(`${email_inputted} is unsubscribed and cannot be added.`);
+        manualError.textContent = `${email_inputted} is unsubscribed and cannot be added.`;
+        return;
+    }
+
 
     // // Prepend "https://" if not included
     if (!/^https:\/\//i.test(website)) {
@@ -2601,6 +2628,35 @@ function showNewHtml() {
 //     }
 // }
 
+let unsubscribedEmailsCache = [];
+
+// Function to fetch all unsubscribed emails
+async function fetchUnsubscribedEmails(sender) {
+    try {
+        const response = await fetch(`https://server.voltmailer.com/get-unsubscribed-emails?sender=${encodeURIComponent(sender)}`);
+        
+        if (!response.ok) {
+            const { message } = await response.json();
+            throw new Error(message || 'Failed to fetch unsubscribed emails.');
+        }
+
+        const { unsubscribedEmails } = await response.json();
+        unsubscribedEmailsCache = unsubscribedEmails; // Cache the emails
+        console.log('Unsubscribed emails fetched:', unsubscribedEmailsCache);
+    } catch (error) {
+        console.error('Error fetching unsubscribed emails:', error);
+    }
+}
+
+// Function to check if an email is unsubscribed
+function isEmailNotUnsubscribed(emailToCheck) {
+    return !unsubscribedEmailsCache.includes(emailToCheck);
+}
+
+
+
+
+
 function separateSubject(input) {
     // Check if the input starts with "Subject: "
     const prefix = "Subject: ";
@@ -2886,9 +2942,6 @@ return
     console.error('Selection process failed:', error);
 }
 }
-
-
-
 
 }
 
