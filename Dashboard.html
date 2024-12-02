@@ -1736,27 +1736,13 @@ const validateEmail = (email) => {
 };
 
 const normalizeWebsite = (website) => {
-    if (!website) return null;
-    
-    // Remove any whitespace and convert to string
-    website = String(website).trim();
-    
-    // // Add https:// if not present
-    // if (!website.match(/^https?:\/\//i)) {
-    //     website = `https://${website}`;
-    // }
-    
-    // // Basic website validation
-    // const websiteRegex = /^https?:\/\/[a-zA-Z0-9.-]+\.[a-z]{2,}(\/.*)?$/i;
-    // return websiteRegex.test(website) ? website : null;
-
-    const websiteRegex = /^https:\/\/.+$/;
-    // // Prepend "https://" if not included
-    if (!/^https:\/\//i.test(website)) {
-        website = 'https://' + website;
+    try {
+        if (!website) return null;
+        let url = new URL(website.includes('http') ? website : 'https://' + website);
+        return url.href;
+    } catch (error) {
+        return null; // Invalid URL
     }
-    return website
-
 };
 
 // File Processing Function
@@ -1865,7 +1851,7 @@ const ensureSingleHttps = (url) => {
 function isEmailNotUnsubscribed(emailToCheck) {
     return !unsubscribedEmailsCache.includes(emailToCheck);
 }
-let processedEmails = []
+let processedEmails = new Set(); // Correct type
 
 
 // Validation and Data Preparation
