@@ -1870,7 +1870,7 @@ let processedEmails = []
 
 // Validation and Data Preparation
 async function validateAndPrepareData(rawData) {
-    await fetchUnsubscribedEmails(U_MyEmail)
+    // await fetchUnsubscribedEmails(U_MyEmail)
     const validData = [];
     processedEmails = []
     const potentialColumns = [
@@ -1906,7 +1906,7 @@ async function validateAndPrepareData(rawData) {
         const isNotUnsubscribed = isEmailNotUnsubscribed(email);
         // Validation checks
         if (validateEmail(email)) {
-            if(isNotUnsubscribed){
+            // if(isNotUnsubscribed){
             const normalizedWebsite = normalizeWebsite(website);
             // normalizedWebsite = ensureSingleHttps = (ndWebsite)
             
@@ -1921,10 +1921,10 @@ async function validateAndPrepareData(rawData) {
                 processedEmails.add(email);
             }
         }
-        } else {
-            console.log(`${email_inputted} is unsubscribed and cannot be added.`);
-            sNotification(`${email_inputted} is unsubscribed and cannot be added.`)
-        }
+        // } else {
+        //     console.log(`${email_inputted} is unsubscribed and cannot be added.`);
+        //     sNotification(`${email_inputted} is unsubscribed and cannot be added.`)
+        // }
     });
 
     return validData;
