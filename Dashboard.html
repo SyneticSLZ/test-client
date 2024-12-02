@@ -5453,17 +5453,19 @@ const formatMailboxData = (formData) => {
 
                 emails = await fetchActiveMailbox(U_MyEmail)
                 console.log(emails)
-
+                let unique = true
                 emails.forEach(email => {
                     if (email = details.username){
                         sNotification('Failed to add mailbox : Account already exists');
-                        return { success: false, message: 'Account already exists' };
+                        unique = false
+                        return;
                     }
 
                 })
 
+                if (unique) {
 
-        const response = await fetch('https://server.voltmailer.com/verify-smtp', {
+                    const response = await fetch('https://server.voltmailer.com/verify-smtp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -5479,6 +5481,11 @@ const formatMailboxData = (formData) => {
         }
 
         return { success: true, message: 'SMTP details verified successfully' };
+                } else {
+                    return { success: false, message: 'Account already exists' };
+                }
+
+
     } catch (error) {
         sNotification('Failed to add mailbox');
         console.error('Error verifying SMTP details:', error);
