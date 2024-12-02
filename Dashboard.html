@@ -678,7 +678,7 @@ window.onload = function() {
         const mailboxList = document.getElementById('mailboxList');
         const mailboxCards = document.getElementById('mailboxCards');
         let button = document.getElementById('submit')
-        HasActive = await fetchActiveMailbox(email)
+        HasActive = await fetchActiveMailbox(U_MyEmail)
         if (mailboxes.length === 0) {
             emptyState.classList.remove('hidden');
             mailboxList.classList.add('hidden');
