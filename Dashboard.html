@@ -1903,7 +1903,7 @@ async function validateAndPrepareData(rawData) {
         const email = row[emailColumn]?.toString().trim();
         const website = row[websiteColumn]?.toString().trim();
         const name = row[nameColumn]?.toString().trim();
-        const isNotUnsubscribed = isEmailNotUnsubscribed(email_inputted);
+        const isNotUnsubscribed = isEmailNotUnsubscribed(email);
         // Validation checks
         if (validateEmail(email)) {
             if(isNotUnsubscribed){
