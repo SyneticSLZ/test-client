@@ -1731,16 +1731,6 @@ async function connectedgoogleAuth() {
 // CSV LOGIC
 
 
-await fetchUnsubscribedEmails(U_MyEmail); // Fetch all unsubscribed emails once
-    const isNotUnsubscribed = isEmailNotUnsubscribed(email_inputted);
-
-    if (isNotUnsubscribed) {
-        console.log(`${email_inputted} is not unsubscribed and can be added.`);
-    } else {
-        console.log(`${email_inputted} is unsubscribed and cannot be added.`);
-        manualError.textContent = `${email_inputted} is unsubscribed and cannot be added.`;
-        return;
-    }
 
 
 function ShowCsv(){
