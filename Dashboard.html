@@ -1809,9 +1809,11 @@ function detectColumnType(sample) {
             }
 
             data.forEach(row => {
-                if (!/^https:\/\//i.test(row[websiteCol])) {
-                    website = 'https://' + row[websiteCol];
-                }
+                if (/^http:\/\//i.test(row[websiteCol])) {
+    website = row[websiteCol].replace(/^http:\/\//i, 'https://');
+} else {
+    website = row[websiteCol];
+}
                 const formData = {
                     email: row[emailCol],
                     website: row[websiteCol],
