@@ -1729,359 +1729,174 @@ async function connectedgoogleAuth() {
 
 
 // CSV LOGIC
-// Validation Utilities
-const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email) && !processedEmails.has(email);
-};
 
-const normalizeWebsite = (website) => {
-    try {
-        if (!website) return null;
-        let url = new URL(website.includes('http') ? website : 'https://' + website);
-        return url.href;
-    } catch (error) {
-        return null; // Invalid URL
+
+await fetchUnsubscribedEmails(U_MyEmail); // Fetch all unsubscribed emails once
+    const isNotUnsubscribed = isEmailNotUnsubscribed(email_inputted);
+
+    if (isNotUnsubscribed) {
+        console.log(`${email_inputted} is not unsubscribed and can be added.`);
+    } else {
+        console.log(`${email_inputted} is unsubscribed and cannot be added.`);
+        manualError.textContent = `${email_inputted} is unsubscribed and cannot be added.`;
+        return;
     }
-};
 
-// File Processing Function
-async function handleFile(event) {
-    const file = event.target.files[0];
-    if (!file) return;
 
-    const fileExtension = file.name.split('.').pop().toLowerCase();
-    
-    try {
-        let parsedData;
-        
-        // CSV Processing
-        if (fileExtension === 'csv') {
-            parsedData = await parseCSV(file);
-        } 
-        // Excel Processing 
-        else if (['xlsx', 'xls'].includes(fileExtension)) {
-            parsedData = await parseExcel(file);
-        } 
-        else {
-            throw new Error('Unsupported file type. Please upload CSV or Excel files.');
+function ShowCsv(){
+    const csvBTN = document.getElementById('csvBTN');
+    const input = document.getElementById('csvFile');
+
+    csvBTN.style.display = 'none';
+    input.style.display = 'block';
+    console.log("switched")
+}
+
+
+function detectColumnType(sample) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const namePattern = /^[A-Za-z ,.'-]+$/;
+    const websitePattern = /^(https?:\/\/)?([\w-]+)\.([a-z]{2,6})(\.[a-z]{2,6})?(\/[\w\-.]*)*\/?$/;
+
+    if (emailPattern.test(sample)) return 'email';
+    if (namePattern.test(sample)) return 'name';
+    if (websitePattern.test(sample)) return 'website';
+
+    return null;
+}
+
+        function handleFileSelect(input) {
+            let center = document.getElementById('center');
+            center.style.display = 'none'
+            const file = input.files[0];
+            processCSV(file);
         }
-        
-        // Validate and Process Data
-        const validatedData = validateAndPrepareData(parsedData);
-        
-        // Update submitted data and table
-        submittedData = validatedData;
-        updateTable();
-        
-        return validatedData;
-    } catch (error) {
-        console.error('File processing error:', error);
-        alert(error.message);
-        return [];
+
+        function processCSV(file, hasHeaders) {
+    if (!file) {
+        alert('Please upload a CSV file.');
+        return;
     }
-}
 
-// CSV Parsing Function
-function parseCSV(file) {
-    return new Promise((resolve, reject) => {
-        Papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-                if (results.errors.length) {
-                    reject(new Error('Error parsing CSV file'));
-                }
-                resolve(results.data);
-            },
-            error: (error) => reject(error)
-        });
-    });
-}
+    Papa.parse(file, {
+        header: hasHeaders,
+        dynamicTyping: true,
+        complete: function(results) {
+            const data = results.data;
+            if (data.length === 0) {
+                console.log('Empty CSV file.');
+                return;
+            }
 
-// Excel Parsing Function
-function parseExcel(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            try {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
-                const firstSheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[firstSheetName];
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { 
-                    header: 1,  // Use first row as headers
-                    defval: '',  // Use empty string for undefined cells
-                });
-                
-                // Convert to object format
-                const processedData = jsonData.slice(1).map(row => {
-                    const headers = jsonData[0];
-                    return headers.reduce((obj, header, index) => {
-                        obj[header] = row[index];
-                        return obj;
+            let columns;
+            if (hasHeaders) {
+                columns = Object.keys(data[0]);
+            } else {
+                // Generate default column names
+                columns = data[0].map((_, index) => `Column${index + 1}`);
+                data.forEach((row, rowIndex) => {
+                    data[rowIndex] = row.reduce((acc, value, index) => {
+                        acc[columns[index]] = value;
+                        return acc;
                     }, {});
                 });
-                
-                resolve(processedData);
-            } catch (error) {
-                reject(new Error('Error parsing Excel file'));
             }
-        };
-        
-        reader.onerror = () => reject(new Error('Error reading file'));
-        reader.readAsArrayBuffer(file);
-    });
-}
 
-const ensureSingleHttps = (url) => {
-    if (!url) return null;
+            let emailCol, nameCol, websiteCol;
 
-    // Remove any whitespace and convert to string
-    url = String(url).trim();
+            for (let col of columns) {
+                const sampleValue = data[0][col];
+                const colType = detectColumnType(sampleValue);
 
-    // Match and clean up repeated https:// or http://
-    url = url.replace(/^(https?:\/\/)+/i, 'https://');
+                if (colType === 'email') emailCol = col;
+                if (colType === 'name') nameCol = col;
+                if (colType === 'website') websiteCol = col;
+            }
 
-    return url;
-};
+            if (!emailCol || !nameCol || !websiteCol) {
+                console.log('Could not detect all necessary columns.');
+                return;
+            }
 
-// Function to check if an email is unsubscribed
-function isEmailNotUnsubscribed(emailToCheck) {
-    return !unsubscribedEmailsCache.includes(emailToCheck);
-}
-let processedEmails = new Set(); // Correct type
-
-
-// Validation and Data Preparation
-async function validateAndPrepareData(rawData) {
-    // await fetchUnsubscribedEmails(U_MyEmail)
-    const validData = [];
-    processedEmails = []
-    const potentialColumns = [
-        ['email', 'Email', 'e-mail', 'emailAddress'],
-        ['website', 'Website', 'url', 'domain'],
-        ['name', 'Name', 'fullName', 'contactName']
-    ];
-
-    // Find column mappings
-    const findColumn = (possibleNames) => {
-        if (!rawData || rawData.length === 0) return null;
-        
-        const headers = Object.keys(rawData[0] || {});
-        return headers.find(header => 
-            possibleNames.some(name => 
-                header.toLowerCase().includes(name.toLowerCase())
-            )
-        );
-    };
-
-    const emailColumn = findColumn(potentialColumns[0]);
-    const websiteColumn = findColumn(potentialColumns[1]);
-    const nameColumn = findColumn(potentialColumns[2]);
-
-    if (!emailColumn || !websiteColumn || !nameColumn) {
-        throw new Error('Could not find required columns. Ensure your file has Email, Website, and Name columns.');
-    }
-
-    rawData.forEach(row => {
-        const email = row[emailColumn]?.toString().trim();
-        const website = row[websiteColumn]?.toString().trim();
-        const name = row[nameColumn]?.toString().trim();
-        const isNotUnsubscribed = isEmailNotUnsubscribed(email);
-        // Validation checks
-        if (validateEmail(email)) {
-            // if(isNotUnsubscribed){
-            const normalizedWebsite = normalizeWebsite(website);
-            // normalizedWebsite = ensureSingleHttps = (ndWebsite)
-            
-            if (normalizedWebsite) {
-                const entry = {
-                    email,
-                    website: normalizedWebsite,
-                    name
+            data.forEach(row => {
+                if (!/^https:\/\//i.test(row[websiteCol])) {
+                    website = 'https://' + row[websiteCol];
+                }
+                const formData = {
+                    email: row[emailCol],
+                    website: row[websiteCol],
+                    name: row[nameCol]
                 };
-                
-                validData.push(entry);
-                processedEmails.add(email);
-            }
-        }
-        // } else {
-        //     console.log(`${email_inputted} is unsubscribed and cannot be added.`);
-        //     sNotification(`${email_inputted} is unsubscribed and cannot be added.`)
-        // }
-    });
+                submittedData.push(formData);
+                updateTable();
+            });
 
-    return validData;
+            console.log(JSON.stringify(submittedData, null, 2));
+        }
+    });
 }
 
-// await fetchUnsubscribedEmails(U_MyEmail); // Fetch all unsubscribed emails once
-//     const isNotUnsubscribed = isEmailNotUnsubscribed(email_inputted);
-
-//     if (isNotUnsubscribed) {
-//         console.log(`${email_inputted} is not unsubscribed and can be added.`);
-//     } else {
-//         console.log(`${email_inputted} is unsubscribed and cannot be added.`);
-//         manualError.textContent = `${email_inputted} is unsubscribed and cannot be added.`;
-//         return;
-//     }
-
-
-// function ShowCsv(){
-//     const csvBTN = document.getElementById('csvBTN');
-//     const input = document.getElementById('csvFile');
-
-//     csvBTN.style.display = 'none';
-//     input.style.display = 'block';
-//     console.log("switched")
-// }
-
-
-// function detectColumnType(sample) {
-//     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     const namePattern = /^[A-Za-z ,.'-]+$/;
-//     const websitePattern = /^(https?:\/\/)?([\w-]+)\.([a-z]{2,6})(\.[a-z]{2,6})?(\/[\w\-.]*)*\/?$/;
-
-//     if (emailPattern.test(sample)) return 'email';
-//     if (namePattern.test(sample)) return 'name';
-//     if (websitePattern.test(sample)) return 'website';
-
-//     return null;
-// }
-
-//         function handleFileSelect(input) {
-//             let center = document.getElementById('center');
-//             center.style.display = 'none'
-//             const file = input.files[0];
-//             processCSV(file);
-//         }
-
-//         function processCSV(file, hasHeaders) {
-//     if (!file) {
-//         alert('Please upload a CSV file.');
-//         return;
-//     }
-
-//     Papa.parse(file, {
-//         header: hasHeaders,
-//         dynamicTyping: true,
-//         complete: function(results) {
-//             const data = results.data;
-//             if (data.length === 0) {
-//                 console.log('Empty CSV file.');
-//                 return;
-//             }
-
-//             let columns;
-//             if (hasHeaders) {
-//                 columns = Object.keys(data[0]);
-//             } else {
-//                 // Generate default column names
-//                 columns = data[0].map((_, index) => `Column${index + 1}`);
-//                 data.forEach((row, rowIndex) => {
-//                     data[rowIndex] = row.reduce((acc, value, index) => {
-//                         acc[columns[index]] = value;
-//                         return acc;
-//                     }, {});
-//                 });
-//             }
-
-//             let emailCol, nameCol, websiteCol;
-
-//             for (let col of columns) {
-//                 const sampleValue = data[0][col];
-//                 const colType = detectColumnType(sampleValue);
-
-//                 if (colType === 'email') emailCol = col;
-//                 if (colType === 'name') nameCol = col;
-//                 if (colType === 'website') websiteCol = col;
-//             }
-
-//             if (!emailCol || !nameCol || !websiteCol) {
-//                 console.log('Could not detect all necessary columns.');
-//                 return;
-//             }
-
-//             data.forEach(row => {
-//                 if (!/^https:\/\//i.test(row[websiteCol])) {
-//                     website = 'https://' + row[websiteCol];
-//                 }
-//                 const formData = {
-//                     email: row[emailCol],
-//                     website: row[websiteCol],
-//                     name: row[nameCol]
-//                 };
-//                 submittedData.push(formData);
-//                 updateTable();
-//             });
-
-//             console.log(JSON.stringify(submittedData, null, 2));
-//         }
-//     });
-// }
 
 
 
+function handleFile(event) {
+    console.log("running file chanfge")
+    const file = event.target.files[0];
+    if (file) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (fileExtension === 'xlsx') {
+            handleExcelFile(file);
+        } else if (fileExtension === 'csv') {
+            handleCSVFile(file);
+        } else {
+            alert('Unsupported file type');
+        }
+    }
+}
 
-// function handleFile(event) {
-//     console.log("running file chanfge")
-//     const file = event.target.files[0];
-//     if (file) {
-//         const fileExtension = file.name.split('.').pop().toLowerCase();
-//         if (fileExtension === 'xlsx') {
-//             handleExcelFile(file);
-//         } else if (fileExtension === 'csv') {
-//             handleCSVFile(file);
-//         } else {
-//             alert('Unsupported file type');
-//         }
-//     }
-// }
+function handleExcelFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-// function handleExcelFile(file) {
-//     const reader = new FileReader();
-//     reader.onload = function(e) {
-//         const data = new Uint8Array(e.target.result);
-//         const workbook = XLSX.read(data, {type: 'array'});
-//         const firstSheetName = workbook.SheetNames[0];
-//         const worksheet = workbook.Sheets[firstSheetName];
-//         const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        processData(jsonData);
+    };
+    reader.readAsArrayBuffer(file);
+}
 
-//         processData(jsonData);
-//     };
-//     reader.readAsArrayBuffer(file);
-// }
+function handleCSVFile(file) {
+    Papa.parse(file, {
+        header: true,
+        complete: function(results) {
+            processData(results.data);
+        }
+    });
+}
 
-// function handleCSVFile(file) {
-//     Papa.parse(file, {
-//         header: true,
-//         complete: function(results) {
-//             processData(results.data);
-//         }
-//     });
-// }
+function processData(data) {
+    const emailCol = 'Email';
+    const websiteCol = 'Website';
+    const nameCol = 'Name';
+                let center = document.getElementById('center');
+            center.style.display = 'none'
+    // const submittedData = [];
 
-// function processData(data) {
-//     const emailCol = 'Email';
-//     const websiteCol = 'Website';
-//     const nameCol = 'Name';
-//                 let center = document.getElementById('center');
-//             center.style.display = 'none'
-//     // const submittedData = [];
+    data.forEach(row => {
+        const formData = {
+            email: row[emailCol],
+            website: row[websiteCol],
+            name: row[nameCol]
+        };
+        submittedData.push(formData);
+        updateTable();
+    });
 
-//     data.forEach(row => {
-//         const formData = {
-//             email: row[emailCol],
-//             website: row[websiteCol],
-//             name: row[nameCol]
-//         };
-//         submittedData.push(formData);
-//         updateTable();
-//     });
-
-//     console.log(submittedData); // Display the output in the console
-// }
+    console.log(submittedData); // Display the output in the console
+}
 
 
 
