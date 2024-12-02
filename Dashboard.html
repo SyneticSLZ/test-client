@@ -677,6 +677,7 @@ window.onload = function() {
         const emptyState = document.getElementById('emptyState');
         const mailboxList = document.getElementById('mailboxList');
         const mailboxCards = document.getElementById('mailboxCards');
+        let button = document.getElementById('submit')
         HasActive = await fetchActiveMailbox(email)
         if (mailboxes.length === 0) {
             emptyState.classList.remove('hidden');
@@ -714,6 +715,7 @@ window.onload = function() {
 
             console.log('Initialized MAILBOXES:', HasActive);
         // Use MAILBOXES for your dropdown or UI logic
+        
         document.getElementById('googleauthid').innerHTML=`
             <div class="topbar">
                 <div class="dropdown">
