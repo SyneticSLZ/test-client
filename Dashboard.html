@@ -1841,6 +1841,19 @@ function parseExcel(file) {
     });
 }
 
+const ensureSingleHttps = (url) => {
+    if (!url) return null;
+
+    // Remove any whitespace and convert to string
+    url = String(url).trim();
+
+    // Match and clean up repeated https:// or http://
+    url = url.replace(/^(https?:\/\/)+/i, 'https://');
+
+    return url;
+};
+
+
 // Validation and Data Preparation
 function validateAndPrepareData(rawData) {
     const validData = [];
@@ -1877,7 +1890,8 @@ function validateAndPrepareData(rawData) {
 
         // Validation checks
         if (validateEmail(email)) {
-            const normalizedWebsite = normalizeWebsite(website);
+            const ndWebsite = normalizeWebsite(website);
+            normalizedWebsite = ensureSingleHttps = (ndWebsite)
             
             if (normalizedWebsite) {
                 const entry = {
