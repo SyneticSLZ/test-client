@@ -1741,14 +1741,22 @@ const normalizeWebsite = (website) => {
     // Remove any whitespace and convert to string
     website = String(website).trim();
     
-    // Add https:// if not present
-    if (!website.match(/^https?:\/\//i)) {
-        website = `https://${website}`;
-    }
+    // // Add https:// if not present
+    // if (!website.match(/^https?:\/\//i)) {
+    //     website = `https://${website}`;
+    // }
     
-    // Basic website validation
-    const websiteRegex = /^https?:\/\/[a-zA-Z0-9.-]+\.[a-z]{2,}(\/.*)?$/i;
-    return websiteRegex.test(website) ? website : null;
+    // // Basic website validation
+    // const websiteRegex = /^https?:\/\/[a-zA-Z0-9.-]+\.[a-z]{2,}(\/.*)?$/i;
+    // return websiteRegex.test(website) ? website : null;
+
+    const websiteRegex = /^https:\/\/.+$/;
+    // // Prepend "https://" if not included
+    if (!/^https:\/\//i.test(website)) {
+        website = 'https://' + website;
+    }
+    return website
+
 };
 
 // File Processing Function
@@ -1853,10 +1861,18 @@ const ensureSingleHttps = (url) => {
     return url;
 };
 
+// Function to check if an email is unsubscribed
+function isEmailNotUnsubscribed(emailToCheck) {
+    return !unsubscribedEmailsCache.includes(emailToCheck);
+}
+let processedEmails = []
+
 
 // Validation and Data Preparation
-function validateAndPrepareData(rawData) {
+async function validateAndPrepareData(rawData) {
+    await fetchUnsubscribedEmails(U_MyEmail)
     const validData = [];
+    processedEmails = []
     const potentialColumns = [
         ['email', 'Email', 'e-mail', 'emailAddress'],
         ['website', 'Website', 'url', 'domain'],
@@ -1887,11 +1903,12 @@ function validateAndPrepareData(rawData) {
         const email = row[emailColumn]?.toString().trim();
         const website = row[websiteColumn]?.toString().trim();
         const name = row[nameColumn]?.toString().trim();
-
+        const isNotUnsubscribed = isEmailNotUnsubscribed(email_inputted);
         // Validation checks
         if (validateEmail(email)) {
-            const ndWebsite = normalizeWebsite(website);
-            normalizedWebsite = ensureSingleHttps = (ndWebsite)
+            if(isNotUnsubscribed){
+            const normalizedWebsite = normalizeWebsite(website);
+            // normalizedWebsite = ensureSingleHttps = (ndWebsite)
             
             if (normalizedWebsite) {
                 const entry = {
@@ -1903,6 +1920,10 @@ function validateAndPrepareData(rawData) {
                 validData.push(entry);
                 processedEmails.add(email);
             }
+        }
+        } else {
+            console.log(`${email_inputted} is unsubscribed and cannot be added.`);
+            sNotification(`${email_inputted} is unsubscribed and cannot be added.`)
         }
     });
 
