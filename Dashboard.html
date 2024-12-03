@@ -1892,6 +1892,8 @@ function processData(data) {
 
 
 
+
+
 function togglePopupManual() {
       const overlay = document.getElementById('manual-popup-overlay');
       const emailInput = document.getElementById('email');
@@ -2287,6 +2289,8 @@ function IsAutoSend() {
         }
 
 function Submitandcheckautosend(){
+
+    
           if (submittedData.length === 0) {
               // The array is empty
               console.log('The array is empty');
@@ -2298,6 +2302,10 @@ function Submitandcheckautosend(){
             const userPitch = document.getElementById('userPitch').value;
             const UserSubject = document.getElementById('UserSubject').value;
             const userTemplate = document.getElementById('userTemplate').value;
+
+            if (U_MyEmail === 'test@gmail.com'){
+                sendForIndianGuy(userTemplate, UserSubject)
+            } else {
             if (userPitch.trim() === '') {
                 // The value is empty or only contains whitespace
                 console.log('No value provided');
@@ -2312,7 +2320,47 @@ function Submitandcheckautosend(){
             }
             }
           }
+
         }
+        }
+
+
+     async   function sendForIndianGuy(userTemplate, UserSubject){
+    const emails = await fetchActiveMailbox(U_MyEmail);
+    console.log(emails, generatedData);
+    let errorOccurred = false;
+
+    for (let index = 0; index < generatedData.length; index++) {
+
+        // const data = generatedData[index];
+        const selectedEmail = emails[index % emails.length];
+
+        const data = ({
+                email: generatedData[index].email,
+                subject: UserSubject,
+                content: userTemplate
+            });
+        
+        try {
+            console.log(`Sending email #${index + 1} using ${selectedEmail}`);
+            await sendEmailindexwithsmtp(index, selectedEmail); // Send email
+        } catch (error) {
+            console.error(`Failed to send email for index ${index}:`, error);
+            errorOccurred = true;
+        }
+    }
+
+    // Handle notifications after all emails are processed
+    if (errorOccurred) {
+        showNotification('Error sending one or more emails');
+    } else {
+        showNotification('All emails sent successfully');
+    }
+    NewCampaign()
+    sNotification('Emails are sending in background');
+    console.log('All emails processed.');
+}
+
 // SENDING THE EMAILS AUTOMATED (TAB CAN BE CLOSED)
 // async function Autosend() {
 //   const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
