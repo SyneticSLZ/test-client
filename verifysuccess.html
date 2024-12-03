@@ -1,359 +1,647 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Authentication</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* Global styles */
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to bottom right, #FFB6C1, #C71585);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    /* Card styles */
-    .card {
-      background-color: white;
-      padding: 3rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 450px;
-    }
-
-    /* Form styles */
-    /* (same as before) */
-
-    /* Verification modal styles */
-    /* (same as before) */
-/* Form styles */
-.form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      color: #545454;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: #C71585;
-    }
-
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .checkbox-group label {
-      margin-left: 0.5rem;
-      font-size: 0.9rem;
-      color: #545454;
-    }
-
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background-color: #C71585;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .btn:hover {
-      background-color: #AC1576;
-    }
-
-    .link-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-    }
-
-    .link-group a {
-      color: #C71585;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .link-group a:hover {
-      text-decoration: underline;
-    }
-
-    /* Email verification styles */
-    .verification-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s;
-    }
-
-    .verification-modal.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .verification-modal .modal-content {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .verification-modal input {
-      width: 40px;
-      height: 40px;
-      font-size: 1.5rem;
-      text-align: center;
-      margin: 0 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    .verification-modal button {
-      margin-top: 1.5rem;
-    }
-    /* Navigation styles */
-    .nav {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-
-    .nav-link {
-      color: #C71585;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.3s;
-    }
-
-    .nav-link.active {
-      background-color: #C71585;
-      color: white;
-    }
-
-    .nav-link:hover {
-      background-color: #F3E5F5;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Outreach Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-  <div class="card">
-    <div class="nav">
-      <a href="#" class="nav-link active" data-section="signup">Sign Up</a>
-      <a href="#" class="nav-link" data-section="login">Log In</a>
-      <a href="#" class="nav-link" data-section="reset-password">Reset Password</a>
-      <a href="#" class="nav-link" data-section="enter-name">Enter Name</a>
+<body class="bg-gray-50 text-gray-900">
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-12 gap-6">
+            <!-- Sidebar Navigation -->
+            <nav class="col-span-2 bg-white shadow-md rounded-xl p-4">
+                <div class="space-y-2">
+                    <button id="templatesNav" class="w-full text-left px-4 py-2 hover:bg-purple-50 rounded-lg font-medium flex items-center text-purple-600">
+                        <i class="fas fa-file-alt mr-3"></i>Templates
+                    </button>
+                    <button id="listsNav" class="w-full text-left px-4 py-2 hover:bg-purple-50 rounded-lg text-gray-600 font-medium flex items-center">
+                        <i class="fas fa-list mr-3"></i>Lists
+                    </button>
+                    <button id="sendCampaignNav" class="w-full text-left px-4 py-2 hover:bg-purple-50 rounded-lg text-gray-600 font-medium flex items-center">
+                        <i class="fas fa-paper-plane mr-3"></i>Send Campaign
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Main Content Area -->
+            <main class="col-span-10">
+                <!-- Templates Section -->
+                <section id="templatesSection" class="bg-white shadow-xl rounded-xl">
+                    <header class="bg-purple-600 text-white p-6 rounded-t-xl flex justify-between items-center">
+                        <h1 class="text-2xl font-bold">Email Templates</h1>
+                        <button id="createTemplateBtn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">
+                            <i class="fas fa-plus mr-2"></i>Create Template
+                        </button>
+                    </header>
+                    
+                    <div class="grid grid-cols-3 gap-6 p-6" id="templatesGrid">
+                        <!-- Predefined Templates -->
+                        <div class="bg-gray-100 rounded-xl p-6 relative">
+                            <h3 class="text-lg font-semibold mb-4">Product Launch</h3>
+                            <div class="mb-4">
+                                <strong>Subject:</strong> 
+                                <p class="text-gray-600 truncate">Exciting New Product Launch - Limited Time Offer!</p>
+                            </div>
+                            <div class="h-32 overflow-hidden mb-4">
+                                <strong>Preview HTML:</strong>
+                                <div id="productLaunchTemplatePreview" class="text-gray-600 line-clamp-3"></div>
+                            </div>
+                            <div class="absolute bottom-4 right-4 flex space-x-2">
+                                <button class="text-purple-600 hover:text-purple-800 template-view-btn" data-template="productLaunch">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-purple-600 hover:text-purple-800">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-100 rounded-xl p-6 relative">
+                            <h3 class="text-lg font-semibold mb-4">Customer Feedback</h3>
+                            <div class="mb-4">
+                                <strong>Subject:</strong> 
+                                <p class="text-gray-600 truncate">We Value Your Opinion - Quick Survey</p>
+                            </div>
+                            <div class="h-32 overflow-hidden mb-4">
+                                <strong>Preview HTML:</strong>
+                                <div id="customerFeedbackTemplatePreview" class="text-gray-600 line-clamp-3"></div>
+                            </div>
+                            <div class="absolute bottom-4 right-4 flex space-x-2">
+                                <button class="text-purple-600 hover:text-purple-800 template-view-btn" data-template="customerFeedback">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-purple-600 hover:text-purple-800">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-100 rounded-xl p-6 relative">
+                            <h3 class="text-lg font-semibold mb-4">Webinar Invite</h3>
+                            <div class="mb-4">
+                                <strong>Subject:</strong> 
+                                <p class="text-gray-600 truncate">Exclusive Industry Insights Webinar</p>
+                            </div>
+                            <div class="h-32 overflow-hidden mb-4">
+                                <strong>Preview HTML:</strong>
+                                <div id="webinarTemplatePreview" class="text-gray-600 line-clamp-3"></div>
+                            </div>
+                            <div class="absolute bottom-4 right-4 flex space-x-2">
+                                <button class="text-purple-600 hover:text-purple-800 template-view-btn" data-template="webinar">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-purple-600 hover:text-purple-800">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Lists Section -->
+                <section id="listsSection" class="bg-white shadow-xl rounded-xl hidden">
+                    <header class="bg-purple-600 text-white p-6 rounded-t-xl flex justify-between items-center">
+                        <h1 class="text-2xl font-bold">Email Lists</h1>
+                        <div class="flex space-x-4">
+                            <!-- <input type="file" id="fileInput" class="hidden" accept=".csv,.xlsx">
+                            <button id="uploadListBtn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">
+                                <i class="fas fa-upload mr-2"></i>Upload List
+                            </button> -->
+                            <button id="openCreateListModalBtn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">
+                                <i class="fas fa-plus mr-2"></i>Create List
+                            </button>
+                        </div>
+                    </header>
+                    
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table id="listsTable" class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                    <tr>
+                                        <th class="px-6 py-3">List Name</th>
+                                        <th class="px-6 py-3">Contacts</th>
+                                        <th class="px-6 py-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Send Campaign Section -->
+                <section id="sendCampaignSection" class="bg-white shadow-xl rounded-xl hidden">
+                    <header class="bg-purple-600 text-white p-6 rounded-t-xl flex justify-between items-center">
+                        <h1 class="text-2xl font-bold">Send Campaign</h1>
+                        <button id="sendCampaignBtn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">
+                            <i class="fas fa-paper-plane mr-2"></i>Send Campaign
+                        </button>
+                    </header>
+                    
+                    <div class="p-6 space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Email List</label>
+                            <select id="campaignListSelect" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option>Select a list</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Template</label>
+                            <select id="campaignTemplateSelect" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option>Select a template</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Template View Modal -->
+        <div id="templateViewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+            <div class="bg-white rounded-xl shadow-2xl w-[800px] max-h-[90vh] overflow-auto">
+                <div id="templateViewContent" class="p-8"></div>
+                <div class="p-4 bg-gray-100 flex justify-end">
+                    <button id="closeTemplateViewBtn" class="py-2 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Template Modal -->
+        <div id="createTemplateModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+            <div class="bg-white rounded-xl shadow-2xl w-[800px] p-8">
+                <h2 class="text-2xl font-bold mb-6 text-purple-800">Create New Template</h2>
+                <form id="templateForm" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Template Name</label>
+                            <input type="text" required class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Subject</label>
+                            <input type="text" required class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Plain Text Body</label>
+                        <textarea required rows="4" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">HTML Body (Optional)</label>
+                        <textarea rows="6" class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" id="cancelTemplateBtn" class="py-2 px-6 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Cancel</button>
+                        <button type="submit" class="py-2 px-6 bg-purple-600 text-white rounded-lg hover:bg-purple-700">Create Template</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <div id="content-container">
-      <!-- Signup form -->
-      <div class="content-section" data-section="signup">
-        <h2 class="mb-4">Sign Up</h2>
-        <form id="signup-form">
-
-          <!-- Signup form fields -->
-
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="confirm-password">Confirm Password:</label>
-            <input type="password" id="confirm-password" name="confirm-password" class="form-control" required>
-          </div>
-          <div class="checkbox-group">
-            <input type="checkbox" id="privacy-policy" name="privacy-policy" required>
-            <label for="privacy-policy">I agree to the <a href="/Privacy.pdf" target="_blank">Privacy Policy</a> and <a href="/Terms_Of_Service.pdf" target="_blank">Terms of Service</a>.</label>
-          </div>
-          <div class="checkbox-group">
-            <input type="checkbox" id="can-spam" name="can-spam" required>
-            <label for="can-spam">I will adhere to CAN-SPAM and GDPR laws.</label>
-          </div>
-          <button type="submit" class="btn">Sign Up</button>
-
-        </form>
-        <div class="link-group">
-          <a href="#" data-section="login">Log In</a>
-          <a href="#" data-section="reset-password">Forgot Password?</a>
-        </div>
-        <div class="link-group">
-          <a href="#">Sign in with Google</a>
-        </div>
+    <script>
+      // Main Application Class
+      class EmailOutreachPlatform {
+          constructor() {
+              this.initEventListeners();
+              this.templates = [
+              {
+    id: 'productLaunch',
+    name: 'Product Launch',
+    subject: 'Exciting New Product Launch - Limited Time Offer!',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;">
+        <header style="background-color: #6a0dad; color: white; text-align: center; padding: 20px;">
+          <h1>Our Brand</h1>
+        </header>
+        <main style="background-color: white; padding: 20px;">
+          <h2 style="color: #6a0dad;">Introducing Our Latest Innovation</h2>
+          <p>We’re excited to introduce our new product that will revolutionize your workflow!</p>
+          <a href="#" style="display: inline-block; padding: 10px 20px; background-color: #6a0dad; color: white; text-decoration: none; border-radius: 5px;">Explore Now</a>
+        </main>
+        <footer style="text-align: center; padding: 10px; background-color: #ddd;">
+          <p>© 2024 Our Brand. All rights reserved.</p>
+        </footer>
       </div>
-
-      <!-- Login form -->
-      <div class="content-section" data-section="login" style="display: none;">
-        <h2 class="mb-4">Log In</h2>
-        <form id="login-form">
-          <!-- Login form fields -->
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control" required>
-          </div>
-          <button type="submit" class="btn">Log In</button>
-        </form>
-        <div class="link-group">
-          <a href="#" data-section="signup">Sign Up</a>
-          <a href="#" data-section="reset-password">Forgot Password?</a>
-        </div>
-        <div class="link-group">
-          <a href="#">Sign in with Google</a>
-        </div>
+    `,
+  },
+  {
+    id: 'customerFeedback',
+    name: 'Customer Feedback',
+    subject: 'We Value Your Opinion - Quick Survey',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+        <header style="background-color: #0077cc; color: white; text-align: center; padding: 20px;">
+          <h1>Our Brand</h1>
+        </header>
+        <main style="background-color: white; padding: 20px;">
+          <h2 style="color: #0077cc;">We Want Your Feedback!</h2>
+          <p>Your opinion helps us grow. Take our quick survey and share your thoughts.</p>
+          <a href="#" style="display: inline-block; padding: 10px 20px; background-color: #0077cc; color: white; text-decoration: none; border-radius: 5px;">Take Survey</a>
+        </main>
+        <footer style="text-align: center; padding: 10px; background-color: #ddd;">
+          <p>© 2024 Our Brand. All rights reserved.</p>
+        </footer>
       </div>
-
-      <!-- Reset password form -->
-      <div class="content-section" data-section="reset-password" style="display: none;">
-        <h2 class="mb-4">Reset Password</h2>
-        <form id="reset-password-form">
-          <!-- Reset password form fields -->
-
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" class="form-control" required>
-          </div>
-          <button type="submit" class="btn">Reset Password</button>
-        </form>
-        <div class="link-group">
-          <a href="#" data-section="signup">Sign Up</a>
-          <a href="#" data-section="login">Log In</a>
-        </div>
+    `,
+  },
+  {
+    id: 'webinar',
+    name: 'Webinar Invite',
+    subject: 'Exclusive Industry Insights Webinar',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f0f8ff;">
+        <header style="background-color: #1a73e8; color: white; text-align: center; padding: 20px;">
+          <h1>Our Brand</h1>
+        </header>
+        <main style="background-color: white; padding: 20px;">
+          <h2 style="color: #1a73e8;">Join Our Exclusive Webinar</h2>
+          <p>Gain insights from industry leaders. Reserve your spot today!</p>
+          <a href="#" style="display: inline-block; padding: 10px 20px; background-color: #1a73e8; color: white; text-decoration: none; border-radius: 5px;">Register Now</a>
+        </main>
+        <footer style="text-align: center; padding: 10px; background-color: #ddd;">
+          <p>© 2024 Our Brand. All rights reserved.</p>
+        </footer>
       </div>
+    `,
+  },
+              ];
+              this.renderTemplates();
+          }
+  
+          initEventListeners() {
+              document.getElementById('templatesNav').addEventListener('click', () => this.showSection('templatesSection'));
+              document.getElementById('listsNav').addEventListener('click', () => this.showSection('listsSection'));
+              document.getElementById('sendCampaignNav').addEventListener('click', () => this.showSection('sendCampaignSection'));
+              
+              document.getElementById('createTemplateBtn').addEventListener('click', () => this.toggleModal('createTemplateModal', true));
+              document.getElementById('cancelTemplateBtn').addEventListener('click', () => this.toggleModal('createTemplateModal', false));
+              document.getElementById('closeTemplateViewBtn').addEventListener('click', () => this.toggleModal('templateViewModal', false));
+              
+              document.getElementById('templateForm').addEventListener('submit', (e) => this.createTemplate(e));
+              document.getElementById('uploadListBtn').addEventListener('click', () => document.getElementById('fileInput').click());
+              document.getElementById('fileInput').addEventListener('change', (e) => this.uploadList(e));
+          }
+  
+          showSection(sectionId) {
+              document.querySelectorAll('main > section').forEach(section => section.classList.add('hidden'));
+              
+              document.getElementById(sectionId).classList.remove('hidden');
+          }
+  
+          toggleModal(modalId, show) {
+              const modal = document.getElementById(modalId);
+              if (show) modal.classList.remove('hidden');
+              else modal.classList.add('hidden');
+          }
+  
+          renderTemplates() {
+              const templatesGrid = document.getElementById('templatesGrid');
+              templatesGrid.innerHTML = '';
+              this.templates.forEach(template => {
+                  templatesGrid.innerHTML += `
+                      <div class="bg-gray-100 rounded-xl p-6 relative">
+                          <h3 class="text-lg font-semibold mb-4">${template.name}</h3>
+                          <div class="mb-4"><strong>Subject:</strong> <p class="text-gray-600 truncate">${template.subject}</p></div>
+                          <div class="h-32 overflow-hidden mb-4"><strong>Preview HTML:</strong> <div class="text-gray-600 line-clamp-3">${template.html}</div></div>
+                          <div class="absolute bottom-4 right-4 flex space-x-2">
+                              <button class="text-purple-600 hover:text-purple-800" onclick="platform.viewTemplate('${template.id}')"><i class="fas fa-eye"></i></button>
+                              <button class="text-red-600 hover:text-red-800" onclick="platform.deleteTemplate('${template.id}')"><i class="fas fa-trash"></i></button>
+                          </div>
+                      </div>`;
+              });
+          }
+  
+          createTemplate(e) {
+              e.preventDefault();
+              const name = e.target[0].value;
+              const subject = e.target[1].value;
+              const html = e.target[3].value || '<p>No HTML content provided.</p>';
+              this.templates.push({ id: name.toLowerCase().replace(/\s+/g, ''), name, subject, html });
+              this.toggleModal('createTemplateModal', false);
+              this.renderTemplates();
+          }
+  
+          viewTemplate(templateId) {
+              const template = this.templates.find(t => t.id === templateId);
+              if (template) {
+                  document.getElementById('templateViewContent').innerHTML = template.html;
+                  this.toggleModal('templateViewModal', true);
+              }
+          }
+  
+          deleteTemplate(templateId) {
+              this.templates = this.templates.filter(t => t.id !== templateId);
+              this.renderTemplates();
+          }
+  
+          // uploadList(event) {
+          //     const file = event.target.files[0];
+          //     if (file) {
+          //         const reader = new FileReader();
+          //         reader.onload = (e) => {
+          //             const data = new Uint8Array(e.target.result);
+          //             const workbook = XLSX.read(data, { type: 'array' });
+          //             const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          //             const rows = XLSX.utils.sheet_to_json(sheet);
+          //             console.log('Uploaded List:', rows);
+          //         };
+          //         reader.readAsArrayBuffer(file);
+          //     }
+          // }
+      }
+      class EmailListManager {
+    constructor() {
+        this.contacts = [];
+        this.initializeEventListeners();
+    }
 
-      <!-- Enter name form -->
-      <div class="content-section" data-section="enter-name" style="display: none;">
-        <h2 class="mb-4">Enter Your Name</h2>
-        <form id="enter-name-form">
-          <!-- Enter name form fields -->
+    initializeEventListeners() {
+        // Manual Email Entry
+        document.getElementById('manualAddEmailBtn').addEventListener('click', () => this.addManualEmail());
+        document.getElementById('emailInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') this.addManualEmail();
+        });
 
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" class="form-control" required>
-          </div>
-          <button type="submit" class="btn">Save</button>
+        // File Upload
+        document.getElementById('csvFileUpload').addEventListener('change', (e) => this.handleFileUpload(e));
 
-        </form>
-      </div>
-    </div>
+        // Remove Contact
+        document.getElementById('contactsTable').addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-contact')) {
+                const index = e.target.closest('tr').dataset.index;
+                this.removeContact(parseInt(index));
+            }
+        });
+    }
 
-    <div class="verification-modal" id="verification-modal">
-      <!-- Email verification modal content -->
-      <div class="modal-content">
-        <h3>Verify Your Email</h3>
-        <p>Please enter the 6-digit code sent to your email address.</p>
-        <div class="verification-code">
-          <input type="text" maxlength="1" required>
-          <input type="text" maxlength="1" required>
-          <input type="text" maxlength="1" required>
-          <input type="text" maxlength="1" required>
-          <input type="text" maxlength="1" required>
-          <input type="text" maxlength="1" required>
-        </div>
-        <button class="btn" id="verify-code">Verify</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // JavaScript functionality
-    const navLinks = document.querySelectorAll('.nav-link');
-    const contentSections = document.querySelectorAll('.content-section');
-    const verificationModal = document.getElementById('verification-modal');
-
-    // Switch between sections
-    navLinks.forEach((link) => {
-      link.addEventListener('click', (event) => {
-        event.preventDefault();
-        const targetSection = event.target.dataset.section;
-        switchSection(targetSection);
-      });
-    });
-
-    function switchSection(sectionName) {
-      // Hide all sections
-      contentSections.forEach((section) => {
-        section.style.display = 'none';
-      });
-
-      // Show the target section
-      const targetSection = document.querySelector(`.content-section[data-section="${sectionName}"]`);
-      targetSection.style.display = 'block';
-
-      // Update the active nav link
-      navLinks.forEach((link) => {
-        link.classList.remove('active');
-        if (link.dataset.section === sectionName) {
-          link.classList.add('active');
+    addManualEmail() {
+        const emailInput = document.getElementById('emailInput');
+        const email = emailInput.value.trim();
+        
+        if (this.validateEmail(email) && !this.isDuplicateEmail(email)) {
+            this.contacts.push({
+                email: email,
+                source: 'manual',
+                addedAt: new Date().toISOString()
+            });
+            this.renderContacts();
+            emailInput.value = '';
         }
-      });
     }
 
-    // Signup form submission
-    const signupForm = document.getElementById('signup-form');
-    signupForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      // Perform signup logic
-      showVerificationModal();
-    });
+    handleFileUpload(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
 
-    // Verification modal functionality
-    function showVerificationModal() {
-      verificationModal.classList.add('show');
+        reader.onload = (event) => {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const extractedContacts = XLSX.utils.sheet_to_json(worksheet)
+                .map(row => row.email || row.Email)
+                .filter(email => this.validateEmail(email) && !this.isDuplicateEmail(email))
+                .map(email => ({
+                    email: email,
+                    source: 'file',
+                    addedAt: new Date().toISOString()
+                }));
+
+            this.contacts = [...this.contacts, ...extractedContacts];
+            this.renderContacts();
+        };
+
+        reader.readAsArrayBuffer(file);
     }
 
-    function hideVerificationModal() {
-      verificationModal.classList.remove('show');
+    removeContact(index) {
+        this.contacts.splice(index, 1);
+        this.renderContacts();
     }
 
-    // Other form submissions (login, reset password, enter name)
-    // Add your functionality here
+    validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    isDuplicateEmail(email) {
+        return this.contacts.some(contact => contact.email === email);
+    }
+
+    renderContacts() {
+        const contactsTable = document.getElementById('contactsTable');
+        const contactsCount = document.getElementById('contactsCount');
+        
+        contactsTable.innerHTML = this.contacts.map((contact, index) => 
+        `
+            <tr data-index="${index}" class="border-b">
+                <td class="py-2 px-4">${contact.email}</td>
+                <td class="py-2 px-4">${contact.source}</td>
+                <td class="py-2 px-4 text-right">
+                    <button class="text-red-500 remove-contact">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            `
+        ).join('');
+
+        contactsCount.textContent = `${this.contacts.length} Contacts`;
+    }
+
+    saveList() {
+        const listNameInput = document.getElementById('listNameInput');
+        const listName = listNameInput.value.trim();
+
+        if (this.contacts.length === 0) {
+            alert('Please add contacts before saving the list');
+            return;
+        }
+
+        if (!listName) {
+            alert('Please provide a list name');
+            return;
+        }
+
+        const newList = {
+            name: listName,
+            contacts: this.contacts,
+            createdAt: new Date().toISOString()
+        };
+
+        // Here you would typically save to your application's state or backend
+        console.log('Saving list:', newList);
+        
+        // Reset form and close modal
+        this.contacts = [];
+        this.renderContacts();
+        listNameInput.value = '';
+        document.getElementById('createListModal').classList.add('hidden');
+    }
+}
+
+// HTML for the modal (to be added to your existing HTML)
+const createListModalHTML = 
+`<div id="createListModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-2xl w-[800px] max-h-[90vh] flex flex-col">
+        <div class="p-6 bg-purple-600 text-white rounded-t-xl flex justify-between items-center">
+            <h2 class="text-2xl font-bold">Create Contact List</h2>
+            <div class="text-sm" id="contactsCount">0 Contacts</div>
+        </div>
+        
+        <div class="p-6 grid grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">List Name</label>
+                <input 
+                    type="text" 
+                    id="listNameInput" 
+                    class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter list name"
+                >
+            </div>
+            
+            <div class="flex items-end space-x-4">
+                <div class="flex-grow">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Add Email</label>
+                    <input 
+                        type="email" 
+                        id="emailInput" 
+                        class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        placeholder="Enter email address"
+                    >
+                </div>
+                <button 
+                    id="manualAddEmailBtn" 
+                    class="bg-purple-500 text-white px-4 py-3 rounded-lg hover:bg-purple-600"
+                >
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6 pt-0">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Upload Contacts</h3>
+                <input 
+                    type="file" 
+                    id="csvFileUpload" 
+                    accept=".csv,.xlsx,.xls" 
+                    class="hidden"
+                >
+                <button 
+                    onclick="document.getElementById('csvFileUpload').click()" 
+                    class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200"
+                >
+                    <i class="fas fa-file-upload mr-2"></i>Upload File
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex-grow overflow-auto">
+            <table id="contactsTable" class="w-full text-left">
+                <thead class="bg-gray-100 sticky top-0">
+                    <tr>
+                        <th class="py-2 px-4">Email</th>
+                        <th class="py-2 px-4">Source</th>
+                        <th class="py-2 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div class="p-6 bg-gray-100 rounded-b-xl flex justify-end space-x-4">
+            <button 
+                id="cancelCreateListBtn" 
+                class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300"
+            >
+                Cancel
+            </button>
+            <button 
+                id="saveListBtn" 
+                class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
+            >
+                Save List
+            </button>
+        </div>
+    </div>
+</div>`
+;
+      
+
+          // Assuming createListModalHTML is defined as shown
+    document.body.insertAdjacentHTML('beforeend', createListModalHTML);
+
+document.getElementById('openCreateListModalBtn').addEventListener('click', () => {
+    document.getElementById('createListModal').classList.remove('hidden');
+});
+
+document.getElementById('cancelCreateListBtn').addEventListener('click', () => {
+    document.getElementById('createListModal').classList.add('hidden');
+});
+
+document.getElementById('saveListBtn').addEventListener('click', () => {
+    const manager = new EmailListManager();
+    manager.saveList();
+});
+
+// Initialize EmailListManager after modal has been added
+const emailListManager = new EmailListManager();
+  
+      // Initialize the platform
+      const platform = new EmailOutreachPlatform();
   </script>
-</body>
-</html>
+  
+
+
+                  </body>
+                  </html>
+                  
+
+                      <!-- <script>
+        // Dashboard State Management
+        class EmailOutreachPlatform {
+            constructor() {
+                this.emailLists = [];
+                this.templates = [
+                    {
+                        id: 'productLaunch',
+                        name: 'Product Launch',
+                        subject: 'Exciting New Product Launch - Limited Time Offer!',
+                        html: `
+                            <!DOCTYPE html>
+                            <html>
+                            <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;">
+                                <div style="background-color: #6a0dad; color: white; padding: 20px; text-align: center;">
+                                    <h1>Introducing Our Latest Innovation</h1>
+                                </div>
+                                <div style="padding: 20px; background-color: white;">
+                                    <p>Dear Valued Customer,</p>
+                                    <p>We're thrilled to announce our groundbreaking new product that will revolutionize the way you work!</p>
+                                    <a href="#" style="display: block; width: 200px; margin: 20px auto; background-color: #6a0dad; color: white; text-align: center; padding: 10px; text-decoration: none; border-radius: 5px;">
+                                        Explore Now
+                                    </a>
+                                </div>
+                                <div style="background-color: #f4f4f4; padding: 10px; text-align: center;">
+                                    <p>© 2024 Our Company. All rights reserved.</p>
+                                </div>
+                            </body>
+                            </html>
+                        `
+                    }, -->

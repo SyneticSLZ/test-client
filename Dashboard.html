@@ -3164,19 +3164,33 @@ async function Campaign(campaignDetails) {
 
 
 function calculateDelay(emailsPerHour) {
-    return Math.ceil(3600 / emailsPerHour) * 1000; // Delay in milliseconds
+    const cappedEmailsPerHour = Math.min(emailsPerHour, 90); // Cap at 90 emails/hour for delay calculation
+    const baseDelay = Math.ceil(3600 / cappedEmailsPerHour) * 1000; // Base delay in ms
+    const minVariance = -0.2 * baseDelay; // 20% faster than base delay
+    const maxVariance = 0.3 * baseDelay;  // 30% slower than base delay
+    return baseDelay + Math.random() * (maxVariance - minVariance) + minVariance;
 }
 
 async function sendAllEmails() {
+    const cappedEmailsPerHour = Math.min(generatedData.length, 90); // Capped for safe pacing
+    const emailsPerHour = generatedData.length
+    let emailsSent = 0;
+    const startTime = Date.now();
 
     const emails = await fetchActiveMailbox(U_MyEmail);
     console.log(emails, generatedData);
 
-    const delay = 3000 // Adjust this based on emails/hour
+    // const delay = 3000 // Adjust this based on emails/hour
     console.log( "delay is :" ,delay , "gen data len :", generatedData.length )
     let errorOccurred = false;
 
     for (let index = 0; index < generatedData.length; index++) {
+
+        const delay = calculateDelay(cappedEmailsPerHour);
+        console.log(`Delaying next email by ${Math.round(delay)} ms`);
+
+        await new Promise(resolve => setTimeout(resolve, delay));
+
         const data = generatedData[index];
         const selectedEmail = emails[index % emails.length]; // Distribute emails across mailboxes
         
@@ -3187,9 +3201,14 @@ async function sendAllEmails() {
             console.error(`Failed to send email for index ${index}:`, error);
             errorOccurred = true;
         }
-
-        // Introduce delay between sending emails
-        await new Promise(resolve => setTimeout(resolve, delay));
+        // Check if we're exceeding the hourly cap
+        const elapsedTime = Date.now() - startTime;
+        if (emailsSent >= cappedEmailsPerHour && elapsedTime < 3600000) {
+            const waitTime = 3600000 - elapsedTime; // Wait until one hour has passed
+            console.log(`Hourly limit reached. Waiting for ${Math.round(waitTime / 1000)} seconds.`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            emailsSent = 0; // Reset for the next hour
+        }
     }
 
     // Handle notifications after all emails are processed
