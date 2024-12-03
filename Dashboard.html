@@ -2303,10 +2303,12 @@ function Submitandcheckautosend(){
             const UserSubject = document.getElementById('UserSubject').value;
             const userTemplate = document.getElementById('userTemplate').value;
             console.log(U_MyEmail)
-            if (U_MyEmail === 'Test@gmail.com'){
-                console.log(U_MyEmail, 'pakistan')
-                sendForIndianGuy(userTemplate, UserSubject)
-            } else {
+            // if (U_MyEmail === 'Test@gmail.com'){
+            //     console.log(U_MyEmail, 'pakistan')
+            //     sendForIndianGuy(userTemplate, UserSubject)
+
+
+            // } else {
             if (userPitch.trim() === '') {
                 // The value is empty or only contains whitespace
                 console.log('No value provided');
@@ -2320,7 +2322,7 @@ function Submitandcheckautosend(){
                   manualSend();
             }
             }
-          }
+        //   }
 
         }
         }
@@ -2845,7 +2847,8 @@ localStorage.setItem('currentCampaignId', campaignId);
                         userPitch: userPitch, 
                         Uname: U_Username,
                         To: sddata.name,
-                    Template : userTemplate})
+                    Template : userTemplate,
+                   email: U_MyEmail})
                 });
 
                 if (!response.ok) {
