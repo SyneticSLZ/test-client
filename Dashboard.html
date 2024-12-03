@@ -1994,8 +1994,14 @@ async function Manual() {
 
     // // Prepend "https://" if not included
     if (!/^https:\/\//i.test(website)) {
+    if (/^http:\/\//i.test(website)) {
+        // Replace http:// with https://
+        website = website.replace(/^http:\/\//i, 'https://');
+    } else {
+        // Prepend https:// if no protocol exists
         website = 'https://' + website;
     }
+}
     console.log(isValidURL(website))
         if (!emailRegex.test(email_inputted)) {
             manualError.textContent = "Invalid email format.";
