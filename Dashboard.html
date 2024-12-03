@@ -2302,8 +2302,9 @@ function Submitandcheckautosend(){
             const userPitch = document.getElementById('userPitch').value;
             const UserSubject = document.getElementById('UserSubject').value;
             const userTemplate = document.getElementById('userTemplate').value;
-
+            console.log(U_MyEmail)
             if (U_MyEmail === 'Test@gmail.com'){
+                console.log(U_MyEmail, 'pakistan')
                 sendForIndianGuy(userTemplate, UserSubject)
             } else {
             if (userPitch.trim() === '') {
