@@ -2835,8 +2835,14 @@ localStorage.setItem('currentCampaignId', campaignId);
             let website = sddata.website
             updateRowStatus(index, 'Personalizing message');
             if (!/^https:\/\//i.test(website)) {
-                    website = 'https://' + website;
-                }
+    if (/^http:\/\//i.test(website)) {
+        // Replace http:// with https://
+        website = website.replace(/^http:\/\//i, 'https://');
+    } else {
+        // Prepend https:// if no protocol exists
+        website = 'https://' + website;
+    }
+}
             const response = await fetch('https://server.voltmailer.com/generate-email-content', {
                     method: 'POST',
                     headers: {
