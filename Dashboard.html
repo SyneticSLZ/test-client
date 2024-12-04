@@ -2338,8 +2338,18 @@ function Submitandcheckautosend(){
             const userTemplate = document.getElementById('userTemplate').value;
             console.log(U_MyEmail)
             if (U_MyEmail === 'Test@gmail.com'){
-                console.log(U_MyEmail, 'pakistan')
-                sendForIndianGuy(userTemplate, UserSubject)
+                if(UserSubject.trim() === ''){
+                    showNotification(`Please submit a subject`);
+                }
+                else {
+                    if(userTemplate.trim() === ''){
+                        showNotification(`Please submit a body`);
+                    }   
+                    else{
+                        sendForIndianGuy(userTemplate, UserSubject)
+                    }
+                }
+                
 
 
             } else {
