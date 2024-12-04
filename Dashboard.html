@@ -1732,7 +1732,8 @@ async function connectedgoogleAuth() {
 
 
 
-
+// email and website regex
+// not unsub emails
 function ShowCsv(){
     const csvBTN = document.getElementById('csvBTN');
     const input = document.getElementById('csvFile');
@@ -1809,14 +1810,27 @@ function detectColumnType(sample) {
             }
 
             data.forEach(row => {
-                if (/^http:\/\//i.test(row[websiteCol])) {
-    website = row[websiteCol].replace(/^http:\/\//i, 'https://');
-} else {
-    website = row[websiteCol];
+
+    // // Prepend "https://" if not included
+    if (!/^https:\/\//i.test(row[websiteCol])) {
+    if (/^http:\/\//i.test(row[websiteCol])) {
+        // Replace http:// with https://
+        website = row[websiteCol].replace(/^http:\/\//i, 'https://');
+    } else {
+        // Prepend https:// if no protocol exists
+        website = 'https://' + row[websiteCol];
+    }
 }
+
+
+//                 if (/^http:\/\//i.test(row[websiteCol])) {
+//     website = row[websiteCol].replace(/^http:\/\//i, 'https://');
+// } else {
+//     website = row[websiteCol];
+// }
                 const formData = {
                     email: row[emailCol],
-                    website: row[websiteCol],
+                    website: website,
                     name: row[nameCol]
                 };
                 submittedData.push(formData);
@@ -1877,10 +1891,23 @@ function processData(data) {
             center.style.display = 'none'
     // const submittedData = [];
 
+
+    
     data.forEach(row => {
+
+        if (!/^https:\/\//i.test(row[websiteCol])) {
+    if (/^http:\/\//i.test(row[websiteCol])) {
+        // Replace http:// with https://
+        website = row[websiteCol].replace(/^http:\/\//i, 'https://');
+    } else {
+        // Prepend https:// if no protocol exists
+        website = 'https://' + row[websiteCol];
+    }
+}
+
         const formData = {
             email: row[emailCol],
-            website: row[websiteCol],
+            website: website,
             name: row[nameCol]
         };
         submittedData.push(formData);
@@ -2002,6 +2029,7 @@ async function Manual() {
         website = 'https://' + website;
     }
 }
+
     console.log(isValidURL(website))
         if (!emailRegex.test(email_inputted)) {
             manualError.textContent = "Invalid email format.";
@@ -2309,12 +2337,12 @@ function Submitandcheckautosend(){
             const UserSubject = document.getElementById('UserSubject').value;
             const userTemplate = document.getElementById('userTemplate').value;
             console.log(U_MyEmail)
-            // if (U_MyEmail === 'Test@gmail.com'){
-            //     console.log(U_MyEmail, 'pakistan')
-            //     sendForIndianGuy(userTemplate, UserSubject)
+            if (U_MyEmail === 'Test@gmail.com'){
+                console.log(U_MyEmail, 'pakistan')
+                sendForIndianGuy(userTemplate, UserSubject)
 
 
-            // } else {
+            } else {
             if (userPitch.trim() === '') {
                 // The value is empty or only contains whitespace
                 console.log('No value provided');
@@ -2328,31 +2356,27 @@ function Submitandcheckautosend(){
                   manualSend();
             }
             }
-        //   }
+          }
 
         }
         }
 
 
-     async   function sendForIndianGuy(userTemplate, UserSubject){
+    async function sendForIndianGuy(userTemplate, UserSubject){
     const emails = await fetchActiveMailbox(U_MyEmail);
-    console.log(emails, generatedData);
+    console.log(emails, submittedData);
     let errorOccurred = false;
 
-    for (let index = 0; index < generatedData.length; index++) {
+    for (let index = 0; index < submittedData.length; index++) {
 
         // const data = generatedData[index];
         const selectedEmail = emails[index % emails.length];
-
-        const data = ({
-                email: generatedData[index].email,
-                subject: UserSubject,
-                content: userTemplate
-            });
+        let email = submittedData[index].email
+        console.log(UserSubject, userTemplate, email)
         
         try {
             console.log(`Sending email #${index + 1} using ${selectedEmail}`);
-            await sendEmailindexwithsmtp(index, selectedEmail); // Send email
+            await sendEmailsmtp(index, UserSubject, userTemplate, email, selectedEmail); // Send email
         } catch (error) {
             console.error(`Failed to send email for index ${index}:`, error);
             errorOccurred = true;
@@ -3057,6 +3081,81 @@ return
 }
 }
 
+}
+
+
+
+async function sendEmailsmtp(index,subject,content, email, selectedMailbox) {
+
+if (submittedData.length === 0) {
+
+                // return;
+                document.getElementById('pr').style.display = `none`;
+    document.getElementById('sending').style.display = 'block';
+    document.getElementById('submit').innerHTML = ` 
+    
+
+                                    <button class="button" onclick="NewCampaign()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                      <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                    </svg>
+                     New Campaign
+                  </button>
+
+
+                    `;
+return
+
+
+
+}
+else {
+
+try {
+
+
+console.log(subject, content)
+
+// Implement send logic here
+try {
+    // updateRowStatus(index, 'Sending');
+    const campaignId = localStorage.getItem('currentCampaignId');
+
+    const result = await sendMessage('me', email, subject, content, campaignId, selectedMailbox);
+
+
+    console.log('Message to ', email, ' successfully sent:', result);
+    showNotification(`Message to ${email} successfully sent`);
+    removeRow(index);
+
+    if (submittedData.length === 0) {
+                // return;
+                document.getElementById('pr').style.display = `none`;
+    document.getElementById('sending').style.display = 'block';
+    document.getElementById('submit').innerHTML = ` 
+    
+
+                                    <button class="button" onclick="NewCampaign()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
+                      <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
+                    </svg>
+                     New Campaign
+                  </button>
+
+
+                    `;
+return
+
+
+                }
+
+} catch (error) {
+        removeRow(index);
+}
+} catch (error) {
+    console.error('Selection process failed:', error);
+}
+}
 }
 
 
