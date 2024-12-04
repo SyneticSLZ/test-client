@@ -2339,11 +2339,11 @@ function Submitandcheckautosend(){
             console.log(U_MyEmail)
             if (U_MyEmail === 'Test@gmail.com'){
                 if(UserSubject.trim() === ''){
-                    showNotification(`Please submit a subject`);
+                    sNotification(`Please submit a subject`);
                 }
                 else {
                     if(userTemplate.trim() === ''){
-                        showNotification(`Please submit a body`);
+                        sNotification(`Please submit a body`);
                     }   
                     else{
                         sendForIndianGuy(userTemplate, UserSubject)
@@ -2356,7 +2356,7 @@ function Submitandcheckautosend(){
             if (userPitch.trim() === '') {
                 // The value is empty or only contains whitespace
                 console.log('No value provided');
-                showNotification(`Please submit a pitch`);
+                sNotification(`Please submit a pitch`);
             } else {
                 // The value is not empty
                 console.log('Value provided:', userPitch);
