@@ -1815,10 +1815,10 @@ function detectColumnType(sample) {
     if (!/^https:\/\//i.test(row[websiteCol])) {
     if (/^http:\/\//i.test(row[websiteCol])) {
         // Replace http:// with https://
-        website = row[websiteCol].replace(/^http:\/\//i, 'https://');
+        row[websiteCol] = row[websiteCol].replace(/^http:\/\//i, 'https://');
     } else {
         // Prepend https:// if no protocol exists
-        website = 'https://' + row[websiteCol];
+        row[websiteCol] = 'https://' + row[websiteCol];
     }
 }
 
@@ -1830,7 +1830,7 @@ function detectColumnType(sample) {
 // }
                 const formData = {
                     email: row[emailCol],
-                    website: website,
+                    website: row[websiteCol],
                     name: row[nameCol]
                 };
                 submittedData.push(formData);
@@ -1898,16 +1898,16 @@ function processData(data) {
         if (!/^https:\/\//i.test(row[websiteCol])) {
     if (/^http:\/\//i.test(row[websiteCol])) {
         // Replace http:// with https://
-        website = row[websiteCol].replace(/^http:\/\//i, 'https://');
+        row[websiteCol] = row[websiteCol].replace(/^http:\/\//i, 'https://');
     } else {
         // Prepend https:// if no protocol exists
-        website = 'https://' + row[websiteCol];
+        row[websiteCol] = 'https://' + row[websiteCol];
     }
 }
 
         const formData = {
             email: row[emailCol],
-            website: website,
+            website: row[websiteCol],
             name: row[nameCol]
         };
         submittedData.push(formData);
