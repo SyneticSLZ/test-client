@@ -1868,6 +1868,10 @@ const ColumnDetector = {
         /contact.*name/i,
         /^nom$/i, // French
         /^nombre$/i, // Spanish
+        /first.*name/i,
+        /last.*name/i,
+        /full\s*name/i,
+        /display.*name/i
     ],
     websitePatterns: [
         /^website$/i, 
@@ -1891,12 +1895,24 @@ const ColumnDetector = {
     ],
 
     detectColumn(headers, patterns) {
+        // Prioritize exact matches, then partial matches
         for (let pattern of patterns) {
-            const matchedColumn = headers.find(header => 
+            // First, try exact match
+            const exactMatch = headers.find(header => 
+                pattern.test(String(header).trim()) && 
+                String(header).trim().match(pattern)[0] === String(header).trim()
+            );
+            if (exactMatch) return exactMatch;
+        }
+
+        // Then try partial matches
+        for (let pattern of patterns) {
+            const partialMatch = headers.find(header => 
                 pattern.test(String(header).trim())
             );
-            if (matchedColumn) return matchedColumn;
+            if (partialMatch) return partialMatch;
         }
+
         return null;
     },
 
@@ -1915,6 +1931,24 @@ const ColumnDetector = {
         return !this.socialMediaDomains.some(socialDomain => 
             domain.includes(socialDomain)
         );
+    },
+
+    // Enhanced website normalization
+    normalizeWebsite(website) {
+        // Remove any leading/trailing whitespace
+        website = website.trim();
+        
+        // Replace http with https
+        if (website.startsWith('http://')) {
+            website = 'https://' + website.slice(7);
+        } else if (!website.startsWith('https://')) {
+            website = 'https://' + website;
+        }
+
+        // Remove trailing slashes
+        website = website.replace(/\/+$/, '');
+
+        return website;
     }
 };
 
@@ -2026,9 +2060,15 @@ const LeadImporter = {
 
     async processBatches() {
         const validLeads = [];
-        let skippedRows = 0;
+        const issues = {
+            missingColumns: [],
+            invalidEmails: 0,
+            invalidWebsites: 0
+        };
 
         for (let batch of this.processingQueue) {
+            if (batch.length === 0) continue;
+
             const headers = Object.keys(batch[0] || {});
             
             // Detect columns dynamically
@@ -2036,37 +2076,42 @@ const LeadImporter = {
             const nameColumn = ColumnDetector.detectColumn(headers, ColumnDetector.namePatterns);
             const websiteColumn = ColumnDetector.detectColumn(headers, ColumnDetector.websitePatterns);
 
-            if (!emailColumn || !websiteColumn) {
-                this.showErrorModal('Could not detect essential columns');
-                return [];
-            }
+            // Track missing columns
+            if (!emailColumn) issues.missingColumns.push('Email');
+            if (!websiteColumn) issues.missingColumns.push('Website');
+
+            // If critical columns are missing, skip batch
+            if (!emailColumn || !websiteColumn) continue;
 
             const batchResults = batch.map(row => {
                 const email = row[emailColumn];
-                const website = row[websiteColumn];
+                let website = row[websiteColumn];
                 const name = row[nameColumn] || '';
 
-                // Comprehensive validation
+                // Validate and normalize
                 if (!ColumnDetector.validateEmail(email)) {
-                    skippedRows++;
+                    issues.invalidEmails++;
                     return null;
                 }
 
-                if (!ColumnDetector.validateWebsite(website)) {
-                    skippedRows++;
+                try {
+                    // Normalize website
+                    website = ColumnDetector.normalizeWebsite(website);
+
+                    if (!ColumnDetector.validateWebsite(website)) {
+                        issues.invalidWebsites++;
+                        return null;
+                    }
+
+                    return {
+                        email: email.toLowerCase(),
+                        website: website,
+                        name: name.trim()
+                    };
+                } catch {
+                    issues.invalidWebsites++;
                     return null;
                 }
-
-                // Normalize website
-                const normalizedWebsite = website.startsWith('http') 
-                    ? website 
-                    : `https://${website}`;
-
-                return {
-                    email: email.toLowerCase(),
-                    website: normalizedWebsite,
-                    name: name.trim()
-                };
             }).filter(lead => lead !== null);
 
             validLeads.push(...batchResults);
@@ -2076,90 +2121,161 @@ const LeadImporter = {
         submittedData = validLeads;
         updateTable(); // Existing function from previous implementation
 
-        // Show results modal
-        this.showResultsModal(validLeads.length, skippedRows);
+        // Show modal only if there are specific issues
+        if (issues.missingColumns.length > 0 || 
+            issues.invalidEmails > 0 || 
+            issues.invalidWebsites > 0) {
+            this.showResultsModal(validLeads.length, issues);
+        }
 
         return validLeads;
     },
 
-    showErrorModal(message) {
+    showResultsModal(validCount, issues) {
+        // Create modal with Tailwind CSS for professional look
         const modal = document.createElement('div');
+        modal.id = 'results-modal';
         modal.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;">
-                <div style="background: white; padding: 20px; border-radius: 8px; max-width: 500px; text-align: center;">
-                    <h2 style="color: #d32f2f;">Import Error</h2>
-                    <p>${message}</p>
-                    <button onclick="this.closest('div').remove()">Close</button>
+            <div class="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex items-center justify-center p-4">
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Import Results</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-green-600 font-semibold">✅ Valid Leads</span>
+                                <span class="font-bold">${validCount}</span>
+                            </div>
+                            
+                            ${issues.missingColumns.length > 0 ? `
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                                <p class="text-yellow-700">
+                                    <strong>Missing Columns:</strong> 
+                                    ${issues.missingColumns.join(', ')}
+                                </p>
+                            </div>` : ''}
+                            
+                            ${issues.invalidEmails > 0 ? `
+                            <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                                <p class="text-red-700">
+                                    <strong>Invalid Emails:</strong> 
+                                    ${issues.invalidEmails} row(s) skipped
+                                </p>
+                            </div>` : ''}
+                            
+                            ${issues.invalidWebsites > 0 ? `
+                            <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                                <p class="text-red-700">
+                                    <strong>Invalid Websites:</strong> 
+                                    ${issues.invalidWebsites} row(s) skipped
+                                </p>
+                            </div>` : ''}
+                        </div>
+                        
+                        <div class="mt-6 flex justify-end space-x-3">
+                            <button id="close-modal" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                                Close
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
+        
         document.body.appendChild(modal);
+
+        // Add event listener to close button
+        const closeButton = modal.querySelector('#close-modal');
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
     },
 
-    showResultsModal(validCount, skippedCount) {
+    showErrorModal(message) {
+        // Similar professional Tailwind styling
         const modal = document.createElement('div');
+        modal.id = 'error-modal';
         modal.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;">
-                <div style="background: white; padding: 20px; border-radius: 8px; max-width: 500px; text-align: center;">
-                    <h2>Import Results</h2>
-                    <p>✅ Valid Leads: ${validCount}</p>
-                    <p>❌ Skipped Rows: ${skippedCount}</p>
-                    <button onclick="this.closest('div').remove()">Close</button>
+            <div class="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex items-center justify-center p-4">
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-bold text-red-600 mb-4">Import Error</h2>
+                        <p class="text-gray-700 mb-6">${message}</p>
+                        <div class="flex justify-end">
+                            <button id="close-error-modal" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                                Close
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
+        
         document.body.appendChild(modal);
+
+        // Add event listener to close button
+        const closeButton = modal.querySelector('#close-error-modal');
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
     }
 };
 
 // Modify existing handleFile function to use new importer
 
 // Existing handleFile function (from previous artifact)
+// Modify handleFile to address the upload issues
 function handleFile(event) {
+    // Prevent default to stop potential file dialog re-opening
+    event.preventDefault();
+    
     const file = event.target.files[0];
     if (file) {
+        // Reset the file input to allow re-selecting the same file
+        event.target.value = '';
+
         // Check file type
         const allowedTypes = [
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
             'text/csv', 
             'application/csv',
-            'application/vnd.ms-excel' // Some CSV mime types
+            'application/vnd.ms-excel'
         ];
 
         if (allowedTypes.includes(file.type) || 
             ['.csv', '.xlsx', '.xls'].some(ext => file.name.toLowerCase().endsWith(ext))) {
             
-            // Show loading indicator (optional)
+            // Show loading indicator
             const loadingIndicator = document.createElement('div');
             loadingIndicator.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                            background: rgba(0,0,0,0.5); z-index: 1000; 
-                            display: flex; justify-content: center; align-items: center;">
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        Processing file... Please wait.
+                <div class="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex items-center justify-center">
+                    <div class="bg-white p-6 rounded-lg shadow-xl">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-500 mx-auto"></div>
+                        <p class="mt-4 text-center">Processing file... Please wait.</p>
                     </div>
                 </div>
             `;
             document.body.appendChild(loadingIndicator);
 
-            // Process the file
-            LeadImporter.processFile(file)
-                .then(() => {
-                    // Remove loading indicator
-                    document.body.removeChild(loadingIndicator);
-                })
-                .catch(error => {
-                    // Remove loading indicator and show error
-                    document.body.removeChild(loadingIndicator);
-                    LeadImporter.showErrorModal(error.message);
-                });
+            // Use setTimeout to ensure UI updates before processing
+            setTimeout(() => {
+                LeadImporter.processFile(file)
+                    .then(() => {
+                        // Remove loading indicator
+                        document.body.removeChild(loadingIndicator);
+                    })
+                    .catch(error => {
+                        // Remove loading indicator and show error
+                        document.body.removeChild(loadingIndicator);
+                        LeadImporter.showErrorModal(error.message);
+                    });
+            }, 100);
         } else {
             // Show error for unsupported file type
             LeadImporter.showErrorModal('Unsupported file type. Please upload a CSV or Excel file.');
         }
     }
 }
-
 // Ensure the file input accepts multiple file types
 function setupFileInputs() {
     const fileInput = document.getElementById('fileInput');
