@@ -2060,7 +2060,6 @@ const LeadImporter = {
 
     async processBatches() {
         const validLeads = [];
-        // const validCount = 0;
         const issues = {
             missingColumns: [],
             invalidEmails: 0,
@@ -2095,16 +2094,6 @@ const LeadImporter = {
                     return null;
                 }
 
-                            // Special condition for Test@gmail.com to allow empty website
-            // if (U_MyEmail === 'Test@gmail.com' && (!website || website.trim() === '')) {
-            //     validCount++;
-            //     return {
-            //         email: email.toLowerCase(),
-            //         website: '',
-            //         name: name.trim()
-            //     };
-            // }
-
                 try {
                     // Normalize website
                     website = ColumnDetector.normalizeWebsite(website);
@@ -2113,7 +2102,7 @@ const LeadImporter = {
                         issues.invalidWebsites++;
                         return null;
                     }
-                    validCount ++;
+
                     return {
                         email: email.toLowerCase(),
                         website: website,
@@ -2125,11 +2114,11 @@ const LeadImporter = {
                 }
             }).filter(lead => lead !== null);
 
-            submittedData.push(...batchResults);
+            validLeads.push(...batchResults);
         }
 
         // Update global submittedData
-        
+        submittedData = validLeads;
         updateTable(); // Existing function from previous implementation
 
         // Show modal only if there are specific issues
@@ -2141,6 +2130,7 @@ const LeadImporter = {
 
         return validLeads;
     },
+
 
     showResultsModal(validCount, issues) {
         // Create modal with Tailwind CSS for professional look
