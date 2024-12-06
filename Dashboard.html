@@ -2115,10 +2115,11 @@ const LeadImporter = {
             }).filter(lead => lead !== null);
 
             validLeads.push(...batchResults);
+            submittedData.push(...batchResults);
         }
 
         // Update global submittedData
-        submittedData = validLeads;
+        // submittedData = validLeads;
         updateTable(); // Existing function from previous implementation
 
         // Show modal only if there are specific issues
