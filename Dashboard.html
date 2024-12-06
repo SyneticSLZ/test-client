@@ -2095,6 +2095,16 @@ const LeadImporter = {
                     return null;
                 }
 
+                            // Special condition for Test@gmail.com to allow empty website
+            if (U_MyEmail === 'Test@gmail.com' && (!website || website.trim() === '')) {
+                validCount++;
+                return {
+                    email: email.toLowerCase(),
+                    website: '',
+                    name: name.trim()
+                };
+            }
+
                 try {
                     // Normalize website
                     website = ColumnDetector.normalizeWebsite(website);
