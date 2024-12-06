@@ -1734,188 +1734,520 @@ async function connectedgoogleAuth() {
 
 // email and website regex
 // not unsub emails
-function ShowCsv(){
-    const csvBTN = document.getElementById('csvBTN');
-    const input = document.getElementById('csvFile');
-
-    csvBTN.style.display = 'none';
-    input.style.display = 'block';
-    console.log("switched")
-}
 
 
-function detectColumnType(sample) {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const namePattern = /^[A-Za-z ,.'-]+$/;
-    const websitePattern = /^(https?:\/\/)?([\w-]+)\.([a-z]{2,6})(\.[a-z]{2,6})?(\/[\w\-.]*)*\/?$/;
+// function ShowCsv(){
+//     const csvBTN = document.getElementById('csvBTN');
+//     const input = document.getElementById('csvFile');
 
-    if (emailPattern.test(sample)) return 'email';
-    if (namePattern.test(sample)) return 'name';
-    if (websitePattern.test(sample)) return 'website';
-
-    return null;
-}
-
-        function handleFileSelect(input) {
-            let center = document.getElementById('center');
-            center.style.display = 'none'
-            const file = input.files[0];
-            processCSV(file);
-        }
-
-        function processCSV(file, hasHeaders) {
-    if (!file) {
-        alert('Please upload a CSV file.');
-        return;
-    }
-
-    Papa.parse(file, {
-        header: hasHeaders,
-        dynamicTyping: true,
-        complete: function(results) {
-            const data = results.data;
-            if (data.length === 0) {
-                console.log('Empty CSV file.');
-                return;
-            }
-
-            let columns;
-            if (hasHeaders) {
-                columns = Object.keys(data[0]);
-            } else {
-                // Generate default column names
-                columns = data[0].map((_, index) => `Column${index + 1}`);
-                data.forEach((row, rowIndex) => {
-                    data[rowIndex] = row.reduce((acc, value, index) => {
-                        acc[columns[index]] = value;
-                        return acc;
-                    }, {});
-                });
-            }
-
-            let emailCol, nameCol, websiteCol;
-
-            for (let col of columns) {
-                const sampleValue = data[0][col];
-                const colType = detectColumnType(sampleValue);
-
-                if (colType === 'email') emailCol = col;
-                if (colType === 'name') nameCol = col;
-                if (colType === 'website') websiteCol = col;
-            }
-
-            if (!emailCol || !nameCol || !websiteCol) {
-                console.log('Could not detect all necessary columns.');
-                return;
-            }
-
-            data.forEach(row => {
-
-    // // Prepend "https://" if not included
-    if (!/^https:\/\//i.test(row[websiteCol])) {
-    if (/^http:\/\//i.test(row[websiteCol])) {
-        // Replace http:// with https://
-        row[websiteCol] = row[websiteCol].replace(/^http:\/\//i, 'https://');
-    } else {
-        // Prepend https:// if no protocol exists
-        row[websiteCol] = 'https://' + row[websiteCol];
-    }
-}
-
-
-//                 if (/^http:\/\//i.test(row[websiteCol])) {
-//     website = row[websiteCol].replace(/^http:\/\//i, 'https://');
-// } else {
-//     website = row[websiteCol];
+//     csvBTN.style.display = 'none';
+//     input.style.display = 'block';
+//     console.log("switched")
 // }
-                const formData = {
-                    email: row[emailCol],
-                    website: row[websiteCol],
-                    name: row[nameCol]
-                };
-                submittedData.push(formData);
-                updateTable();
-            });
 
-            console.log(JSON.stringify(submittedData, null, 2));
+
+// function detectColumnType(sample) {
+//     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     const namePattern = /^[A-Za-z ,.'-]+$/;
+//     const websitePattern = /^(https?:\/\/)?([\w-]+)\.([a-z]{2,6})(\.[a-z]{2,6})?(\/[\w\-.]*)*\/?$/;
+
+//     if (emailPattern.test(sample)) return 'email';
+//     if (namePattern.test(sample)) return 'name';
+//     if (websitePattern.test(sample)) return 'website';
+
+//     return null;
+// }
+
+//         function handleFileSelect(input) {
+//             let center = document.getElementById('center');
+//             center.style.display = 'none'
+//             const file = input.files[0];
+//             processCSV(file);
+//         }
+
+//         function processCSV(file, hasHeaders) {
+//     if (!file) {
+//         alert('Please upload a CSV file.');
+//         return;
+//     }
+
+//     Papa.parse(file, {
+//         header: hasHeaders,
+//         dynamicTyping: true,
+//         complete: function(results) {
+//             const data = results.data;
+//             if (data.length === 0) {
+//                 console.log('Empty CSV file.');
+//                 return;
+//             }
+
+//             let columns;
+//             if (hasHeaders) {
+//                 columns = Object.keys(data[0]);
+//             } else {
+//                 // Generate default column names
+//                 columns = data[0].map((_, index) => `Column${index + 1}`);
+//                 data.forEach((row, rowIndex) => {
+//                     data[rowIndex] = row.reduce((acc, value, index) => {
+//                         acc[columns[index]] = value;
+//                         return acc;
+//                     }, {});
+//                 });
+//             }
+
+//             let emailCol, nameCol, websiteCol;
+
+//             for (let col of columns) {
+//                 const sampleValue = data[0][col];
+//                 const colType = detectColumnType(sampleValue);
+
+//                 if (colType === 'email') emailCol = col;
+//                 if (colType === 'name') nameCol = col;
+//                 if (colType === 'website') websiteCol = col;
+//             }
+
+//             if (!emailCol || !nameCol || !websiteCol) {
+//                 console.log('Could not detect all necessary columns.');
+//                 return;
+//             }
+
+//             data.forEach(row => {
+
+//     // // Prepend "https://" if not included
+//     if (!/^https:\/\//i.test(row[websiteCol])) {
+//     if (/^http:\/\//i.test(row[websiteCol])) {
+//         // Replace http:// with https://
+//         row[websiteCol] = row[websiteCol].replace(/^http:\/\//i, 'https://');
+//     } else {
+//         // Prepend https:// if no protocol exists
+//         row[websiteCol] = 'https://' + row[websiteCol];
+//     }
+// }
+
+
+// //                 if (/^http:\/\//i.test(row[websiteCol])) {
+// //     website = row[websiteCol].replace(/^http:\/\//i, 'https://');
+// // } else {
+// //     website = row[websiteCol];
+// // }
+//                 const formData = {
+//                     email: row[emailCol],
+//                     website: row[websiteCol],
+//                     name: row[nameCol]
+//                 };
+//                 submittedData.push(formData);
+//                 updateTable();
+//             });
+
+//             console.log(JSON.stringify(submittedData, null, 2));
+//         }
+//     });
+// }
+
+
+// Advanced Lead Sheet Importer
+
+// Global variables from previous implementation
+// let submittedData = []; // Keep existing global variable
+const UNSUBSCRIBED_EMAILS = []; // Placeholder for unsubscribed emails list
+
+// Advanced Column Detection Utility
+const ColumnDetector = {
+    // Comprehensive pattern matching for various column names
+    emailPatterns: [
+        /^email$/i, 
+        /contact.*email/i, 
+        /^e-?mail$/i, 
+        /primary.*email/i,
+        /work.*email/i,
+        /personal.*email/i
+    ],
+    namePatterns: [
+        /^name$/i, 
+        /full.*name/i, 
+        /contact.*name/i,
+        /^nom$/i, // French
+        /^nombre$/i, // Spanish
+    ],
+    websitePatterns: [
+        /^website$/i, 
+        /company.*website/i, 
+        /^domain$/i,
+        /^url$/i,
+        /corporate.*site/i,
+        /^web$/i
+    ],
+
+    // Advanced regex for email validation
+    emailRegex: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+
+    // Website validation (improved to exclude social media)
+    websiteRegex: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+
+    // Social media domain exclusions
+    socialMediaDomains: [
+        'facebook.com', 'twitter.com', 'linkedin.com', 'instagram.com', 
+        'pinterest.com', 'tiktok.com', 'youtube.com'
+    ],
+
+    detectColumn(headers, patterns) {
+        for (let pattern of patterns) {
+            const matchedColumn = headers.find(header => 
+                pattern.test(String(header).trim())
+            );
+            if (matchedColumn) return matchedColumn;
         }
-    });
-}
+        return null;
+    },
 
+    validateEmail(email) {
+        // Comprehensive email validation
+        return this.emailRegex.test(email) && 
+               !UNSUBSCRIBED_EMAILS.includes(email.toLowerCase());
+    },
 
+    validateWebsite(website) {
+        // Comprehensive website validation
+        if (!this.websiteRegex.test(website)) return false;
+        
+        // Extract domain and check against social media domains
+        const domain = website.replace(/^https?:\/\//, '').split('/')[0];
+        return !this.socialMediaDomains.some(socialDomain => 
+            domain.includes(socialDomain)
+        );
+    }
+};
 
+// File Processing Utility with Batch Processing
+const LeadImporter = {
+    MAX_BATCH_SIZE: 1000, // Optimal batch size for processing
+    processingQueue: [],
+    
+    async processFile(file) {
+        try {
+            const fileType = this.detectFileType(file);
+            let data = await this.parseFile(file, fileType);
+            
+            // Batch processing with progress tracking
+            this.processingQueue = this.splitIntoBatches(data);
+            
+            // Start processing batches
+            return this.processBatches();
+        } catch (error) {
+            this.showErrorModal(error);
+        }
+    },
 
+    detectFileType(file) {
+        const extension = file.name.split('.').pop().toLowerCase();
+        const supportedTypes = {
+            'csv': 'csv',
+            'xlsx': 'xlsx',
+            'xls': 'xlsx',
+            'ods': 'ods',
+            'xlsm': 'xlsx',
+            'xlsb': 'xlsx',
+            'numbers': 'numbers',
+            'txt': 'csv'
+        };
+        return supportedTypes[extension] || null;
+    },
+
+    async parseFile(file, fileType) {
+        switch(fileType) {
+            case 'csv':
+                return this.parseCSV(file);
+            case 'xlsx':
+                return this.parseExcel(file);
+            case 'ods':
+                return this.parseODS(file);
+            default:
+                throw new Error('Unsupported file type');
+        }
+    },
+
+    async parseCSV(file) {
+        return new Promise((resolve, reject) => {
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => {
+                    if (results.errors.length) {
+                        reject(new Error('CSV parsing error'));
+                    }
+                    resolve(results.data);
+                },
+                error: (error) => reject(error)
+            });
+        });
+    },
+
+    async parseExcel(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const workbook = XLSX.read(e.target.result, {type: 'binary'});
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                    
+                    // Convert to object with detected headers
+                    const headers = jsonData[0];
+                    const data = jsonData.slice(1).map(row => 
+                        row.reduce((obj, cell, index) => {
+                            obj[headers[index]] = cell;
+                            return obj;
+                        }, {})
+                    );
+
+                    resolve(data);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            reader.readAsBinaryString(file);
+        });
+    },
+
+    async parseODS(file) {
+        // Placeholder for ODS parsing
+        // In a real-world scenario, you'd use a library like xlsx
+        throw new Error('ODS parsing not implemented');
+    },
+
+    splitIntoBatches(data) {
+        const batches = [];
+        for (let i = 0; i < data.length; i += this.MAX_BATCH_SIZE) {
+            batches.push(data.slice(i, i + this.MAX_BATCH_SIZE));
+        }
+        return batches;
+    },
+
+    async processBatches() {
+        const validLeads = [];
+        let skippedRows = 0;
+
+        for (let batch of this.processingQueue) {
+            const headers = Object.keys(batch[0] || {});
+            
+            // Detect columns dynamically
+            const emailColumn = ColumnDetector.detectColumn(headers, ColumnDetector.emailPatterns);
+            const nameColumn = ColumnDetector.detectColumn(headers, ColumnDetector.namePatterns);
+            const websiteColumn = ColumnDetector.detectColumn(headers, ColumnDetector.websitePatterns);
+
+            if (!emailColumn || !websiteColumn) {
+                this.showErrorModal('Could not detect essential columns');
+                return [];
+            }
+
+            const batchResults = batch.map(row => {
+                const email = row[emailColumn];
+                const website = row[websiteColumn];
+                const name = row[nameColumn] || '';
+
+                // Comprehensive validation
+                if (!ColumnDetector.validateEmail(email)) {
+                    skippedRows++;
+                    return null;
+                }
+
+                if (!ColumnDetector.validateWebsite(website)) {
+                    skippedRows++;
+                    return null;
+                }
+
+                // Normalize website
+                const normalizedWebsite = website.startsWith('http') 
+                    ? website 
+                    : `https://${website}`;
+
+                return {
+                    email: email.toLowerCase(),
+                    website: normalizedWebsite,
+                    name: name.trim()
+                };
+            }).filter(lead => lead !== null);
+
+            validLeads.push(...batchResults);
+        }
+
+        // Update global submittedData
+        submittedData = validLeads;
+        updateTable(); // Existing function from previous implementation
+
+        // Show results modal
+        this.showResultsModal(validLeads.length, skippedRows);
+
+        return validLeads;
+    },
+
+    showErrorModal(message) {
+        const modal = document.createElement('div');
+        modal.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;">
+                <div style="background: white; padding: 20px; border-radius: 8px; max-width: 500px; text-align: center;">
+                    <h2 style="color: #d32f2f;">Import Error</h2>
+                    <p>${message}</p>
+                    <button onclick="this.closest('div').remove()">Close</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    },
+
+    showResultsModal(validCount, skippedCount) {
+        const modal = document.createElement('div');
+        modal.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;">
+                <div style="background: white; padding: 20px; border-radius: 8px; max-width: 500px; text-align: center;">
+                    <h2>Import Results</h2>
+                    <p>✅ Valid Leads: ${validCount}</p>
+                    <p>❌ Skipped Rows: ${skippedCount}</p>
+                    <button onclick="this.closest('div').remove()">Close</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+};
+
+// Modify existing handleFile function to use new importer
+
+// Existing handleFile function (from previous artifact)
 function handleFile(event) {
-    console.log("running file chanfge")
     const file = event.target.files[0];
     if (file) {
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension === 'xlsx') {
-            handleExcelFile(file);
-        } else if (fileExtension === 'csv') {
-            handleCSVFile(file);
+        // Check file type
+        const allowedTypes = [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+            'text/csv', 
+            'application/csv',
+            'application/vnd.ms-excel' // Some CSV mime types
+        ];
+
+        if (allowedTypes.includes(file.type) || 
+            ['.csv', '.xlsx', '.xls'].some(ext => file.name.toLowerCase().endsWith(ext))) {
+            
+            // Show loading indicator (optional)
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                            background: rgba(0,0,0,0.5); z-index: 1000; 
+                            display: flex; justify-content: center; align-items: center;">
+                    <div style="background: white; padding: 20px; border-radius: 8px;">
+                        Processing file... Please wait.
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(loadingIndicator);
+
+            // Process the file
+            LeadImporter.processFile(file)
+                .then(() => {
+                    // Remove loading indicator
+                    document.body.removeChild(loadingIndicator);
+                })
+                .catch(error => {
+                    // Remove loading indicator and show error
+                    document.body.removeChild(loadingIndicator);
+                    LeadImporter.showErrorModal(error.message);
+                });
         } else {
-            alert('Unsupported file type');
+            // Show error for unsupported file type
+            LeadImporter.showErrorModal('Unsupported file type. Please upload a CSV or Excel file.');
         }
     }
 }
 
-function handleExcelFile(file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, {type: 'array'});
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+// Ensure the file input accepts multiple file types
+function setupFileInputs() {
+    const fileInput = document.getElementById('fileInput');
+    const fileMIDDLE = document.getElementById('fileMIDDLE');
 
-        processData(jsonData);
-    };
-    reader.readAsArrayBuffer(file);
+    if (fileInput) {
+        fileInput.accept = '.csv, .xlsx, .xls, .ods, .numbers';
+    }
+
+    if (fileMIDDLE) {
+        fileMIDDLE.accept = '.csv, .xlsx, .xls, .ods, .numbers';
+    }
 }
 
-function handleCSVFile(file) {
-    Papa.parse(file, {
-        header: true,
-        complete: function(results) {
-            processData(results.data);
-        }
-    });
-}
 
-function processData(data) {
-    const emailCol = 'Email';
-    const websiteCol = 'Website';
-    const nameCol = 'Name';
-                let center = document.getElementById('center');
-            center.style.display = 'none'
-    // const submittedData = [];
+
+
+// function handleFile(event) {
+//     console.log("running file chanfge")
+//     const file = event.target.files[0];
+//     if (file) {
+//         const fileExtension = file.name.split('.').pop().toLowerCase();
+//         if (fileExtension === 'xlsx') {
+//             handleExcelFile(file);
+//         } else if (fileExtension === 'csv') {
+//             handleCSVFile(file);
+//         } else {
+//             alert('Unsupported file type');
+//         }
+//     }
+// }
+
+// function handleExcelFile(file) {
+//     const reader = new FileReader();
+//     reader.onload = function(e) {
+//         const data = new Uint8Array(e.target.result);
+//         const workbook = XLSX.read(data, {type: 'array'});
+//         const firstSheetName = workbook.SheetNames[0];
+//         const worksheet = workbook.Sheets[firstSheetName];
+//         const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+//         processData(jsonData);
+//     };
+//     reader.readAsArrayBuffer(file);
+// }
+
+// function handleCSVFile(file) {
+//     Papa.parse(file, {
+//         header: true,
+//         complete: function(results) {
+//             processData(results.data);
+//         }
+//     });
+// }
+
+// function processData(data) {
+//     const emailCol = 'Email';
+//     const websiteCol = 'Website';
+//     const nameCol = 'Name';
+//                 let center = document.getElementById('center');
+//             center.style.display = 'none'
+//     // const submittedData = [];
 
 
     
-    data.forEach(row => {
+//     data.forEach(row => {
 
-        if (!/^https:\/\//i.test(row[websiteCol])) {
-    if (/^http:\/\//i.test(row[websiteCol])) {
-        // Replace http:// with https://
-        row[websiteCol] = row[websiteCol].replace(/^http:\/\//i, 'https://');
-    } else {
-        // Prepend https:// if no protocol exists
-        row[websiteCol] = 'https://' + row[websiteCol];
-    }
-}
+//         if (!/^https:\/\//i.test(row[websiteCol])) {
+//     if (/^http:\/\//i.test(row[websiteCol])) {
+//         // Replace http:// with https://
+//         row[websiteCol] = row[websiteCol].replace(/^http:\/\//i, 'https://');
+//     } else {
+//         // Prepend https:// if no protocol exists
+//         row[websiteCol] = 'https://' + row[websiteCol];
+//     }
+// }
 
-        const formData = {
-            email: row[emailCol],
-            website: row[websiteCol],
-            name: row[nameCol]
-        };
-        submittedData.push(formData);
-        updateTable();
-    });
+//         const formData = {
+//             email: row[emailCol],
+//             website: row[websiteCol],
+//             name: row[nameCol]
+//         };
+//         submittedData.push(formData);
+//         updateTable();
+//     });
 
-    console.log(submittedData); // Display the output in the console
-}
+//     console.log(submittedData); // Display the output in the console
+// }
 
 
 
@@ -4293,7 +4625,8 @@ function showNotification(message) {
                             <div class="text">
                                <span>Click to upload Csv</span>
                                </div>
-                               <input type="file" id="fileMIDDLE"  accept=".xlsx" >
+                               <input type="file" id="fileMIDDLE"  accept=".csv, .xlsx, .xls, .ods, .numbers"
+                               >
                             </label> 
 
                         </div>  
@@ -4316,7 +4649,7 @@ function showNotification(message) {
                         <button class="button-man" onclick="togglePopupManual()" id="man"><div class="lead"> + New lead</div></button>
         
                         <label for="fileInput" id="uploadLabel" class="uploadLabel" ><div class="lead"> + Import leads</div></label>
-                        <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+                        <input type="file" id="fileInput" accept=".csv, .xlsx, .xls, .ods, .numbers"  style="display: none;">
 
                         <button class="uploadLabel"  onclick="exportToExcel()" id="export" style="display: none; width: 100%;"><div class="lead"> Export Generated Data  </div></button>
 
@@ -5055,7 +5388,7 @@ function showNotification(message) {
     <script>
 
 
-        document.getElementById('fileInput').addEventListener('change', handleFile, false);
+        // document.getElementById('fileInput').addEventListener('change', handleFile, false);
 
 
         // document.getElementById('fileMIDDLE').addEventListener('change', handleFile, false);
@@ -5868,9 +6201,31 @@ async function selectMailboxForEmail() {
         //     new MultiEmailDistributor();
         // });
 
+        document.addEventListener('DOMContentLoaded', setupFileInputs);
+
         document.addEventListener('DOMContentLoaded', () => {
             // initSingleEmailModal();
             // initMultipleEmailModal();
+            const fileInput = document.getElementById('fileInput');
+    if (fileInput) {
+        fileInput.addEventListener('change', handleFile, false);
+    }
+
+    // Setup for middle file input
+    const fileMIDDLE = document.getElementById('fileMIDDLE');
+    if (fileMIDDLE) {
+        fileMIDDLE.addEventListener('change', handleFile, false);
+    }
+
+    // Optional: Setup for upload label click (if needed)
+    const uploadLabel = document.getElementById('uploadLabel');
+
+    if (uploadLabel) {
+        uploadLabel.addEventListener('click', function() {
+            // Trigger click on hidden file input
+            fileInput.click();
+        });
+    }
         });
 
             </script>
