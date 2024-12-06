@@ -2118,7 +2118,7 @@ const LeadImporter = {
         }
 
         // Update global submittedData
-        submittedData = validLeads;
+        submittedData = submittedData + validLeads;
         updateTable(); // Existing function from previous implementation
 
         // Show modal only if there are specific issues
@@ -2277,18 +2277,49 @@ function handleFile(event) {
     }
 }
 // Ensure the file input accepts multiple file types
-function setupFileInputs() {
+document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('fileInput');
     const fileMIDDLE = document.getElementById('fileMIDDLE');
+    const uploadLabel = document.getElementById('uploadLabel');
 
-    if (fileInput) {
-        fileInput.accept = '.csv, .xlsx, .xls, .ods, .numbers';
+    // Single, consolidated setup to prevent multiple bindings
+    function setupFileInputHandlers() {
+        // Ensure file inputs have correct accept attributes
+        if (fileInput) {
+            fileInput.accept = '.csv, .xlsx, .xls, .ods, .numbers';
+            
+            // Remove any existing listeners first to prevent multiple bindings
+            fileInput.removeEventListener('change', handleFile);
+            fileInput.addEventListener('change', handleFile, false);
+        }
+
+        if (fileMIDDLE) {
+            fileMIDDLE.accept = '.csv, .xlsx, .xls, .ods, .numbers';
+            
+            // Remove any existing listeners first
+            fileMIDDLE.removeEventListener('change', handleFile);
+            fileMIDDLE.addEventListener('change', handleFile, false);
+        }
+
+        // Setup upload label click if applicable
+        if (uploadLabel && fileInput) {
+            // Remove any existing click listeners
+            uploadLabel.removeEventListener('click', triggerFileInput);
+            uploadLabel.addEventListener('click', triggerFileInput);
+        }
     }
 
-    if (fileMIDDLE) {
-        fileMIDDLE.accept = '.csv, .xlsx, .xls, .ods, .numbers';
+    // Separate function for file input triggering to avoid duplication
+    function triggerFileInput() {
+        if (fileInput) {
+            fileInput.click();
+        }
     }
-}
+
+    // Call setup once
+    setupFileInputHandlers();
+});
+
 
 
 
@@ -6317,32 +6348,32 @@ async function selectMailboxForEmail() {
         //     new MultiEmailDistributor();
         // });
 
-        document.addEventListener('DOMContentLoaded', setupFileInputs);
+    //     document.addEventListener('DOMContentLoaded', setupFileInputs);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // initSingleEmailModal();
-            // initMultipleEmailModal();
-            const fileInput = document.getElementById('fileInput');
-    if (fileInput) {
-        fileInput.addEventListener('change', handleFile, false);
-    }
+    //     document.addEventListener('DOMContentLoaded', () => {
+    //         // initSingleEmailModal();
+    //         // initMultipleEmailModal();
+    //         const fileInput = document.getElementById('fileInput');
+    // if (fileInput) {
+    //     fileInput.addEventListener('change', handleFile, false);
+    // }
 
-    // Setup for middle file input
-    const fileMIDDLE = document.getElementById('fileMIDDLE');
-    if (fileMIDDLE) {
-        fileMIDDLE.addEventListener('change', handleFile, false);
-    }
+    // // Setup for middle file input
+    // const fileMIDDLE = document.getElementById('fileMIDDLE');
+    // if (fileMIDDLE) {
+    //     fileMIDDLE.addEventListener('change', handleFile, false);
+    // }
 
-    // Optional: Setup for upload label click (if needed)
-    const uploadLabel = document.getElementById('uploadLabel');
+    // // Optional: Setup for upload label click (if needed)
+    // const uploadLabel = document.getElementById('uploadLabel');
 
-    if (uploadLabel) {
-        uploadLabel.addEventListener('click', function() {
-            // Trigger click on hidden file input
-            fileInput.click();
-        });
-    }
-        });
+    // if (uploadLabel) {
+    //     uploadLabel.addEventListener('click', function() {
+    //         // Trigger click on hidden file input
+    //         fileInput.click();
+    //     });
+    // }
+    //     });
 
             </script>
 
