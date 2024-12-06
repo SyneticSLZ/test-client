@@ -2822,6 +2822,7 @@ function Submitandcheckautosend(){
             console.log(U_MyEmail)
 
             if (U_MyEmail === 'Test@gmail.com'){
+                console.log(U_MyEmail, (U_MyEmail === 'Test@gmail.com'))
                 if(UserSubject.trim() === ''){
                     sNotification(`Please submit a subject`);
                 }
