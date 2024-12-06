@@ -2304,19 +2304,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Setup upload label click if applicable
-        if (uploadLabel && fileInput) {
-            // Remove any existing click listeners
-            uploadLabel.removeEventListener('click', triggerFileInput);
-            uploadLabel.addEventListener('click', triggerFileInput);
-        }
+        // if (uploadLabel && fileInput) {
+        //     // Remove any existing click listeners
+        //     uploadLabel.removeEventListener('click', triggerFileInput);
+        //     uploadLabel.addEventListener('click', triggerFileInput);
+        // }
     }
 
     // Separate function for file input triggering to avoid duplication
-    function triggerFileInput() {
-        if (fileInput) {
-            fileInput.click();
-        }
-    }
+    // function triggerFileInput() {
+    //     if (fileInput) {
+    //         fileInput.click();
+    //     }
+    // }
 
     // Call setup once
     setupFileInputHandlers();
