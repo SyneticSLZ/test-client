@@ -2059,87 +2059,78 @@ const LeadImporter = {
     },
 
     async processBatches() {
-    const validLeads = [];
-    const validCount = 0;
-    const issues = {
-        missingColumns: [],
-        invalidEmails: 0,
-        invalidWebsites: 0
-    };
+        const validLeads = [];
+        const validCount = 0;
+        const issues = {
+            missingColumns: [],
+            invalidEmails: 0,
+            invalidWebsites: 0
+        };
 
-    for (let batch of this.processingQueue) {
-        if (batch.length === 0) continue;
+        for (let batch of this.processingQueue) {
+            if (batch.length === 0) continue;
 
-        const headers = Object.keys(batch[0] || {});
-        
-        // Detect columns dynamically
-        const emailColumn = ColumnDetector.detectColumn(headers, ColumnDetector.emailPatterns);
-        const nameColumn = ColumnDetector.detectColumn(headers, ColumnDetector.namePatterns);
-        const websiteColumn = ColumnDetector.detectColumn(headers, ColumnDetector.websitePatterns);
+            const headers = Object.keys(batch[0] || {});
+            
+            // Detect columns dynamically
+            const emailColumn = ColumnDetector.detectColumn(headers, ColumnDetector.emailPatterns);
+            const nameColumn = ColumnDetector.detectColumn(headers, ColumnDetector.namePatterns);
+            const websiteColumn = ColumnDetector.detectColumn(headers, ColumnDetector.websitePatterns);
 
-        // Track missing columns
-        if (!emailColumn) issues.missingColumns.push('Email');
-        if (!websiteColumn) issues.missingColumns.push('Website');
+            // Track missing columns
+            if (!emailColumn) issues.missingColumns.push('Email');
+            if (!websiteColumn) issues.missingColumns.push('Website');
 
-        // If critical columns are missing, skip batch
-        if (!emailColumn || !websiteColumn) continue;
+            // If critical columns are missing, skip batch
+            if (!emailColumn || !websiteColumn) continue;
 
-        const batchResults = batch.map(row => {
-            const email = row[emailColumn];
-            let website = row[websiteColumn];
-            const name = row[nameColumn] || '';
+            const batchResults = batch.map(row => {
+                const email = row[emailColumn];
+                let website = row[websiteColumn];
+                const name = row[nameColumn] || '';
 
-            // Validate and normalize
-            if (!ColumnDetector.validateEmail(email)) {
-                issues.invalidEmails++;
-                return null;
-            }
+                // Validate and normalize
+                if (!ColumnDetector.validateEmail(email)) {
+                    issues.invalidEmails++;
+                    return null;
+                }
 
-            // Special condition for Test@gmail.com to allow empty website
-            if (email.toLowerCase() === 'test@gmail.com' && (!website || website.trim() === '')) {
-                validCount++;
-                return {
-                    email: email.toLowerCase(),
-                    website: '',
-                    name: name.trim()
-                };
-            }
+                try {
+                    // Normalize website
+                    website = ColumnDetector.normalizeWebsite(website);
 
-            try {
-                // Normalize website
-                website = ColumnDetector.normalizeWebsite(website);
-
-                if (!ColumnDetector.validateWebsite(website)) {
+                    if (!ColumnDetector.validateWebsite(website)) {
+                        issues.invalidWebsites++;
+                        return null;
+                    }
+                    validCount ++;
+                    return {
+                        email: email.toLowerCase(),
+                        website: website,
+                        name: name.trim()
+                    };
+                } catch {
                     issues.invalidWebsites++;
                     return null;
                 }
-                validCount++;
-                return {
-                    email: email.toLowerCase(),
-                    website: website,
-                    name: name.trim()
-                };
-            } catch {
-                issues.invalidWebsites++;
-                return null;
-            }
-        }).filter(lead => lead !== null);
+            }).filter(lead => lead !== null);
 
-        submittedData.push(...batchResults);
-    }
+            submittedData.push(...batchResults);
+        }
 
-    // Update global submittedData
-    updateTable(); // Existing function from previous implementation
+        // Update global submittedData
+        
+        updateTable(); // Existing function from previous implementation
 
-    // Show modal only if there are specific issues
-    if (issues.missingColumns.length > 0 || 
-        issues.invalidEmails > 0 || 
-        issues.invalidWebsites > 0) {
-        this.showResultsModal(validLeads.length, issues);
-    }
+        // Show modal only if there are specific issues
+        if (issues.missingColumns.length > 0 || 
+            issues.invalidEmails > 0 || 
+            issues.invalidWebsites > 0) {
+            this.showResultsModal(validLeads.length, issues);
+        }
 
-    return validLeads;
-},
+        return validLeads;
+    },
 
     showResultsModal(validCount, issues) {
         // Create modal with Tailwind CSS for professional look
