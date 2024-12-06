@@ -2060,6 +2060,7 @@ const LeadImporter = {
 
     async processBatches() {
         const validLeads = [];
+        const validCount = 0;
         const issues = {
             missingColumns: [],
             invalidEmails: 0,
@@ -2102,7 +2103,7 @@ const LeadImporter = {
                         issues.invalidWebsites++;
                         return null;
                     }
-
+                    validCount ++;
                     return {
                         email: email.toLowerCase(),
                         website: website,
