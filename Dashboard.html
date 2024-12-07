@@ -1883,10 +1883,12 @@ const ColumnDetector = {
     ],
 
     // Advanced regex for email validation
-    emailRegex: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+    // emailRegex: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+    emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Less strict email regex
 
     // Website validation (improved to exclude social media)
-    websiteRegex: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+    // websiteRegex: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+    websiteRegex: /^(https?:\/\/)?([\w-]+\.)+[\w]{2,}/, // More permissive domain check
 
     // Social media domain exclusions
     socialMediaDomains: [
