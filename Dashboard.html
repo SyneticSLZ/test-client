@@ -2694,11 +2694,17 @@ function deleteRow(index) {
 }
 
 function truncateText(text, maxLength = 10) {
+    // If text is undefined, null, or an empty string, return empty string
+    if (!text) {
+        return '';
+    }
+    
     if (text.length <= maxLength) {
         return text;
     }
     return text.substring(0, maxLength) + '...';
 }
+
 
 function simplifyWebsite(url) {
     // Remove protocol (https:// or http://)
