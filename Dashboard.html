@@ -2677,6 +2677,7 @@ async function Manual() {
             deleteRow(index); // Call deleteRow function with index
         });
 
+        console.log(formatText(data.email).length, simplifyWebsite(data.website).length,formatText(data.name).legnth )
         emailCell.textContent = formatText(data.email);
 websiteCell.textContent = simplifyWebsite(data.website);
 nameCell.textContent = formatText(data.name);
@@ -2696,9 +2697,7 @@ function deleteRow(index) {
 
 function formatText(text, maxLength = 10) {
     // If text is undefined, null, or an empty string, return empty string
-    if (!text) {
-        return '';
-    }
+
     
     // If text is longer than max length, truncate
     if (text.length > maxLength) {
@@ -2711,7 +2710,12 @@ function formatText(text, maxLength = 10) {
     }
     
     // If text is between 10-12 characters, return as is
-    return text;
+    if (!text) {
+        return '            ';
+    } else {
+        return text;
+    }
+
 }
 
 function simplifyWebsite(url) {
