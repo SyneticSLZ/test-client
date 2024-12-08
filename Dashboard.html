@@ -2123,7 +2123,13 @@ console.log(batchResults)
 
         // Update global submittedData
         // submittedData = validLeads;
-        updateTable(); // Existing function from previous implementation
+        if (submittedData.length === 0){
+            this.showErrorModal("Unable to parse document please try again");
+        }
+        else {
+            updateTable();
+        }
+        // updateTable(); // Existing function from previous implementation
 
         // Show modal only if there are specific issues
         if (issues.missingColumns.length > 0 || 
