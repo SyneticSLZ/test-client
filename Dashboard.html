@@ -2676,9 +2676,11 @@ async function Manual() {
             deleteRow(index); // Call deleteRow function with index
         });
 
-        emailCell.textContent = data.email;
-        websiteCell.textContent = data.website;
-        nameCell.textContent = data.name;
+        emailCell.textContent = truncateText(data.email);
+websiteCell.textContent = simplifyWebsite(data.website);
+nameCell.textContent = truncateText(data.name);
+
+
         actionCell.appendChild(editButton); // Append edit button to action cell
         actionCell.appendChild(deleteButton); // Append delete button to action cell
         row.setAttribute('data-index', index);
@@ -2689,6 +2691,23 @@ function deleteRow(index) {
     submittedData.splice(index, 1); // Remove data from array
     sNotification(`Removed`)
     updateTable(); // Update table to reflect changes
+}
+
+function truncateText(text, maxLength = 10) {
+    if (text.length <= maxLength) {
+        return text;
+    }
+    return text.substring(0, maxLength) + '...';
+}
+
+function simplifyWebsite(url) {
+    // Remove protocol (https:// or http://)
+    let cleanUrl = url.replace(/^https?:\/\//, '');
+    
+    // Remove everything after .com, .org, .net, etc.
+    const tldMatch = cleanUrl.match(/^([^.]+\.[a-z]+)/i);
+    
+    return tldMatch ? tldMatch[1] : cleanUrl;
 }
 
 
