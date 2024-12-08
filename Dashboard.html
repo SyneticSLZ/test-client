@@ -630,6 +630,7 @@ let generatedData = [];
 let MAILBOXES = [];
 let U_Username;
 let U_MyEmail;
+let allemailsmade = false;
 
 
 
@@ -3455,6 +3456,7 @@ if(UserSubject){
             showNotification(`Error generating email for ${data.email}`);
         }
     }
+    allemailsmade = true
     console.log( 'generated data : ', generatedData)
     document.getElementById('tfoot').style.display = 'block';
     document.getElementById('customLoader').style.display = 'none';
@@ -3698,6 +3700,7 @@ async function sendEmailindex(index) {
     console.log(generatedData)
 
     if (generatedData.length === 0) {
+        
         // sNotification(`Sent Email`)
         NewCampaign()
                     // return;
@@ -3759,7 +3762,7 @@ else {
         console.log('Message to ', data.email, ' successfully sent:', result);
         showNotification(`Message to ${data.email} successfully sent`);
         removeRow(index);
-
+        if(allemailsmade) {
         if (generatedData.length === 0) {
             sNotification(`Sent Email`)
             NewCampaign()
@@ -3782,6 +3785,7 @@ else {
     
 
                     }
+                }
 
     } catch (error) {
             removeRow(index);
