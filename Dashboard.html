@@ -2676,9 +2676,9 @@ async function Manual() {
             deleteRow(index); // Call deleteRow function with index
         });
 
-        emailCell.textContent = truncateText(data.email);
+        emailCell.textContent = formatText(data.email);
 websiteCell.textContent = simplifyWebsite(data.website);
-nameCell.textContent = truncateText(data.name);
+nameCell.textContent = formatText(data.name);
 
 
         actionCell.appendChild(editButton); // Append edit button to action cell
@@ -2693,18 +2693,25 @@ function deleteRow(index) {
     updateTable(); // Update table to reflect changes
 }
 
-function truncateText(text, maxLength = 10) {
+function formatText(text, maxLength = 10) {
     // If text is undefined, null, or an empty string, return empty string
     if (!text) {
         return '';
     }
     
-    if (text.length <= maxLength) {
-        return text;
+    // If text is longer than max length, truncate
+    if (text.length > maxLength) {
+        return text.substring(0, maxLength) + '...';
     }
-    return text.substring(0, maxLength) + '...';
+    
+    // If text is shorter than 12 characters, pad with whitespace on the left
+    if (text.length < 12) {
+        return text.padStart(12);
+    }
+    
+    // If text is between 10-12 characters, return as is
+    return text;
 }
-
 
 function simplifyWebsite(url) {
     // Remove protocol (https:// or http://)
@@ -2715,6 +2722,7 @@ function simplifyWebsite(url) {
     
     return tldMatch ? tldMatch[1] : cleanUrl;
 }
+
 
 
 function editRow(index, row) {
@@ -3688,6 +3696,7 @@ return
 
 async function sendEmailindex(index) {
     console.log(generatedData)
+
     if (generatedData.length === 0) {
         // sNotification(`Sent Email`)
         NewCampaign()
@@ -3711,6 +3720,7 @@ async function sendEmailindex(index) {
 
 
 }
+
 else {
 
     try {
@@ -6169,7 +6179,7 @@ async function selectMailboxForEmail() {
         console.log(`Automatically selected single mailbox: ${emails[0]}`);
         return emails[0]; // Return the only mailbox
     }
-    
+
 
     return new Promise((resolve, reject) => {
         const singleMailboxSelect = document.getElementById('singleMailbox');
