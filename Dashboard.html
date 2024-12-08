@@ -1480,7 +1480,7 @@ async function RenderHtml(data){
     // document.getElementById('plan-usage-detail').innerHTML=`You have used : ${UsedEmails} Emails of :  ${planEmails} Emails / mo`;
     document.getElementById('progress-text').innerHTML=`<p>Current: ${UsedEmails}</p><p>Total: ${planEmails}</p>`;
     document.getElementById('subscription').onclick = function() { billing(data.stripeID, data.email) };
-    document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
+    // document.getElementById('3').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('billing-man').onclick = function() { billing(data.stripeID, data.email) };
     document.getElementById('progressx').style.width = percentageUsed + '%'; 
 
