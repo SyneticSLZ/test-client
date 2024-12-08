@@ -6165,6 +6165,12 @@ async function selectMailboxForEmail() {
     emails = await fetchActiveMailbox(U_MyEmail)
     console.log(emails)
 
+    if (emails.length === 1) {
+        console.log(`Automatically selected single mailbox: ${emails[0]}`);
+        return emails[0]; // Return the only mailbox
+    }
+    
+
     return new Promise((resolve, reject) => {
         const singleMailboxSelect = document.getElementById('singleMailbox');
         const singleEmailSendBtn = document.getElementById('singleEmailSend');
