@@ -3,409 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn Message Automation</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <title>Lead Personalization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .output {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-4">
-    <div class="container mx-auto max-w-4xl">
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Stepper -->
-            <div class="bg-gray-100 p-4 border-b">
-                <ol class="flex items-center w-full text-sm font-medium text-center text-gray-500">
-                    <li id="step-upload" class="flex md:w-full items-center text-blue-600 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6">
-                        <span class="flex items-center">
-                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                            </svg>
-                            Upload Leads
-                        </span>
-                    </li>
-                    <li id="step-config" class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6">
-                        <span class="flex items-center">
-                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                            </svg>
-                            Configure
-                        </span>
-                    </li>
-                    <li id="step-process" class="flex items-center">
-                        <span class="flex items-center">
-                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                            </svg>
-                            Process
-                        </span>
-                    </li>
-                </ol>
-            </div>
-
-            <!-- Main Content -->
-            <div class="p-6 space-y-6">
-                <!-- Upload Section -->
-                <div id="upload-section">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Upload LinkedIn Leads</h2>
-                    <div class="border-dashed border-2 border-blue-300 p-6 text-center rounded-lg hover:bg-blue-50 transition">
-                        <input type="file" id="file-upload" accept=".csv" class="hidden" />
-                        <label for="file-upload" class="cursor-pointer">
-                            <svg class="mx-auto h-12 w-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            <p class="mt-2 text-sm text-gray-600">
-                                Drag and drop CSV file or <span class="text-blue-600">Browse</span>
-                            </p>
-                            <p id="file-name" class="text-xs text-gray-500 mt-1"></p>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Configuration Section (Initially Hidden) -->
-                <div id="config-section" class="hidden space-y-4">
-                    <div class="relative">
-                        <label for="linkedin-cookie" class="block mb-2 text-sm font-medium text-gray-900">
-                            LinkedIn Session Cookie
-                        </label>
-                        <input type="text" id="linkedin-cookie" 
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Paste li_at cookie value">
-                        
-                        <button data-tooltip-target="cookie-help" type="button" 
-                            class="absolute right-2 top-8 text-blue-500 hover:text-blue-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        
-                        <div id="cookie-help" role="tooltip" 
-                            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
-                            How to get LinkedIn Session Cookie:
-                            <ol class="list-decimal pl-5 mt-2">
-                                <li>Open LinkedIn.com</li>
-                                <li>Open Chrome DevTools (F12)</li>
-                                <li>Go to Application Tab</li>
-                                <li>Select Cookies > linkedin.com</li>
-                                <li>Find 'li_at' and copy its value</li>
-                            </ol>
-                            <div class="tooltip-arrow" data-popper-arrow></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="subject-line" class="block mb-2 text-sm font-medium text-gray-900">
-                            En
-                        </label>
-                        <input type="text" id="subject-line" 
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Enter subject line for messages">
-                    </div>
-
-                    <button id="next-btn" 
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        Next: Process Leads
-                    </button>
-                </div>
-
-                <!-- Processing Section -->
-                <div id="processing-section" class="hidden">
-                    <div class="overflow-x-auto">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="leads-grid">
-                            <!-- Leads will be dynamically inserted here -->
-                        </div>
-                    </div>
-
-                    <div class="mt-6 text-center">
-                        <button id="start-process-btn" 
-                            class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
-                            Start Processing
-                        </button>
-                    </div>
-                </div>
-            </div>
+<body>
+    <h1>Lead Personalization</h1>
+    <form id="personalization-form">
+        <div class="form-group">
+            <label for="csvFile">Upload CSV File:</label>
+            <input type="file" id="csvFile" accept=".csv" required />
         </div>
+        <div class="form-group">
+            <label for="cookie">Cookie:</label>
+            <input type="text" id="cookie" placeholder="Enter Cookie" required />
+        </div>
+        <div class="form-group">
+            <label for="pitch">Pitch:</label>
+            <textarea id="pitch" placeholder="Enter Pitch" rows="4" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
 
-        <!-- Toast Notification Container -->
-        <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
-    </div>
+    <div class="output" id="output"></div>
 
-    <!-- Flowbite and App Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script>
+        const form = document.getElementById('personalization-form');
+        const outputDiv = document.getElementById('output');
 
-document.addEventListener('DOMContentLoaded', () => {
-    // UI Elements
-    const fileUpload = document.getElementById('file-upload');
-    const fileName = document.getElementById('file-name');
-    const uploadSection = document.getElementById('upload-section');
-    const configSection = document.getElementById('config-section');
-    const processingSection = document.getElementById('processing-section');
-    const leadsGrid = document.getElementById('leads-grid');
-    const nextBtn = document.getElementById('next-btn');
-    const startProcessBtn = document.getElementById('start-process-btn');
-    const linkedinCookieInput = document.getElementById('linkedin-cookie');
-    const subjectLineInput = document.getElementById('subject-line');
-
-    // Stepper Elements
-    const stepUpload = document.getElementById('step-upload');
-    const stepConfig = document.getElementById('step-config');
-    const stepProcess = document.getElementById('step-process');
-
-    let leads = [];
-
-    // Toast Notification Function
-    function showToast(message, type = 'info') {
-        const toastContainer = document.getElementById('toast-container');
-        const toastColors = {
-            success: 'bg-green-500',
-            error: 'bg-red-500',
-            info: 'bg-blue-500',
-            warning: 'bg-yellow-500'
-        };
-
-        const toast = document.createElement('div');
-        toast.className = `${toastColors[type]} text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300`;
-        toast.textContent = message;
-
-        toastContainer.appendChild(toast);
-
-        // Remove toast after 3 seconds
-        setTimeout(() => {
-            toast.classList.add('opacity-0', 'translate-x-full');
-            setTimeout(() => toastContainer.removeChild(toast), 300);
-        }, 3000);
-    }
-
-    // File Upload Handling
-    fileUpload.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        try {
-            const text = await file.text();
-            leads = parseCSV(text);
-            
-            // Update file name display
-            fileName.textContent = `${file.name} (${leads.length} leads)`;
-            
-            // Transition to config section
-            uploadSection.classList.add('hidden');
-            configSection.classList.remove('hidden');
-            
-            // Update stepper
-            stepUpload.classList.add('text-green-600');
-            stepConfig.classList.add('text-blue-600');
-
-            showToast(`Uploaded ${leads.length} leads successfully`, 'success');
-        } catch (error) {
-            showToast('Error parsing CSV: ' + error.message, 'error');
-        }
-    });
-
-    // Next Button (Config to Processing)
-    nextBtn.addEventListener('click', () => {
-        const cookie = linkedinCookieInput.value.trim();
-        const pitch = subjectLineInput.value.trim();
-
-        if (!cookie || !pitch) {
-            showToast('Please enter LinkedIn cookie and subject line', 'error');
-            return;
-        }
-
-        // Transition to processing section
-        configSection.classList.add('hidden');
-        processingSection.classList.remove('hidden');
-
-        // Populate leads grid
-        leadsGrid.innerHTML = leads.map(lead => `
-            <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition" id="lead-${lead.url.replace(/[^a-zA-Z0-9]/g, '')}">
-                <div class="flex items-center space-x-4">
-                    <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span class="text-blue-600 font-bold">${lead.name.charAt(0)}</span>
-                        </div>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">
-                            ${lead.name}
-                        </p>
-                        <p class="text-xs text-gray-500 truncate">
-                            ${lead.url}
-                        </p>
-                    </div>
-                    <div id="status-${lead.url.replace(/[^a-zA-Z0-9]/g, '')}">
-                        <span class="text-xs text-gray-500">Pending</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-
-        // Update stepper
-        stepConfig.classList.add('text-green-600');
-        stepProcess.classList.add('text-blue-600');
-    });
-
-     // Start Processing Button
-     startProcessBtn.addEventListener('click', async () => {
-        const cookie = linkedinCookieInput.value.trim();
-        const pitch = subjectLineInput.value.trim();
-
-        // Disable start button and show processing state
-        startProcessBtn.disabled = true;
-        startProcessBtn.innerHTML = `
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Processing Leads...
-        `;
-
-        // Track overall progress
-        let successCount = 0;
-        let failureCount = 0;
-
-        // Create a copy of leads to modify during processing
-        let remainingLeads = [...leads];
-
-        // Process leads sequentially
-        while (remainingLeads.length > 0) {
-            const lead = remainingLeads[0];
-            const statusElement = document.createElement('div');
-            statusElement.className = 'text-xs text-yellow-600 flex items-center';
-            statusElement.innerHTML = `
-                <svg class="w-3 h-3 mr-1 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                </svg>
-                Generating Message
-            `;
-
+        async function generatePersonalizedMessage(lead, pitch, cookie) {
+            console.log('url', lead.url.replace(/"/g, ''))
             try {
-                // Generate personalized message
-                const personalizedMessage = await generatePersonalizedMessage(lead, pitch);
+                const response = await fetch('http://localhost:3002/linkedin/personalise', {
 
-                // Update status to sending
-                statusElement.innerHTML = `
-                    <span class="text-xs text-blue-600 flex items-center">
-                        <svg class="w-3 h-3 mr-1 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
-                            <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
-                        </svg>
-                        Sending Message
-                    </span>
-                `;
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: lead.url.replace(/"/g, ''),
+                        cookie: cookie,
+                        userAgent: navigator.userAgent,
+                        data: `my data for this person is that thier name is ${lead.name}, skills are ${lead.skills}, summary is ${lead.summary}, headline / job is ${lead.headline}`,
+                        pitch: pitch,
+                        
+                    }),
+                });
 
-                // Send LinkedIn message
-                // await sendLinkedInMessage(lead, personalizedMessage, cookie);
-
-                // Remove the successfully sent lead
-                remainingLeads.shift();
-                
-                // Rerender the leads grid with remaining leads
-                renderLeadsGrid(remainingLeads);
-
-                // Increment success count
-                successCount++;
-
-                // Small delay between processing leads
-                await new Promise(resolve => setTimeout(resolve, 500));
+                const result = await response.json();
+                console.log(result);
+                return { ...lead, status: 'Success', result };
             } catch (error) {
-                // Move failed lead to the end of the queue
-                remainingLeads.push(remainingLeads.shift());
-                
-                // Rerender the leads grid 
-                renderLeadsGrid(remainingLeads);
-
-                failureCount++;
-                console.error(`Error processing ${lead.name}:`, error);
-
-                // Small delay to prevent immediate retry
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                console.error(error);
+                return { ...lead, status: 'Failed', error: error.message };
             }
         }
 
-        // Final processing state
-        startProcessBtn.disabled = false;
-        startProcessBtn.innerHTML = `Processing Complete`;
-        startProcessBtn.classList.replace('bg-green-600', 'bg-blue-600');
+        function parseCSV(csvText) {
+    const rows = csvText.split('\n').filter(row => row.trim() !== '');
+    const headers = rows[0].match(/(?:[^,"]+|"[^"]*")+/g).map(header => header.trim());
 
-        // Show final summary toast
-        showToast(`
-            Processing Complete: 
-            ${successCount} Successful, 
-            ${failureCount} Failed
-        `, successCount > 0 ? 'success' : 'error');
+    const profileUrlIndex = headers.indexOf('profile_url');
+    if (profileUrlIndex === -1) {
+        throw new Error('No "profile_url" column found in the CSV');
+    }
 
-        // Update stepper
-        stepProcess.classList.add('text-green-600');
+    return rows.slice(1).map(row => {
+        const values = row.match(/(?:[^,"]+|"[^"]*")+/g).map(value => value.trim());
+        console.log(values)
+        return {
+            name: values[0], // Adjust based on your header order
+            url: values[8],
+            summary: values[20],
+            skills: values[29],
+            headline: values[17],
+            status: 'Pending',
+        };
     });
-
-    // Function to render leads grid
-    function renderLeadsGrid(leads) {
-        leadsGrid.innerHTML = leads.map((lead, index) => `
-            <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition ${index === 0 ? 'border-2 border-blue-300 animate-pulse' : ''}" id="lead-${lead.url.replace(/[^a-zA-Z0-9]/g, '')}">
-                <div class="flex items-center space-x-4">
-                    <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span class="text-blue-600 font-bold">${lead.name.charAt(0)}</span>
-                        </div>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">
-                            ${lead.name}
-                        </p>
-                        <p class="text-xs text-gray-500 truncate">
-                            ${lead.url}
-                        </p>
-                    </div>
-                    <div>
-                        <span class="text-xs text-gray-500">
-                            ${index === 0 ? 'Processing Next' : 'Pending'}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
+}
 
 
-    // Utility Functions (to be replaced with actual backend calls)
-    async function generatePersonalizedMessage(lead, pitch, cookie, userAgent) {
-    const response = await fetch('http://localhost:3002/linkedin/personalise', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            url: lead.profile_url,
-            cookie: cookie,
-            userAgent: Navigator.userAgent,
-            data: leads,
-            pitch: pitch,
-        }),
-    });
+//         function parseCSV(csvText) {
+//     const rows = csvText.split('\n');
+//     const headers = rows[0].split(',').map(header => header.trim());
 
-    const result = await response.json();
-    console.log(result);
+//     // Check if the CSV has at least 14 columns
+//     if (headers.length < 14) {
+//         throw new Error('The CSV does not have a 14th column.');
+//     }
+
+//     return rows.slice(1)
+//         .filter(row => row.trim() !== '')
+//         .map(row => {
+//             const values = row.split(',').map(value => value.trim());
+//             const url = values[14] || ''; // Access the 14th column (index 13)
+
+//             return {
+//                 name: values[0] || '', // Assuming the first column is 'name'
+//                 url: url, // Store the 14th column value
+//                 allData: headers.reduce((obj, header, index) => {
+//                     obj[header] = values[index] || '';
+//                     return obj;
+//                 }, {}),
+//                 status: 'Pending'
+//             };
+//         });
+// }
 
 
 
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            outputDiv.innerHTML = '';
 
-        return 
-    }
+            const csvFile = document.getElementById('csvFile').files[0];
+            const cookie = document.getElementById('cookie').value;
+            const pitch = document.getElementById('pitch').value;
 
-    // Parse CSV function
-    function parseCSV(csvText) {
-        const rows = csvText.split('\n').slice(1); // Skip header
-        return rows
-            .filter(row => row.trim() !== '')
-            .map(row => {
-                const [name, url, ...rest] = row.split(',');
-                return { 
-                    name: name.trim(), 
-                    url: url.trim(),
-                    status: 'Pending'
-                };
-            });
-    }
-});
+            if (!csvFile) {
+                alert('Please upload a CSV file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const leads = parseCSV(e.target.result);
+                    const results = [];
+
+                    for (const lead of leads) {
+                        const result = await generatePersonalizedMessage(lead, pitch, cookie);
+                        results.push(result);
+                    }
+
+                    renderResults(results);
+                } catch (error) {
+                    console.error(error);
+                    alert('Error processing the CSV file.');
+                }
+            };
+            reader.readAsText(csvFile);
+        });
+
+        function renderResults(results) {
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>URL</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${results.map(result => `
+                        <tr>
+                            <td>${result.name}</td>
+                            <td><a href="${result.url}" target="_blank">${result.url}</a></td>
+                            <td>${result.status}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            outputDiv.appendChild(table);
+        }
     </script>
 </body>
 </html>
