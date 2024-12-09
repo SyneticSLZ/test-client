@@ -4,81 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lead Personalization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
+        .loader {
+            border-top-color: #3498db;
+            animation: spin 1s linear infinite;
         }
-
-        form {
-            max-width: 400px;
-            margin: 0 auto;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-        }
-
-        input, textarea, button {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            margin-top: 5px;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        .output {
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #f4f4f4;
+        .toast {
+            transition: all 0.3s ease-in-out;
         }
     </style>
 </head>
-<body>
-    <h1>Lead Personalization</h1>
-    <form id="personalization-form">
-        <div class="form-group">
-            <label for="csvFile">Upload CSV File:</label>
-            <input type="file" id="csvFile" accept=".csv" required />
+    <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center px-4 py-8">
+        <div class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-8 space-y-6">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Lead Personalization</h1>
+            
+            <form id="personalization-form" class="space-y-4">
+                <div class="mb-4">
+                    <label for="csvFile" class="block text-gray-700 font-medium mb-2">
+                        Upload CSV File
+                    </label>
+                    <input 
+                        type="file" 
+                        id="csvFile" 
+                        accept=".csv" 
+                        required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+                
+                <div class="mb-4">
+                    <label for="cookie" class="block text-gray-700 font-medium mb-2">
+                        LinkedIn Cookie
+                    </label>
+                    <input 
+                        type="text" 
+                        id="cookie" 
+                        placeholder="Enter LinkedIn Cookie" 
+                        required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+                
+                <div class="mb-4">
+                    <label for="pitch" class="block text-gray-700 font-medium mb-2">
+                        Pitch Template
+                    </label>
+                    <textarea 
+                        id="pitch" 
+                        placeholder="Enter your personalization pitch" 
+                        rows="4" 
+                        required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    ></textarea>
+                </div>
+                
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                    Start Personalization
+                </button>
+            </form>
+    
+            <!-- Toast Notification Container -->
+            <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+    
+            <!-- Progress and Results Container -->
+            <div id="progressContainer" class="mt-6 hidden">
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                    <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-center text-gray-600">Initializing...</p>
+            </div>
+    
+            <!-- Output Table -->
+            <div id="output" class="mt-6 overflow-x-auto"></div>
         </div>
-        <div class="form-group">
-            <label for="cookie">Cookie:</label>
-            <input type="text" id="cookie" placeholder="Enter Cookie" required />
-        </div>
-        <div class="form-group">
-            <label for="pitch">Pitch:</label>
-            <textarea id="pitch" placeholder="Enter Pitch" rows="4" required></textarea>
-        </div>
-        <button type="submit">Submit</button>
-    </form>
-
-    <div class="output" id="output"></div>
 
     <script>
-        const form = document.getElementById('personalization-form');
+
+const form = document.getElementById('personalization-form');
         const outputDiv = document.getElementById('output');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const toastContainer = document.getElementById('toastContainer');
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast p-4 rounded-lg shadow-lg ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            } text-white`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
         async function generatePersonalizedMessage(lead, pitch, cookie) {
             console.log('url', lead.url.replace(/"/g, ''))
@@ -164,6 +196,9 @@
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             outputDiv.innerHTML = '';
+            progressContainer.classList.remove('hidden');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             const csvFile = document.getElementById('csvFile').files[0];
             const cookie = document.getElementById('cookie').value;
@@ -180,15 +215,31 @@
                     const leads = parseCSV(e.target.result);
                     const results = [];
 
-                    for (const lead of leads) {
+                    for (let i = 0; i < leads.length; i++) {
+                        const lead = leads[i];
+                        progressText.textContent = `Processing lead ${i + 1} of ${leads.length}`;
+                        progressBar.style.width = `${((i + 1) / leads.length) * 100}%`;
+
                         const result = await generatePersonalizedMessage(lead, pitch, cookie);
                         results.push(result);
+
+                        if (result.status === 'Success') {
+                            showToast(`Personalized message generated for ${lead.name}`, 'success');
+                        } else {
+                            showToast(`Failed to generate message for ${lead.name}`, 'error');
+                        }
+
                     }
 
                     renderResults(results);
+                    showToast('Personalization process completed', 'success');
                 } catch (error) {
                     console.error(error);
                     alert('Error processing the CSV file.');
+                    showToast('Error processing the CSV file', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
             };
             reader.readAsText(csvFile);
@@ -196,20 +247,23 @@
 
         function renderResults(results) {
             const table = document.createElement('table');
+            table.className = 'w-full border-collapse border border-gray-300';
             table.innerHTML = `
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>URL</th>
-                        <th>Status</th>
+                    <tr class="bg-gray-100">
+                        <th class="border p-2">Name</th>
+                        <th class="border p-2">URL</th>
+                        <th class="border p-2">Headline</th>
+                        <th class="border p-2">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${results.map(result => `
-                        <tr>
-                            <td>${result.name}</td>
-                            <td><a href="${result.url}" target="_blank">${result.url}</a></td>
-                            <td>${result.status}</td>
+                        <tr class="${result.status === 'Success' ? 'bg-green-50' : 'bg-red-50'}">
+                            <td class="border p-2">${result.name}</td>
+                            <td class="border p-2"><a href="${result.url}" target="_blank" class="text-blue-600 hover:underline">${result.url}</a></td>
+                            <td class="border p-2">${result.headline}</td>
+                            <td class="border p-2 font-semibold ${result.status === 'Success' ? 'text-green-600' : 'text-red-600'}">${result.status}</td>
                         </tr>
                     `).join('')}
                 </tbody>
