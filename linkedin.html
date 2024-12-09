@@ -83,7 +83,7 @@
         async function generatePersonalizedMessage(lead, pitch, cookie) {
             console.log('url', lead.url.replace(/"/g, ''))
             try {
-                const response = await fetch('http://localhost:3002/linkedin/personalise', {
+                const response = await fetch('https://server.voltmailer.com/linkedin/personalise', {
 
                     method: 'POST',
                     headers: {
