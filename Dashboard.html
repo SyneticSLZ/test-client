@@ -6046,12 +6046,22 @@ document.getElementById('addMailboxForm').addEventListener('submit', async (e) =
         //         username: document.getElementById('username').value,
         //         password: document.getElementById('password').value,
         //     };
-            const formData = {
+        const newAccount = {
+            id: 'null',
+            provider: 'null',
+            email: 'null',
+            accessToken: 'null',
+            refreshToken: 'null',
+            expiresAt: 1
+          };
+
+          const formData = {
                 email: "exe@gmail.com",
                 smtpHost: "gmail",
-                smtpPort: "586",
-                username: document.getElementById('email').value,
-                password: document.getElementById(password).value,
+                smtpPort: "mailjet",
+                username: userInfoResponse.data.email,
+                password: 'null',
+                gmail: newAccount
             };
 
             // Show loading state
