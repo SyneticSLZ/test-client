@@ -10,7 +10,7 @@
     const GOOGLE_OAUTH_CONFIG = {
       clientId: '691667454079-6joalt2dv172u8f4o0qecb6b6acbmls5.apps.googleusercontent.com',
       clientSecret: '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', // Add your client secret here
-      redirectUri: 'https://www.voltmailer.com/oauth2callback',
+      redirectUri: 'https://www.voltmailer.com/oauth2callback?email=test',
       scopes: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/gmail.send']
     };
 
@@ -222,6 +222,8 @@
       // Check for OAuth callback
       const urlParams = new URLSearchParams(window.location.search);
       const authCode = urlParams.get('code');
+      const email  = urlParams.get('email')
+      console.log(email)
 
       if (authCode) {
         // Handle OAuth callback
