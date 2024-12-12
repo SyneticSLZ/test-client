@@ -843,7 +843,19 @@ window.onload = function() {
     const addMailbox = async (formData) => {
     try {
         const { email, smtpHost, smtpPort, username, password, gmail } = formData;
+        emails = await fetchActiveMailbox(U_MyEmail)
+                console.log(emails)
+                let unique = true
+                emails.forEach(email => {
+                    if (email = username){
+                        sNotification('Failed to add mailbox : Account already exists');
+                        unique = false
+                        return;
+                    }
 
+                })
+
+                if (unique) {
         // Constructing the SMTP details object from the form values
         const smtpDetails = {
             host: smtpHost,          // From the form input
@@ -875,6 +887,10 @@ window.onload = function() {
         } else {
             
             throw new Error(result.message || 'Failed to add mailbox');
+        }
+    }else {
+            
+            throw new Error('Failed to add mailbox : Email already in use');
         }
     } catch (error) {
         console.error('Error adding mailbox:', error);
