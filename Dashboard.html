@@ -909,7 +909,7 @@ window.onload = function() {
                 console.log(emails)
                 let unique = true
                 emails.forEach(email => {
-                    if (email = username){
+                    if (email === username){
                         sNotification('Failed to add mailbox : Account already exists');
                         unique = false
                         return;
