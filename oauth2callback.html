@@ -9,97 +9,256 @@
     // Configuration for OAuth
     const GOOGLE_OAUTH_CONFIG = {
       clientId: '691667454079-6joalt2dv172u8f4o0qecb6b6acbmls5.apps.googleusercontent.com',
+      clientSecret: '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', // Add your client secret here
       redirectUri: 'https://www.voltmailer.com/oauth2callback',
       scopes: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/gmail.send']
     };
 
-    const MICROSOFT_OAUTH_CONFIG = {
-      clientId: 'YOUR_MICROSOFT_CLIENT_ID',
-      redirectUri: 'YOUR_MICROSOFT_REDIRECT_URI',
-      scopes: ['openid', 'profile', 'email', 'offline_access', 'https://graph.microsoft.com/Mail.Send']
+    // Centralized state management
+    class EmailAccountManager {
+      constructor() {
+        this.accounts = this.loadAccounts();
+        this.selectedAccount = null;
+      }
+
+      // Load accounts from local storage
+      loadAccounts() {
+        const savedAccounts = localStorage.getItem('emailAccounts');
+        return savedAccounts ? JSON.parse(savedAccounts) : [];
+      }
+
+      // Save accounts to local storage
+      saveAccounts() {
+        localStorage.setItem('emailAccounts', JSON.stringify(this.accounts));
+      }
+
+      // Add a new Gmail account
+      async addGoogleAccount(code) {
+        try {
+          // Exchange authorization code for tokens
+          const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+            client_id: GOOGLE_OAUTH_CONFIG.clientId,
+            client_secret: GOOGLE_OAUTH_CONFIG.clientSecret,
+            code: code,
+            grant_type: 'authorization_code',
+            redirect_uri: GOOGLE_OAUTH_CONFIG.redirectUri
+          });
+
+          // Fetch user info
+          const userInfoResponse = await axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokenResponse.data.access_token}`
+          );
+
+          // Create account object
+          const newAccount = {
+            id: `gmail_${userInfoResponse.data.email}_${Date.now()}`,
+            provider: 'gmail',
+            email: userInfoResponse.data.email,
+            accessToken: tokenResponse.data.access_token,
+            refreshToken: tokenResponse.data.refresh_token,
+            expiresAt: Date.now() + (tokenResponse.data.expires_in * 1000)
+          };
+
+          // Add to accounts and save
+          this.accounts.push(newAccount);
+          this.saveAccounts();
+
+          // Select the newly added account
+          this.selectedAccount = newAccount;
+
+          return newAccount;
+        } catch (error) {
+          console.error('Failed to add Google account:', error);
+          throw error;
+        }
+      }
+
+      // Remove an account
+      removeAccount(accountId) {
+        this.accounts = this.accounts.filter(account => account.id !== accountId);
+        
+        // Update selected account if needed
+        if (this.selectedAccount?.id === accountId) {
+          this.selectedAccount = this.accounts.length ? this.accounts[0] : null;
+        }
+
+        this.saveAccounts();
+        this.renderAccounts();
+      }
+
+      // Select an account
+      selectAccount(accountId) {
+        this.selectedAccount = this.accounts.find(account => account.id === accountId) || null;
+        this.renderAccounts();
+      }
+
+      // Send email via selected account
+      async sendEmail(to, subject, body) {
+        if (!this.selectedAccount) {
+          throw new Error('No account selected');
+        }
+
+        try {
+          // Refresh token if expired
+          await this.refreshTokenIfNeeded(this.selectedAccount);
+
+          // Construct raw email message
+          const rawMessage = btoa(
+            `To: ${to}\r\n` +
+            `Subject: ${subject}\r\n` +
+            `Content-Type: text/plain; charset="UTF-8"\r\n\r\n` +
+            body
+          ).replace(/\+/g, '-').replace(/\//g, '_');
+
+          // Send email via Gmail API
+          const response = await axios.post(
+            `https://gmail.googleapis.com/gmail/v1/users/me/messages/send`,
+            { raw: rawMessage },
+            {
+              headers: {
+                'Authorization': `Bearer ${this.selectedAccount.accessToken}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          return response.data;
+        } catch (error) {
+          console.error('Failed to send email:', error);
+          throw error;
+        }
+      }
+
+      // Refresh access token if needed
+      async refreshTokenIfNeeded(account) {
+        // Check if token is expired or about to expire
+        if (account.expiresAt && Date.now() >= account.expiresAt - 300000) { // 5 minutes buffer
+          try {
+            const refreshResponse = await axios.post('https://oauth2.googleapis.com/token', {
+              client_id: GOOGLE_OAUTH_CONFIG.clientId,
+              client_secret: GOOGLE_OAUTH_CONFIG.clientSecret,
+              refresh_token: account.refreshToken,
+              grant_type: 'refresh_token'
+            });
+
+            // Update tokens
+            account.accessToken = refreshResponse.data.access_token;
+            account.expiresAt = Date.now() + (refreshResponse.data.expires_in * 1000);
+
+            // Update in stored accounts
+            const index = this.accounts.findIndex(a => a.id === account.id);
+            if (index !== -1) {
+              this.accounts[index] = account;
+              this.saveAccounts();
+            }
+          } catch (error) {
+            console.error('Token refresh failed:', error);
+            throw error;
+          }
+        }
+      }
+
+      // Render accounts in the UI
+      renderAccounts() {
+        const accountList = document.getElementById('account-list');
+        accountList.innerHTML = '';
+
+        this.accounts.forEach(account => {
+          const accountDiv = document.createElement('div');
+          accountDiv.className = `flex justify-between items-center p-2 border rounded ${this.selectedAccount?.id === account.id ? 'bg-blue-50 border-blue-300' : ''}`;
+
+          const accountInfo = document.createElement('div');
+          accountInfo.className = 'flex items-center space-x-2';
+
+          const icon = document.createElement('span');
+          icon.innerText = '📧';
+          accountInfo.appendChild(icon);
+
+          const email = document.createElement('span');
+          email.innerText = account.email;
+          accountInfo.appendChild(email);
+
+          accountDiv.appendChild(accountInfo);
+
+          const actions = document.createElement('div');
+          actions.className = 'flex space-x-2';
+
+          const selectButton = document.createElement('button');
+          selectButton.className = `py-1 px-2 rounded ${this.selectedAccount?.id === account.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`;
+          selectButton.innerText = this.selectedAccount?.id === account.id ? 'Selected' : 'Select';
+          selectButton.onclick = () => this.selectAccount(account.id);
+          actions.appendChild(selectButton);
+
+          const removeButton = document.createElement('button');
+          removeButton.className = 'py-1 px-2 rounded bg-red-500 text-white';
+          removeButton.innerText = 'Remove';
+          removeButton.onclick = () => this.removeAccount(account.id);
+          actions.appendChild(removeButton);
+
+          accountDiv.appendChild(actions);
+          accountList.appendChild(accountDiv);
+        });
+      }
+
+      // Initiate Google OAuth flow
+      initiateGoogleOAuth() {
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+          `client_id=${GOOGLE_OAUTH_CONFIG.clientId}` +
+          `&redirect_uri=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.redirectUri)}` +
+          `&response_type=code` +
+          `&access_type=offline` + // Important for getting refresh token
+          `&prompt=consent` + // Force consent screen to get refresh token
+          `&scope=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.scopes.join(' '))}`;
+
+        window.location.href = authUrl;
+      }
+    }
+
+    // Global instance of account manager
+    const accountManager = new EmailAccountManager();
+
+    // Handle page load and OAuth callback
+    window.onload = function () {
+      // Check for OAuth callback
+      const urlParams = new URLSearchParams(window.location.search);
+      const authCode = urlParams.get('code');
+
+      if (authCode) {
+        // Handle OAuth callback
+        accountManager.addGoogleAccount(authCode)
+          .then(() => {
+            // Clear URL parameters to prevent re-processing
+            window.history.replaceState({}, document.title, window.location.pathname);
+            accountManager.renderAccounts();
+          })
+          .catch(error => {
+            alert('Failed to add account: ' + error.message);
+          });
+      } else {
+        // Normal page load - render existing accounts
+        accountManager.renderAccounts();
+      }
     };
 
-    let accounts = [];
-    let selectedAccount = null;
-
-    async function addGoogleAccount() {
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-        `client_id=${GOOGLE_OAUTH_CONFIG.clientId}` +
-        `&redirect_uri=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.redirectUri)}` +
-        `&response_type=code` +
-        `&scope=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.scopes.join(' '))}`;
-
-      window.location.href = authUrl;
-    }
-
-    async function addMicrosoftAccount() {
-      const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?` +
-        `client_id=${MICROSOFT_OAUTH_CONFIG.clientId}` +
-        `&redirect_uri=${encodeURIComponent(MICROSOFT_OAUTH_CONFIG.redirectUri)}` +
-        `&response_type=code` +
-        `&scope=${encodeURIComponent(MICROSOFT_OAUTH_CONFIG.scopes.join(' '))}` +
-        `&response_mode=query`;
-
-      window.location.href = authUrl;
-    }
-
-    function removeAccount(accountId) {
-      accounts = accounts.filter(account => account.id !== accountId);
-      if (selectedAccount?.id === accountId) {
-        selectedAccount = accounts.length ? accounts[0] : null;
+    // Example email sending function (you can call this from your UI)
+    function sendTestEmail() {
+      if (!accountManager.selectedAccount) {
+        alert('Please select an account first');
+        return;
       }
-      renderAccounts();
-    }
 
-    function selectAccount(accountId) {
-      selectedAccount = accounts.find(account => account.id === accountId) || null;
-      renderAccounts();
-    }
-
-    function renderAccounts() {
-      const accountList = document.getElementById('account-list');
-      accountList.innerHTML = '';
-
-      accounts.forEach(account => {
-        const accountDiv = document.createElement('div');
-        accountDiv.className = `flex justify-between items-center p-2 border rounded ${selectedAccount?.id === account.id ? 'bg-blue-50 border-blue-300' : ''}`;
-
-        const accountInfo = document.createElement('div');
-        accountInfo.className = 'flex items-center space-x-2';
-
-        const icon = document.createElement('span');
-        icon.innerText = account.provider === 'gmail' ? '📧' : '📨';
-        accountInfo.appendChild(icon);
-
-        const email = document.createElement('span');
-        email.innerText = account.email;
-        accountInfo.appendChild(email);
-
-        accountDiv.appendChild(accountInfo);
-
-        const actions = document.createElement('div');
-        actions.className = 'flex space-x-2';
-
-        const selectButton = document.createElement('button');
-        selectButton.className = `py-1 px-2 rounded ${selectedAccount?.id === account.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`;
-        selectButton.innerText = selectedAccount?.id === account.id ? 'Selected' : 'Select';
-        selectButton.onclick = () => selectAccount(account.id);
-        actions.appendChild(selectButton);
-
-        const removeButton = document.createElement('button');
-        removeButton.className = 'py-1 px-2 rounded bg-red-500 text-white';
-        removeButton.innerText = 'Remove';
-        removeButton.onclick = () => removeAccount(account.id);
-        actions.appendChild(removeButton);
-
-        accountDiv.appendChild(actions);
-        accountList.appendChild(accountDiv);
+      accountManager.sendEmail(
+        'recipient@example.com', 
+        'Test Subject', 
+        'This is a test email sent via Gmail API'
+      )
+      .then(() => {
+        alert('Email sent successfully!');
+      })
+      .catch(error => {
+        alert('Failed to send email: ' + error.message);
       });
     }
-
-    window.onload = function () {
-      renderAccounts();
-    };
   </script>
   <style>
     @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
@@ -110,13 +269,19 @@
     <h1 class="text-xl font-bold mb-4">Email Accounts</h1>
     <div class="space-y-4">
       <div class="flex space-x-2">
-        <button class="py-2 px-4 bg-gray-100 border rounded flex items-center space-x-2" onclick="addGoogleAccount()">
+        <button 
+          class="py-2 px-4 bg-gray-100 border rounded flex items-center space-x-2" 
+          onclick="accountManager.initiateGoogleOAuth()"
+        >
           <span>📧</span>
           <span>Add Gmail</span>
         </button>
-        <button class="py-2 px-4 bg-gray-100 border rounded flex items-center space-x-2" onclick="addMicrosoftAccount()">
-          <span>📨</span>
-          <span>Add Outlook</span>
+        <button 
+          class="py-2 px-4 bg-green-100 border rounded flex items-center space-x-2" 
+          onclick="sendTestEmail()"
+        >
+          <span>✉️</span>
+          <span>Send Test Email</span>
         </button>
       </div>
 
