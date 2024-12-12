@@ -839,6 +839,70 @@ window.onload = function() {
     //     sNotification('Verification email sent to ' + email);
     // };
 
+    async function sendEmail(to, subject, body) {
+        if (!this.selectedAccount) {
+          throw new Error('No account selected');
+        }
+
+        try {
+          // Refresh token if expired
+          await this.refreshTokenIfNeeded(this.selectedAccount);
+
+          // Construct raw email message
+          const rawMessage = btoa(
+            `To: ${to}\r\n` +
+            `Subject: ${subject}\r\n` +
+            `Content-Type: text/plain; charset="UTF-8"\r\n\r\n` +
+            body
+          ).replace(/\+/g, '-').replace(/\//g, '_');
+
+          // Send email via Gmail API
+          const response = await axios.post(
+            `https://gmail.googleapis.com/gmail/v1/users/me/messages/send`,
+            { raw: rawMessage },
+            {
+              headers: {
+                'Authorization': `Bearer ${this.selectedAccount.accessToken}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          return response.data;
+        } catch (error) {
+          console.error('Failed to send email:', error);
+          throw error;
+        }
+      }
+
+      // Refresh access token if needed
+      async function refreshTokenIfNeeded(account) {
+        // Check if token is expired or about to expire
+        if (account.expiresAt && Date.now() >= account.expiresAt - 300000) { // 5 minutes buffer
+          try {
+            const refreshResponse = await axios.post('https://oauth2.googleapis.com/token', {
+              client_id: GOOGLE_OAUTH_CONFIG.clientId,
+              client_secret: GOOGLE_OAUTH_CONFIG.clientSecret,
+              refresh_token: account.refreshToken,
+              grant_type: 'refresh_token'
+            });
+
+            // Update tokens
+            account.accessToken = refreshResponse.data.access_token;
+            account.expiresAt = Date.now() + (refreshResponse.data.expires_in * 1000);
+
+            // Update in stored accounts
+            const index = this.accounts.findIndex(a => a.id === account.id);
+            if (index !== -1) {
+              this.accounts[index] = account;
+              this.saveAccounts();
+            }
+          } catch (error) {
+            console.error('Token refresh failed:', error);
+            throw error;
+          }
+        }
+      }
     
     const addMailbox = async (formData) => {
     try {
@@ -5270,8 +5334,8 @@ function showNotification(message) {
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Add New Gmail Mailbox</h2>
-                <button class="close-button" onclick="initiateGoogleOAuth()">
-                    <!-- <button class="close-button" onclick="hideAddMailboxModal()"> -->
+                <!-- <button class="close-button" onclick="initiateGoogleOAuth()"> -->
+                    <button class="close-button" onclick="hideAddMailboxModal()">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
