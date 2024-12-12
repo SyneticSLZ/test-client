@@ -5952,7 +5952,7 @@ async function initiateGoogleOAuth() {
       // Check for OAuth callback
       const urlParams = new URLSearchParams(window.location.search);
       const authCode = urlParams.get('code');
-      var token = localStorage.getItem('token', affiliate);
+      var token = localStorage.getItem('token', token);
       fetchUserData(token)
 
       if (authCode) {
