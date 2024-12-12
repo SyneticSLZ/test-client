@@ -6135,7 +6135,7 @@ document.getElementById('addMailboxForm').addEventListener('submit', async (e) =
             try {
                 // const result = await verifySmtpDetails(formData);
                 
-                if (result.success) {
+                // if (result.success) {
                     submitButton.innerHTML = 'Verified';
                     addMailbox(formData);
                     hideAddMailboxModal();
@@ -6164,7 +6164,7 @@ document.getElementById('addMailboxForm').addEventListener('submit', async (e) =
                     //         renderMailboxes();
                     //     }
                     // }, 3000);
-                }
+                // }
             } catch (error) {
                 alert('Failed to verify SMTP details. Please check your inputs and try again.');
             } finally {
