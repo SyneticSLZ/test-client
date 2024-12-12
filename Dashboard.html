@@ -618,7 +618,15 @@
         }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+  // Configuration for OAuth
+  const GOOGLE_OAUTH_CONFIG = {
+    clientId: '691667454079-6joalt2dv172u8f4o0qecb6b6acbmls5.apps.googleusercontent.com',
+    clientSecret: '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', // Add your client secret here
+    redirectUri: 'https://www.voltmailer.com/Dashboard.html',
+    scopes: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/gmail.send']
+  };
     // Sample data - replace with your actual data
     let mailboxes = [
         // { id: 1, email: 'work@example.com', status: 'verified', isActive: true },
@@ -831,9 +839,10 @@ window.onload = function() {
     //     sNotification('Verification email sent to ' + email);
     // };
 
+    
     const addMailbox = async (formData) => {
     try {
-        const { email, smtpHost, smtpPort, username, password } = formData;
+        const { email, smtpHost, smtpPort, username, password, gmail } = formData;
 
         // Constructing the SMTP details object from the form values
         const smtpDetails = {
@@ -841,7 +850,8 @@ window.onload = function() {
             port: parseInt(smtpPort), // Convert port to number
             secure: smtpPort === "465", // If port is 465, set secure to true (adjust this based on your actual logic)
             user: username,         // From the form input
-            pass: password          // From the form input
+            pass: password,
+            gmail: gmail         // From the form input
         };
         console.log(U_MyEmail)
         const response = await fetch('https://server.voltmailer.com/api/mailboxes/create', {
@@ -1015,7 +1025,7 @@ async function init() {
     }else {
             if (token) {
                 console.log("noraml running")
-                fetchUserData();
+                fetchUserData(token);
             } else {
                 console.log("google running")
                 googleAuth();
@@ -1199,9 +1209,9 @@ function decodeEmailJWT(token) {
 //     }
 // }
 
-function fetchUserData() {
+function fetchUserData(token) {
     console.log("fetching data")
-    const token = getEmailTokenFromUrl();
+    // const token = getEmailTokenFromUrl();
     if (token) {
         const decoded = decodeEmailJWT(token);
         const email = decoded.email;
@@ -5244,7 +5254,8 @@ function showNotification(message) {
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Add New Gmail Mailbox</h2>
-                <button class="close-button" onclick="hideAddMailboxModal()">
+                <button class="close-button" onclick="initiateGoogleOAuth()">
+                    <!-- <button class="close-button" onclick="hideAddMailboxModal()"> -->
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -5917,6 +5928,98 @@ async function updateEmailForm(){
         errorMessages.innerHTML = '<p>An error occurred while updating the password.</p>';
     }
 };
+
+
+async function initiateGoogleOAuth() {
+    const urlParams = new URLSearchParams(window.location.search);
+    var token  = urlParams.get('token');        
+    if (token){
+        localStorage.setItem('token', token);
+    }
+
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+          `client_id=${GOOGLE_OAUTH_CONFIG.clientId}` +
+          `&redirect_uri=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.redirectUri)}` +
+          `&response_type=code` +
+          `&access_type=offline` + // Important for getting refresh token
+          `&prompt=consent` + // Force consent screen to get refresh token
+          `&scope=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.scopes.join(' '))}`;
+
+        window.location.href = authUrl;
+      }
+    
+      window.onload = function () {
+      // Check for OAuth callback
+      const urlParams = new URLSearchParams(window.location.search);
+      const authCode = urlParams.get('code');
+      var token = localStorage.getItem('token', affiliate);
+      fetchUserData(token)
+
+      if (authCode) {
+
+        // Handle OAuth callback
+        addGoogleAccount(authCode)
+          .then(() => {
+            // Clear URL parameters to prevent re-processing
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+          })
+          .catch(error => {
+            alert('Failed to add account: ' + error.message);
+          });
+
+
+      }
+    };
+
+    async function addGoogleAccount(code) {
+        try {
+          // Exchange authorization code for tokens
+          const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+            client_id: GOOGLE_OAUTH_CONFIG.clientId,
+            client_secret: GOOGLE_OAUTH_CONFIG.clientSecret,
+            code: code,
+            grant_type: 'authorization_code',
+            redirect_uri: GOOGLE_OAUTH_CONFIG.redirectUri
+          });
+
+          // Fetch user info
+          const userInfoResponse = await axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokenResponse.data.access_token}`
+          );
+
+          // Create account object
+          const newAccount = {
+            id: `gmail_${userInfoResponse.data.email}_${Date.now()}`,
+            provider: 'gmail',
+            email: userInfoResponse.data.email,
+            accessToken: tokenResponse.data.access_token,
+            refreshToken: tokenResponse.data.refresh_token,
+            expiresAt: Date.now() + (tokenResponse.data.expires_in * 1000)
+          };
+
+          const formData = {
+                email: "exe@gmail.com",
+                smtpHost: "gmail",
+                smtpPort: "586",
+                username: userInfoResponse.data.email,
+                password: null,
+                gmail: newAccount
+            };
+                    addMailbox(formData);
+          // Add to accounts and save
+        //   this.accounts.push(newAccount);
+        //   this.saveAccounts();
+
+          // Select the newly added account
+        //   this.selectedAccount = newAccount;
+
+          return newAccount;
+        } catch (error) {
+          console.error('Failed to add Google account:', error);
+          throw error;
+        }
+      }
 
 document.getElementById('addMailboxForm').addEventListener('submit', async (e) => {
     e.preventDefault();
