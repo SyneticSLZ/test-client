@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Account Manager</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    // Configuration for OAuth
+    const GOOGLE_OAUTH_CONFIG = {
+      clientId: '691667454079-6joalt2dv172u8f4o0qecb6b6acbmls5.apps.googleusercontent.com',
+      redirectUri: 'https://www.server.voltmailer.com/oauth2callback',
+      scopes: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/gmail.send']
+    };
+
+    const MICROSOFT_OAUTH_CONFIG = {
+      clientId: 'YOUR_MICROSOFT_CLIENT_ID',
+      redirectUri: 'YOUR_MICROSOFT_REDIRECT_URI',
+      scopes: ['openid', 'profile', 'email', 'offline_access', 'https://graph.microsoft.com/Mail.Send']
+    };
+
+    let accounts = [];
+    let selectedAccount = null;
+
+    async function addGoogleAccount() {
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+        `client_id=${GOOGLE_OAUTH_CONFIG.clientId}` +
+        `&redirect_uri=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.redirectUri)}` +
+        `&response_type=code` +
+        `&scope=${encodeURIComponent(GOOGLE_OAUTH_CONFIG.scopes.join(' '))}`;
+
+      window.location.href = authUrl;
+    }
+
+    async function addMicrosoftAccount() {
+      const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?` +
+        `client_id=${MICROSOFT_OAUTH_CONFIG.clientId}` +
+        `&redirect_uri=${encodeURIComponent(MICROSOFT_OAUTH_CONFIG.redirectUri)}` +
+        `&response_type=code` +
+        `&scope=${encodeURIComponent(MICROSOFT_OAUTH_CONFIG.scopes.join(' '))}` +
+        `&response_mode=query`;
+
+      window.location.href = authUrl;
+    }
+
+    function removeAccount(accountId) {
+      accounts = accounts.filter(account => account.id !== accountId);
+      if (selectedAccount?.id === accountId) {
+        selectedAccount = accounts.length ? accounts[0] : null;
+      }
+      renderAccounts();
+    }
+
+    function selectAccount(accountId) {
+      selectedAccount = accounts.find(account => account.id === accountId) || null;
+      renderAccounts();
+    }
+
+    function renderAccounts() {
+      const accountList = document.getElementById('account-list');
+      accountList.innerHTML = '';
+
+      accounts.forEach(account => {
+        const accountDiv = document.createElement('div');
+        accountDiv.className = `flex justify-between items-center p-2 border rounded ${selectedAccount?.id === account.id ? 'bg-blue-50 border-blue-300' : ''}`;
+
+        const accountInfo = document.createElement('div');
+        accountInfo.className = 'flex items-center space-x-2';
+
+        const icon = document.createElement('span');
+        icon.innerText = account.provider === 'gmail' ? '📧' : '📨';
+        accountInfo.appendChild(icon);
+
+        const email = document.createElement('span');
+        email.innerText = account.email;
+        accountInfo.appendChild(email);
+
+        accountDiv.appendChild(accountInfo);
+
+        const actions = document.createElement('div');
+        actions.className = 'flex space-x-2';
+
+        const selectButton = document.createElement('button');
+        selectButton.className = `py-1 px-2 rounded ${selectedAccount?.id === account.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`;
+        selectButton.innerText = selectedAccount?.id === account.id ? 'Selected' : 'Select';
+        selectButton.onclick = () => selectAccount(account.id);
+        actions.appendChild(selectButton);
+
+        const removeButton = document.createElement('button');
+        removeButton.className = 'py-1 px-2 rounded bg-red-500 text-white';
+        removeButton.innerText = 'Remove';
+        removeButton.onclick = () => removeAccount(account.id);
+        actions.appendChild(removeButton);
+
+        accountDiv.appendChild(actions);
+        accountList.appendChild(accountDiv);
+      });
+    }
+
+    window.onload = function () {
+      renderAccounts();
+    };
+  </script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="w-full max-w-md bg-white p-6 rounded shadow">
+    <h1 class="text-xl font-bold mb-4">Email Accounts</h1>
+    <div class="space-y-4">
+      <div class="flex space-x-2">
+        <button class="py-2 px-4 bg-gray-100 border rounded flex items-center space-x-2" onclick="addGoogleAccount()">
+          <span>📧</span>
+          <span>Add Gmail</span>
+        </button>
+        <button class="py-2 px-4 bg-gray-100 border rounded flex items-center space-x-2" onclick="addMicrosoftAccount()">
+          <span>📨</span>
+          <span>Add Outlook</span>
+        </button>
+      </div>
+
+      <div id="account-list" class="space-y-2">
+        <!-- Dynamically populated account list -->
+      </div>
+    </div>
+  </div>
+</body>
+</html>
