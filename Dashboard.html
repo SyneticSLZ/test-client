@@ -6910,6 +6910,7 @@ async function selectMailboxForEmail() {
             console.log(sampleEmails)
             const sentEmailsContainer = document.getElementById('sentEmailsContainer');
             const sentEmailsManager = new SentEmailsManager(sentEmailsContainer, sampleEmails);
+            window.toggleEmailDetails = (emailId) => sentEmailsManager.toggleEmailDetails(emailId);
 
         } else {
             throw new Error(mailboxesFromBackend.message || 'Failed to fetch mailboxes');
@@ -6950,8 +6951,8 @@ const modalmail = document.getElementById('mailbox-mailbox-modal');
 
 
         // Global functions to interface with the class methods
-        const sentEmailsContainer = document.getElementById('sentEmailsContainer');
-        window.toggleEmailDetails = (emailId) => sentEmailsManager.toggleEmailDetails(emailId);
+        // const sentEmailsContainer = document.getElementById('sentEmailsContainer');
+        
 
 // class MultiEmailDistributor {
 //             constructor() {
