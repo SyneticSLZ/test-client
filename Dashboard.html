@@ -694,7 +694,7 @@ const fetchuserEmails = async () => {
         const emailsfound = await response.json();
         if (response.ok) {
             console.log("found them", emailsfound)
-            let sampleEmails = emailsfound
+            sampleEmails = emailsfound
             console.log(sampleEmails)
 
         } else {
