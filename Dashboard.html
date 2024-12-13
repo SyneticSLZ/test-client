@@ -6937,7 +6937,7 @@ const modalmail = document.getElementById('mailbox-mailbox-modal');
 
         // Close modal functionality
         closeBtnmail.addEventListener('click', () => {
-            modalmail.style.display = 'none';
+           closemailmod()
         });
 
         function openModalmail(){
@@ -6951,9 +6951,14 @@ const modalmail = document.getElementById('mailbox-mailbox-modal');
             console.log('Gmail option clicked');
         });
 
+        function closemailmod(){
+modalmail.style.display = 'none';
+        
+        }
+
         manualOption.addEventListener('click', () => {
             // Your manual entry logic here
-            closeBtnmail.click
+            closemailmod()
             showAddMailboxModal()
             console.log('Manual entry option clicked');
         });
