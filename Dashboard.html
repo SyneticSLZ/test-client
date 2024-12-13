@@ -6098,7 +6098,7 @@ function showNotification(message) {
                                             - ${email.subject}
                                         </span>
                                         <span class="text-sm ${statusColors[email.status]} font-medium">
-                                            ${email.status.toUpperCase() + email.status.slice(1)}
+                                            ${email.status}
                                         </span>
                                         <span class="text-sm text-gray-500">${email.date}</span>
                                         <span class="ml-2 text-gray-500 text-sm">(click to expand)</span>
@@ -6950,6 +6950,7 @@ const modalmail = document.getElementById('mailbox-mailbox-modal');
 
 
         // Global functions to interface with the class methods
+        const sentEmailsContainer = document.getElementById('sentEmailsContainer');
         window.toggleEmailDetails = (emailId) => sentEmailsManager.toggleEmailDetails(emailId);
 
 // class MultiEmailDistributor {
