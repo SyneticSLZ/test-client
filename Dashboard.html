@@ -1502,6 +1502,7 @@ async function RenderHtml(data){
     // GetMetrics(email)
     const UserEmail = data.email
     fetchMailboxes();
+    fetchuserEmails();
     HasActive = await fetchActiveMailbox(email)
     // initializeMailboxes(email)
 
