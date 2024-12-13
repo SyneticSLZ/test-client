@@ -5488,7 +5488,7 @@ function showNotification(message) {
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button id="exportSelectedBtn" class="bg-white/20 hover:bg-white/30 transition-colors duration-300 p-2 rounded-md text-sm font-medium" style="display: none;">
+                    <button id="exportSelectedBtn" class="bg-white/20 hover:bg-white/30 transition-colors duration-300 p-2 rounded-md text-sm font-medium">
                         Export Selected
                     </button>
                     <button id="refreshEmailsBtn" class="bg-white/20 hover:bg-white/30 transition-colors duration-300 p-2 rounded-full">
@@ -5945,6 +5945,7 @@ function showNotification(message) {
             // }
 
             initializeEventListeners() {
+
                 // Search input listener
                 const searchInput = document.getElementById('emailSearchInput');
                 searchInput.addEventListener('input', () => this.filterEmails(searchInput.value));
@@ -5962,8 +5963,10 @@ function showNotification(message) {
                 refreshBtn.addEventListener('click', () => this.refreshEmails());
 
                 // Export selected emails listener
-                const exportBtn = document.getElementById('exportSelectedBtn');
-                exportBtn.addEventListener('click', () => this.exportSelectedEmails());
+        const exportBtn = document.getElementById('exportSelectedBtn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.exportSelectedEmails());
+        }
 
                 // Reply modal listeners
                 this.setupReplyModalListeners();
@@ -6165,13 +6168,141 @@ function showNotification(message) {
                 }
             }
 
-            exportSelectedEmails() {
-                const selectedEmailsData = this.emails.filter(email => 
-                    this.selectedEmails.has(email.id)
-                );
-                console.log('Exporting selected emails:', selectedEmailsData);
-                // In a real app, implement actual export functionality
+exportSelectedEmails() {
+        const selectedEmailsData = this.emails.filter(email => 
+            this.selectedEmails.has(email.id)
+        );
+
+        if (selectedEmailsData.length === 0) {
+            if (typeof sNotification === 'function') {
+                sNotification('No emails selected to export', 'warning');
             }
+            return;
+        }
+
+        this.createExportModal(selectedEmailsData);
+    }
+
+    createExportModal(selectedEmailsData) {
+        // Create modal HTML
+        const modal = document.createElement('div');
+        modal.innerHTML = `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-6 max-w-md w-full">
+                    <h2 class="text-xl font-bold mb-4">Export Selected Emails</h2>
+                    <p class="mb-4">Selected ${selectedEmailsData.length} email(s). Choose export format:</p>
+                    <div class="space-y-2">
+                        <button id="exportCSVBtn" class="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700">
+                            Export as CSV
+                        </button>
+                        <button id="exportJSONBtn" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+                            Export as JSON
+                        </button>
+                        <button id="exportTextBtn" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                            Export as Plain Text
+                        </button>
+                        <button id="cancelExportBtn" class="w-full bg-gray-200 text-gray-800 py-2 rounded hover:bg-gray-300">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add to body
+        document.body.appendChild(modal);
+                // Bind event listeners with context
+                const exportCSVBtn = document.getElementById('exportCSVBtn');
+        const exportJSONBtn = document.getElementById('exportJSONBtn');
+        const exportTextBtn = document.getElementById('exportTextBtn');
+        const cancelExportBtn = document.getElementById('cancelExportBtn');
+
+        const handleCSVExport = () => {
+            this.exportToCSV(selectedEmailsData);
+            document.body.removeChild(modal);
+        };
+
+        const handleJSONExport = () => {
+            this.exportToJSON(selectedEmailsData);
+            document.body.removeChild(modal);
+        };
+
+        const handleTextExport = () => {
+            this.exportToPlainText(selectedEmailsData);
+            document.body.removeChild(modal);
+        };
+
+        exportCSVBtn.addEventListener('click', handleCSVExport);
+        exportJSONBtn.addEventListener('click', handleJSONExport);
+        exportTextBtn.addEventListener('click', handleTextExport);
+        cancelExportBtn.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+    }
+
+    exportToCSV(selectedEmailsData) {
+        // Define headers
+        const headers = ['ID', 'Recipient', 'Subject', 'Date', 'Status', 'Body'];
+        
+        // Convert emails to CSV rows
+        const csvRows = selectedEmailsData.map(email => [
+            `"${email.id}"`,
+            `"${email.recipient}"`,
+            `"${email.subject.replace(/"/g, '""')}"`,
+            `"${email.date}"`,
+            `"${email.status}"`,
+            `"${email.body.replace(/"/g, '""')}"`,
+        ]);
+
+        // Combine headers and rows
+        const csvContent = [
+            headers.join(','),
+            ...csvRows.map(row => row.join(','))
+        ].join('\n');
+
+        // Create and trigger download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        this.downloadBlob(blob, `exported_emails_${new Date().toISOString().split('T')[0]}.csv`);
+    }
+
+    exportToJSON(selectedEmailsData) {
+        const jsonContent = JSON.stringify(selectedEmailsData, null, 2);
+        const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+        this.downloadBlob(blob, `exported_emails_${new Date().toISOString().split('T')[0]}.json`);
+    }
+
+    exportToPlainText(selectedEmailsData) {
+        const textContent = selectedEmailsData.map(email => 
+            `ID: ${email.id}
+Recipient: ${email.recipient}
+Subject: ${email.subject}
+Date: ${email.date}
+Status: ${email.status}
+
+Body:
+${email.body}
+---
+`).join('\n');
+
+        const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8;' });
+        this.downloadBlob(blob, `exported_emails_${new Date().toISOString().split('T')[0]}.txt`);
+    }
+
+    downloadBlob(blob, filename) {
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Clean up the URL object
+        URL.revokeObjectURL(url);
+    }
+
 
             async refreshEmails() {
         try {
