@@ -5455,11 +5455,11 @@ function showNotification(message) {
 
 <div class="contentf" id="mailboxTab" style="display: none;" >
 
-    <div class="container mx-auto p-6 max-w-5xl">
+    <div class="container mx-auto p-6 max-w-5xl" >
+        <!-- style="overflow-y: scroll !important;" -->
 
 
-
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-white rounded-lg shadow-md overflow-scroll">
             <!-- Header Section -->
             <div class="bg-purple-600 text-white p-6 flex justify-between items-center">
                 <div>
@@ -5528,8 +5528,8 @@ function showNotification(message) {
             </div>
 
             <!-- Emails Container -->
-            <div id="sentEmailsContainer" class="divide-y divide-gray-200" style="overflow: scroll;">
-                <!-- Emails will be dynamically inserted here -->
+            <div id="sentEmailsContainer" class="divide-y divide-gray-200" >
+                <!-- Emails will be dynamically inserted here  style="overflow: scroll;" -->
             </div>
         </div>
 
