@@ -5382,7 +5382,7 @@ function showNotification(message) {
                 </div> -->
                 <div class="form-group">
                     <label class="form-label" for="username">Email Address</label>
-                    <input type="text" id="smtpemail" class="form-input" required>
+                    <input type="text" id="smtpemail" class="form-input" style="background-color: white !important; color: #333 !important;" required>
                 </div>
                 <!-- <div class="form-group">
                     <label class="form-label" for="password">App Password</label>
@@ -5456,6 +5456,7 @@ function showNotification(message) {
                     type="text" 
                     id="emailSearchInput" 
                     placeholder="Search emails..." 
+                    style="background-color: white !important; color: #333 !important;"
                     class="flex-grow p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 transition-all"
                 />
                 <select 
@@ -5866,7 +5867,264 @@ function showNotification(message) {
         //         document.getElementById('results').textContent = 'An error occurred while fetching emails.';
         //     }
         // });
+        class SentEmailsManager {
+            constructor(containerElement, emails) {
+                this.container = containerElement;
+                this.emails = emails.map(email => ({
+                    ...email,
+                    status: this.generateRandomStatus()
+                }));
+                this.filteredEmails = this.emails;
+                this.selectedEmails = new Set();
+                this.initializeEventListeners();
+                this.render();
+                this.updateMetrics();
+            }
 
+            // generateRandomStatus() {
+            //     const statuses = ['delivered', 'opened', 'replied', 'bounced'];
+            //     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            //     return {
+            //         delivered: Math.random() > 0.1,
+            //         opened: Math.random() > 0.3,
+            //         replied: Math.random() > 0.5,
+            //         bounced: Math.random() < 0.1,
+            //         primaryStatus: randomStatus
+            //     };
+            // }
+
+            initializeEventListeners() {
+                // Search input listener
+                const searchInput = document.getElementById('emailSearchInput');
+                searchInput.addEventListener('input', () => this.filterEmails(searchInput.value));
+
+                // Filter select listener
+                const filterSelect = document.getElementById('emailFilterSelect');
+                filterSelect.addEventListener('change', () => this.filterEmailsByStatus(filterSelect.value));
+
+                // Sort select listener
+                const sortSelect = document.getElementById('emailSortSelect');
+                sortSelect.addEventListener('change', () => this.sortEmails(sortSelect.value));
+
+                // Refresh button listener
+                const refreshBtn = document.getElementById('refreshEmailsBtn');
+                refreshBtn.addEventListener('click', () => this.refreshEmails());
+
+                // Export selected emails listener
+                const exportBtn = document.getElementById('exportSelectedBtn');
+                exportBtn.addEventListener('click', () => this.exportSelectedEmails());
+
+                // Reply modal listeners
+                this.setupReplyModalListeners();
+            }
+
+            setupReplyModalListeners() {
+                const replyModal = document.getElementById('replyModal');
+                const closeModalBtn = document.getElementById('closeReplyModalBtn');
+                const cancelReplyBtn = document.getElementById('cancelReplyBtn');
+                const sendReplyBtn = document.getElementById('sendReplyBtn');
+
+                closeModalBtn.addEventListener('click', () => this.toggleReplyModal());
+                cancelReplyBtn.addEventListener('click', () => this.toggleReplyModal());
+                sendReplyBtn.addEventListener('click', () => this.sendReply());
+            }
+
+            toggleReplyModal(email = null) {
+                const replyModal = document.getElementById('replyModal');
+                const modalContent = document.getElementById('replyModalContent');
+                const replyTextArea = document.getElementById('replyTextArea');
+
+                replyModal.classList.toggle('hidden');
+                replyModal.classList.toggle('flex');
+
+                if (email) {
+                    modalContent.innerHTML = `
+                        <div class="bg-gray-100 p-4 rounded-md mb-4">
+                            <div class="font-bold text-purple-600">To: ${email.recipient}</div>
+                            <div class="text-gray-700">Subject: Re: ${email.subject}</div>
+                            <div class="text-gray-600 mt-2">${email.body}</div>
+                        </div>
+                    `;
+                    replyTextArea.value = '';
+                    replyTextArea.dataset.emailId = email.id;
+                }
+            }
+
+            sendReply() {
+                const replyTextArea = document.getElementById('replyTextArea');
+                const replyText = replyTextArea.value.trim();
+                const originalEmailId = replyTextArea.dataset.emailId;
+
+                if (replyText) {
+                    // In a real app, this would send the reply via backend
+                    console.log('Sending reply:', {
+                        originalEmailId,
+                        replyText
+                    });
+
+                    // Update email status to replied
+                    const emailToUpdate = this.emails.find(email => email.id === originalEmailId);
+                    if (emailToUpdate) {
+                        // emailToUpdate.status.replied = true;
+                        emailToUpdate.status = 'replied';
+                    }
+
+                    this.toggleReplyModal();
+                    this.render();
+                    this.updateMetrics();
+                }
+            }
+
+            render() {
+                this.container.innerHTML = '';
+                this.filteredEmails.forEach(email => {
+                    const emailRow = this.createEmailRow(email);
+                    this.container.insertAdjacentHTML('beforeend', emailRow);
+                });
+            }
+
+            filterEmails(searchTerm) {
+                this.filteredEmails = this.emails.filter(email => 
+                    email.recipient.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    email.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    email.body.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                this.render();
+            }
+
+            filterEmailsByStatus(status) {
+                if (status === 'all') {
+                    this.filteredEmails = this.emails;
+                } else {
+                    this.filteredEmails = this.emails.filter(email => 
+                        email.status[status]
+                    );
+                }
+                this.render();
+            }
+
+            sortEmails(sortType) {
+                this.filteredEmails.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return sortType === 'newest' ? dateB - dateA : dateA - dateB;
+                });
+                this.render();
+            }
+
+            updateMetrics() {
+                const totalEmails = this.emails.length;
+                const deliveredEmails = this.emails.filter(email => email.status.delivered).length;
+                const openedEmails = this.emails.filter(email => email.status.opened).length;
+                const repliedEmails = this.emails.filter(email => email.status.replied).length;
+                const bouncedEmails = this.emails.filter(email => email.status.bounced).length;
+
+                document.getElementById('totalEmailsMetric').textContent = totalEmails;
+                document.getElementById('deliveredEmailsMetric').textContent = deliveredEmails;
+                document.getElementById('openedEmailsMetric').textContent = openedEmails;
+                document.getElementById('repliedEmailsMetric').textContent = repliedEmails;
+                document.getElementById('bouncedEmailsMetric').textContent = bouncedEmails;
+            }
+
+            createEmailRow(email) {
+                // Status color mapping
+                const statusColors = {
+                    delivered: 'text-green-600',
+                    opened: 'text-blue-600',
+                    replied: 'text-purple-600',
+                    bounced: 'text-red-600'
+                };
+
+                return `
+                    <div class="email-row hover:bg-purple-50 transition-colors duration-200 flex items-center" data-email-id="${email.id}">
+                        <div class="p-2">
+                            <input 
+                                type="checkbox" 
+                                class="email-checkbox form-checkbox h-5 w-5 text-purple-600 rounded"
+                                onclick="sentEmailsManager.toggleEmailSelection('${email.id}')"
+                            >
+                        </div>
+                        <div class="flex-grow cursor-pointer" onclick="toggleEmailDetails('${email.id}')">
+                            <div class="flex items-center justify-between p-4">
+                                <div class="flex-grow">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="font-medium text-gray-800 truncate max-w-md">
+                                            <span class="text-purple-600">${email.recipient}</span> 
+                                            - ${email.subject}
+                                        </span>
+                                        <span class="text-sm ${statusColors[email.status]} font-medium">
+                                            ${email.status.toUpperCase() + email.status.slice(1)}
+                                        </span>
+                                        <span class="text-sm text-gray-500">${email.date}</span>
+                                        <span class="ml-2 text-gray-500 text-sm">(click to expand)</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button 
+                                        onclick="sentEmailsManager.openReplyModal('${email.id}')" 
+                                        class="text-purple-600 hover:text-purple-800 focus:outline-none"
+                                    >
+                                        <svg xmlns="http://www.w3.org/22000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div id="email-details-${email.id}" class="hidden p-4 bg-gray-50 text-sm text-gray-700">
+                                ${email.body}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            openReplyModal(emailId) {
+                const email = this.emails.find(e => e.id === emailId);
+                if (email) {
+                    this.toggleReplyModal(email);
+                }
+            }
+
+            toggleEmailDetails(emailId) {
+                const detailsElement = document.getElementById(`email-details-${emailId}`);
+                detailsElement.classList.toggle('hidden');
+            }
+
+            toggleEmailSelection(emailId) {
+                const checkbox = document.querySelector(`[data-email-id="${emailId}"] .email-checkbox`);
+                if (checkbox.checked) {
+                    this.selectedEmails.add(emailId);
+                } else {
+                    this.selectedEmails.delete(emailId);
+                }
+            }
+
+            exportSelectedEmails() {
+                const selectedEmailsData = this.emails.filter(email => 
+                    this.selectedEmails.has(email.id)
+                );
+                console.log('Exporting selected emails:', selectedEmailsData);
+                // In a real app, implement actual export functionality
+            }
+
+            refreshEmails() {
+                // Simulate fetching new emails
+                this.emails = this.emails.map(email => ({
+                    ...email,
+                    status: this.generateRandomStatus()
+                }));
+                this.filteredEmails = this.emails;
+                this.render();
+                this.updateMetrics();
+            }
+
+            render() {
+                this.container.innerHTML = this.filteredEmails
+                    .map(email => this.createEmailRow(email))
+                    .join('');
+            }
+        }
+
+        
         async function submitDomain(){
             let domain = document.getElementById('domain').value;
             let newDomain = domain
@@ -6009,6 +6267,8 @@ function showNotification(message) {
                     document.getElementById('myUsage-content').style.display = 'none';
                     document.getElementById('main').style.display = 'none';
                     document.getElementById('mailboxTab').style.display = 'block'; 
+                    const sentEmailsContainer = document.getElementById('sentEmailsContainer');
+                    const sentEmailsManager = new SentEmailsManager(sentEmailsContainer, sampleEmails);
 
                 default:
                     // contentDiv.innerHTML = '<h2>Home Content</h2><p>This is the default home page content.</p>';
@@ -6586,266 +6846,9 @@ async function selectMailboxForEmail() {
 
 
 
-        class SentEmailsManager {
-            constructor(containerElement, emails) {
-                this.container = containerElement;
-                this.emails = emails.map(email => ({
-                    ...email,
-                    status: this.generateRandomStatus()
-                }));
-                this.filteredEmails = this.emails;
-                this.selectedEmails = new Set();
-                this.initializeEventListeners();
-                this.render();
-                this.updateMetrics();
-            }
-
-            // generateRandomStatus() {
-            //     const statuses = ['delivered', 'opened', 'replied', 'bounced'];
-            //     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-            //     return {
-            //         delivered: Math.random() > 0.1,
-            //         opened: Math.random() > 0.3,
-            //         replied: Math.random() > 0.5,
-            //         bounced: Math.random() < 0.1,
-            //         primaryStatus: randomStatus
-            //     };
-            // }
-
-            initializeEventListeners() {
-                // Search input listener
-                const searchInput = document.getElementById('emailSearchInput');
-                searchInput.addEventListener('input', () => this.filterEmails(searchInput.value));
-
-                // Filter select listener
-                const filterSelect = document.getElementById('emailFilterSelect');
-                filterSelect.addEventListener('change', () => this.filterEmailsByStatus(filterSelect.value));
-
-                // Sort select listener
-                const sortSelect = document.getElementById('emailSortSelect');
-                sortSelect.addEventListener('change', () => this.sortEmails(sortSelect.value));
-
-                // Refresh button listener
-                const refreshBtn = document.getElementById('refreshEmailsBtn');
-                refreshBtn.addEventListener('click', () => this.refreshEmails());
-
-                // Export selected emails listener
-                const exportBtn = document.getElementById('exportSelectedBtn');
-                exportBtn.addEventListener('click', () => this.exportSelectedEmails());
-
-                // Reply modal listeners
-                this.setupReplyModalListeners();
-            }
-
-            setupReplyModalListeners() {
-                const replyModal = document.getElementById('replyModal');
-                const closeModalBtn = document.getElementById('closeReplyModalBtn');
-                const cancelReplyBtn = document.getElementById('cancelReplyBtn');
-                const sendReplyBtn = document.getElementById('sendReplyBtn');
-
-                closeModalBtn.addEventListener('click', () => this.toggleReplyModal());
-                cancelReplyBtn.addEventListener('click', () => this.toggleReplyModal());
-                sendReplyBtn.addEventListener('click', () => this.sendReply());
-            }
-
-            toggleReplyModal(email = null) {
-                const replyModal = document.getElementById('replyModal');
-                const modalContent = document.getElementById('replyModalContent');
-                const replyTextArea = document.getElementById('replyTextArea');
-
-                replyModal.classList.toggle('hidden');
-                replyModal.classList.toggle('flex');
-
-                if (email) {
-                    modalContent.innerHTML = `
-                        <div class="bg-gray-100 p-4 rounded-md mb-4">
-                            <div class="font-bold text-purple-600">To: ${email.recipient}</div>
-                            <div class="text-gray-700">Subject: Re: ${email.subject}</div>
-                            <div class="text-gray-600 mt-2">${email.body}</div>
-                        </div>
-                    `;
-                    replyTextArea.value = '';
-                    replyTextArea.dataset.emailId = email.id;
-                }
-            }
-
-            sendReply() {
-                const replyTextArea = document.getElementById('replyTextArea');
-                const replyText = replyTextArea.value.trim();
-                const originalEmailId = replyTextArea.dataset.emailId;
-
-                if (replyText) {
-                    // In a real app, this would send the reply via backend
-                    console.log('Sending reply:', {
-                        originalEmailId,
-                        replyText
-                    });
-
-                    // Update email status to replied
-                    const emailToUpdate = this.emails.find(email => email.id === originalEmailId);
-                    if (emailToUpdate) {
-                        // emailToUpdate.status.replied = true;
-                        emailToUpdate.status = 'replied';
-                    }
-
-                    this.toggleReplyModal();
-                    this.render();
-                    this.updateMetrics();
-                }
-            }
-
-            render() {
-                this.container.innerHTML = '';
-                this.filteredEmails.forEach(email => {
-                    const emailRow = this.createEmailRow(email);
-                    this.container.insertAdjacentHTML('beforeend', emailRow);
-                });
-            }
-
-            filterEmails(searchTerm) {
-                this.filteredEmails = this.emails.filter(email => 
-                    email.recipient.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    email.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    email.body.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                this.render();
-            }
-
-            filterEmailsByStatus(status) {
-                if (status === 'all') {
-                    this.filteredEmails = this.emails;
-                } else {
-                    this.filteredEmails = this.emails.filter(email => 
-                        email.status[status]
-                    );
-                }
-                this.render();
-            }
-
-            sortEmails(sortType) {
-                this.filteredEmails.sort((a, b) => {
-                    const dateA = new Date(a.date);
-                    const dateB = new Date(b.date);
-                    return sortType === 'newest' ? dateB - dateA : dateA - dateB;
-                });
-                this.render();
-            }
-
-            updateMetrics() {
-                const totalEmails = this.emails.length;
-                const deliveredEmails = this.emails.filter(email => email.status.delivered).length;
-                const openedEmails = this.emails.filter(email => email.status.opened).length;
-                const repliedEmails = this.emails.filter(email => email.status.replied).length;
-                const bouncedEmails = this.emails.filter(email => email.status.bounced).length;
-
-                document.getElementById('totalEmailsMetric').textContent = totalEmails;
-                document.getElementById('deliveredEmailsMetric').textContent = deliveredEmails;
-                document.getElementById('openedEmailsMetric').textContent = openedEmails;
-                document.getElementById('repliedEmailsMetric').textContent = repliedEmails;
-                document.getElementById('bouncedEmailsMetric').textContent = bouncedEmails;
-            }
-
-            createEmailRow(email) {
-                // Status color mapping
-                const statusColors = {
-                    delivered: 'text-green-600',
-                    opened: 'text-blue-600',
-                    replied: 'text-purple-600',
-                    bounced: 'text-red-600'
-                };
-
-                return `
-                    <div class="email-row hover:bg-purple-50 transition-colors duration-200 flex items-center" data-email-id="${email.id}">
-                        <div class="p-2">
-                            <input 
-                                type="checkbox" 
-                                class="email-checkbox form-checkbox h-5 w-5 text-purple-600 rounded"
-                                onclick="sentEmailsManager.toggleEmailSelection('${email.id}')"
-                            >
-                        </div>
-                        <div class="flex-grow cursor-pointer" onclick="toggleEmailDetails('${email.id}')">
-                            <div class="flex items-center justify-between p-4">
-                                <div class="flex-grow">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="font-medium text-gray-800 truncate max-w-md">
-                                            <span class="text-purple-600">${email.recipient}</span> 
-                                            - ${email.subject}
-                                        </span>
-                                        <span class="text-sm ${statusColors[email.status]} font-medium">
-                                            ${email.status.toUpperCase() + email.status.slice(1)}
-                                        </span>
-                                        <span class="text-sm text-gray-500">${email.date}</span>
-                                        <span class="ml-2 text-gray-500 text-sm">(click to expand)</span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <button 
-                                        onclick="sentEmailsManager.openReplyModal('${email.id}')" 
-                                        class="text-purple-600 hover:text-purple-800 focus:outline-none"
-                                    >
-                                        <svg xmlns="http://www.w3.org/22000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div id="email-details-${email.id}" class="hidden p-4 bg-gray-50 text-sm text-gray-700">
-                                ${email.body}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            openReplyModal(emailId) {
-                const email = this.emails.find(e => e.id === emailId);
-                if (email) {
-                    this.toggleReplyModal(email);
-                }
-            }
-
-            toggleEmailDetails(emailId) {
-                const detailsElement = document.getElementById(`email-details-${emailId}`);
-                detailsElement.classList.toggle('hidden');
-            }
-
-            toggleEmailSelection(emailId) {
-                const checkbox = document.querySelector(`[data-email-id="${emailId}"] .email-checkbox`);
-                if (checkbox.checked) {
-                    this.selectedEmails.add(emailId);
-                } else {
-                    this.selectedEmails.delete(emailId);
-                }
-            }
-
-            exportSelectedEmails() {
-                const selectedEmailsData = this.emails.filter(email => 
-                    this.selectedEmails.has(email.id)
-                );
-                console.log('Exporting selected emails:', selectedEmailsData);
-                // In a real app, implement actual export functionality
-            }
-
-            refreshEmails() {
-                // Simulate fetching new emails
-                this.emails = this.emails.map(email => ({
-                    ...email,
-                    status: this.generateRandomStatus()
-                }));
-                this.filteredEmails = this.emails;
-                this.render();
-                this.updateMetrics();
-            }
-
-            render() {
-                this.container.innerHTML = this.filteredEmails
-                    .map(email => this.createEmailRow(email))
-                    .join('');
-            }
-        }
-
+      
                 // Initialize the emails dashboard
-                const sentEmailsContainer = document.getElementById('sentEmailsContainer');
-        const sentEmailsManager = new SentEmailsManager(sentEmailsContainer, sampleEmails);
+
 
         // Global functions to interface with the class methods
         window.toggleEmailDetails = (emailId) => sentEmailsManager.toggleEmailDetails(emailId);
