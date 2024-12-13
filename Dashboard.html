@@ -6490,10 +6490,14 @@ async function initiateGoogleOAuth() {
       // Check for OAuth callback
       const urlParams = new URLSearchParams(window.location.search);
       const authCode = urlParams.get('code');
-      var token = localStorage.getItem('token', token);
-      fetchUserData(token)
-
+      const token = urlParams.get('token');
       if (authCode) {
+      if (!token) {
+
+      token = localStorage.getItem('token', token);
+      window.location.href = `https://www.voltmailer.com/Dashboard?token=${token}&code=${authCode}`;
+} else{
+
 
         // Handle OAuth callback
         addGoogleAccount(authCode)
@@ -6506,6 +6510,7 @@ async function initiateGoogleOAuth() {
             alert('Failed to add account: ' + error.message);
           });
 
+}
 
       }
     };
