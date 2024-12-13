@@ -5455,11 +5455,8 @@ function showNotification(message) {
 
 <div class="contentf" id="mailboxTab" style="display: none;" >
 
-    <div class="container mx-auto p-6 max-w-5xl" style="overflow-y: scroll !important;" >
-        <!-- style="overflow-y: scroll !important;" -->
-
-
-        <div class="bg-white rounded-lg shadow-md overflow-scroll" style="overflow-y: scroll !important;" >
+    <div class="container mx-auto p-6 max-w-5xl">
+        <div class="bg-white rounded-lg shadow-md">
             <!-- Header Section -->
             <div class="bg-purple-600 text-white p-6 flex justify-between items-center">
                 <div>
@@ -5498,7 +5495,7 @@ function showNotification(message) {
                     </button>
                 </div>
             </div>
-
+    
             <!-- Email Search and Filter -->
             <div class="p-4 bg-gray-100 flex items-center space-x-4">
                 <input 
@@ -5526,14 +5523,14 @@ function showNotification(message) {
                     <option value="oldest">Oldest First</option>
                 </select>
             </div>
-
-            <!-- Emails Container -->
-            <div id="sentEmailsContainer" class="divide-y divide-gray-200"style="overflow-y: scroll !important;"  >
-                <!-- Emails will be dynamically inserted here  style="overflow: scroll;" -->
+    
+            <!-- Emails Container with Max Height and Scrolling -->
+            <div id="sentEmailsContainer" class="divide-y divide-gray-200 max-h-[500px] overflow-y-auto">
+                <!-- Emails will be dynamically inserted here -->
             </div>
         </div>
-
-        <!-- Reply Modal -->
+    
+        <!-- Reply Modal (unchanged) -->
         <div id="replyModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6">
                 <div class="flex justify-between items-center mb-4">
@@ -5563,8 +5560,6 @@ function showNotification(message) {
             </div>
         </div>
     </div>
-
-</div>
 
 
     <div  class="contentf" id="main-old"  style="display: none;">
