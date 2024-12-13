@@ -5849,8 +5849,7 @@ function showNotification(message) {
             constructor(containerElement, emails) {
                 this.container = containerElement;
                 this.emails = emails.map(email => ({
-                    ...email,
-                    status: this.generateRandomStatus()
+                    ...email
                 }));
                 this.filteredEmails = this.emails;
                 this.selectedEmails = new Set();
