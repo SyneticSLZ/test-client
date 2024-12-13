@@ -695,6 +695,7 @@ const fetchuserEmails = async () => {
         if (response.ok) {
             console.log("found them", emailsfound)
             let sampleEmails = emailsfound
+            console.log(sampleEmails)
 
         } else {
             throw new Error(mailboxesFromBackend.message || 'Failed to fetch mailboxes');
@@ -6124,7 +6125,7 @@ function showNotification(message) {
             }
         }
 
-        
+
         async function submitDomain(){
             let domain = document.getElementById('domain').value;
             let newDomain = domain
