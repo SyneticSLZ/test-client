@@ -681,30 +681,7 @@ window.onload = function() {
     }
 };
 
-const fetchuserEmails = async () => {
-    try {
-        console.log("fetching meailboxes")
-        const response = await fetch(`https://server.voltmailer.com/api/emails?email=${U_MyEmail}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
 
-        const emailsfound = await response.json();
-        if (response.ok) {
-            console.log("found them", emailsfound)
-            sampleEmails = emailsfound
-            console.log(sampleEmails)
-
-        } else {
-            throw new Error(mailboxesFromBackend.message || 'Failed to fetch mailboxes');
-        }
-    } catch (error) {
-        console.error('Error fetching mailboxes:', error);
-        sNotification('Error fetching mailboxes: ' + error.message, 'error');
-    }
-};
 
     // UI State Management
     async function updateUI(){
@@ -6849,7 +6826,32 @@ async function selectMailboxForEmail() {
 
       
                 // Initialize the emails dashboard
+                const fetchuserEmails = async () => {
+    try {
+        console.log("fetching meailboxes")
+        const response = await fetch(`https://server.voltmailer.com/api/emails?email=${U_MyEmail}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 
+        const emailsfound = await response.json();
+        if (response.ok) {
+            console.log("found them", emailsfound)
+            sampleEmails = emailsfound
+            console.log(sampleEmails)
+            const sentEmailsContainer = document.getElementById('sentEmailsContainer');
+            const sentEmailsManager = new SentEmailsManager(sentEmailsContainer, sampleEmails);
+
+        } else {
+            throw new Error(mailboxesFromBackend.message || 'Failed to fetch mailboxes');
+        }
+    } catch (error) {
+        console.error('Error fetching mailboxes:', error);
+        sNotification('Error fetching mailboxes: ' + error.message, 'error');
+    }
+};
 
         // Global functions to interface with the class methods
         window.toggleEmailDetails = (emailId) => sentEmailsManager.toggleEmailDetails(emailId);
