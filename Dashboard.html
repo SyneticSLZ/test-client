@@ -6584,12 +6584,7 @@ async function selectMailboxForEmail() {
     });
 }
 
-        // Initialize the emails dashboard
-        const sentEmailsContainer = document.getElementById('sentEmailsContainer');
-        const sentEmailsManager = new SentEmailsManager(sentEmailsContainer, sampleEmails);
 
-        // Global functions to interface with the class methods
-        window.toggleEmailDetails = (emailId) => sentEmailsManager.toggleEmailDetails(emailId);
 
         class SentEmailsManager {
             constructor(containerElement, emails) {
@@ -6847,6 +6842,13 @@ async function selectMailboxForEmail() {
                     .join('');
             }
         }
+
+                // Initialize the emails dashboard
+                const sentEmailsContainer = document.getElementById('sentEmailsContainer');
+        const sentEmailsManager = new SentEmailsManager(sentEmailsContainer, sampleEmails);
+
+        // Global functions to interface with the class methods
+        window.toggleEmailDetails = (emailId) => sentEmailsManager.toggleEmailDetails(emailId);
 
 // class MultiEmailDistributor {
 //             constructor() {
