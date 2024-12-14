@@ -1309,7 +1309,7 @@ function fetchUserData(token) {
             console.log("response : ", response)
             if (response.status === 401) {
                 // Unauthorized error, redirect to expired session page
-                // window.location.href = 'https://voltmailer.com/ExpiredSession.html';
+                window.location.href = 'https://voltmailer.com/ExpiredSession.html';
                 return null; // Stop further processing
             }
             return response.json();
@@ -1317,7 +1317,7 @@ function fetchUserData(token) {
         .then(data => {
             if (data && data.error) {
                 console.error('Error fetching user data:', data.error);
-                // window.location.href = 'https://voltmailer.com/ExpiredSession.html';
+                window.location.href = 'https://voltmailer.com/ExpiredSession.html';
             } else if (data) {
                 // Customize the page using user data
                 console.log(data);
