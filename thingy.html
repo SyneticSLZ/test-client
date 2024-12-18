@@ -156,661 +156,576 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Campaigns Page -->
+<div id="campaigns-page" class="page hidden">
+    <div class="grid grid-cols-1 gap-6">
+        <!-- Campaign Overview Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
+                        <i class="fas fa-paper-plane text-blue-500"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Total Campaigns</h3>
+                        <p class="text-2xl font-semibold" id="total-campaigns">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
+                        <i class="fas fa-check text-green-500"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Active Campaigns</h3>
+                        <p class="text-2xl font-semibold" id="active-campaigns">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-500 bg-opacity-10">
+                        <i class="fas fa-envelope-open text-yellow-500"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Total Opens</h3>
+                        <p class="text-2xl font-semibold" id="total-opens">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
+                        <i class="fas fa-reply text-purple-500"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Total Responses</h3>
+                        <p class="text-2xl font-semibold" id="total-responses">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Management Section -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold">Email Campaigns</h2>
+                    <button onclick="showCreateCampaignModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
+                        <i class="fas fa-plus mr-2"></i>
+                        Create Campaign
+                    </button>
+                </div>
+                
+                <!-- Campaign Filters -->
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <select id="campaign-status-filter" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <input type="date" id="campaign-date-filter" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="resetFilters()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-redo-alt mr-2"></i>Reset
+                    </button>
+                </div>
+
+                <!-- Campaigns Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opened</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responded</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="campaigns-table-body">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
             </main>
         </div>
     </div>
 
     <script>
-        // Continue existing code...
+        // Mock Data
+const mockData = {
+    fccSubmissions: [
+        { company: "TeleCorp", type: "Equipment Authorization", date: "2024-03-15", status: "Pending", id: 1 },
+        { company: "NetworkSys", type: "License Application", date: "2024-03-14", status: "Approved", id: 2 },
+        { company: "CommTech", type: "Spectrum License", date: "2024-03-13", status: "Under Review", id: 3 },
+        { company: "WirelessCo", type: "Service Registration", date: "2024-03-12", status: "Approved", id: 4 }
+    ],
+    fundingRounds: [
+        { company: "AI Solutions", type: "Series A", amount: "$10M", date: "2024-03-15", investors: ["VC Fund A", "Angel Group B"], id: 1 },
+        { company: "BlockTech", type: "Seed", amount: "$2.5M", date: "2024-03-14", investors: ["Seed Fund X"], id: 2 },
+        { company: "CloudServ", type: "Series B", amount: "$25M", date: "2024-03-13", investors: ["Growth Fund Y", "Tech Fund Z"], id: 3 },
+        { company: "DataCorp", type: "Series C", amount: "$50M", date: "2024-03-12", investors: ["Mega Fund A", "Global VC"], id: 4 }
+    ],
+    fdaFilings: [
+        { company: "Biotech Solutions", type: "New Drug Application", date: "2024-03-15", status: "Pending", id: 1 },
+        { company: "MediCorp Inc", type: "Generic Drug", date: "2024-03-14", status: "Approved", id: 2 },
+        { company: "PharmaTech", type: "Medical Device", date: "2024-03-13", status: "Under Review", id: 3 },
+        { company: "HealthCare Plus", type: "Supplement Filing", date: "2024-03-12", status: "Pending", id: 4 }
+    ],
+    patents: [
+        { title: "AI-Driven Drug Discovery", company: "Biotech Solutions", filedDate: "2024-03-10", status: "Pending", id: 1 },
+        { title: "Quantum Computing Method", company: "TechCorp", filedDate: "2024-03-09", status: "Published", id: 2 },
+        { title: "Renewable Energy System", company: "GreenTech", filedDate: "2024-03-08", status: "Granted", id: 3 }
+    ],
+    companies: [
+        { name: "Biotech Solutions", industry: "Healthcare", source: "FDA Filing", addedDate: "2024-03-15", id: 1 },
+        { name: "TechCorp", industry: "Technology", source: "Patent", addedDate: "2024-03-14", id: 2 },
+        { name: "GreenTech", industry: "Energy", source: "FCC Filing", addedDate: "2024-03-13", id: 3 }
+    ],
+    campaigns: [
+        { name: "Q1 Healthcare Outreach", status: "Active", sent: 150, opened: 89, responded: 12, id: 1 },
+        { name: "Tech Innovation Campaign", status: "Draft", sent: 0, opened: 0, responded: 0, id: 2 },
+        { name: "Energy Sector Initiative", status: "Completed", sent: 200, opened: 145, responded: 35, id: 3 }
+    ]
+};
 
-        // Additional Table Updates
-        function updateFCCTable() {
-            const tableBody = document.getElementById('fcc-table-body');
-            tableBody.innerHTML = mockData.fccSubmissions.map(submission => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">${submission.company}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${submission.type}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${submission.date}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                            ${submission.status}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
-                            name: submission.company,
-                            industry: "Telecommunications",
-                            source: "FCC Filing"
-                        })})'>
-                            Add to Companies
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+// Modal Management
+function showModal(content) {
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modal-content');
+    modalContent.innerHTML = content;
+    modal.classList.remove('hidden');
+}
 
-        function updateFundingTable() {
-            const tableBody = document.getElementById('funding-table-body');
-            tableBody.innerHTML = mockData.fundingRounds.map(round => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">${round.company}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${round.type}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${round.amount}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${round.date}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${round.investors.join(', ')}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
-                            name: round.company,
-                            industry: "Technology",
-                            source: "Funding Round"
-                        })})'>
-                            Add to Companies
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+function hideModal() {
+    const modal = document.getElementById('modal');
+    modal.classList.add('hidden');
+}
 
-        // Profile Management
-        function saveProfile(event) {
-            event.preventDefault();
-            const profile = {
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                industries: Array.from(document.getElementById('industry-tags').children).map(tag => tag.textContent.trim()),
-                emailTemplates: Array.from(document.getElementById('email-templates').children).map(template => ({
-                    name: template.querySelector('input').value,
-                    content: template.querySelector('textarea').value
-                }))
-            };
-            localStorage.setItem('userProfile', JSON.stringify(profile));
-            showNotification('Profile saved successfully!');
-        }
+// Company Management
+function addToCompanies(companyData) {
+    let companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
+    if (!companies.find(c => c.name === companyData.name)) {
+        companies.push({
+            ...companyData,
+            id: Date.now(),
+            addedDate: new Date().toISOString().split('T')[0]
+        });
+        localStorage.setItem('trackedCompanies', JSON.stringify(companies));
+        showNotification(`${companyData.name} added to your companies!`);
+        updateCompaniesTable();
+    }
+}
 
-        function resetProfile() {
-            document.getElementById('profile-form').reset();
-            document.getElementById('industry-tags').innerHTML = '';
-            document.getElementById('email-templates').innerHTML = '';
-            localStorage.removeItem('userProfile');
-            showNotification('Profile reset successfully!');
-        }
+function removeCompany(companyId) {
+    let companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
+    companies = companies.filter(c => c.id !== companyId);
+    localStorage.setItem('trackedCompanies', JSON.stringify(companies));
+    updateCompaniesTable();
+    showNotification('Company removed successfully!');
+}
 
-        function addIndustryTag() {
-            const input = document.getElementById('industry-input');
-            const value = input.value.trim();
-            if (value) {
-                const tag = document.createElement('div');
-                tag.className = 'px-3 py-1 bg-blue-100 text-blue-800 rounded-full flex items-center gap-2';
-                tag.innerHTML = `
-                    ${value}
-                    <button onclick="this.parentElement.remove()" class="text-blue-600 hover:text-blue-800">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                document.getElementById('industry-tags').appendChild(tag);
-                input.value = '';
+// Campaign Management Functions
+function showCreateCampaignModal() {
+    const selectedCompanies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
+    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
+    
+    const content = `
+        <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Create Email Campaign</h3>
+        <form id="campaign-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Campaign Name</label>
+                <input type="text" id="campaign-name" required placeholder="Enter campaign name" class="w-full p-2 border rounded">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Select Template</label>
+                <select id="template-select" class="w-full p-2 border rounded">
+                    <option value="">Select a template...</option>
+                    ${templates.map(template => `
+                        <option value="${template.id}">${template.name}</option>
+                    `).join('')}
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email Content</label>
+                <textarea id="campaign-content" required class="w-full p-2 border rounded" rows="6" placeholder="Enter email content..."></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Select Companies</label>
+                <div class="max-h-40 overflow-y-auto border rounded p-2">
+                    ${selectedCompanies.map(company => `
+                        <label class="flex items-center space-x-2 p-1 hover:bg-gray-50">
+                            <input type="checkbox" value="${company.id}" class="company-checkbox">
+                            <span>${company.name}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="flex justify-end space-x-2 pt-4">
+                <button type="button" onclick="hideModal()" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create Campaign</button>
+            </div>
+        </form>
+    `;
+    showModal(content);
+
+    // Add form submit handler
+    document.getElementById('campaign-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        createCampaign();
+    });
+
+    // Add template change handler
+    document.getElementById('template-select').addEventListener('change', function(e) {
+        const templateId = e.target.value;
+        if (templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (template) {
+                document.getElementById('campaign-content').value = template.content;
             }
         }
+    });
+}
 
-        function addEmailTemplate() {
-            const template = document.createElement('div');
-            template.className = 'border rounded-lg p-4';
-            template.innerHTML = `
+function createCampaign() {
+    const name = document.getElementById('campaign-name').value;
+    const content = document.getElementById('campaign-content').value;
+    const selectedCompanies = Array.from(document.querySelectorAll('.company-checkbox:checked')).map(cb => cb.value);
+    
+    const campaign = {
+        id: Date.now(),
+        name,
+        content,
+        companies: selectedCompanies,
+        status: 'draft',
+        created: new Date().toISOString(),
+        sent: 0,
+        opened: 0,
+        responded: 0,
+        lastModified: new Date().toISOString()
+    };
+
+    const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+    campaigns.push(campaign);
+    localStorage.setItem('campaigns', JSON.stringify(campaigns));
+    
+    hideModal();
+    updateCampaignDashboard();
+    updateCampaignsTable();
+    showNotification('Campaign created successfully!');
+}
+
+function updateCampaignDashboard() {
+    const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+    
+    document.getElementById('total-campaigns').textContent = campaigns.length;
+    document.getElementById('active-campaigns').textContent = campaigns.filter(c => c.status === 'active').length;
+    document.getElementById('total-opens').textContent = campaigns.reduce((sum, c) => sum + c.opened, 0);
+    document.getElementById('total-responses').textContent = campaigns.reduce((sum, c) => sum + c.responded, 0);
+}
+
+// Table Updates
+function updateFDATable() {
+    const tableBody = document.getElementById('fda-table-body');
+    tableBody.innerHTML = mockData.fdaFilings.map(filing => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap">${filing.company}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${filing.type}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${filing.date}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                    ${filing.status}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
+                    name: filing.company,
+                    industry: "Healthcare",
+                    source: "FDA Filing"
+                })})'>
+                    Add to Companies
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function updatePatentsTable() {
+    const tableBody = document.getElementById('patents-table-body');
+    tableBody.innerHTML = mockData.patents.map(patent => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap">${patent.title}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${patent.company}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${patent.filedDate}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    ${patent.status}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
+                    name: patent.company,
+                    industry: "Technology",
+                    source: "Patent Filing"
+                })})'>
+                    Add to Companies
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function updateCompaniesTable() {
+    const companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
+    const tableBody = document.getElementById('companies-table-body');
+    tableBody.innerHTML = companies.map(company => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <input type="checkbox" class="company-select" data-id="${company.id}">
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">${company.name}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${company.industry}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${company.source}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${company.addedDate}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="text-red-600 hover:text-red-900" onclick="removeCompany(${company.id})">
+                    Remove
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function updateCampaignsTable(filters = {}) {
+    let campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+    
+    // Apply filters
+    if (filters.status && filters.status !== 'all') {
+        campaigns = campaigns.filter(c => c.status === filters.status);
+    }
+    if (filters.date) {
+        campaigns = campaigns.filter(c => c.created.startsWith(filters.date));
+    }
+
+    const tableBody = document.getElementById('campaigns-table-body');
+    tableBody.innerHTML = campaigns.map(campaign => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap">${campaign.name}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    campaign.status === 'active' ? 'bg-green-100 text-green-800' :
+                    campaign.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-gray-100 text-gray-800'
+                }">
+                    ${campaign.status}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">${new Date(campaign.created).toLocaleDateString()}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${campaign.sent}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${campaign.opened}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${campaign.responded}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="text-blue-600 hover:text-blue-900 mr-2" onclick="viewCampaignDetails(${campaign.id})">
+                    View
+                </button>
+                <button class="text-red-600 hover:text-red-900" onclick="deleteCampaign(${campaign.id})">
+                    Delete
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Utility Functions
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+    });
+}
+
+// Page Navigation
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.add('hidden');
+    });
+    document.getElementById(`${pageId}-page`).classList.remove('hidden');
+    
+    document.querySelectorAll('nav a').forEach(link => {
+        link.classList.remove('bg-gray-700');
+        if (link.getAttribute('data-page') === pageId) {
+            link.classList.add('bg-gray-700');
+        }
+    });
+
+    // Update relevant data when switching pages
+    switch(pageId) {
+        case 'fda':
+            updateFDATable();
+            break;
+        case 'patents':
+            updatePatentsTable();
+            break;
+        case 'fcc':
+            updateFCCTable();
+            break;
+        case 'funding':
+            updateFundingTable();
+            break;
+        case 'companies':
+            updateCompaniesTable();
+            break;
+        case 'campaigns':
+            updateCampaignDashboard();
+            updateCampaignsTable();
+            break;
+    }
+}
+
+// Filter Management
+function handleFilters() {
+    document.getElementById('campaign-status-filter')?.addEventListener('change', function() {
+        updateCampaignsTable({
+            status: this.value,
+            date: document.getElementById('campaign-date-filter').value
+        });
+    });
+
+    document.getElementById('campaign-date-filter')?.addEventListener('change', function() {
+        updateCampaignsTable({
+            status: document.getElementById('campaign-status-filter').value,
+            date: this.value
+        });
+    });
+}
+
+function resetFilters() {
+    document.getElementById('campaign-status-filter').value = 'all';
+    document.getElementById('campaign-date-filter').value = '';
+    updateCampaignsTable();
+}
+
+// Bulk Actions
+function handleBulkSelections() {
+    document.getElementById('select-all-companies')?.addEventListener('change', function() {
+        document.querySelectorAll('.company-select').forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+}
+
+// Notifications
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    const bgColor = type === 'success' ? 'bg-green-500' : 
+                    type === 'error' ? 'bg-red-500' : 
+                    'bg-blue-500';
+    
+    notification.className = `fixed bottom-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-500`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 500);
+    }, 3000);
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize data
+    if (!localStorage.getItem('trackedCompanies')) {
+        localStorage.setItem('trackedCompanies', JSON.stringify(mockData.companies));
+    }
+    if (!localStorage.getItem('campaigns')) {
+        localStorage.setItem('campaigns', JSON.stringify(mockData.campaigns));
+    }
+
+    // Navigation setup
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pageId = link.getAttribute('data-page');
+            showPage(pageId);
+        });
+    });
+
+    // Profile dropdown
+    document.getElementById('profile-dropdown').addEventListener('click', function() {
+        this.querySelector('div').classList.toggle('hidden');
+    });
+
+    // Notifications button
+    document.getElementById('notifications-btn').addEventListener('click', function() {
+        showNotification('No new notifications', 'info');
+    });
+
+    // Initialize filters
+    handleFilters();
+    
+    // Initialize bulk selections
+    handleBulkSelections();
+
+    // Modal close when clicking outside
+    document.getElementById('modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideModal();
+        }
+    });
+
+    // Load profile data if exists
+    const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+    if (profile.fullName) {
+        document.getElementById('fullName').value = profile.fullName;
+        document.getElementById('email').value = profile.email;
+        
+        // Load industry tags
+        profile.industries?.forEach(industry => {
+            const tag = document.createElement('div');
+            tag.className = 'px-3 py-1 bg-blue-100 text-blue-800 rounded-full flex items-center gap-2';
+            tag.innerHTML = `
+                ${industry}
+                <button onclick="this.parentElement.remove()" class="text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            document.getElementById('industry-tags').appendChild(tag);
+        });
+
+        // Load email templates
+        profile.emailTemplates?.forEach(template => {
+            const templateEl = document.createElement('div');
+            templateEl.className = 'border rounded-lg p-4';
+            templateEl.dataset.id = template.id;
+            templateEl.innerHTML = `
                 <div class="flex justify-between items-center mb-2">
-                    <input type="text" placeholder="Template Name" class="font-medium p-2 border rounded">
+                    <input type="text" value="${template.name}" class="font-medium p-2 border rounded">
                     <button type="button" onclick="this.closest('.border').remove()" class="text-red-600 hover:text-red-800">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
-                <textarea class="w-full h-32 p-2 border rounded" placeholder="Email template content..."></textarea>
+                <textarea class="w-full h-32 p-2 border rounded">${template.content}</textarea>
             `;
-            document.getElementById('email-templates').appendChild(template);
-        }
+            document.getElementById('email-templates').appendChild(templateEl);
+        });
+    }
 
-        // Campaign Management
-        function viewCampaignDetails(campaignId) {
-            const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
-            const campaign = campaigns.find(c => c.id === campaignId);
-            if (campaign) {
-                const content = `
-                    <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">${campaign.name}</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Status</p>
-                            <p class="mt-1">${campaign.status}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Statistics</p>
-                            <div class="mt-1 grid grid-cols-3 gap-4">
-                                <div>
-                                    <p class="text-2xl font-semibold">${campaign.sent}</p>
-                                    <p class="text-sm text-gray-500">Sent</p>
-                                </div>
-                                <div>
-                                    <p class="text-2xl font-semibold">${campaign.opened}</p>
-                                    <p class="text-sm text-gray-500">Opened</p>
-                                </div>
-                                <div>
-                                    <p class="text-2xl font-semibold">${campaign.responded}</p>
-                                    <p class="text-sm text-gray-500">Responded</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6 flex justify-end">
-                        <button onclick="hideModal()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Close</button>
-                    </div>
-                `;
-                showModal(content);
-            }
-        }
-
-        function deleteCampaign(campaignId) {
-            const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
-            const updatedCampaigns = campaigns.filter(c => c.id !== campaignId);
-            localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
-            updateCampaignsTable();
-            showNotification('Campaign deleted successfully!');
-        }
-
-        // Update showPage function to include new pages
-        const originalShowPage = showPage;
-        showPage = function(pageId) {
-            originalShowPage(pageId);
-            switch(pageId) {
-                case 'fcc':
-                    updateFCCTable();
-                    break;
-                case 'funding':
-                    updateFundingTable();
-                    break;
-            }
-        };
-
-        // Select All Companies Functionality
-        document.getElementById('select-all-companies').addEventListener('change', function () {
-    // When the "select all" checkbox changes state
-    const isChecked = this.checked; // Check if the "select all" checkbox is checked
-    
-    // Select all checkboxes with the class "company-select"
-    document.querySelectorAll('.company-select').forEach(checkbox => {
-        checkbox.checked = isChecked; // Set each checkbox to the same state
-    });
+    // Initialize dashboard
+    showPage('dashboard');
 });
-        // Mock Data
-        const mockData = {
-            fccSubmissions: [
-                { company: "TeleCorp", type: "Equipment Authorization", date: "2024-03-15", status: "Pending", id: 1 },
-                { company: "NetworkSys", type: "License Application", date: "2024-03-14", status: "Approved", id: 2 },
-                { company: "CommTech", type: "Spectrum License", date: "2024-03-13", status: "Under Review", id: 3 },
-                { company: "WirelessCo", type: "Service Registration", date: "2024-03-12", status: "Approved", id: 4 }
-            ],
-            fundingRounds: [
-                { company: "AI Solutions", type: "Series A", amount: "$10M", date: "2024-03-15", investors: ["VC Fund A", "Angel Group B"], id: 1 },
-                { company: "BlockTech", type: "Seed", amount: "$2.5M", date: "2024-03-14", investors: ["Seed Fund X"], id: 2 },
-                { company: "CloudServ", type: "Series B", amount: "$25M", date: "2024-03-13", investors: ["Growth Fund Y", "Tech Fund Z"], id: 3 },
-                { company: "DataCorp", type: "Series C", amount: "$50M", date: "2024-03-12", investors: ["Mega Fund A", "Global VC"], id: 4 }
-            ],
-            fdaFilings: [
-                { company: "Biotech Solutions", type: "New Drug Application", date: "2024-03-15", status: "Pending", id: 1 },
-                { company: "MediCorp Inc", type: "Generic Drug", date: "2024-03-14", status: "Approved", id: 2 },
-                { company: "PharmaTech", type: "Medical Device", date: "2024-03-13", status: "Under Review", id: 3 },
-                { company: "HealthCare Plus", type: "Supplement Filing", date: "2024-03-12", status: "Pending", id: 4 }
-            ],
-            patents: [
-                { title: "AI-Driven Drug Discovery", company: "Biotech Solutions", filedDate: "2024-03-10", status: "Pending", id: 1 },
-                { title: "Quantum Computing Method", company: "TechCorp", filedDate: "2024-03-09", status: "Published", id: 2 },
-                { title: "Renewable Energy System", company: "GreenTech", filedDate: "2024-03-08", status: "Granted", id: 3 }
-            ],
-            companies: [
-                { name: "Biotech Solutions", industry: "Healthcare", source: "FDA Filing", addedDate: "2024-03-15", id: 1 },
-                { name: "TechCorp", industry: "Technology", source: "Patent", addedDate: "2024-03-14", id: 2 },
-                { name: "GreenTech", industry: "Energy", source: "FCC Filing", addedDate: "2024-03-13", id: 3 }
-            ],
-            campaigns: [
-                { name: "Q1 Healthcare Outreach", status: "Active", sent: 150, opened: 89, responded: 12, id: 1 },
-                { name: "Tech Innovation Campaign", status: "Draft", sent: 0, opened: 0, responded: 0, id: 2 },
-                { name: "Energy Sector Initiative", status: "Completed", sent: 200, opened: 145, responded: 35, id: 3 }
-            ]
-        };
-
-        // Modal Management
-        function showModal(content) {
-            const modal = document.getElementById('modal');
-            const modalContent = document.getElementById('modal-content');
-            modalContent.innerHTML = content;
-            modal.classList.remove('hidden');
-        }
-
-        function hideModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.add('hidden');
-        }
-
-        // Company Management
-        function addToCompanies(companyData) {
-            let companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
-            if (!companies.find(c => c.name === companyData.name)) {
-                companies.push({
-                    ...companyData,
-                    addedDate: new Date().toISOString().split('T')[0]
-                });
-                localStorage.setItem('trackedCompanies', JSON.stringify(companies));
-                showNotification(`${companyData.name} added to your companies!`);
-                updateCompaniesTable();
-            }
-        }
-
-        function showEmailCampaignModal() {
-            const content = `
-                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Create Email Campaign</h3>
-                <div class="mb-4">
-                    <input type="text" placeholder="Campaign Name" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <textarea placeholder="Email Template" class="w-full p-2 border rounded" rows="4"></textarea>
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button onclick="hideModal()" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">Cancel</button>
-                    <button onclick="createCampaign()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create</button>
-                </div>
-            `;
-            showModal(content);
-        }
-
-        function createCampaign() {
-            // Mock campaign creation
-            const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
-            campaigns.push({
-                name: "New Campaign " + (campaigns.length + 1),
-                status: "Draft",
-                sent: 0,
-                opened: 0,
-                responded: 0,
-                id: Date.now()
-            });
-            localStorage.setItem('campaigns', JSON.stringify(campaigns));
-            hideModal();
-            updateCampaignsTable();
-            showNotification("Campaign created successfully!");
-        }
-
-        // Table Updates
-        function updateFDATable() {
-            const tableBody = document.getElementById('fda-table-body');
-            tableBody.innerHTML = mockData.fdaFilings.map(filing => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">${filing.company}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${filing.type}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${filing.date}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                            ${filing.status}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
-                            name: filing.company,
-                            industry: "Healthcare",
-                            source: "FDA Filing"
-                        })})'>
-                            Add to Companies
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function updatePatentsTable() {
-            const tableBody = document.getElementById('patents-table-body');
-            tableBody.innerHTML = mockData.patents.map(patent => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">${patent.title}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${patent.company}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${patent.filedDate}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            ${patent.status}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
-                            name: patent.company,
-                            industry: "Technology",
-                            source: "Patent Filing"
-                        })})'>
-                            Add to Companies
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function updateCompaniesTable() {
-            const companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
-            const tableBody = document.getElementById('companies-table-body');
-            tableBody.innerHTML = companies.map(company => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <input type="checkbox" class="company-select" data-id="${company.id}">
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">${company.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${company.industry}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${company.source}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${company.addedDate}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <button class="text-red-600 hover:text-red-900" onclick="removeCompany(${company.id})">
-                            Remove
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function updateCampaignsTable() {
-            const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
-            const tableBody = document.getElementById('campaigns-table-body');
-            tableBody.innerHTML = campaigns.map(campaign => `
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">${campaign.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            campaign.status === 'Active' ? 'bg-green-100 text-green-800' :
-                            campaign.status === 'Draft' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-gray-100 text-gray-800'
-                        }">
-                            ${campaign.status}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">${campaign.sent}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${campaign.opened}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${campaign.responded}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <button class="text-blue-600 hover:text-blue-900 mr-2" onclick="viewCampaignDetails(${campaign.id})">
-                            View
-                        </button>
-                        <button class="text-red-600 hover:text-red-900" onclick="deleteCampaign(${campaign.id})">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Notifications
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-500';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => notification.remove(), 500);
-            }, 3000);
-        }
-
-        // Navigation
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.add('hidden');
-            });
-            document.getElementById(`${pageId}-page`).classList.remove('hidden');
-            
-            document.querySelectorAll('nav a').forEach(link => {
-                link.classList.remove('bg-gray-700');
-                if (link.getAttribute('data-page') === pageId) {
-                    link.classList.add('bg-gray-700');
-                }
-            });
-
-            // Update relevant data when switching pages
-            switch(pageId) {
-                case 'fda':
-                    updateFDATable();
-                    break;
-                case 'patents':
-                    updatePatentsTable();
-                    break;
-                case 'companies':
-                    updateCompaniesTable();
-                    break;
-                case 'campaigns':
-                    updateCampaignsTable();
-                    break;
-            }
-        }
-
-        // Event Listeners
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const pageId = link.getAttribute('data-page');
-                showPage(pageId);
-            });
-        });
-
-        document.getElementById('profile-dropdown').addEventListener('click', function() {
-            this.querySelector('div').classList.toggle('hidden');
-        });
-
-        document.getElementById('notifications-btn').addEventListener('click', function() {
-            showNotification('No new notifications');
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            showPage('dashboard');
-            // Initialize mockData in localStorage if empty
-            if (!localStorage.getItem('trackedCompanies')) {
-                localStorage.setItem('trackedCompanies', JSON.stringify(mockData.companies));
-            }
-            if (!localStorage.getItem('campaigns')) {
-                localStorage.setItem('campaigns', JSON.stringify(mockData.campaigns));
-            }
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                hideModal();
-            }
-        });
     </script>
 </body>
 </html>
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Patents Page -->
-                <div id="patents-page" class="page hidden">
-                    <div class="bg-white rounded-lg shadow">
-                        <div class="p-6">
-                            <h2 class="text-xl font-semibold mb-4">Recent Patent Applications</h2>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full table-auto">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patent Title</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Filed Date</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="patents-table-body">
-                                        <!-- Data will be populated here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FCC Submissions Page -->
-                <div id="fcc-page" class="page hidden">
-                    <div class="bg-white rounded-lg shadow">
-                        <div class="p-6">
-                            <h2 class="text-xl font-semibold mb-4">FCC Submissions</h2>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full table-auto">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="fcc-table-body">
-                                        <!-- Data will be populated here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Funding Rounds Page -->
-                <div id="funding-page" class="page hidden">
-                    <div class="bg-white rounded-lg shadow">
-                        <div class="p-6">
-                            <h2 class="text-xl font-semibold mb-4">Recent Funding Rounds</h2>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full table-auto">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Round</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Investors</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="funding-table-body">
-                                        <!-- Data will be populated here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile Page -->
-                <div id="profile-page" class="page hidden">
-                    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow">
-                        <div class="p-6">
-                            <h2 class="text-xl font-semibold mb-6">Profile Settings</h2>
-                            <form id="profile-form" class="space-y-6" onsubmit="saveProfile(event)">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                                        <input type="text" id="fullName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700">Email</label>
-                                        <input type="email" id="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Industry Preferences</h3>
-                                    <div class="space-y-4">
-                                        <div class="flex flex-wrap gap-2" id="industry-tags">
-                                            <!-- Industry tags will be populated here -->
-                                        </div>
-                                        <div class="flex gap-2">
-                                            <input type="text" id="industry-input" placeholder="Add industry..." class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
-                                            <button type="button" onclick="addIndustryTag()" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Email Templates</h3>
-                                    <div id="email-templates" class="space-y-4">
-                                        <!-- Email templates will be populated here -->
-                                    </div>
-                                    <button type="button" onclick="addEmailTemplate()" class="mt-4 w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-500">
-                                        Add New Template
-                                    </button>
-                                </div>
-
-                                <div class="flex justify-end space-x-3">
-                                    <button type="button" onclick="resetProfile()" class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-50">Reset</button>
-                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save Changes</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <script>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Companies Page -->
-                <div id="companies-page" class="page hidden">
-                    <div class="bg-white rounded-lg shadow">
-                        <div class="p-6">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-semibold">My Companies</h2>
-                                <button onclick="showEmailCampaignModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                                    Start Email Campaign
-                                </button>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full table-auto">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                <input type="checkbox" id="select-all-companies">
-                                            </th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Industry</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added Date</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="companies-table-body">
-                                        <!-- Data will be populated here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                // <!-- Campaigns Page -->
-                // <div id="campaigns-page" class="page hidden">
-                //     <div class="bg-white rounded-lg shadow">
-                //         <div class="p-6">
-                //             <h2 class="text-xl font-semibold mb-4">Email Campaigns</h2>
-                //             <div class="overflow-x-auto">
-                //                 <table class="min-w-full table-auto">
-                //                     <thead class="bg-gray-50">
-                //                         <tr>
-                //                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign Name</th>
-                //                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                //                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent</th>
-                //                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opened</th>
-                //                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responded</th>
-                //                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                //                         </tr>
-                //                     </thead>
-                //                     <tbody id="campaigns-table-body">
-                //                         <!-- Data will be populated here -->
+                              
