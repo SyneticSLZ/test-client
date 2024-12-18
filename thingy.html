@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Intelligence Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Modal Template -->
+    <div id="modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center" id="modal-content">
+                <!-- Modal content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white">
+            <div class="p-4">
+                <h2 class="text-xl font-semibold">Intelligence Hub</h2>
+            </div>
+            <nav class="mt-4">
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 active-nav" data-page="dashboard">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" data-page="fda">
+                    <i class="fas fa-pills mr-2"></i>FDA Filings
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" data-page="patents">
+                    <i class="fas fa-scroll mr-2"></i>Patents
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" data-page="fcc">
+                    <i class="fas fa-broadcast-tower mr-2"></i>FCC Submissions
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" data-page="funding">
+                    <i class="fas fa-money-bill-wave mr-2"></i>Funding Rounds
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" data-page="companies">
+                    <i class="fas fa-building mr-2"></i>My Companies
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" data-page="campaigns">
+                    <i class="fas fa-envelope mr-2"></i>Email Campaigns
+                </a>
+                <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" data-page="profile">
+                    <i class="fas fa-user mr-2"></i>Profile
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <header class="bg-white shadow-sm">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center space-x-4">
+                        <input type="text" placeholder="Search..." class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="p-2 rounded-full hover:bg-gray-100 relative" id="notifications-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">3</span>
+                        </button>
+                        <div class="relative" id="profile-dropdown">
+                            <button class="flex items-center space-x-2">
+                                <img src="/api/placeholder/32/32" alt="Profile" class="w-8 h-8 rounded-full">
+                                <span>John Doe</span>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                <!-- Dashboard Page -->
+                <div id="dashboard-page" class="page active">
+                    <h1 class="text-2xl font-semibold mb-6">Dashboard Overview</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <!-- Stats Cards -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
+                                    <i class="fas fa-building text-blue-500"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Companies Tracked</h3>
+                                    <p class="text-2xl font-semibold">245</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
+                                    <i class="fas fa-envelope text-green-500"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Active Campaigns</h3>
+                                    <p class="text-2xl font-semibold">12</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
+                                    <i class="fas fa-file-alt text-purple-500"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">New Filings</h3>
+                                    <p class="text-2xl font-semibold">37</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-yellow-500 bg-opacity-10">
+                                    <i class="fas fa-user-tie text-yellow-500"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Decision Makers</h3>
+                                    <p class="text-2xl font-semibold">892</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FDA Filings Page -->
+                <div id="fda-page" class="page hidden">
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6">
+                            <h2 class="text-xl font-semibold mb-4">Recent FDA Filings</h2>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full table-auto">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Filing Type</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200" id="fda-table-body">
+                                                                            </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Mock Data
+        const mockData = {
+            fdaFilings: [
+                { company: "Biotech Solutions", type: "New Drug Application", date: "2024-03-15", status: "Pending", id: 1 },
+                { company: "MediCorp Inc", type: "Generic Drug", date: "2024-03-14", status: "Approved", id: 2 },
+                { company: "PharmaTech", type: "Medical Device", date: "2024-03-13", status: "Under Review", id: 3 },
+                { company: "HealthCare Plus", type: "Supplement Filing", date: "2024-03-12", status: "Pending", id: 4 }
+            ],
+            patents: [
+                { title: "AI-Driven Drug Discovery", company: "Biotech Solutions", filedDate: "2024-03-10", status: "Pending", id: 1 },
+                { title: "Quantum Computing Method", company: "TechCorp", filedDate: "2024-03-09", status: "Published", id: 2 },
+                { title: "Renewable Energy System", company: "GreenTech", filedDate: "2024-03-08", status: "Granted", id: 3 }
+            ],
+            companies: [
+                { name: "Biotech Solutions", industry: "Healthcare", source: "FDA Filing", addedDate: "2024-03-15", id: 1 },
+                { name: "TechCorp", industry: "Technology", source: "Patent", addedDate: "2024-03-14", id: 2 },
+                { name: "GreenTech", industry: "Energy", source: "FCC Filing", addedDate: "2024-03-13", id: 3 }
+            ],
+            campaigns: [
+                { name: "Q1 Healthcare Outreach", status: "Active", sent: 150, opened: 89, responded: 12, id: 1 },
+                { name: "Tech Innovation Campaign", status: "Draft", sent: 0, opened: 0, responded: 0, id: 2 },
+                { name: "Energy Sector Initiative", status: "Completed", sent: 200, opened: 145, responded: 35, id: 3 }
+            ]
+        };
+
+        // Modal Management
+        function showModal(content) {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = content;
+            modal.classList.remove('hidden');
+        }
+
+        function hideModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add('hidden');
+        }
+
+        // Company Management
+        function addToCompanies(companyData) {
+            let companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
+            if (!companies.find(c => c.name === companyData.name)) {
+                companies.push({
+                    ...companyData,
+                    addedDate: new Date().toISOString().split('T')[0]
+                });
+                localStorage.setItem('trackedCompanies', JSON.stringify(companies));
+                showNotification(`${companyData.name} added to your companies!`);
+                updateCompaniesTable();
+            }
+        }
+
+        function showEmailCampaignModal() {
+            const content = `
+                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Create Email Campaign</h3>
+                <div class="mb-4">
+                    <input type="text" placeholder="Campaign Name" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <textarea placeholder="Email Template" class="w-full p-2 border rounded" rows="4"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="hideModal()" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">Cancel</button>
+                    <button onclick="createCampaign()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create</button>
+                </div>
+            `;
+            showModal(content);
+        }
+
+        function createCampaign() {
+            // Mock campaign creation
+            const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+            campaigns.push({
+                name: "New Campaign " + (campaigns.length + 1),
+                status: "Draft",
+                sent: 0,
+                opened: 0,
+                responded: 0,
+                id: Date.now()
+            });
+            localStorage.setItem('campaigns', JSON.stringify(campaigns));
+            hideModal();
+            updateCampaignsTable();
+            showNotification("Campaign created successfully!");
+        }
+
+        // Table Updates
+        function updateFDATable() {
+            const tableBody = document.getElementById('fda-table-body');
+            tableBody.innerHTML = mockData.fdaFilings.map(filing => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">${filing.company}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${filing.type}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${filing.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            ${filing.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
+                            name: filing.company,
+                            industry: "Healthcare",
+                            source: "FDA Filing"
+                        })})'>
+                            Add to Companies
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updatePatentsTable() {
+            const tableBody = document.getElementById('patents-table-body');
+            tableBody.innerHTML = mockData.patents.map(patent => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">${patent.title}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${patent.company}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${patent.filedDate}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            ${patent.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <button class="text-blue-600 hover:text-blue-900" onclick='addToCompanies(${JSON.stringify({
+                            name: patent.company,
+                            industry: "Technology",
+                            source: "Patent Filing"
+                        })})'>
+                            Add to Companies
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateCompaniesTable() {
+            const companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
+            const tableBody = document.getElementById('companies-table-body');
+            tableBody.innerHTML = companies.map(company => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <input type="checkbox" class="company-select" data-id="${company.id}">
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">${company.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${company.industry}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${company.source}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${company.addedDate}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <button class="text-red-600 hover:text-red-900" onclick="removeCompany(${company.id})">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateCampaignsTable() {
+            const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+            const tableBody = document.getElementById('campaigns-table-body');
+            tableBody.innerHTML = campaigns.map(campaign => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">${campaign.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            campaign.status === 'Active' ? 'bg-green-100 text-green-800' :
+                            campaign.status === 'Draft' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800'
+                        }">
+                            ${campaign.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">${campaign.sent}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${campaign.opened}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${campaign.responded}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <button class="text-blue-600 hover:text-blue-900 mr-2" onclick="viewCampaignDetails(${campaign.id})">
+                            View
+                        </button>
+                        <button class="text-red-600 hover:text-red-900" onclick="deleteCampaign(${campaign.id})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Notifications
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-500';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        // Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(`${pageId}-page`).classList.remove('hidden');
+            
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('bg-gray-700');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('bg-gray-700');
+                }
+            });
+
+            // Update relevant data when switching pages
+            switch(pageId) {
+                case 'fda':
+                    updateFDATable();
+                    break;
+                case 'patents':
+                    updatePatentsTable();
+                    break;
+                case 'companies':
+                    updateCompaniesTable();
+                    break;
+                case 'campaigns':
+                    updateCampaignsTable();
+                    break;
+            }
+        }
+
+        // Event Listeners
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        document.getElementById('profile-dropdown').addEventListener('click', function() {
+            this.querySelector('div').classList.toggle('hidden');
+        });
+
+        document.getElementById('notifications-btn').addEventListener('click', function() {
+            showNotification('No new notifications');
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('dashboard');
+            // Initialize mockData in localStorage if empty
+            if (!localStorage.getItem('trackedCompanies')) {
+                localStorage.setItem('trackedCompanies', JSON.stringify(mockData.companies));
+            }
+            if (!localStorage.getItem('campaigns')) {
+                localStorage.setItem('campaigns', JSON.stringify(mockData.campaigns));
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideModal();
+            }
+        });
+    </script>
+</body>
+</html>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patents Page -->
+                <div id="patents-page" class="page hidden">
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6">
+                            <h2 class="text-xl font-semibold mb-4">Recent Patent Applications</h2>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full table-auto">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patent Title</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Filed Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="patents-table-body">
+                                        <!-- Data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Companies Page -->
+                <div id="companies-page" class="page hidden">
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-semibold">My Companies</h2>
+                                <button onclick="showEmailCampaignModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                                    Start Email Campaign
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full table-auto">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <input type="checkbox" id="select-all-companies">
+                                            </th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Industry</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="companies-table-body">
+                                        <!-- Data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaigns Page -->
+                <div id="campaigns-page" class="page hidden">
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6">
+                            <h2 class="text-xl font-semibold mb-4">Email Campaigns</h2>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full table-auto">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign Name</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opened</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Responded</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="campaigns-table-body">
+                                        <!-- Data will be populated here -->
