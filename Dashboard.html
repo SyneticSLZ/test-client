@@ -5458,19 +5458,20 @@ function showNotification(message) {
     <div class="container mx-auto p-6 max-w-20xl" style="height: 85vh;">
         <!-- style="overflow-y: scroll !important;" -->
 
-        <div class="bg-white rounded-lg " >
-
-            <div id="no-emails-container" class="bg-white rounded-lg shadow-md p-6 w-full max-w-2xl mx-auto hidden">
-                <div class="flex flex-col items-center justify-center h-full">
-                  <div class="text-center">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">No Emails Yet</h2>
-                    <p class="text-gray-600 mb-8">You haven't sent any emails. Get started by creating a new campaign.</p>
-                  </div>
-                  <button id="new-campaign-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-md">
-                    + New Campaign
-                  </button>
-                </div>
+        <div id="no-emails-container" class="bg-white rounded-lg shadow-md p-6 w-full max-w-2xl mx-auto hidden">
+            <div class="flex flex-col items-center justify-center h-full">
+              <div class="text-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">No Emails Yet</h2>
+                <p class="text-gray-600 mb-8">You haven't sent any emails. Get started by creating a new campaign.</p>
               </div>
+              <button id="new-campaign-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-md">
+                + New Campaign
+              </button>
+            </div>
+          </div>
+
+        <div class="bg-white rounded-lg " id="mailxoxcontainer">
+
               
             <!-- Header Section -->
             <div class=" text-black p-6 flex justify-between items-center">
@@ -5962,8 +5963,10 @@ function showNotification(message) {
             toggleNoEmailsUI() {
     if (this.emails.length === 0) {
       this.noEmailsContainer.classList.remove('hidden');
+      document.getElementById('mailxoxcontainer').classList.add('hidden');
     } else {
       this.noEmailsContainer.classList.add('hidden');
+      document.getElementById('mailxoxcontainer').classList.remove('hidden');
     }
   }
 
