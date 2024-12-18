@@ -5478,7 +5478,7 @@ function showNotification(message) {
                             <span class="block text-sm font-medium">Opened</span>
                             <span id="openedEmailsMetric" class="text-xl font-bold">0</span>
                         </div>
-                        <div class="bg-purple-500 rounded-md p-2 text-center">
+                        <div class="bg-purple-500 rounded-md p-2 text-center " style="display: none;">
                             <span class="block text-sm font-medium">Replied</span>
                             <span id="repliedEmailsMetric" class="text-xl font-bold">0</span>
                         </div>
@@ -6085,10 +6085,10 @@ function showNotification(message) {
 
             updateMetrics() {
                 const totalEmails = this.emails.length;
-                const deliveredEmails = this.emails.filter(email => email.status.delivered).length;
-                const openedEmails = this.emails.filter(email => email.status.opened).length;
-                const repliedEmails = this.emails.filter(email => email.status.replied).length;
-                const bouncedEmails = this.emails.filter(email => email.status.bounced).length;
+                const deliveredEmails = this.emails.filter(email => email.status === 'delivered').length;
+                const openedEmails = this.emails.filter(email => email.status === 'opened').length;
+                const repliedEmails = this.emails.filter(email => email.status === 'replied').length;
+                const bouncedEmails = this.emails.filter(email => email.status === 'bounced').length;
 
                 document.getElementById('totalEmailsMetric').textContent = totalEmails;
                 document.getElementById('deliveredEmailsMetric').textContent = deliveredEmails;
