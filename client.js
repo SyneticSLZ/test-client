@@ -1,5 +1,5 @@
 // Constants and Config
-const API_BASE_URL = 'http://server.voltmailer.com/api';
+const API_BASE_URL = 'https://server.voltmailer.com/api';
 
 
 
