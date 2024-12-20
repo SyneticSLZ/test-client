@@ -214,7 +214,7 @@ async function updateFDATable() {
                     </div>
                 </td>
                 <td class="px-6 py-4">
-                    <div class="text-sm text-gray-900">${formatDate(filing.date)}</div>
+                    <div class="text-sm text-gray-900">${filing.date}</div>
                     <div class="text-xs text-gray-500">${filing.date}</div>
                 </td>
                 <td class="px-6 py-4">
