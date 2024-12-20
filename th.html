@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Intelligence Dashboard</title>
+    
+    <!-- Tailwind CSS and Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script type="module">
+        import {
+          addToCompanies,
+          removeCompany,
+          createCampaign,
+          showCreateCampaignModal,
+          updateFDATable,
+          updatePatentsTable,
+          updateFCCTable,
+          updateFundingTable,
+          updateCompaniesTable,
+          updateCampaignsTable,
+          showPage,
+          showModal,
+          hideModal,
+          showNotification
+        } from './client.js';
+      
+        // Make functions available globally
+        window.addToCompanies = addToCompanies;
+        window.removeCompany = removeCompany;
+        window.createCampaign = createCampaign;
+        window.showCreateCampaignModal = showCreateCampaignModal;
+        window.updateFDATable = updateFDATable;
+        window.updatePatentsTable = updatePatentsTable;
+        window.updateFCCTable = updateFCCTable;
+        window.updateFundingTable = updateFundingTable;
+        window.updateCompaniesTable = updateCompaniesTable;
+        window.updateCampaignsTable = updateCampaignsTable;
+        window.showPage = showPage;
+        window.showModal = showModal;
+        window.hideModal = hideModal;
+        window.showNotification = showNotification;
+      </script>
+    <!-- Custom Styles -->
+    <style>
+        .table-loader {
+            @apply flex items-center justify-center p-8;
+        }
+        
+        .loader {
+            @apply w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin;
+        }
+        
+        .shimmer {
+            @apply animate-pulse bg-gray-200;
+        }
+
+        /* Smooth transitions */
+        .page-transition {
+            @apply transition-all duration-300 ease-in-out;
+        }
+
+        /* Enhanced table styles */
+        .data-table {
+            @apply min-w-full divide-y divide-gray-200;
+        }
+
+        .data-table th {
+            @apply px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
+        }
+
+        .data-table td {
+            @apply px-4 py-3 whitespace-nowrap text-sm;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            @apply bg-gray-100;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            @apply bg-gray-400 rounded hover:bg-gray-500;
+        }
+
+        /* Enhanced modal animation */
+        .modal-enter {
+            @apply transform transition-transform duration-300 ease-out;
+            transform: translateY(-100%);
+        }
+
+        .modal-enter-active {
+            transform: translateY(0);
+        }
+
+        .modal-exit {
+            @apply transform transition-transform duration-200 ease-in;
+            transform: translateY(0);
+        }
+
+        .modal-exit-active {
+            transform: translateY(-100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Notification Toast Container -->
+    <div id="notification-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Modal Container -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4">
+            <div class="absolute top-4 right-4">
+                <button onclick="hideModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-content" class="p-6">
+                <!-- Modal content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white">
+            <div class="p-4">
+                <h2 class="text-xl font-semibold flex items-center space-x-2">
+                    <i class="fas fa-chart-network"></i>
+                    <span>Intelligence Hub</span>
+                </h2>
+            </div>
+            <nav class="mt-4">
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-page="dashboard">
+                    <i class="fas fa-home w-6"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-page="fda">
+                    <i class="fas fa-pills w-6"></i>
+                    <span>FDA Filings</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-page="patents">
+                    <i class="fas fa-scroll w-6"></i>
+                    <span>Patents</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-page="fcc">
+                    <i class="fas fa-broadcast-tower w-6"></i>
+                    <span>FCC Submissions</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-page="funding">
+                    <i class="fas fa-money-bill-wave w-6"></i>
+                    <span>Funding Rounds</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-page="companies">
+                    <i class="fas fa-building w-6"></i>
+                    <span>My Companies</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-page="campaigns">
+                    <i class="fas fa-envelope w-6"></i>
+                    <span>Email Campaigns</span>
+                </a>
+            </nav>
+
+            <!-- User Section -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gray-900">
+                <div class="flex items-center space-x-3">
+                    <img src="https://ui-avatars.com/api/?name=John+Doe" alt="Profile" 
+                         class="w-10 h-10 rounded-full">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">John Doe</p>
+                        <p class="text-xs text-gray-400">Premium Plan</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Top Bar -->
+            <header class="bg-white border-b">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <!-- Global Search -->
+                    <div class="flex-1 max-w-2xl">
+                        <div class="relative">
+                            <input type="text" id="global-search" 
+                                   placeholder="Search companies, filings, patents..." 
+                                   class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side Actions -->
+                    <div class="flex items-center space-x-4">
+                        <!-- Quick Actions -->
+                        <div class="relative" id="quick-actions">
+                            <button class="p-2 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-10">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="showCreateCampaignModal()">
+                                    <i class="fas fa-envelope mr-2"></i> New Campaign
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="showAddCompanyModal()">
+                                    <i class="fas fa-building mr-2"></i> Add Company
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <button class="p-2 rounded-lg hover:bg-gray-100 relative" onclick="showNotificationsModal()">
+                            <i class="fas fa-bell"></i>
+                            <span id="notification-badge" 
+                                  class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                0
+                            </span>
+                        </button>
+
+                        <!-- User Menu -->
+                        <div class="relative" id="user-menu">
+                            <button class="flex items-center space-x-3">
+                                <img src="https://ui-avatars.com/api/?name=John+Doe" alt="Profile" 
+                                     class="w-8 h-8 rounded-full">
+                                <span class="text-sm font-medium">John Doe</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-10">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="showPage('profile')">
+                                    <i class="fas fa-user mr-2"></i> Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onclick="showSettingsModal()">
+                                    <i class="fas fa-cog mr-2"></i> Settings
+                                </a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Sign out
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+                <!-- Dashboard Page -->
+                <div id="dashboard-page" class="page active p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <h1 class="text-2xl font-semibold mb-6">Dashboard Overview</h1>
+                        
+                        <!-- Stats Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                            <!-- Companies Tracked -->
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
+                                        <i class="fas fa-building text-blue-500"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-gray-500 text-sm">Companies Tracked</h3>
+                                        <p class="text-2xl font-semibold" id="total-companies">...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Active Campaigns -->
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
+                                        <i class="fas fa-envelope text-green-500"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-gray-500 text-sm">Active Campaigns</h3>
+                                        <p class="text-2xl font-semibold" id="active-campaigns">...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- New Filings -->
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
+                                        <i class="fas fa-file-alt text-purple-500"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-gray-500 text-sm">New Filings</h3>
+                                        <p class="text-2xl font-semibold" id="total-filings">...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Decision Makers -->
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-yellow-500 bg-opacity-10">
+                                        <i class="fas fa-users text-yellow-500"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-gray-500 text-sm">Decision Makers</h3>
+                                        <p class="text-2xl font-semibold" id="total-decision-makers">...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity and Quick Actions -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Recent Activity -->
+                            <div class="lg:col-span-2">
+                                <div class="bg-white rounded-lg shadow">
+                                    <div class="p-6">
+                                        <h2 class="text-lg font-semibold mb-4">Recent Activity</h2>
+                                        <div class="space-y-4" id="recent-activity-container">
+                                            <!-- Activity items will be populated here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="lg:col-span-1">
+                                <div class="bg-white rounded-lg shadow p-6">
+                                    <h2 class="text-lg font-semibold mb-4">Quick Actions</h2>
+                                    <div class="space-y-3">
+                                        <button onclick="showCreateCampaignModal()" 
+                                                class="w-full flex items-center justify-between p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                                            <span class="flex items-center">
+                                                <i class="fas fa-envelope text-blue-500 mr-3"></i>
+                                                <span>Create Campaign</span>
+                                            </span>
+                                            <i class="fas fa-chevron-right text-blue-500"></i>
+                                        </button>
+                                        <button onclick="showAddCompanyModal()"
+                                                class="w-full flex items-center justify-between p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                                            <span class="flex items-center">
+                                                <i class="fas fa-building text-green-500 mr-3"></i>
+                                                <span>Add Company</span>
+                                            </span>
+                                            <i class="fas fa-chevron-right text-green-500"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FDA Filings Page -->
+                <div id="fda-page" class="page hidden p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="bg-white rounded-lg shadow">
+                            <!-- Header and Controls -->
+                            <div class="p-6 border-b">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <h2 class="text-xl font-semibold">FDA Filings</h2>
+                                    <div class="flex flex-wrap gap-3">
+                                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="fda-type-filter">
+                                            <option value="all">All Types</option>
+                                            <option value="nda">New Drug Application</option>
+                                            <option value="anda">Generic Drug</option>
+                                            <option value="device">Medical Device</option>
+                                        </select>
+                                        <input type="date" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <div class="relative">
+                                            <input type="text" placeholder="Search filings..." 
+                                                   class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Filing Type</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="fda-table-body" class="divide-y divide-gray-200">
+                                        <!-- Table content will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="px-6 py-4 border-t">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-sm text-gray-500">
+                                        Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">97</span> results
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">Previous</button>
+                                        <button class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">1</button>
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">2</button>
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">3</button>
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patents Page -->
+                <div id="patents-page" class="page hidden p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="bg-white rounded-lg shadow">
+                            <!-- Header and Controls -->
+                            <div class="p-6 border-b">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <h2 class="text-xl font-semibold">Patent Applications</h2>
+                                    <div class="flex flex-wrap gap-3">
+                                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="all">All Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="published">Published</option>
+                                            <option value="granted">Granted</option>
+                                        </select>
+                                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="all">All Categories</option>
+                                            <option value="tech">Technology</option>
+                                            <option value="biotech">Biotech</option>
+                                            <option value="medical">Medical</option>
+                                        </select>
+                                        <div class="relative">
+                                            <input type="text" placeholder="Search patents..." 
+                                                   class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Patents Grid -->
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="patents-grid">
+                                    <!-- Patent cards will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="px-6 py-4 border-t">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-sm text-gray-500">
+                                        Showing <span class="font-medium">1</span> to <span class="font-medium">9</span> of <span class="font-medium">124</span> patents
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">Previous</button>
+                                        <button class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">1</button>
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">2</button>
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">3</button>
+                                        <button class="px-3 py-1 border rounded hover:bg-gray-50">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FCC Submissions Page -->
+                <div id="fcc-page" class="page hidden p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="p-6 border-b">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <h2 class="text-xl font-semibold">FCC Submissions</h2>
+                                    <div class="flex flex-wrap gap-3">
+                                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="all">All Types</option>
+                                            <option value="equipment">Equipment Authorization</option>
+                                            <option value="license">License Application</option>
+                                            <option value="spectrum">Spectrum License</option>
+                                        </select>
+                                        <input type="date" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <div class="relative">
+                                            <input type="text" placeholder="Search submissions..." 
+                                                   class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="fcc-table-body" class="divide-y divide-gray-200">
+                                        <!-- FCC submissions will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Funding Rounds Page -->
+                <div id="funding-page" class="page hidden p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="p-6 border-b">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <h2 class="text-xl font-semibold">Funding Rounds</h2>
+                                    <div class="flex flex-wrap gap-3">
+                                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="all">All Rounds</option>
+                                            <option value="seed">Seed</option>
+                                            <option value="seriesA">Series A</option>
+                                            <option value="seriesB">Series B</option>
+                                            <option value="seriesC">Series C+</option>
+                                        </select>
+                                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="all">All Industries</option>
+                                            <option value="tech">Technology</option>
+                                            <option value="healthcare">Healthcare</option>
+                                            <option value="fintech">Fintech</option>
+                                        </select>
+                                        <div class="relative">
+                                            <input type="text" placeholder="Search funding rounds..." 
+                                                   class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Round</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Investors</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="funding-table-body" class="divide-y divide-gray-200">
+                                        <!-- Funding rounds will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Companies Page -->
+                <div id="companies-page" class="page hidden p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="p-6 border-b">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <h2 class="text-xl font-semibold">My Companies</h2>
+                                    <div class="flex flex-wrap gap-3">
+                                        <button onclick="showCreateCampaignModal()" 
+                                                class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                                            <i class="fas fa-envelope mr-2"></i>
+                                            Start Email Campaign
+                                        </button>
+                                        <button onclick="showAddCompanyModal()"
+                                                class="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                            <i class="fas fa-plus mr-2"></i>
+                                            Add Company
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="companies-grid">
+                                    <!-- Company cards will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Campaigns Page -->
+                <div id="campaigns-page" class="page hidden p-6">
+                    <div class="max-w-7xl mx-auto">
+                        <!-- Campaign Stats -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
+                                        <i class="fas fa-paper-plane text-blue-500"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-gray-500 text-sm">Total Campaigns</h3>
+                                        <p class="text-2xl font-semibold" id="total-campaigns">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Add other campaign stat cards -->
+                        </div>
+
+                        <!-- Campaign List -->
+                        <div class="bg-white rounded-lg shadow">
+                            <div class="p-6 border-b">
+                                <div class="flex items-center justify-between">
+                                    <h2 class="text-xl font-semibold">Email Campaigns</h2>
+                                    <button onclick="showCreateCampaignModal()" 
+                                            class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Create Campaign
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <div class="space-y-6" id="campaigns-list">
+                                    <!-- Campaign cards will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+// Activity and notification tracking
+const activityTypes = {
+    COMPANY_ADDED: 'company_added',
+    CAMPAIGN_CREATED: 'campaign_created',
+    TEMPLATE_ADDED: 'template_added',
+    PROFILE_UPDATED: 'profile_updated'
+};
+
+function addActivity(type, details) {
+    const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+    const activity = {
+        id: Date.now(),
+        type,
+        details,
+        timestamp: new Date().toISOString()
+    };
+    activities.unshift(activity); // Add to start of array
+    if (activities.length > 50) activities.pop(); // Keep only last 50 activities
+    localStorage.setItem('recentActivities', JSON.stringify(activities));
+    updateRecentActivities();
+}
+
+function getActivityIcon(type) {
+    switch(type) {
+        case activityTypes.COMPANY_ADDED:
+            return '<i class="fas fa-building text-blue-500"></i>';
+        case activityTypes.CAMPAIGN_CREATED:
+            return '<i class="fas fa-envelope text-green-500"></i>';
+        case activityTypes.TEMPLATE_ADDED:
+            return '<i class="fas fa-file-alt text-purple-500"></i>';
+        case activityTypes.PROFILE_UPDATED:
+            return '<i class="fas fa-user text-yellow-500"></i>';
+        default:
+            return '<i class="fas fa-bell text-gray-500"></i>';
+    }
+}
+
+function updateRecentActivities() {
+    const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+    const container = document.querySelector('#dashboard-page .recent-activity .space-y-4');
+    if (!container) return;
+
+    container.innerHTML = activities.map(activity => `
+        <div class="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
+            <div class="flex-shrink-0">
+                ${getActivityIcon(activity.type)}
+            </div>
+            <div class="flex-1">
+                <p class="text-sm">${activity.details}</p>
+                <p class="text-xs text-gray-500">${formatTimeAgo(activity.timestamp)}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function formatTimeAgo(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `${days}d ago`;
+    
+    const months = Math.floor(days / 30);
+    return `${months}mo ago`;
+}
+
+// Notifications System
+const notificationTypes = {
+    INFO: 'info',
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    ERROR: 'error'
+};
+
+function addNotification(type, title, message) {
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const notification = {
+        id: Date.now(),
+        type,
+        title,
+        message,
+        read: false,
+        timestamp: new Date().toISOString()
+    };
+    notifications.unshift(notification);
+    if (notifications.length > 50) notifications.pop();
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    updateNotificationBadge();
+}
+
+function updateNotificationBadge() {
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const unreadCount = notifications.filter(n => !n.read).length;
+    const badge = document.querySelector('#notifications-btn span');
+    if (badge) {
+        badge.textContent = unreadCount;
+        badge.classList.toggle('hidden', unreadCount === 0);
+    }
+}
+
+function showNotificationsModal() {
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const modalContent = `
+        <div class="max-h-[70vh] overflow-y-auto">
+            <h3 class="text-lg font-semibold mb-4">Notifications</h3>
+            ${notifications.length === 0 ? 
+                '<p class="text-gray-500 text-center py-4">No notifications</p>' :
+                notifications.map(notification => `
+                    <div class="p-3 ${notification.read ? 'bg-gray-50' : 'bg-white'} border-b hover:bg-gray-100">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                ${getNotificationIcon(notification.type)}
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium">${notification.title}</p>
+                                <p class="text-sm text-gray-600">${notification.message}</p>
+                                <p class="text-xs text-gray-500 mt-1">${formatTimeAgo(notification.timestamp)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+        </div>
+        <div class="mt-4 flex justify-end">
+            <button onclick="markAllNotificationsRead()" 
+                    class="mr-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800">
+                Mark all as read
+            </button>
+            <button onclick="hideModal()" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Close
+            </button>
+        </div>
+    `;
+    showModal(modalContent);
+}
+
+function getNotificationIcon(type) {
+    switch(type) {
+        case notificationTypes.SUCCESS:
+            return '<i class="fas fa-check-circle text-green-500"></i>';
+        case notificationTypes.WARNING:
+            return '<i class="fas fa-exclamation-triangle text-yellow-500"></i>';
+        case notificationTypes.ERROR:
+            return '<i class="fas fa-times-circle text-red-500"></i>';
+        default:
+            return '<i class="fas fa-info-circle text-blue-500"></i>';
+    }
+}
+
+function markAllNotificationsRead() {
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    notifications.forEach(n => n.read = true);
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    updateNotificationBadge();
+    hideModal();
+    showNotification('All notifications marked as read');
+}
+
+// Global search functionality
+function setupGlobalSearch() {
+    const searchInput = document.querySelector('header input[type="text"]');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', _.debounce(async function() {
+        const query = this.value.toLowerCase().trim();
+        if (query.length < 2) return;
+
+        // Show loading state
+        showNotification('Searching...', 'info');
+
+        try {
+            const results = await Promise.all([
+                searchFDAFilings(query),
+                searchPatents(query),
+                searchFCCSubmissions(query),
+                searchFundingRounds(query),
+                searchCompanies(query)
+            ]);
+
+            const modalContent = `
+                <div class="max-h-[70vh] overflow-y-auto">
+                    <h3 class="text-lg font-semibold mb-4">Search Results</h3>
+                    <div class="space-y-4">
+                        ${generateSearchResultsHTML(results)}
+                    </div>
+                </div>
+            `;
+            showModal(modalContent);
+        } catch (error) {
+            console.error('Search error:', error);
+            showNotification('Error performing search', 'error');
+        }
+    }, 300));
+}
+
+// Table-specific search
+function setupTableSearch() {
+    document.querySelectorAll('.table-search').forEach(searchInput => {
+        searchInput.addEventListener('input', _.debounce(function() {
+            const tableBody = this.closest('.table-container').querySelector('tbody');
+            const rows = tableBody.querySelectorAll('tr');
+            const query = this.value.toLowerCase().trim();
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.classList.toggle('hidden', !text.includes(query));
+            });
+        }, 200));
+    });
+}
+
+// Email campaign enhancements
+const emailConfig = {
+    contactLimits: [10, 25, 50, 100, 250, 500, 'All'],
+    apis: {
+        contacts: {
+            apollo: 'YOUR_APOLLO_API_KEY',
+            clearbit: 'YOUR_CLEARBIT_API_KEY'
+        },
+        news: {
+            newsapi: 'YOUR_NEWSAPI_KEY',
+            gnews: 'YOUR_GNEWS_KEY'
+        }
+    }
+};
+
+async function enrichCompanyData(companyName) {
+    try {
+        // Fetch company data from Clearbit
+        const companyData = await fetchCompanyData(companyName);
+        
+        // Fetch company news
+        const newsData = await fetchCompanyNews(companyName);
+        
+        // Fetch decision makers
+        const contacts = await fetchCompanyContacts(companyName);
+
+        return {
+            companyData,
+            newsData,
+            contacts
+        };
+    } catch (error) {
+        console.error('Error enriching company data:', error);
+        throw error;
+    }
+}
+
+async function fetchCompanyContacts(companyName, limit = 100) {
+    // Implementation using Apollo API
+    const response = await fetch(`https://api.apollo.io/v1/organizations/search`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${emailConfig.apis.contacts.apollo}`
+        },
+        body: JSON.stringify({
+            q_organization_name: companyName,
+            page: 1,
+            per_page: limit
+        })
+    });
+    
+    return await response.json();
+}
+
+// Enhanced campaign modal with automated features
+function showCreateCampaignModal(companyData = null) {
+    const content = `
+        <div class="p-6 max-w-2xl mx-auto">
+            <h2 class="text-xl font-bold mb-4">Create Email Campaign</h2>
+            
+            <div class="space-y-6">
+                <!-- Campaign Details -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Campaign Name
+                    </label>
+                    <input type="text" id="campaign-name" 
+                           class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <!-- Contact Limit -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Limit
+                    </label>
+                    <select id="contact-limit" 
+                            class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        ${emailConfig.contactLimits.map(limit => 
+                            `<option value="${limit}">${limit} contacts</option>`
+                        ).join('')}
+                    </select>
+                </div>
+
+                <!-- Template Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Email Template
+                    </label>
+                    <select id="template-select" 
+                            class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option value="new">Create New Template</option>
+                        ${getEmailTemplateOptions()}
+                    </select>
+                </div>
+
+                <!-- Template Editor -->
+                <div id="template-editor" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Subject Line
+                        </label>
+                        <input type="text" id="email-subject" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Content
+                        </label>
+                        <textarea id="email-content" rows="6" 
+                                  class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        <div class="text-sm text-gray-500 mt-1">
+                            Available variables: {firstName}, {lastName}, {company}, {role}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Automation Options -->
+                <div class="space-y-3">
+                    <h3 class="font-medium text-gray-900">Automation Options</h3>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="auto-followup" class="rounded border-gray-300">
+                        <label for="auto-followup" class="ml-2 text-sm text-gray-700">
+                            Enable automatic follow-ups
+                        </label>
+                    </div>
+                    <div id="followup-options" class="pl-6 space-y-2 hidden">
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">
+                                Follow-up Delay (days)
+                            </label>
+                            <input type="number" min="1" max="30" value="5" 
+                                   class="w-24 px-3 py-1 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">
+                                Follow-up Message
+                            </label>
+                            <textarea rows="3" 
+                                      class="w-full px-3 py-2 border rounded-md"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule Options -->
+                <div>
+                    <h3 class="font-medium text-gray-900 mb-2">Sending Schedule</h3>
+                    <div class="space-y-2">
+                        <div>
+                            <input type="radio" name="schedule" id="send-now" value="now" checked>
+                            <label for="send-now" class="ml-2 text-sm text-gray-700">
+                                Send immediately
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="schedule" id="schedule-later" value="later">
+                            <label for="schedule-later" class="ml-2 text-sm text-gray-700">
+                                Schedule for later
+                            </label>
+                        </div>
+                        <div id="schedule-options" class="pl-6 hidden">
+                            <input type="datetime-local" 
+                                   class="px-3 py-2 border rounded-md">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button onclick="hideModal()" 
+                            class="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button onclick="createAndSendCampaign()" 
+                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        Create Campaign
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    showModal(content);
+    setupCampaignModalHandlers();
+}
+
+// Campaign tracking and metrics
+async function createAndSendCampaign() {
+    const campaignData = {
+        name: document.getElementById('campaign-name').value,
+        contactLimit: document.getElementById('contact-limit').value,
+        template: {
+            id: document.getElementById('template-select').value,
+            subject: document.getElementById('email-subject').value,
+            content: document.getElementById('email-content').value
+        },
+        automation: {
+            enableFollowup: document.getElementById('auto-followup').checked,
+            followupDelay: document.querySelector('#followup-options input[type="number"]')?.value,
+            followupMessage: document.querySelector('#followup-options textarea')?.value
+        },
+        schedule: {
+            type: document.querySelector('input[name="schedule"]:checked').value,
+            datetime: document.querySelector('#schedule-options input[type="datetime-local"]')?.value
+        }
+    };
+
+    showNotification('Creating campaign...', 'info');
+
+    try {
+        // Save campaign details
+        const campaign = await saveCampaign(campaignData);
+        
+        // Fetch and enrich contacts
+        const enrichedContacts = await fetchAndEnrichContacts(campaign);
+        
+        // Create email content for each contact
+        const emailBatch = await prepareEmailBatch(campaign, enrichedContacts);
+        
+        // Send or schedule emails
+        if (campaignData.schedule.type === 'now') {
+            await sendEmailBatch(emailBatch);
+        } else {
+            await scheduleEmailBatch(emailBatch, campaignData.schedule.datetime);
+        }
+
+        hideModal();
+        showNotification('Campaign created successfully!', 'success');
+        updateCampaignDashboard();
+        addActivity(activityTypes.CAMPAIGN_CREATED, `Created campaign: ${campaignData.name}`);
+    } catch (error) {
+        console.error('Error creating campaign:', error);
+        showNotification('Error creating campaign', 'error');
+    }
+}
+
+async function saveCampaign(campaignData) {
+    const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+    const campaign = {
+        id: Date.now(),
+        ...campaignData,
+        status: 'created',
+        metrics: {
+            sent: 0,
+            delivered: 0,
+            opened: 0,
+            clicked: 0,
+            replied: 0,
+            bounced: 0
+        },
+        createdAt: new Date().toISOString()
+    };
+    
+    campaigns.push(campaign);
+    localStorage.setItem('campaigns', JSON.stringify(campaigns));
+    return campaign;
+}
+
+async function fetchAndEnrichContacts(campaign) {
+    const companies = JSON.parse(localStorage.getItem('trackedCompanies') || '[]');
+    const enrichedContacts = [];
+    
+    for (const company of companies) {
+        try {
+            const { contacts } = await enrichCompanyData(company.name);
+            const limitedContacts = contacts.slice(0, campaign.contactLimit === 'All' ? 
+                contacts.length : parseInt(campaign.contactLimit));
+            
+            enrichedContacts.push(...limitedContacts.map(contact => ({
+                ...contact,
+                companyData: company
+            })));
+        } catch (error) {
+            console.error(`Error enriching contacts for ${company.name}:`, error);
+        }
+    }
+    
+    return enrichedContacts;
+}
+
+async function prepareEmailBatch(campaign, contacts) {
+    return contacts.map(contact => ({
+        to: contact.email,
+        subject: replacePlaceholders(campaign.template.subject, contact),
+        content: replacePlaceholders(campaign.template.content, contact),
+        metadata: {
+            campaignId: campaign.id,
+            contactId: contact.id,
+            companyId: contact.companyData.id
+        }
+    }));
+}
+
+function replacePlaceholders(text, contact) {
+    return text
+        .replace(/{firstName}/g, contact.firstName)
+        .replace(/{lastName}/g, contact.lastName)
+        .replace(/{company}/g, contact.companyData.name)
+        .replace(/{role}/g, contact.role || 'Decision Maker');
+}
+
+async function sendEmailBatch(emailBatch) {
+    // Send emails in smaller batches to avoid rate limits
+    const batchSize = 50;
+    for (let i = 0; i < emailBatch.length; i += batchSize) {
+        const batch = emailBatch.slice(i, i + batchSize);
+        await Promise.all(batch.map(email => sendEmail(email)));
+        
+        // Update progress
+        const progress = Math.round(((i + batchSize) / emailBatch.length) * 100);
+        updateSendingProgress(progress);
+    }
+}
+
+async function sendEmail(email) {
+    try {
+        const response = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(email)
+        });
+        
+        if (!response.ok) throw new Error('Failed to send email');
+        
+        // Update campaign metrics
+        updateCampaignMetrics(email.metadata.campaignId, 'sent');
+        return await response.json();
+    } catch (error) {
+        console.error('Error sending email:', error);
+        updateCampaignMetrics(email.metadata.campaignId, 'bounced');
+        throw error;
+    }
+}
+
+function updateSendingProgress(progress) {
+    const progressBar = document.querySelector('#sending-progress');
+    if (progressBar) {
+        progressBar.style.width = `${progress}%`;
+        progressBar.textContent = `${progress}%`;
+    }
+}
+
+function updateCampaignMetrics(campaignId, metric) {
+    const campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+    const campaign = campaigns.find(c => c.id === campaignId);
+    
+    if (campaign) {
+        campaign.metrics[metric]++;
+        localStorage.setItem('campaigns', JSON.stringify(campaigns));
+        updateCampaignDashboard();
+    }
+}
+
+// Event tracking endpoints
+function setupMetricsTracking() {
+    // Endpoint to track email opens
+    app.get('/api/track/open/:emailId', (req, res) => {
+        const { emailId } = req.params;
+        updateCampaignMetrics(getEmailCampaignId(emailId), 'opened');
+        res.sendFile(path.join(__dirname, 'public', 'tracking-pixel.gif'));
+    });
+
+    // Endpoint to track link clicks
+    app.get('/api/track/click/:emailId/:linkId', (req, res) => {
+        const { emailId, linkId } = req.params;
+        updateCampaignMetrics(getEmailCampaignId(emailId), 'clicked');
+        res.redirect(getOriginalUrl(emailId, linkId));
+    });
+}
+
+function setupCampaignModalHandlers() {
+    // Auto-followup toggle
+    document.getElementById('auto-followup')?.addEventListener('change', function() {
+        document.getElementById('followup-options').classList.toggle('hidden', !this.checked);
+    });
+
+    // Schedule toggle
+    document.querySelectorAll('input[name="schedule"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.getElementById('schedule-options').classList.toggle('hidden', 
+                this.value === 'now');
+        });
+    });
+
+    // Template selection
+    document.getElementById('template-select')?.addEventListener('change', function() {
+        if (this.value !== 'new') {
+            loadEmailTemplate(this.value);
+        }
+    });
+}
+
+// Email template management
+function saveEmailTemplate() {
+    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
+    const template = {
+        id: Date.now(),
+        name: document.getElementById('template-name').value,
+        subject: document.getElementById('email-subject').value,
+        content: document.getElementById('email-content').value,
+        createdAt: new Date().toISOString()
+    };
+    
+    templates.push(template);
+    localStorage.setItem('emailTemplates', JSON.stringify(templates));
+    addActivity(activityTypes.TEMPLATE_ADDED, `Created template: ${template.name}`);
+    return template;
+}
+
+function loadEmailTemplate(templateId) {
+    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
+    const template = templates.find(t => t.id === parseInt(templateId));
+    
+    if (template) {
+        document.getElementById('email-subject').value = template.subject;
+        document.getElementById('email-content').value = template.content;
+    }
+}
+
+function getEmailTemplateOptions() {
+    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
+    return templates.map(template => 
+        `<option value="${template.id}">${template.name}</option>`
+    ).join('');
+}
+
+// Dashboard metrics and visualizations
+function updateDashboardMetrics() {
+    // Update counts in stat cards
+    updateStatCard('total-companies', getTotalCompanies());
+    updateStatCard('active-campaigns', getActiveCampaigns());
+    updateStatCard('total-filings', getTotalFilings());
+    updateStatCard('total-decision-makers', getTotalContacts());
+    
+    // Update recent activity feed
+    updateRecentActivities();
+    
+    // Add loading animation
+    const loadingHTML = `
+        <div class="animate-pulse">
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+    `;
+
+    // Helper function to update stat cards with loading state
+    function updateStatCard(id, getValue) {
+        const card = document.getElementById(id);
+        if (!card) return;
+        
+        card.innerHTML = loadingHTML;
+        
+        setTimeout(() => {
+            const value = getValue();
+            card.textContent = typeof value === 'number' ? value.toLocaleString() : value;
+        }, 800);
+    }
+}
+
+// Enhanced table loading states
+function createTableLoadingState(columns) {
+    return `
+        <tr class="animate-pulse">
+            ${Array(columns).fill().map(() => `
+                <td class="px-4 py-3">
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                </td>
+            `).join('')}
+        </tr>
+    `.repeat(5); // Show 5 loading rows
+}
+
+// Updated table functions with enhanced loading states
+async function updateFDATable() {
+    const tableBody = document.getElementById('fda-table-body');
+    if (!tableBody) return;
+
+    // Show loading state
+    tableBody.innerHTML = createTableLoadingState(5);
+
+    try {
+        const filings = await fetchFDAFilings();
+        
+        // Add search functionality
+        const searchHTML = `
+            <div class="mb-4">
+                <div class="relative">
+                    <input type="text" 
+                           class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="Search FDA filings...">
+                    <div class="absolute left-3 top-2.5 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        tableBody.closest('.table-container').insertAdjacentHTML('beforebegin', searchHTML);
+        
+        // Update table content
+        if (filings.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-8">
+                        <div class="text-gray-500">
+                            <i class="fas fa-folder-open text-4xl mb-3"></i>
+                            <p>No FDA filings found</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tableBody.innerHTML = filings.map(filing => `
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3">${filing.company}</td>
+                <td class="px-4 py-3">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium
+                           ${getFilingTypeClass(filing.type)}">
+                        ${filing.type}
+                    </span>
+                </td>
+                <td class="px-4 py-3">${formatDate(filing.date)}</td>
+                <td class="px-4 py-3">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium
+                           ${getStatusClass(filing.status)}">
+                        ${filing.status}
+                    </span>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex space-x-2">
+                        <button class="text-blue-600 hover:text-blue-900 transition-colors"
+                                onclick='addToCompanies(${JSON.stringify({
+                                    name: filing.company,
+                                    industry: "Healthcare",
+                                    source: "FDA Filing"
+                                })})'>
+                            <i class="fas fa-plus-circle mr-1"></i>
+                            Track
+                        </button>
+                        <button class="text-gray-600 hover:text-gray-900 transition-colors"
+                                onclick='viewFilingDetails(${JSON.stringify(filing)})'>
+                            <i class="fas fa-eye mr-1"></i>
+                            View
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+        
+        // Initialize search functionality
+        initializeTableSearch(tableBody.closest('.table-container'));
+    } catch (error) {
+        console.error('Error loading FDA filings:', error);
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center py-8">
+                    <div class="text-red-500">
+                        <i class="fas fa-exclamation-circle text-4xl mb-3"></i>
+                        <p>Error loading FDA filings</p>
+                        <button onclick="updateFDATable()" 
+                                class="mt-2 text-blue-500 hover:text-blue-700">
+                            Try again
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// Table search functionality
+function initializeTableSearch(container) {
+    const searchInput = container.querySelector('input[type="text"]');
+    const tableBody = container.querySelector('tbody');
+    
+    if (!searchInput || !tableBody) return;
+    
+    searchInput.addEventListener('input', _.debounce(function() {
+        const searchTerm = this.value.toLowerCase();
+        const rows = tableBody.querySelectorAll('tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.classList.toggle('hidden', !text.includes(searchTerm));
+        });
+        
+        // Show no results message if needed
+        const visibleRows = tableBody.querySelectorAll('tr:not(.hidden)');
+        if (visibleRows.length === 0 && searchTerm) {
+            const noResultsRow = document.createElement('tr');
+            noResultsRow.innerHTML = `
+                <td colspan="5" class="text-center py-8">
+                    <div class="text-gray-500">
+                        <i class="fas fa-search text-4xl mb-3"></i>
+                        <p>No results found for "${searchTerm}"</p>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(noResultsRow);
+        }
+    }, 200));
+}
+
+// Utility functions for styling
+function getFilingTypeClass(type) {
+    const classes = {
+        'New Drug Application': 'bg-blue-100 text-blue-800',
+        'Generic Drug': 'bg-green-100 text-green-800',
+        'Medical Device': 'bg-purple-100 text-purple-800',
+        'default': 'bg-gray-100 text-gray-800'
+    };
+    return classes[type] || classes.default;
+}
+
+function getStatusClass(status) {
+    const classes = {
+        'Pending': 'bg-yellow-100 text-yellow-800',
+        'Approved': 'bg-green-100 text-green-800',
+        'Rejected': 'bg-red-100 text-red-800',
+        'Under Review': 'bg-blue-100 text-blue-800',
+        'default': 'bg-gray-100 text-gray-800'
+    };
+    return classes[status] || classes.default;
+}
+
+// Apply similar loading and search functionality to other tables
+function applyTableEnhancements() {
+    const tables = [
+        { id: 'patents-table-body', columns: 5 },
+        { id: 'fcc-table-body', columns: 5 },
+        { id: 'funding-table-body', columns: 6 },
+        { id: 'companies-table-body', columns: 6 }
+    ];
+    
+    tables.forEach(({ id, columns }) => {
+        const tableBody = document.getElementById(id);
+        if (tableBody) {
+            const container = tableBody.closest('.table-container');
+            if (container) {
+                const searchContainer = document.createElement('div');
+                searchContainer.className = 'mb-4';
+                searchContainer.innerHTML = `
+                    <div class="relative">
+                        <input type="text" 
+                               class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Search...">
+                        <div class="absolute left-3 top-2.5 text-gray-400">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                `;
+                container.insertBefore(searchContainer, container.firstChild);
+                initializeTableSearch(container);
+            }
+        }
+    });
+}
+
+// Initialize enhancements when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    applyTableEnhancements();
+    updateDashboardMetrics();
+});
+
+
+// Company data enrichment and contact fetching
+const COMPANY_APIS = {
+    clearbit: {
+        baseUrl: 'https://company.clearbit.com/v2',
+        headers: {
+            'Authorization': 'Bearer YOUR_CLEARBIT_API_KEY'
+        }
+    },
+    apollo: {
+        baseUrl: 'https://api.apollo.io/v1',
+        headers: {
+            'Authorization': 'YOUR_APOLLO_API_KEY'
+        }
+    },
+    newsapi: {
+        baseUrl: 'https://newsapi.org/v2',
+        headers: {
+            'X-Api-Key': 'YOUR_NEWSAPI_KEY'
+        }
+    }
+};
+
+async function enrichCompanyData(companyName) {
+    const cache = JSON.parse(localStorage.getItem('companyDataCache') || '{}');
+    const cacheKey = companyName.toLowerCase();
+    
+    // Check cache (valid for 24 hours)
+    if (cache[cacheKey] && cache[cacheKey].timestamp > Date.now() - 86400000) {
+        return cache[cacheKey].data;
+    }
+
+    try {
+        // Show loading notification
+        showNotification(`Gathering data for ${companyName}...`, 'info');
+
+        // Parallel requests for different data types
+        const [companyInfo, contacts, news] = await Promise.all([
+            fetchCompanyInfo(companyName),
+            fetchCompanyContacts(companyName),
+            fetchCompanyNews(companyName)
+        ]);
+
+        const enrichedData = {
+            basicInfo: companyInfo,
+            contacts: contacts,
+            news: news,
+            lastUpdated: new Date().toISOString()
+        };
+
+        // Cache the results
+        cache[cacheKey] = {
+            data: enrichedData,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('companyDataCache', JSON.stringify(cache));
+
+        return enrichedData;
+    } catch (error) {
+        console.error('Error enriching company data:', error);
+        showNotification(`Error gathering data for ${companyName}`, 'error');
+        throw error;
+    }
+}
+
+async function fetchCompanyInfo(companyName) {
+    try {
+        // Try Clearbit first
+        const clearbitResponse = await fetch(`${COMPANY_APIS.clearbit.baseUrl}/companies/find?domain=${encodeURIComponent(companyName)}`, {
+            headers: COMPANY_APIS.clearbit.headers
+        });
+
+        if (clearbitResponse.ok) {
+            return await clearbitResponse.json();
+        }
+
+        // Fallback to alternative data source if needed
+        return fetchAlternativeCompanyInfo(companyName);
+    } catch (error) {
+        console.error('Error fetching company info:', error);
+        return null;
+    }
+}
+
+async function fetchCompanyContacts(companyName) {
+    try {
+        const response = await fetch(`${COMPANY_APIS.apollo.baseUrl}/mixed_people/search`, {
+            method: 'POST',
+            headers: {
+                ...COMPANY_APIS.apollo.headers,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                q_organization_name: companyName,
+                page: 1,
+                per_page: 100,
+                person_titles: [
+                    'CEO',
+                    'CTO',
+                    'CFO',
+                    'COO',
+                    'Director',
+                    'VP',
+                    'Head',
+                    'Manager'
+                ]
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch contacts');
+
+        const data = await response.json();
+        return processContactsData(data.people);
+    } catch (error) {
+        console.error('Error fetching contacts:', error);
+        return [];
+    }
+}
+
+function processContactsData(contacts) {
+    return contacts.map(contact => ({
+        id: contact.id,
+        firstName: contact.first_name,
+        lastName: contact.last_name,
+        title: contact.title,
+        email: contact.email,
+        confidence: contact.email_confidence,
+        linkedin: contact.linkedin_url,
+        department: contact.department,
+        seniority: calculateSeniority(contact.title)
+    })).sort((a, b) => b.seniority - a.seniority);
+}
+
+function calculateSeniority(title) {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('ceo') || titleLower.includes('cto') || titleLower.includes('cfo')) return 5;
+    if (titleLower.includes('vp') || titleLower.includes('vice president')) return 4;
+    if (titleLower.includes('director')) return 3;
+    if (titleLower.includes('head') || titleLower.includes('lead')) return 2;
+    if (titleLower.includes('manager')) return 1;
+    return 0;
+}
+
+async function fetchCompanyNews(companyName) {
+    try {
+        const response = await fetch(`${COMPANY_APIS.newsapi.baseUrl}/everything?` + new URLSearchParams({
+            q: companyName,
+            language: 'en',
+            sortBy: 'relevancy',
+            pageSize: 10
+        }), {
+            headers: COMPANY_APIS.newsapi.headers
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch news');
+
+        const data = await response.json();
+        return processNewsData(data.articles);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        return [];
+    }
+}
+
+function processNewsData(articles) {
+    return articles.map(article => ({
+        title: article.title,
+        description: article.description,
+        url: article.url,
+        publishedAt: article.publishedAt,
+        source: article.source.name,
+        sentiment: analyzeSentiment(article.title + ' ' + article.description)
+    }));
+}
+
+function analyzeSentiment(text) {
+    // Basic sentiment analysis
+    const positiveWords = ['growth', 'profit', 'success', 'innovation', 'partnership', 'launch'];
+    const negativeWords = ['loss', 'decline', 'lawsuit', 'problem', 'crisis', 'failure'];
+    
+    text = text.toLowerCase();
+    let score = 0;
+    
+    positiveWords.forEach(word => {
+        if (text.includes(word)) score++;
+    });
+    
+    negativeWords.forEach(word => {
+        if (text.includes(word)) score--;
+    });
+    
+    return {
+        score,
+        label: score > 0 ? 'positive' : score < 0 ? 'negative' : 'neutral'
+    };
+}
+
+// Company profile view
+function showCompanyProfile(companyData) {
+    const modalContent = `
+        <div class="max-h-[80vh] overflow-y-auto p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">${companyData.basicInfo.name}</h2>
+                <button onclick="hideModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Company Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="font-semibold mb-2">Company Info</h3>
+                    <div class="space-y-2">
+                        <p><span class="text-gray-600">Industry:</span> ${companyData.basicInfo.industry}</p>
+                        <p><span class="text-gray-600">Size:</span> ${companyData.basicInfo.employees}</p>
+                        <p><span class="text-gray-600">Founded:</span> ${companyData.basicInfo.founded}</p>
+                        <p><span class="text-gray-600">Location:</span> ${companyData.basicInfo.location}</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="font-semibold mb-2">Key Metrics</h3>
+                    <div class="space-y-2">
+                        <p><span class="text-gray-600">Revenue:</span> ${companyData.basicInfo.revenue}</p>
+                        <p><span class="text-gray-600">Funding:</span> ${companyData.basicInfo.funding}</p>
+                        <p><span class="text-gray-600">Tech Stack:</span> ${companyData.basicInfo.techStack?.join(', ')}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Contacts -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">Key Decision Makers</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    ${companyData.contacts.slice(0, 6).map(contact => `
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <span class="text-gray-600 font-semibold">
+                                            ${contact.firstName[0]}${contact.lastName[0]}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-medium">${contact.firstName} ${contact.lastName}</h4>
+                                    <p class="text-sm text-gray-600">${contact.title}</p>
+                                </div>
+                            </div>
+                            ${contact.email ? `
+                                <div class="mt-2 text-sm">
+                                    <p class="text-gray-600">${contact.email}</p>
+                                    <p class="text-xs text-gray-500">Confidence: ${contact.confidence}%</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <!-- Recent News -->
+            <div>
+                <h3 class="text-lg font-semibold mb-3">Recent News</h3>
+                <div class="space-y-4">
+                    ${companyData.news.map(article => `
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <h4 class="font-medium mb-1">${article.title}</h4>
+                                    <p class="text-sm text-gray-600 mb-2">${article.description}</p>
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <span>${article.source}</span>
+                                        <span class="mx-2">•</span>
+                                        <span>${formatDate(article.publishedAt)}</span>
+                                        <span class="mx-2">•</span>
+                                        <span class="px-2 py-1 rounded-full ${getSentimentClass(article.sentiment)}">
+                                            ${article.sentiment.label}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+
+    showModal(modalContent);
+}
+
+function getSentimentClass(sentiment) {
+    const classes = {
+        positive: 'bg-green-100 text-green-800',
+        negative: 'bg-red-100 text-red-800',
+        neutral: 'bg-gray-100 text-gray-800'
+    };
+    return classes[sentiment.label];
+}
+
+
+    </script>
+
+    <!-- Modal Templates (Add these before the closing body tag) -->
+<template id="create-campaign-modal-template">
+    <div class="p-6 max-w-2xl mx-auto">
+        <h2 class="text-xl font-bold mb-6">Create Email Campaign</h2>
+        
+        <!-- Campaign Details -->
+        <div class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Campaign Name</label>
+                <input type="text" id="campaign-name" 
+                       class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Limits</label>
+                <div class="flex items-center gap-2">
+                    <input type="number" id="contact-limit" min="1" value="100"
+                           class="w-24 px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <span class="text-gray-600">contacts per company</span>
+                </div>
+            </div>
+
+            <!-- Template Selection -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email Template</label>
+                <select id="template-select" 
+                        class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <option value="new">Create New Template</option>
+                </select>
+            </div>
+
+            <!-- Template Editor -->
+            <div id="template-editor" class="space-y-4 p-4 bg-gray-50 rounded-lg">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Subject Line</label>
+                    <input type="text" id="email-subject" 
+                           class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <div class="mt-1 text-sm text-gray-500">
+                        Available variables: {companyName}, {firstName}, {position}
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Content</label>
+                    <textarea id="email-content" rows="6" 
+                              class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
+                    <div class="bg-white p-4 rounded border" id="email-preview">
+                        <!-- Preview content will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automation Options -->
+            <div class="space-y-4">
+                <h3 class="font-medium text-gray-900">Automation Options</h3>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" id="auto-followup" class="rounded border-gray-300">
+                    <label for="auto-followup" class="ml-2 text-sm text-gray-700">
+                        Enable automatic follow-ups
+                    </label>
+                </div>
+
+                <div id="followup-options" class="pl-6 space-y-3 hidden">
+                    <div>
+                        <label class="block text-sm text-gray-700 mb-1">Follow-up Delay (days)</label>
+                        <input type="number" min="1" max="30" value="5" 
+                               class="w-24 px-3 py-1 border rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-700 mb-1">Follow-up Message</label>
+                        <textarea rows="3" 
+                                  class="w-full px-3 py-2 border rounded-md"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <input type="checkbox" id="auto-reply" class="rounded border-gray-300">
+                    <label for="auto-reply" class="ml-2 text-sm text-gray-700">
+                        Enable smart auto-replies
+                    </label>
+                </div>
+            </div>
+
+            <!-- Schedule Options -->
+            <div class="space-y-3">
+                <h3 class="font-medium text-gray-900">Sending Schedule</h3>
+                
+                <div>
+                    <label class="flex items-center">
+                        <input type="radio" name="schedule" value="now" checked
+                               class="rounded-full border-gray-300">
+                        <span class="ml-2 text-sm text-gray-700">Send immediately</span>
+                    </label>
+                </div>
+
+                <div>
+                    <label class="flex items-center">
+                        <input type="radio" name="schedule" value="later"
+                               class="rounded-full border-gray-300">
+                        <span class="ml-2 text-sm text-gray-700">Schedule for later</span>
+                    </label>
+                    
+                    <div id="schedule-options" class="mt-2 pl-6 hidden">
+                        <input type="datetime-local" 
+                               class="px-3 py-2 border rounded-md">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-3 pt-6">
+                <button onclick="hideModal()" 
+                        class="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="createAndSendCampaign()" 
+                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                    Create Campaign
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="add-company-modal-template">
+    <div class="p-6">
+        <h2 class="text-xl font-bold mb-6">Add Company</h2>
+        
+        <div class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                <input type="text" id="company-name" 
+                       class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Industry</label>
+                <select id="company-industry" 
+                        class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Select Industry</option>
+                    <option value="technology">Technology</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="finance">Finance</option>
+                    <option value="retail">Retail</option>
+                    <option value="manufacturing">Manufacturing</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                <textarea id="company-notes" rows="3"
+                          class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <div id="company-enrichment-preview" class="hidden">
+                <h3 class="font-medium text-gray-900 mb-3">Enriched Data Preview</h3>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <!-- Enriched data will be displayed here -->
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-6">
+                <button onclick="hideModal()" 
+                        class="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="addCompany()" 
+                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                    Add Company
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="notification-modal-template">
+    <div class="p-6">
+        <h2 class="text-xl font-bold mb-6">Notifications</h2>
+        
+        <!-- Notification Filters -->
+        <div class="flex gap-2 mb-4">
+            <button class="px-3 py-1 bg-blue-500 text-white rounded-md" data-filter="all">All</button>
+            <button class="px-3 py-1 text-gray-700 hover:bg-gray-100 rounded-md" data-filter="unread">Unread</button>
+            <button class="px-3 py-1 text-gray-700 hover:bg-gray-100 rounded-md" data-filter="alerts">Alerts</button>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="max-h-[60vh] overflow-y-auto" id="notifications-list">
+            <!-- Notifications will be populated here -->
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-between items-center mt-4 pt-4 border-t">
+            <button onclick="markAllNotificationsRead()" 
+                    class="text-blue-500 hover:text-blue-600">
+                Mark all as read
+            </button>
+            <button onclick="clearAllNotifications()" 
+                    class="text-red-500 hover:text-red-600">
+                Clear all
+            </button>
+        </div>
+    </div>
+</template>
+
+<template id="settings-modal-template">
+    <div class="p-6">
+        <h2 class="text-xl font-bold mb-6">Settings</h2>
+        
+        <div class="space-y-6">
+            <!-- API Configuration -->
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">API Configuration</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mailjet API Key</label>
+                        <input type="password" id="mailjet-api-key" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">News API Key</label>
+                        <input type="password" id="news-api-key" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Company Data API Key</label>
+                        <input type="password" id="company-api-key" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Settings -->
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Email Settings</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sender Name</label>
+                        <input type="text" id="sender-name" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sender Email</label>
+                        <input type="email" id="sender-email" 
+                               class="w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="track-opens" class="rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Track email opens</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="track-clicks" class="rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Track link clicks</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Notification Preferences</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="email-notifications" class="rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Email notifications</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="browser-notifications" class="rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Browser notifications</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data & Privacy -->
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Data & Privacy</h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="data-collection" class="rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Allow data collection for analytics</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="share-usage" class="rounded border-gray-300">
+                            <span class="ml-2 text-sm text-gray-700">Share usage statistics</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-3 pt-6">
+                <button onclick="resetSettings()" 
+                        class="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-50">
+                    Reset to Default
+                </button>
+                <button onclick="saveSettings()" 
+                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Toast Notification Template -->
+<template id="toast-notification-template">
+    <div class="fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 transition-all duration-300 ease-in-out opacity-0">
+        <i class="fas fa-check-circle text-xl"></i>
+        <div>
+            <h4 class="font-medium"></h4>
+            <p class="text-sm"></p>
+        </div>
+    </div>
+</template>
+
+<!-- Loading Spinner Template -->
+<template id="loading-spinner-template">
+    <div class="flex items-center justify-center p-4">
+        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+</template>
+
+<!-- Empty State Template -->
+<template id="empty-state-template">
+    <div class="text-center py-12">
+        <div class="w-16 h-16 mx-auto mb-4 text-gray-400">
+            <!-- Icon will be injected here -->
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2"></h3>
+        <p class="text-gray-500 mb-4"></p>
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            <!-- Action text will be injected here -->
+        </button>
+    </div>
+</template>
+
+<!-- Data Card Template -->
+<template id="data-card-template">
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-medium text-gray-900"></h3>
+            <div class="text-gray-400"></div>
+        </div>
+        <div class="space-y-4">
+            <!-- Content will be injected here -->
+        </div>
+    </div>
+</template>
+
+<!-- Company Card Template -->
+<template id="company-card-template">
+    <div class="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
+        <div class="p-6">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <h3 class="font-medium text-lg text-gray-900"></h3>
+                    <p class="text-gray-500"></p>
+                </div>
+                <div class="flex space-x-2">
+                    <!-- Action buttons will be injected here -->
+                </div>
+            </div>
+            <div class="mt-4 space-y-2">
+                <!-- Company details will be injected here -->
+            </div>
+        </div>
+    </div>
+</template>
+
+
+</body>
+</html>
