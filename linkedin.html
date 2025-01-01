@@ -133,7 +133,7 @@ const form = document.getElementById('personalization-form');
 
                 const result = await response.json();
                 console.log(result);
-                return { ...lead, status: 'Success', result };
+                return { ...lead, status: 'Success', result, body: result.body };
             } catch (error) {
                 console.error(error);
                 return { ...lead, status: 'Failed', error: error.message };
@@ -254,6 +254,7 @@ const form = document.getElementById('personalization-form');
                         <th class="border p-2">Name</th>
                         <th class="border p-2">URL</th>
                         <th class="border p-2">Headline</th>
+                        <th class="border p-2">body</th>
                         <th class="border p-2">Status</th>
                     </tr>
                 </thead>
