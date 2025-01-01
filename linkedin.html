@@ -250,27 +250,66 @@ const form = document.getElementById('personalization-form');
             const table = document.createElement('table');
             table.className = 'w-full border-collapse border border-gray-300';
             table.innerHTML = `
+    <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
                 <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border p-2">Name</th>
-                        <th class="border p-2">URL</th>
-                        <th class="border p-2">Headline</th>
-                        <th class="border p-2">body</th>
-                        <th class="border p-2">Status</th>
+                    <tr class="bg-gray-50 border-b border-gray-200">
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Name</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">URL</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Headline</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Body</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-200">
                     ${results.map(result => `
-                        <tr class="${result.status === 'Success' ? 'bg-green-50' : 'bg-red-50'}">
-                            <td class="border p-2">${result.name}</td>
-                            <td class="border p-2"><a href="${result.url}" target="_blank" class="text-blue-600 hover:underline">${result.url}</a></td>
-                            <td class="border p-2">${result.headline}</td>
-                            <td class="border p-2">${result.body}</td>
-                            <td class="border p-2 font-semibold ${result.status === 'Success' ? 'text-green-600' : 'text-red-600'}">${result.status}</td>
+                        <tr class="${result.status === 'Success' ? 'bg-green-50 hover:bg-green-100' : 'bg-red-50 hover:bg-red-100'} transition-colors duration-150 ease-in-out">
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-medium text-gray-900">${result.name}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="${result.url}" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer"
+                                   class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                    ${result.url}
+                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900 max-w-md truncate">
+                                    ${result.headline}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-500 max-w-md truncate">
+                                    ${result.body}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center text-sm font-medium ${result.status === 'Success' ? 'text-green-700' : 'text-red-700'}">
+                                    ${result.status === 'Success' ? `
+                                        <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    ` : `
+                                        <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    `}
+                                    ${result.status}
+                                </span>
+                            </td>
                         </tr>
                     `).join('')}
                 </tbody>
-            `;
+            </table>
+        </div>
+    </div>
+`;
             outputDiv.appendChild(table);
         }
     </script>
