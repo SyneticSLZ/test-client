@@ -111,7 +111,7 @@ const form = document.getElementById('personalization-form');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
         const toastContainer = document.getElementById('toastContainer');
-        const name = document.getElementById('name').value;
+        
 
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
@@ -129,6 +129,8 @@ const form = document.getElementById('personalization-form');
         }
 
         async function generatePersonalizedMessage(lead, pitch, cookie) {
+            const name = document.getElementById('name').value;
+            console.log(name)
             console.log('url', lead.url.replace(/"/g, ''))
             try {
                 const response = await fetch('https://server.voltmailer.com/linkedin/personalise', {
@@ -141,8 +143,9 @@ const form = document.getElementById('personalization-form');
                         url: lead.url.replace(/"/g, ''),
                         cookie: cookie,
                         userAgent: navigator.userAgent,
-                        data: `my data for this person is that thier name is ${lead.name}, skills are ${lead.skills}, summary is ${lead.summary}, headline / job is ${lead.headline} and my name is ${name}`,
+                        data: `my data for this person is that thier name is ${lead.name}, skills are ${lead.skills}, summary is ${lead.summary}, headline / job is ${lead.headline}`,
                         pitch: pitch,
+                        name: name
                         
                     }),
                 });
