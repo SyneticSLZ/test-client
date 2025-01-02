@@ -266,7 +266,24 @@ const form = document.getElementById('personalization-form');
             const table = document.createElement('table');
             table.className = 'w-full border-collapse border border-gray-300';
 
-            table.innerHTML = `
+// First add this CSS to your stylesheet for the popup
+const style = document.createElement('style');
+style.textContent = `
+    .body-popup {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    
+    .body-container:hover .body-popup {
+        visibility: visible;
+        opacity: 1;
+    }
+`;
+document.head.appendChild(style);
+
+// Then the table HTML
+table.innerHTML = `
     <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -275,7 +292,7 @@ const form = document.getElementById('personalization-form');
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Name</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">URL</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Headline</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600 w-1/3">Body</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Body</th>
                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
                     </tr>
                 </thead>
@@ -301,9 +318,16 @@ const form = document.getElementById('personalization-form');
                                     ${result.headline}
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-500 whitespace-pre-wrap break-words">
-                                    ${result.body}
+                            <td class="px-6 py-4 relative">
+                                <div class="body-container group cursor-pointer">
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">
+                                        ${result.body}
+                                    </div>
+                                    <div class="body-popup absolute z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-lg mt-2 left-0">
+                                        <div class="text-sm text-gray-500 whitespace-pre-wrap">
+                                            ${result.body}
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4">
