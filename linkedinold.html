@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Personalization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loader {
+            border-top-color: #3498db;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .toast {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+    <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center px-4 py-8">
+        <div class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-8 space-y-6">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Lead Personalization</h1>
+            
+            <form id="personalization-form" class="space-y-4">
+                <div class="mb-4">
+                    <label for="csvFile" class="block text-gray-700 font-medium mb-2">
+                        Upload CSV File
+                    </label>
+                    <input 
+                        type="file" 
+                        id="csvFile" 
+                        accept=".csv" 
+                        required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+                
+                <div class="mb-4">
+                    <label for="cookie" class="block text-gray-700 font-medium mb-2">
+                        LinkedIn Cookie
+                    </label>
+                    <input 
+                        type="text" 
+                        id="cookie" 
+                        placeholder="Enter LinkedIn Cookie" 
+                        required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700 font-medium mb-2">
+                        Your Name
+                    </label>
+                    <input 
+                    type="text" 
+                    id="name" 
+                    placeholder="Enter your Name" 
+                    required 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                </div>
+                
+                <div class="mb-4">
+                    <label for="pitch" class="block text-gray-700 font-medium mb-2">
+                        Pitch Template
+                    </label>
+                    <textarea 
+                        id="pitch" 
+                        placeholder="Enter your personalization pitch" 
+                        rows="4" 
+                        required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    ></textarea>
+                </div>
+
+
+                
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                    Start Personalization
+                </button>
+            </form>
+    
+            <!-- Toast Notification Container -->
+            <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+    
+            <!-- Progress and Results Container -->
+            <div id="progressContainer" class="mt-6 hidden">
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                    <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-center text-gray-600">Initializing...</p>
+            </div>
+    
+            <!-- Output Table -->
+            <div id="output" class="mt-6 overflow-x-auto"></div>
+        </div>
+
+    <script>
+
+const form = document.getElementById('personalization-form');
+        const outputDiv = document.getElementById('output');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const toastContainer = document.getElementById('toastContainer');
+        
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast p-4 rounded-lg shadow-lg ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            } text-white`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        async function generatePersonalizedMessage(lead, pitch, cookie) {
+            const name = document.getElementById('name').value;
+            console.log(name)
+            console.log('url', lead.url.replace(/"/g, ''))
+            try {
+                const response = await fetch('https://server.voltmailer.com/linkedin/personalise', {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: lead.url.replace(/"/g, ''),
+                        cookie: cookie,
+                        userAgent: navigator.userAgent,
+                        data: `my data for this person is that thier name is ${lead.name}, skills are ${lead.skills}, summary is ${lead.summary}, headline / job is ${lead.headline}`,
+                        pitch: pitch,
+                        name: name
+                        
+                    }),
+                });
+
+                const result = await response.json();
+                console.log(result);
+                return { ...lead, status: 'Success', result, body: result.body };
+            } catch (error) {
+                console.error(error);
+                return { ...lead, status: 'Failed', error: error.message };
+            }
+        }
+
+        function parseCSV(csvText) {
+    const rows = csvText.split('\n').filter(row => row.trim() !== '');
+    const headers = rows[0].match(/(?:[^,"]+|"[^"]*")+/g).map(header => header.trim());
+
+    const profileUrlIndex = headers.indexOf('profile_url');
+    if (profileUrlIndex === -1) {
+        throw new Error('No "profile_url" column found in the CSV');
+    }
+
+    return rows.slice(1).map(row => {
+        const values = row.match(/(?:[^,"]+|"[^"]*")+/g).map(value => value.trim());
+        console.log(values)
+        return {
+            name: values[0], // Adjust based on your header order
+            url: values[8],
+            summary: values[20],
+            skills: values[29],
+            headline: values[17],
+            status: 'Pending',
+        };
+    });
+}
+
+
+//         function parseCSV(csvText) {
+//     const rows = csvText.split('\n');
+//     const headers = rows[0].split(',').map(header => header.trim());
+
+//     // Check if the CSV has at least 14 columns
+//     if (headers.length < 14) {
+//         throw new Error('The CSV does not have a 14th column.');
+//     }
+
+//     return rows.slice(1)
+//         .filter(row => row.trim() !== '')
+//         .map(row => {
+//             const values = row.split(',').map(value => value.trim());
+//             const url = values[14] || ''; // Access the 14th column (index 13)
+
+//             return {
+//                 name: values[0] || '', // Assuming the first column is 'name'
+//                 url: url, // Store the 14th column value
+//                 allData: headers.reduce((obj, header, index) => {
+//                     obj[header] = values[index] || '';
+//                     return obj;
+//                 }, {}),
+//                 status: 'Pending'
+//             };
+//         });
+// }
+
+
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            outputDiv.innerHTML = '';
+            progressContainer.classList.remove('hidden');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const csvFile = document.getElementById('csvFile').files[0];
+            const cookie = document.getElementById('cookie').value;
+            const pitch = document.getElementById('pitch').value;
+
+            if (!csvFile) {
+                alert('Please upload a CSV file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const leads = parseCSV(e.target.result);
+                    const results = [];
+
+                    for (let i = 0; i < leads.length; i++) {
+                        const lead = leads[i];
+                        progressText.textContent = `Processing lead ${i + 1} of ${leads.length}`;
+                        progressBar.style.width = `${((i + 1) / leads.length) * 100}%`;
+
+                        const result = await generatePersonalizedMessage(lead, pitch, cookie);
+                        results.push(result);
+
+                        if (result.status === 'Success') {
+                            showToast(`Personalized message generated for ${lead.name}`, 'success');
+                        } else {
+                            showToast(`Failed to generate message for ${lead.name}`, 'error');
+                        }
+
+                    }
+
+                    renderResults(results);
+                    showToast('Personalization process completed', 'success');
+                } catch (error) {
+                    console.error(error);
+                    alert('Error processing the CSV file.');
+                    showToast('Error processing the CSV file', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            };
+            reader.readAsText(csvFile);
+        });
+
+        function renderResults(results) {
+            console.log(results)
+            const table = document.createElement('table');
+            table.className = 'w-full border-collapse border border-gray-300';
+
+// First add this CSS to your stylesheet for the popup
+const style = document.createElement('style');
+style.textContent = `
+    .body-popup {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    
+    .body-container:hover .body-popup {
+        visibility: visible;
+        opacity: 1;
+    }
+`;
+document.head.appendChild(style);
+
+// Then the table HTML
+table.innerHTML = `
+    <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200">
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Name</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">URL</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Headline</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Body</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    ${results.map(result => `
+                        <tr class="${result.status === 'Success' ? 'bg-green-50 hover:bg-green-100' : 'bg-red-50 hover:bg-red-100'} transition-colors duration-150 ease-in-out">
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-medium text-gray-900">${result.name}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="${result.url}" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer"
+                                   class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                    ${result.url}
+                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900">
+                                    ${result.headline}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 relative">
+                                <div class="body-container group cursor-pointer">
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">
+                                        ${result.body}
+                                    </div>
+                                    <div class="body-popup absolute z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-lg mt-2 left-0">
+                                        <div class="text-sm text-gray-500 whitespace-pre-wrap">
+                                            ${result.body}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center text-sm font-medium ${result.status === 'Success' ? 'text-green-700' : 'text-red-700'}">
+                                    ${result.status === 'Success' ? `
+                                        <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    ` : `
+                                        <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    `}
+                                    ${result.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>
+`;
+
+
+//             table.innerHTML = `
+//     <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
+//         <div class="overflow-x-auto">
+//             <table class="w-full">
+//                 <thead>
+//                     <tr class="bg-gray-50 border-b border-gray-200">
+//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Name</th>
+//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">URL</th>
+//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Headline</th>
+//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Body</th>
+//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
+//                     </tr>
+//                 </thead>
+//                 <tbody class="divide-y divide-gray-200">
+//                     ${results.map(result => `
+//                         <tr class="${result.status === 'Success' ? 'bg-green-50 hover:bg-green-100' : 'bg-red-50 hover:bg-red-100'} transition-colors duration-150 ease-in-out">
+//                             <td class="px-6 py-4">
+//                                 <span class="text-sm font-medium text-gray-900">${result.name}</span>
+//                             </td>
+//                             <td class="px-6 py-4">
+//                                 <a href="${result.url}" 
+//                                    target="_blank" 
+//                                    rel="noopener noreferrer"
+//                                    class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
+//                                     ${result.url}
+//                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+//                                     </svg>
+//                                 </a>
+//                             </td>
+//                             <td class="px-6 py-4">
+//                                 <div class="text-sm text-gray-900 max-w-md truncate">
+//                                     ${result.headline}
+//                                 </div>
+//                             </td>
+//                             <td class="px-6 py-4">
+//                                 <div class="text-sm text-gray-500 max-w-md truncate">
+//                                     ${result.body}
+//                                 </div>
+//                             </td>
+//                             <td class="px-6 py-4">
+//                                 <span class="inline-flex items-center text-sm font-medium ${result.status === 'Success' ? 'text-green-700' : 'text-red-700'}">
+//                                     ${result.status === 'Success' ? `
+//                                         <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+//                                         </svg>
+//                                     ` : `
+//                                         <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+//                                         </svg>
+//                                     `}
+//                                     ${result.status}
+//                                 </span>
+//                             </td>
+//                         </tr>
+//                     `).join('')}
+//                 </tbody>
+//             </table>
+//         </div>
+//     </div>
+// `;
+            outputDiv.appendChild(table);
+        }
+    </script>
+</body>
+</html>

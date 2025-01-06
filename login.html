@@ -2,59 +2,198 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Send Email</title>
-    <script>
-        async function sendEmailSMTP() {
-            const to = document.getElementById('to-smtp').value;
-            const subject = document.getElementById('subject-smtp').value;
-            const body = document.getElementById('body-smtp').value;
-
-            const response = await fetch('https://server.voltmailer.com/send-email-smtp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ to, subject, body })
-            });
-
-            if (response.ok) {
-                alert('Email sent successfully');
-            } else {
-                alert('Failed to send email');
-            }
-        }
-
-        async function sendEmailGmail() {
-            const to = document.getElementById('to-gmail').value;
-            const subject = document.getElementById('subject-gmail').value;
-            const body = document.getElementById('body-gmail').value;
-
-            const response = await fetch('https://server.voltmailer.com/send-email-gmail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ to, subject, body })
-            });
-
-            if (response.ok) {
-                alert('Email sent successfully');
-            } else {
-                alert('Failed to send email');
-            }
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Automation - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>Send Email (SMTP)</h2>
-    <input type="email" id="to-smtp" placeholder="Recipient Email"><br>
-    <input type="text" id="subject-smtp" placeholder="Subject"><br>
-    <textarea id="body-smtp" placeholder="Body"></textarea><br>
-    <button onclick="sendEmailSMTP()">Send Email</button>
-    <h2>Send Email (Gmail API)</h2>
-    <input type="email" id="to-gmail" placeholder="Recipient Email"><br>
-    <input type="text" id="subject-gmail" placeholder="Subject"><br>
-    <textarea id="body-gmail" placeholder="Body"></textarea><br>
-    <button onclick="sendEmailGmail()">Send Email</button>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Logo/Branding -->
+        <div class="text-center">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                LinkedAutomation Enterprise
+            </h1>
+            <p class="mt-2 text-sm text-gray-600">Professional LinkedIn Automation Platform</p>
+        </div>
+
+        <!-- Auth Forms Container -->
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <!-- Form Toggle -->
+            <div class="flex justify-center space-x-4 mb-6">
+                <button id="loginToggle" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Login</button>
+                <button id="registerToggle" class="text-gray-500 font-medium pb-1">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="loginEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="loginEmail" required 
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label for="loginPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="loginPassword" required 
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Sign in
+                    </button>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="space-y-6 hidden">
+                <div>
+                    <label for="registerName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="registerName" required 
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label for="registerEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="registerEmail" required 
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label for="registerPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="registerPassword" required 
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <script>
+        // API Configuration
+        const API_URL = 'https://server.voltmailer.com/api';
+
+        // Form Toggle Logic
+        const loginToggle = document.getElementById('loginToggle');
+        const registerToggle = document.getElementById('registerToggle');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+
+        loginToggle.addEventListener('click', () => {
+            loginToggle.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            registerToggle.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        });
+
+        registerToggle.addEventListener('click', () => {
+            registerToggle.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            loginToggle.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+
+        // Form Submission Handlers
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store auth token and user data
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    // Redirect to main application
+                    window.location.href = '/linkedinnew.html';
+                } else {
+                    showToast(data.error, 'error');
+                }
+            } catch (error) {
+                showToast('Error connecting to server', 'error');
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store auth token and user data
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    // Redirect to main application
+                    window.location.href = '/linkedinnew.html';
+                } else {
+                    showToast(data.error, 'error');
+                }
+            } catch (error) {
+                showToast('Error connecting to server', 'error');
+            }
+        });
+
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `px-6 py-4 rounded-lg shadow-lg ${
+                type === 'error' ? 'bg-red-500' : 
+                type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+            } text-white`;
+            toast.textContent = message;
+
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transform', 'translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                window.location.href = '/linkedinnew.html';
+            }
+        });
+    </script>
 </body>
 </html>

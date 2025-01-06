@@ -3,422 +3,2150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lead Personalization</title>
+    <title>LinkedIn Enterprise Automation</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <style>
-        .loader {
-            border-top-color: #3498db;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+#resultsSection {
+    max-height: 80vh;
+}
+
+#output {
+    max-height: calc(80vh - 3rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+    th, td {
+        min-width: 100px;
+    }
+    
+    td:last-child {
+        min-width: 80px;
+    }
+}
+
+        .tab-content {
+    display: none;
+}
+
+.tab-content.show {
+    display: block;
+}
+
         .toast {
             transition: all 0.3s ease-in-out;
+            opacity: 1;
+            transform: translateX(0);
         }
+        .toast.hiding {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        .tutorial-highlight {
+    position: relative;
+    z-index: 50;
+}
+
+.tutorial-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+}
+
+.tutorial-tooltip {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
     </style>
 </head>
-    <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        <div class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-8 space-y-6">
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Lead Personalization</h1>
-            
-            <form id="personalization-form" class="space-y-4">
-                <div class="mb-4">
-                    <label for="csvFile" class="block text-gray-700 font-medium mb-2">
-                        Upload CSV File
-                    </label>
-                    <input 
-                        type="file" 
-                        id="csvFile" 
-                        accept=".csv" 
-                        required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 fixed w-full z-30 top-0">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                            LinkedAutomation Enterprise
+                        </span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <!-- <button onclick="showTab('dashboard')" class="tab-btn border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Dashboard
+                        </button>
+                        <button onclick="showTab('profile')" class="tab-btn border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Profile
+                        </button>
+                        <button onclick="showTab('analytics')" class="tab-btn border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Analytics
+                        </button> -->
+                        <button  onclick="startTutorial()" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                         </svg>
+                         Tutorial
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="mb-4">
-                    <label for="cookie" class="block text-gray-700 font-medium mb-2">
-                        LinkedIn Cookie
-                    </label>
-                    <input 
-                        type="text" 
-                        id="cookie" 
-                        placeholder="Enter LinkedIn Cookie" 
-                        required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
+                        <span class="text-sm text-gray-600" id="messageCounter">0/100</span>
+                        <div class="h-2 w-20 bg-gray-200 rounded-full">
+                            <div id="messageProgressBar" class="h-2 bg-blue-600 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span id="userPlan" class="text-sm font-medium text-gray-600"></span>
+                        <button onclick="AUTH.logout()" class="inline-flex items-center justify-center rounded-md p-2 text-red-600 hover:text-red-800">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-
-                <div class="mb-4">
-                    <label for="name" class="block text-gray-700 font-medium mb-2">
-                        Your Name
-                    </label>
-                    <input 
-                    type="text" 
-                    id="name" 
-                    placeholder="Enter your Name" 
-                    required 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                </div>
-                
-                <div class="mb-4">
-                    <label for="pitch" class="block text-gray-700 font-medium mb-2">
-                        Pitch Template
-                    </label>
-                    <textarea 
-                        id="pitch" 
-                        placeholder="Enter your personalization pitch" 
-                        rows="4" 
-                        required 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                    ></textarea>
-                </div>
-
-
-                
-                <button 
-                    type="submit" 
-                    id="submitBtn"
-                    class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                    Start Personalization
-                </button>
-            </form>
-    
-            <!-- Toast Notification Container -->
-            <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
-    
-            <!-- Progress and Results Container -->
-            <div id="progressContainer" class="mt-6 hidden">
-                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                    <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
-                </div>
-                <p id="progressText" class="text-center text-gray-600">Initializing...</p>
             </div>
-    
-            <!-- Output Table -->
-            <div id="output" class="mt-6 overflow-x-auto"></div>
         </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content space-y-6 show">
+                <!-- Campaign Setup Card -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Campaign Setup</h2>
+                    <form id="personalization-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- CSV Upload Section -->
+                            <div class="space-y-4">
+                                <label class="block text-sm font-medium text-gray-700">Upload Lead List</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-500 transition-colors">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4-4m4-4h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600">
+                                            <label for="csvFile" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                                <span>Upload a CSV file</span>
+                                                <input id="csvFile" name="csvFile" type="file" accept=".csv" class="sr-only" required>
+                                            </label>
+                                        </div>
+                                        <p class="text-xs text-gray-500">CSV up to 10MB</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- LinkedIn Authentication -->
+        <div class="space-y-6">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label for="cookie" class="block text-sm font-medium text-gray-900">LinkedIn Cookie</label>
+                    <button type="button" id="cookieHelp" 
+                            class="text-blue-600 hover:text-blue-500 text-sm flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        How to get this?
+                    </button>
+                </div>
+                <input type="text" id="cookie" required
+                       class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                       placeholder="Enter your LinkedIn cookie">
+            </div>
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-900 mb-2">Your Name</label>
+                <input type="text" id="name" required
+                       class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                       placeholder="Enter your name">
+            </div>
+        </div>
+    </div>
+                        <!-- //Add this section above your pitch textarea in the HTML: -->
+                            <!-- Templates Section -->
+    <div class="border-t border-gray-200 pt-8">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-900">Message Templates</h3>
+                <p class="mt-1 text-sm text-gray-500">Save and reuse your successful message templates</p>
+            </div>
+            <button type="button" 
+                    onclick="showNewTemplateModal()"
+                    class="inline-flex items-center px-4 py-2 border border-blue-600 rounded-lg shadow-sm text-sm font-medium text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                New Template
+            </button>
+        </div>
+        <div id="savedTemplates" class="grid grid-cols-1 gap-3 mb-6">
+            <!-- Templates will be loaded here -->
+        </div>
+                        
+
+                        <!-- Template Modal with improved styling -->
+<div id="templateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl max-w-xl w-full p-8 relative">
+            <div class="absolute top-4 right-4">
+                <button onclick="closeTemplateModal()" class="text-gray-400 hover:text-gray-500">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-gray-900">Save Message Template</h3>
+                <p class="mt-1 text-sm text-gray-500">Create a reusable template for your outreach messages</p>
+            </div>
+            <form id="templateForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Template Name</label>
+                    <input type="text" id="templateName" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-900 mb-2">Message Template</label>
+                    <textarea id="templateContent" rows="6" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"></textarea>
+                    <p class="mt-2 text-sm text-gray-500">
+                        Use variables like {name}, {company}, etc. for personalization
+                    </p>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeTemplateModal()"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+                        Cancel
+                    </button>
+                    <button onclick="template()"
+                            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Save Template
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+                        <!-- Template Modal
+                        <div id="templateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+                            <div class="flex items-center justify-center min-h-screen p-4">
+                                <div class="bg-white rounded-lg max-w-xl w-full p-6">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h3 class="text-lg font-medium text-gray-900">Save Message Template</h3>
+                                        <button onclick="closeTemplateModal()" class="text-gray-400 hover:text-gray-500">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <form id="templateForm" class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Template Name</label>
+                                            <input type="text" id="templateName" required
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Message Template</label>
+                                            <textarea id="templateContent" rows="6" required
+                                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                Available variables: {name}, {company}, {industry}, {headline}
+                                            </p>
+                                        </div>
+                                        <div class="flex justify-end space-x-3">
+                                            <button type="button" onclick="closeTemplateModal()"
+                                                    class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+                                                Cancel
+                                            </button>
+                                            <button onclick="template()"
+                                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                                Save Template
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div> -->
+
+
+                        <!-- Pitch Template -->
+                        <div>
+                            <label for="pitch" class="block text-sm font-medium text-gray-700">
+                                Pitch Template
+                                <span class="text-gray-500 text-xs ml-2">Use {name} for recipient's name</span>
+                            </label>
+                            <textarea id="pitch" rows="4" required
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    placeholder="Enter your pitch template..."></textarea>
+                        </div>
+
+                            <!-- Submit Button -->
+    <div class="pt-6">
+        <button onclick="submitform()" id="submitBtn"
+                class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors text-sm font-medium flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            Start Campaign
+        </button>
+        <p class="mt-2 text-center text-sm text-gray-500">
+            Campaign will be processed in batches to respect LinkedIn's limits
+        </p>
+    </div>
+</form>
+                </div>
+                
+                <!-- Results Section -->
+                <!-- <div id="resultsSection" class="hidden space-y-6">
+                    <div id="progressContainer" class="hidden mt-6">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p id="progressText" class="text-center text-sm text-gray-600 mt-2">Processing: 0%</p>
+                    </div>
+                    
+                    <div id="output" class="mt-6"></div>
+                </div> -->
+
+                <!-- Results Section -->
+                <div id="resultsSection" class="hidden space-y-6 max-w-full overflow-x-auto">
+                    <!-- Progress Bar -->
+                    <div id="progressContainer" class="hidden mt-6">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p id="progressText" class="text-center text-sm text-gray-600 mt-2">Processing: 0%</p>
+                    </div>
+                    
+                    <!-- Results Output -->
+                    <div id="output" class="overflow-x-auto">
+                        <!-- Table will be inserted here -->
+                    </div>
+                </div>
+
+<!-- Detail Modal -->
+<div id="detailModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-[480px] max-w-[90%] shadow-lg rounded-md bg-white">
+        <div class="absolute top-4 right-4">
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="mt-3">
+            <h3 id="modalName" class="text-lg font-medium text-gray-900 mb-1"></h3>
+            <p id="modalHeadline" class="text-sm text-gray-500 mb-4"></p>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs font-medium text-gray-500">PROFILE URL</label>
+                    <a id="modalProfile" href="" target="_blank" class="block text-sm text-blue-600 hover:text-blue-800 break-all"></a>
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-gray-500">MESSAGE</label>
+                    <p id="modalMessage" class="text-sm text-gray-700 whitespace-pre-wrap"></p>
+                </div>
+                <div id="modalErrorContainer" class="hidden">
+                    <label class="text-xs font-medium text-gray-500">ERROR</label>
+                    <p id="modalError" class="text-sm text-red-600"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile" class=" space-y-6">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="p-6 space-y-6">
+                        <h2 class="text-xl font-semibold text-gray-900">Profile Settings</h2>
+                        
+                        <form id="profileForm" class="space-y-6">
+                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Name</label>
+                                    <input type="text" id="profileName" required
+                                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                                    <input type="email" id="profileEmail" required
+                                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">LinkedIn Cookie</label>
+                                <input type="text" id="profileLinkedinCookie"
+                                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+
+                            <!--Then update the frontend profile form HTML: -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Saved Templates</label>
+                                <div id="savedTemplates" class="mt-2 space-y-2">
+                                    <!-- Templates will be inserted here -->
+                                </div>
+                            </div>
+
+                            
+                            <!-- // Add a save template button next to the pitch textarea: -->
+                            <div class="flex justify-between items-center">
+                                <label for="pitch" class="block text-sm font-medium text-gray-700">
+                                    Message Template
+                                    <span class="text-gray-500 text-xs ml-2">Use {name}, {company}, etc.</span>
+                                </label>
+                                <button type="button" 
+                                        onclick="saveTemplate()"
+                                        class="text-blue-600 hover:text-blue-800 text-sm">
+                                    Save Template
+                                </button>
+                            </div>
+
+
+                            <div class="pt-4">
+                                <button type="submit" 
+                                        class="w-full sm:w-auto flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Update Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="border-t border-gray-200">
+                        <div class="p-6 space-y-6">
+                            <h3 class="text-lg font-medium text-gray-900">Current Plan</h3>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">Plan Type</p>
+                                        <p class="mt-1 text-lg font-semibold text-gray-900" id="currentPlanType">Free</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">Daily Limit</p>
+                                        <p class="mt-1 text-lg font-semibold text-gray-900" id="currentPlanLimit">100</p>
+                                    </div>
+                                    <button onclick="upgradePlan()" 
+                                            class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Upgrade Plan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class=" space-y-6">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="p-6 space-y-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-6">Message Analytics</h2>
+                        
+                        <!-- Usage Overview -->
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-500">Total Messages Sent</h4>
+                                <p class="mt-2 text-3xl font-semibold text-gray-900" id="totalMessagesSent">0</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-500">Success Rate</h4>
+                                <p class="mt-2 text-3xl font-semibold text-gray-900" id="successRate">0%</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-500">Daily Average</h4>
+                                <p class="mt-2 text-3xl font-semibold text-gray-900" id="dailyAverage">0</p>
+                            </div>
+                        </div>
+
+                        <!-- Usage Chart -->
+                        <div class="mt-8">
+                            <canvas id="usageChart" height="200"></canvas>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="mt-8">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipient</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentActivityBody" class="bg-white divide-y divide-gray-200">
+                                        <!-- Activity rows will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
     <script>
+        document.getElementById('csvFile').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const preview = document.getElementById('filePreview');
+        preview.classList.remove('hidden');
+        preview.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="font-medium">${file.name}</span>
+                <span class="text-gray-500">(${(file.size / 1024).toFixed(1)} KB)</span>
+            </div>
+        `;
+    }
+});
+// Template Card Rendering (continued)
+function renderTemplateCard(template) {
+    return `
+        <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border border-gray-200">
+            <div class="flex justify-between items-start">
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-medium text-gray-900 truncate">${template.name}</h4>
+                    <p class="mt-1 text-xs text-gray-500 line-clamp-2">${template.content}</p>
+                    <span class="mt-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Last used: ${new Date(template.lastUsed).toLocaleDateString()}
+                    </span>
+                </div>
+                <div class="ml-4 flex-shrink-0 flex space-x-2">
+                    <button onclick="useTemplate('${template._id}')" 
+                            class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </button>
+                    <button onclick="deleteTemplate('${template._id}')"
+                            class="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
-const form = document.getElementById('personalization-form');
-        const outputDiv = document.getElementById('output');
-        const submitBtn = document.getElementById('submitBtn');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const toastContainer = document.getElementById('toastContainer');
-        
+// Enhanced Progress Bar
+function showProgressBar() {
+    const progressContainer = document.getElementById('progressContainer') || createProgressContainer();
+    progressContainer.classList.remove('hidden');
+}
 
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast p-4 rounded-lg shadow-lg ${
-                type === 'success' ? 'bg-green-500' : 
-                type === 'error' ? 'bg-red-500' : 'bg-blue-500'
-            } text-white`;
-            toast.textContent = message;
-            toastContainer.appendChild(toast);
+function createProgressContainer() {
+    const container = document.createElement('div');
+    container.id = 'progressContainer';
+    container.className = 'fixed bottom-0 inset-x-0 pb-6 sm:pb-8 z-50';
+    container.innerHTML = `
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-900">Processing Campaign</h3>
+                    <span id="progressText" class="text-sm text-gray-500">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" 
+                         class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                         style="width: 0%">
+                    </div>
+                </div>
+                <div class="mt-2 flex justify-between text-xs text-gray-500">
+                    <span id="processedCount">0 leads processed</span>
+                    <span id="remainingCount"></span>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(container);
+    return container;
+}
 
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-x-full');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+// Enhanced File Drop Zone
+function setupFileDropZone() {
+    const dropZone = document.querySelector('.border-dashed');
+    const fileInput = document.getElementById('csvFile');
 
-        async function generatePersonalizedMessage(lead, pitch, cookie) {
-            const name = document.getElementById('name').value;
-            console.log(name)
-            console.log('url', lead.url.replace(/"/g, ''))
-            try {
-                const response = await fetch('https://server.voltmailer.com/linkedin/personalise', {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
 
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        url: lead.url.replace(/"/g, ''),
-                        cookie: cookie,
-                        userAgent: navigator.userAgent,
-                        data: `my data for this person is that thier name is ${lead.name}, skills are ${lead.skills}, summary is ${lead.summary}, headline / job is ${lead.headline}`,
-                        pitch: pitch,
-                        name: name
-                        
-                    }),
-                });
-
-                const result = await response.json();
-                console.log(result);
-                return { ...lead, status: 'Success', result, body: result.body };
-            } catch (error) {
-                console.error(error);
-                return { ...lead, status: 'Failed', error: error.message };
-            }
-        }
-
-        function parseCSV(csvText) {
-    const rows = csvText.split('\n').filter(row => row.trim() !== '');
-    const headers = rows[0].match(/(?:[^,"]+|"[^"]*")+/g).map(header => header.trim());
-
-    const profileUrlIndex = headers.indexOf('profile_url');
-    if (profileUrlIndex === -1) {
-        throw new Error('No "profile_url" column found in the CSV');
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
     }
 
-    return rows.slice(1).map(row => {
-        const values = row.match(/(?:[^,"]+|"[^"]*")+/g).map(value => value.trim());
-        console.log(values)
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        if (files.length > 0 && files[0].type === 'text/csv') {
+            fileInput.files = files;
+            fileInput.dispatchEvent(new Event('change'));
+        } else {
+            showToast('Please upload a CSV file', 'error');
+        }
+    }
+}
+
+// Enhanced Toast Notifications
+function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    
+    const bgColor = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        info: 'bg-blue-500'
+    }[type];
+
+    const icon = {
+        success: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                 </svg>`,
+        error: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+               </svg>`,
+        info: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>`
+    }[type];
+
+    toast.className = `toast flex items-center p-4 mb-3 rounded-lg shadow-lg ${bgColor} text-white transform translate-x-full`;
+    toast.innerHTML = `
+        <div class="flex-shrink-0 mr-3">${icon}</div>
+        <div class="flex-1">${message}</div>
+    `;
+
+    toastContainer.appendChild(toast);
+    requestAnimationFrame(() => {
+        toast.classList.remove('translate-x-full');
+    });
+
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Initialize enhancements
+document.addEventListener('DOMContentLoaded', () => {
+    setupFileDropZone();
+    loadTemplates();
+});
+
+        // Auth Configuration
+const AUTH = {
+    token: localStorage.getItem('authToken'),
+    user: JSON.parse(localStorage.getItem('currentUser') || 'null'),
+    API_URL: 'https://server.voltmailer.com/api',
+
+    isAuthenticated() {
+        return !!this.token;
+    },
+
+    getHeaders() {
         return {
-            name: values[0], // Adjust based on your header order
-            url: values[8],
-            summary: values[20],
-            skills: values[29],
-            headline: values[17],
-            status: 'Pending',
+            'Authorization': `Bearer ${this.token}`,
+            'Content-Type': 'application/json'
         };
+    },
+
+    async handleResponse(response) {
+        const data = await response.json();
+        if (!response.ok) {
+            if (response.status === 401) {
+                this.logout();
+                throw new Error('Session expired');
+            }
+            throw new Error(data.error || 'API Error');
+        }
+        return data;
+    },
+
+    logout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        window.location.href = '/login.html';
+    },
+
+    async refreshUserData() {
+        try {
+            const response = await fetch(`${this.API_URL}/profile`, {
+                headers: this.getHeaders()
+            });
+            const userData = await this.handleResponse(response);
+            this.user = userData;
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            updateUIWithUserData();
+            return userData;
+        } catch (error) {
+            console.error('Error refreshing user data:', error);
+            throw error;
+        }
+    }
+};
+
+// Add these frontend functions:
+async function loadSavedTemplates() {
+    try {
+        const response = await fetch(`${AUTH.API_URL}/templates`, {
+            headers: AUTH.getHeaders()
+        });
+        const templates = await AUTH.handleResponse(response);
+        
+        const container = document.getElementById('savedTemplates');
+        container.innerHTML = templates.map(template => `
+            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <div class="flex-1">
+                    <h4 class="text-sm font-medium">${template.name}</h4>
+                    <p class="text-xs text-gray-500 truncate">${template.content}</p>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="useTemplate('${template._id}')" 
+                            class="text-blue-600 hover:text-blue-800 text-sm">
+                        Use
+                    </button>
+                    <button onclick="deleteTemplate('${template._id}')"
+                            class="text-red-600 hover:text-red-800 text-sm">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        `).join('') || '<p class="text-sm text-gray-500">No saved templates</p>';
+    } catch (error) {
+        showToast('Error loading templates', 'error');
+    }
+}
+
+async function saveTemplate() {
+    const pitch = document.getElementById('pitch').value;
+    if (!pitch) {
+        showToast('Please enter a message template', 'error');
+        return;
+    }
+
+    try {
+        const name = prompt('Enter a name for this template:');
+        if (!name) return;
+
+        const response = await fetch(`${AUTH.API_URL}/templates`, {
+            method: 'POST',
+            headers: AUTH.getHeaders(),
+            body: JSON.stringify({
+                name,
+                content: pitch
+            })
+        });
+        
+        await AUTH.handleResponse(response);
+        showToast('Template saved successfully', 'success');
+        loadSavedTemplates();
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+async function useTemplate(templateId) {
+    try {
+        const response = await fetch(`${AUTH.API_URL}/templates/${templateId}`, {
+            headers: AUTH.getHeaders()
+        });
+        const template = await AUTH.handleResponse(response);
+        
+        document.getElementById('pitch').value = template.content;
+        showToast('Template loaded', 'success');
+    } catch (error) {
+        showToast('Error loading template', 'error');
+    }
+}
+
+async function deleteTemplate(templateId) {
+    if (!confirm('Are you sure you want to delete this template?')) return;
+
+    try {
+        await fetch(`${AUTH.API_URL}/templates/${templateId}`, {
+            method: 'DELETE',
+            headers: AUTH.getHeaders()
+        });
+        
+        showToast('Template deleted', 'success');
+        loadSavedTemplates();
+    } catch (error) {
+        showToast('Error deleting template', 'error');
+    }
+}
+//Add these JavaScript functions:
+let currentTemplates = [];
+
+function showNewTemplateModal() {
+    document.getElementById('templateModal').classList.remove('hidden');
+    document.getElementById('templateName').value = '';
+    document.getElementById('templateContent').value = document.getElementById('pitch').value || '';
+}
+
+function closeTemplateModal() {
+    document.getElementById('templateModal').classList.add('hidden');
+}
+
+// Template management
+async function loadTemplates() {
+    try {
+        const response = await fetch(`${AUTH.API_URL}/templates`, {
+            headers: AUTH.getHeaders()
+        });
+        const templates = await AUTH.handleResponse(response);
+        currentTemplates = templates;
+        
+        const container = document.getElementById('savedTemplates');
+        if (!container) return;
+
+        container.innerHTML = templates.map(template => `
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-medium text-gray-900 truncate">${template.name}</h4>
+                    <p class="text-xs text-gray-500 truncate">${template.content}</p>
+                </div>
+                <div class="flex items-center space-x-2 ml-4">
+                    <button onclick="useTemplate('${template._id}')" 
+                            class="text-blue-600 hover:text-blue-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </button>
+                    <button onclick="deleteTemplate('${template._id}')"
+                            class="text-red-600 hover:text-red-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `).join('') || `
+            <div class="text-center py-4 text-gray-500">
+                <p class="text-sm">No saved templates</p>
+                <button onclick="showNewTemplateModal()" 
+                        class="mt-2 text-blue-600 hover:text-blue-700 text-sm">
+                    Create your first template
+                </button>
+            </div>
+        `;
+    } catch (error) {
+        showToast('Error loading templates', 'error');
+    }
+}
+
+// Tab Management
+// Replace your showTab function with this simplified version
+function showTab(tabName) {
+    console.log('Switching to tab:', tabName);
+    
+    // Hide all tab contents
+    const allTabs = document.querySelectorAll('.tab-content');
+    allTabs.forEach(tab => {
+        tab.classList.remove('show');
+    });
+
+    // Show selected tab
+    const selectedTab = document.getElementById(tabName);
+    if (selectedTab) {
+        selectedTab.classList.add('show');
+    }
+
+    // Update button styles
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        // Remove active styles
+        btn.classList.remove('border-blue-500', 'text-blue-600');
+        btn.classList.add('border-transparent', 'text-gray-500');
+    });
+
+    // Add active styles to clicked button
+    const activeButton = document.querySelector(`button[onclick="showTab('${tabName}')"]`);
+    if (activeButton) {
+        activeButton.classList.remove('border-transparent', 'text-gray-500');
+        activeButton.classList.add('border-blue-500', 'text-blue-600');
+    }
+
+    // Load tab-specific data
+    if (tabName === 'analytics') {
+        loadAnalytics();
+    } else if (tabName === 'profile') {
+        loadProfile();
+    }
+}
+
+
+// Profile Management
+async function loadProfile() {
+    console.log('Loading profile data...'); // Debug log
+    
+    try {
+        const userData = await AUTH.refreshUserData();
+        console.log('User data received:', userData); // Debug log
+        
+        // Set form values
+        const fields = {
+            'profileName': userData.name,
+            'profileEmail': userData.email,
+            'profileLinkedinCookie': userData.linkedinCookie || '',
+            'currentPlanType': userData.plan,
+            'currentPlanLimit': userData.messageLimits?.daily
+        };
+
+        // Update each field and log the update
+        Object.entries(fields).forEach(([elementId, value]) => {
+            const element = document.getElementById(elementId);
+            if (element) {
+                console.log(`Updating ${elementId} with value:`, value); // Debug log
+                if (element.tagName === 'INPUT') {
+                    element.value = value;
+                } else {
+                    element.textContent = value;
+                }
+            } else {
+                console.warn(`Element not found: ${elementId}`); // Debug log
+            }
+        });
+
+        // Load templates
+        await loadTemplates();
+        
+        console.log('Profile data loaded successfully'); // Debug log
+    } catch (error) {
+        console.error('Error loading profile:', error); // Debug log
+        showToast(error.message, 'error');
+    }
+}
+
+// Update the loadAnalytics function to handle potential chart errors
+async function loadAnalytics() {
+    try {
+        const response = await fetch(`${AUTH.API_URL}/user/stats`, {
+            headers: AUTH.getHeaders()
+        });
+        const stats = await AUTH.handleResponse(response);
+        
+        // Update stats cards
+        document.getElementById('totalMessagesSent').textContent = stats.messagesSent || '0';
+        document.getElementById('successRate').textContent = 
+            `${((stats.stats.success || 0) / (stats.messagesSent || 1) * 100).toFixed(1)}%`;
+        document.getElementById('dailyAverage').textContent = 
+            Math.round(stats.messagesSent / (1 + daysSinceRegistration(AUTH.user.createdAt))) || '0';
+
+        // Load activity history
+        await loadActivityHistory();
+        
+        // Update chart with error handling
+        try {
+            updateUsageChart(stats);
+        } catch (chartError) {
+            console.error('Error updating chart:', chartError);
+            // Continue execution even if chart fails
+        }
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+function updateAnalyticsUI(stats) {
+    document.getElementById('totalMessagesSent').textContent = stats.messagesSent;
+    document.getElementById('successRate').textContent = 
+        `${((stats.stats.success || 0) / (stats.messagesSent || 1) * 100).toFixed(1)}%`;
+    document.getElementById('dailyAverage').textContent = 
+        Math.round(stats.messagesSent / (1 + daysSinceRegistration(AUTH.user.createdAt)));
+}
+
+async function loadActivityHistory() {
+    try {
+        const response = await fetch(`${AUTH.API_URL}/messages/history`, {
+            headers: AUTH.getHeaders()
+        });
+        const history = await AUTH.handleResponse(response);
+        renderActivityHistory(history);
+    } catch (error) {
+        showToast('Error loading activity history', 'error');
+    }
+}
+
+function renderActivityHistory(history) {
+    const tbody = document.getElementById('recentActivityBody');
+    tbody.innerHTML = history.map(activity => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                ${new Date(activity.timestamp).toLocaleDateString()}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">${activity.recipientName}</div>
+                <div class="text-sm text-gray-500">${activity.recipientUrl}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                    ${activity.status === 'Success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                    ${activity.status}
+                </span>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500">
+                <div class="max-w-xs truncate" title="${activity.messageContent || ''}">
+                    ${activity.messageContent || 'N/A'}
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Campaign Processing
+// async function processCSVFile(file) {
+//     return new Promise((resolve, reject) => {
+//         const reader = new FileReader();
+//         reader.onload = (e) => {
+//             try {
+//                 const text = e.target.result;
+//                 const rows = text.split('\n').filter(row => row.trim());
+//                 const headers = rows[0].split(',').map(h => h.trim());
+                
+//                 const leads = rows.slice(1).map(row => {
+//                     const values = row.split(',').map(v => v.trim());
+//                     console.log(values)
+//                     return {
+//                         name: values[headers.indexOf('full_name')] || values[headers.indexOf('name')],
+//                         url: values[headers.indexOf('profile_url')],
+//                         headline: values[headers.indexOf('headline')],
+//                         summary: values[headers.indexOf('summary')],
+//                         skills: values[headers.indexOf('skills')],
+//                         currentCompany: values[headers.indexOf('current_company')],
+//                         industry: values[headers.indexOf('industry')]
+//                     };
+//                 }).filter(lead => lead.url);
+
+//                 resolve(leads);
+//             } catch (error) {
+//                 reject(new Error('Error processing CSV: ' + error.message));
+//             }
+//         };
+//         reader.onerror = () => reject(new Error('Error reading file'));
+//         reader.readAsText(file);
+//     });
+// }
+
+// Handle CSV file input
+function handleCSVFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const label = document.querySelector('label[for="csvFile"]');
+    const uploadText = label.querySelector('span');
+    uploadText.textContent = file.name;
+
+    // Show file details
+    const fileDetails = document.createElement('div');
+    fileDetails.className = 'mt-2 text-xs text-gray-500';
+    fileDetails.textContent = `Size: ${(file.size / 1024).toFixed(1)}KB`;
+    label.appendChild(fileDetails);
+}
+
+function verifyAuthState() {
+    const token = AUTH.token;
+    const user = AUTH.user;
+    
+    console.log('Auth state:', {
+        hasToken: !!token,
+        hasUser: !!user,
+        token: token ? `${token.substring(0, 10)}...` : null
+    });
+
+    if (!token || !user) {
+        showToast('Please log in again', 'error');
+        AUTH.logout();
+        return false;
+    }
+    return true;
+}
+
+// Update your form submission handler:
+async function handleCampaignSubmit(event) {
+    event.preventDefault();
+    
+    if (!verifyAuthState()) {
+        return;
+    }
+
+    const form = event.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const file = document.getElementById('csvFile').files[0];
+    
+    if (!file) {
+        showToast('Please select a CSV file', 'error');
+        return;
+    }
+
+    try {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+            <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+            </svg>
+            Processing...
+        `;
+
+        const formData = {
+            csvFile: file,
+            cookie: document.getElementById('cookie').value,
+            name: document.getElementById('name').value,
+            pitch: document.getElementById('pitch').value
+        };
+
+        console.log('Form data:', {
+            fileName: formData.csvFile.name,
+            cookieLength: formData.cookie.length,
+            name: formData.name,
+            pitchLength: formData.pitch.length
+        });
+
+        showProgressBar();
+        const leads = await processCSVFile(formData.csvFile);
+        console.log('Processed leads:', leads.length);
+        await processLeads(leads, formData);
+        showToast('Campaign completed successfully', 'success');
+    } catch (error) {
+        console.error('Campaign error:', error);
+        showToast(error.message, 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Start Campaign';
+        hideProgressBar();
+    }
+}
+
+
+// // Update form processing
+// async function handleCampaignSubmit(event) {
+//     event.preventDefault();
+    
+//     const form = event.target;
+//     const submitBtn = form.querySelector('button[type="submit"]');
+//     const file = document.getElementById('csvFile').files[0];
+    
+//     if (!file) {
+//         showToast('Please select a CSV file', 'error');
+//         return;
+//     }
+
+//     try {
+//         submitBtn.disabled = true;
+//         submitBtn.innerHTML = `
+//             <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+//                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+//                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+//             </svg>
+//             Processing...
+//         `;
+
+//         const formData = {
+//             csvFile: file,
+//             cookie: document.getElementById('cookie').value,
+//             name: document.getElementById('name').value,
+//             pitch: document.getElementById('pitch').value,
+//             userId: AUTH.user.id
+//         };
+
+//         showProgressBar();
+//         const leads = await processCSVFile(formData.csvFile);
+//         await processLeads(leads, formData);
+//         showToast('Campaign completed successfully', 'success');
+//     } catch (error) {
+//         showToast(error.message, 'error');
+//     } finally {
+//         submitBtn.disabled = false;
+//         submitBtn.innerHTML = 'Start Campaign';
+//         hideProgressBar();
+//     }
+// }
+
+// async function submitform(event) {
+//     if (event) event.preventDefault();  // Add this line
+    
+//     console.log("Submit function called");
+    
+//     if (!AUTH.isAuthenticated()) {
+//         console.log("Not authenticated");
+//         window.location.href = '/login.html';
+//         return;
+//     }
+
+//     console.log("Auth state:", {
+//         token: AUTH.token ? 'Present' : 'Missing',
+//         user: AUTH.user ? 'Present' : 'Missing'
+//     });
+
+//     const formData = {
+//         csvFile: document.getElementById('csvFile').files[0],
+//         cookie: document.getElementById('cookie').value || AUTH.user.linkedinCookie,
+//         name: document.getElementById('name').value,
+//         pitch: document.getElementById('pitch').value,
+//         userId: AUTH.user.id
+//     };
+
+//     console.log("Form data collected:", {
+//         hasCsvFile: !!formData.csvFile,
+//         cookieLength: formData.cookie?.length,
+//         hasName: !!formData.name,
+//         hasPitch: !!formData.pitch,
+//         userId: formData.userId
+//     });
+
+//     try {
+//         console.log("Starting form processing");
+//         showProgressBar();
+        
+//         console.log("Processing CSV file...");
+//         const leads = await processCSVFile(formData.csvFile);
+//         console.log("Leads extracted:", leads.length);
+        
+//         console.log("Processing leads...");
+//         await processLeads(leads, formData);
+        
+//         console.log("Campaign completed");
+//         showToast('Campaign completed successfully', 'success');
+
+//     } catch (error) {
+//         console.error("Error in form submission:", error);
+//         showToast(error.message, 'error');
+//     } finally {
+//         console.log("Cleaning up");
+//         hideProgressBar();
+//     }
+// }
+
+// Update processLeads with more logging
+async function processLeads(leads, formData) {
+    console.log("processLeads started", {
+        numberOfLeads: leads.length,
+        formDataPresent: !!formData
+    });
+
+    const totalLeads = leads.length;
+    let processed = 0;
+
+    const resultsSection = document.getElementById('resultsSection');
+    resultsSection.classList.remove('hidden');
+
+    for (const lead of leads) {
+        console.log("Processing lead:", lead.url);
+        const userAgent = navigator.userAgent;
+        try {
+            const requestData = {
+                url: lead.url,
+                cookie: formData.cookie,
+                data: lead,
+                pitch: formData.pitch,
+                name: formData.name
+            };
+            
+            console.log("Preparing request:", {
+                url: requestData.url,
+                cookiePresent: !!requestData.cookie,
+                dataPresent: !!requestData.data,
+                pitchPresent: !!requestData.pitch,
+                namePresent: !!requestData.name,
+                userAgent: userAgent
+            });
+
+            const response = await fetch(`${AUTH.API_URL}/linkedin/personalise`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${AUTH.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            console.log("Response received:", {
+                status: response.status,
+                ok: response.ok
+            });
+
+            const result = await response.json();
+            console.log("Response data:", result);
+
+            lead.status = 'Success';
+            lead.message = result.body;
+        } catch (error) {
+            console.error("Error processing lead:", error);
+            lead.status = 'Failed';
+            lead.error = error.message;
+        }
+
+        processed++;
+        updateProgressBar((processed / totalLeads) * 100);
+        renderResult(lead);
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+}
+
+// UI Update Functions
+function updateUIWithUserData() {
+    if (!AUTH.user) return;
+
+    // Update message counter and progress bar
+    const messageCounter = document.getElementById('messageCounter');
+    const progressBar = document.getElementById('messageProgressBar');
+    if (messageCounter && progressBar) {
+        const { messagesSent, messageLimits } = AUTH.user;
+        messageCounter.textContent = `${messagesSent}/${messageLimits.daily}`;
+        const progress = (messagesSent / messageLimits.daily) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    // Update plan display
+    const userPlan = document.getElementById('userPlan');
+    if (userPlan) {
+        userPlan.textContent = AUTH.user.plan;
+    }
+}
+
+// Chart Management Functions
+function updateUsageChart(stats) {
+    const ctx = document.getElementById('usageChart');
+    if (!ctx) return;
+
+    // Properly destroy existing chart if it exists
+    if (window.usageChart instanceof Chart) {
+        window.usageChart.destroy();
+    }
+
+    const dates = getLast7Days();
+    const data = dates.map(date => stats.dailyStats?.[date] || 0);
+
+    window.usageChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates.map(date => new Date(date).toLocaleDateString()),
+            datasets: [{
+                label: 'Messages Sent',
+                data: data,
+                borderColor: 'rgb(59, 130, 246)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
     });
 }
 
 
-//         function parseCSV(csvText) {
-//     const rows = csvText.split('\n');
-//     const headers = rows[0].split(',').map(header => header.trim());
 
-//     // Check if the CSV has at least 14 columns
-//     if (headers.length < 14) {
-//         throw new Error('The CSV does not have a 14th column.');
-//     }
+// Add these helper functions to your JavaScript code
 
-//     return rows.slice(1)
-//         .filter(row => row.trim() !== '')
-//         .map(row => {
-//             const values = row.split(',').map(value => value.trim());
-//             const url = values[14] || ''; // Access the 14th column (index 13)
+function showHelp() {
+    showToast('Need help? Click the question marks next to fields for guidance.', 'info');
+}
 
-//             return {
-//                 name: values[0] || '', // Assuming the first column is 'name'
-//                 url: url, // Store the 14th column value
-//                 allData: headers.reduce((obj, header, index) => {
-//                     obj[header] = values[index] || '';
-//                     return obj;
-//                 }, {}),
-//                 status: 'Pending'
-//             };
-//         });
-// }
+function showCookieHelper() {
+    const helpModal = `
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="cookieHelperModal">
+            <div class="bg-white rounded-lg max-w-lg w-full m-4 p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">How to Get Your LinkedIn Cookie</h3>
+                    <button onclick="closeCookieHelper()" class="text-gray-400 hover:text-gray-500">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                        <li>Log in to LinkedIn in Chrome</li>
+                        <li>Right-click anywhere and select "Inspect" (or press F12)</li>
+                        <li>Go to the "Application" tab at the top</li>
+                        <li>In the left sidebar, under "Storage", expand "Cookies"</li>
+                        <li>Click on "www.linkedin.com"</li>
+                        <li>Find the cookie named "li_at"</li>
+                        <li>Double click the value to select it and copy</li>
+                        <li>Paste the value into the LinkedIn Cookie field</li>
+                    </ol>
+                    <div class="mt-4 bg-blue-50 p-4 rounded-md">
+                        <p class="text-sm text-blue-700">
+                            <strong>Important:</strong> Keep your cookie secure and never share it with untrusted sources.
+                            This cookie provides access to your LinkedIn account.
+                        </p>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button onclick="closeCookieHelper()" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
+                            Got it
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', helpModal);
+}
 
+function closeCookieHelper() {
+    const modal = document.getElementById('cookieHelperModal');
+    if (modal) {
+        modal.classList.add('fade-out');
+        setTimeout(() => modal.remove(), 300);
+    }
+}
 
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            outputDiv.innerHTML = '';
-            progressContainer.classList.remove('hidden');
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-            const csvFile = document.getElementById('csvFile').files[0];
-            const cookie = document.getElementById('cookie').value;
-            const pitch = document.getElementById('pitch').value;
-
-            if (!csvFile) {
-                alert('Please upload a CSV file.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    const leads = parseCSV(e.target.result);
-                    const results = [];
-
-                    for (let i = 0; i < leads.length; i++) {
-                        const lead = leads[i];
-                        progressText.textContent = `Processing lead ${i + 1} of ${leads.length}`;
-                        progressBar.style.width = `${((i + 1) / leads.length) * 100}%`;
-
-                        const result = await generatePersonalizedMessage(lead, pitch, cookie);
-                        results.push(result);
-
-                        if (result.status === 'Success') {
-                            showToast(`Personalized message generated for ${lead.name}`, 'success');
-                        } else {
-                            showToast(`Failed to generate message for ${lead.name}`, 'error');
-                        }
-
-                    }
-
-                    renderResults(results);
-                    showToast('Personalization process completed', 'success');
-                } catch (error) {
-                    console.error(error);
-                    alert('Error processing the CSV file.');
-                    showToast('Error processing the CSV file', 'error');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-            };
-            reader.readAsText(csvFile);
+// Update the cookie management to store per-LinkedIn account:
+async function saveCookie(cookie, linkedinEmail) {
+    try {
+        const response = await fetch(`${AUTH.API_URL}/linkedin-cookies`, {
+            method: 'POST',
+            headers: AUTH.getHeaders(),
+            body: JSON.stringify({
+                value: cookie,
+                email: linkedinEmail
+            })
         });
+        
+        await AUTH.handleResponse(response);
+        showToast('LinkedIn cookie saved successfully', 'success');
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
 
-        function renderResults(results) {
-            console.log(results)
-            const table = document.createElement('table');
-            table.className = 'w-full border-collapse border border-gray-300';
-
-// First add this CSS to your stylesheet for the popup
+// Also add this CSS to your <style> section if not already present
 const style = document.createElement('style');
 style.textContent = `
-    .body-popup {
-        visibility: hidden;
+    .fade-out {
         opacity: 0;
-        transition: opacity 0.2s;
-    }
-    
-    .body-container:hover .body-popup {
-        visibility: visible;
-        opacity: 1;
+        transition: opacity 0.3s ease-out;
     }
 `;
 document.head.appendChild(style);
 
-// Then the table HTML
-table.innerHTML = `
-    <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="bg-gray-50 border-b border-gray-200">
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Name</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">URL</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Headline</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Body</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    ${results.map(result => `
-                        <tr class="${result.status === 'Success' ? 'bg-green-50 hover:bg-green-100' : 'bg-red-50 hover:bg-red-100'} transition-colors duration-150 ease-in-out">
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-medium text-gray-900">${result.name}</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <a href="${result.url}" 
-                                   target="_blank" 
-                                   rel="noopener noreferrer"
-                                   class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
-                                    ${result.url}
-                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                    </svg>
-                                </a>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">
-                                    ${result.headline}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 relative">
-                                <div class="body-container group cursor-pointer">
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">
-                                        ${result.body}
-                                    </div>
-                                    <div class="body-popup absolute z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-lg mt-2 left-0">
-                                        <div class="text-sm text-gray-500 whitespace-pre-wrap">
-                                            ${result.body}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center text-sm font-medium ${result.status === 'Success' ? 'text-green-700' : 'text-red-700'}">
-                                    ${result.status === 'Success' ? `
-                                        <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    ` : `
-                                        <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    `}
-                                    ${result.status}
-                                </span>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-    </div>
-`;
+// Update the setupEventListeners function to include these handlers
+function setupEventListeners() {
+    // Profile Form
+    // document.getElementById('profileForm')?.addEventListener('submit', handleProfileSubmit);
+    
+    // Campaign Form
+    document.getElementById('personalization-form')?.addEventListener('submit', handleCampaignSubmit);
 
+    // Help buttons
+    // const helpButton = document.getElementById('helpButton');
+    // const cookieHelp = document.getElementById('cookieHelp');
 
-//             table.innerHTML = `
-//     <div class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
-//         <div class="overflow-x-auto">
-//             <table class="w-full">
-//                 <thead>
-//                     <tr class="bg-gray-50 border-b border-gray-200">
-//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Name</th>
-//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">URL</th>
-//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Headline</th>
-//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Body</th>
-//                         <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody class="divide-y divide-gray-200">
-//                     ${results.map(result => `
-//                         <tr class="${result.status === 'Success' ? 'bg-green-50 hover:bg-green-100' : 'bg-red-50 hover:bg-red-100'} transition-colors duration-150 ease-in-out">
-//                             <td class="px-6 py-4">
-//                                 <span class="text-sm font-medium text-gray-900">${result.name}</span>
-//                             </td>
-//                             <td class="px-6 py-4">
-//                                 <a href="${result.url}" 
-//                                    target="_blank" 
-//                                    rel="noopener noreferrer"
-//                                    class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium">
-//                                     ${result.url}
-//                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-//                                     </svg>
-//                                 </a>
-//                             </td>
-//                             <td class="px-6 py-4">
-//                                 <div class="text-sm text-gray-900 max-w-md truncate">
-//                                     ${result.headline}
-//                                 </div>
-//                             </td>
-//                             <td class="px-6 py-4">
-//                                 <div class="text-sm text-gray-500 max-w-md truncate">
-//                                     ${result.body}
-//                                 </div>
-//                             </td>
-//                             <td class="px-6 py-4">
-//                                 <span class="inline-flex items-center text-sm font-medium ${result.status === 'Success' ? 'text-green-700' : 'text-red-700'}">
-//                                     ${result.status === 'Success' ? `
-//                                         <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-//                                         </svg>
-//                                     ` : `
-//                                         <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-//                                         </svg>
-//                                     `}
-//                                     ${result.status}
-//                                 </span>
-//                             </td>
-//                         </tr>
-//                     `).join('')}
-//                 </tbody>
-//             </table>
-//         </div>
-//     </div>
-// `;
-            outputDiv.appendChild(table);
+    // if (helpButton) {
+    //     helpButton.addEventListener('click', showHelp);
+    // }
+    
+    // if (cookieHelp) {
+    //     cookieHelp.addEventListener('click', showCookieHelper);
+    // }
+}
+
+// Event Handlers
+function setupEventListeners() {
+    // Profile Form
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`${AUTH.API_URL}/profile`, {
+                method: 'PATCH',
+                headers: AUTH.getHeaders(),
+                body: JSON.stringify({
+                    name: document.getElementById('profileName').value,
+                    email: document.getElementById('profileEmail').value,
+                    linkedinCookie: document.getElementById('profileLinkedinCookie').value
+                })
+            });
+            
+            const updatedUser = await AUTH.handleResponse(response);
+            AUTH.user = updatedUser;
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+            
+            showToast('Profile updated successfully', 'success');
+            updateUIWithUserData();
+        } catch (error) {
+            showToast(error.message, 'error');
         }
+    });
+
+    // Campaign Form
+    // document.getElementById('personalization-form').addEventListener('submit', async (event) => {
+    //     event.preventDefault();
+
+
+
+    // Help buttons
+    document.getElementById('helpButton')?.addEventListener('click', showHelp);
+    document.getElementById('cookieHelp')?.addEventListener('click', showCookieHelper);
+}
+
+async function processCSVFile(file) {
+    console.log("Starting CSV processing");
+
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            try {
+                const text = e.target.result;
+                
+                // Use Papaparse for robust CSV parsing
+                Papa.parse(text, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                        console.log("CSV parsing complete:", {
+                            totalRows: results.data.length,
+                            fields: results.meta.fields
+                        });
+
+                        // Map the data to leads
+                        const leads = results.data.map(row => {
+                            // Clean up values by removing quotes and extra whitespace
+                            const cleanValue = (val) => val ? val.replace(/^["']|["']$/g, '').trim() : '';
+
+                            const lead = {
+                                name: cleanValue(row.full_name),
+                                url: cleanValue(row.profile_url),
+                                headline: cleanValue(row.headline),
+                                summary: cleanValue(row.summary),
+                                currentCompany: cleanValue(row.current_company),
+                                industry: cleanValue(row.industry),
+                                location: cleanValue(row.location_name),
+                                // Additional useful fields
+                                skills: cleanValue(row.skills),
+                                currentPosition: cleanValue(row.current_company_position)
+                            };
+
+                            // Log each processed lead for debugging
+                            console.log("Processed lead:", {
+                                name: lead.name,
+                                url: lead.url?.substring(0, 50) + '...',
+                                hasHeadline: !!lead.headline,
+                                hasCompany: !!lead.currentCompany
+                            });
+
+                            return lead;
+                        }).filter(lead => {
+                            // Only keep leads with valid name and URL
+                            const isValid = lead.name && lead.url;
+                            if (!isValid) {
+                                console.log("Filtered out invalid lead:", {
+                                    hasName: !!lead.name,
+                                    hasUrl: !!lead.url
+                                });
+                            }
+                            return isValid;
+                        });
+
+                        console.log("CSV processing complete:", {
+                            totalLeadsFound: leads.length,
+                            validLeads: leads.filter(l => l.name && l.url).length
+                        });
+
+                        if (leads.length === 0) {
+                            reject(new Error('No valid leads found in CSV. Please ensure the file contains the required columns: full_name and profile_url'));
+                            return;
+                        }
+
+                        resolve(leads);
+                    },
+                    error: (error) => {
+                        console.error("Papa Parse error:", error);
+                        reject(new Error('Error parsing CSV: ' + error.message));
+                    }
+                });
+            } catch (error) {
+                console.error("Error in CSV processing:", error);
+                reject(new Error('Error processing CSV: ' + error.message));
+            }
+        };
+
+        reader.onerror = () => {
+            console.error("FileReader error:", reader.error);
+            reject(new Error('Error reading file'));
+        };
+
+        console.log("Starting file read for:", file.name);
+        reader.readAsText(file);
+    });
+}
+
+// Update form submission to better handle CSV
+async function submitform(event) {
+    if (event) event.preventDefault();
+    
+    console.log("Submit function called");
+    
+    // Authentication check
+    if (!AUTH.isAuthenticated()) {
+        console.log("Not authenticated");
+        window.location.href = '/login.html';
+        return;
+    }
+
+    // Get and validate form inputs
+    const fileInput = document.getElementById('csvFile');
+    const cookieInput = document.getElementById('cookie');
+    const nameInput = document.getElementById('name');
+    const pitchInput = document.getElementById('pitch');
+
+    // Validate all required fields
+    const validations = [
+        { condition: !fileInput.files[0], message: 'Please select a CSV file' },
+        { condition: !cookieInput.value, message: 'Please enter your LinkedIn cookie' },
+        { condition: !nameInput.value, message: 'Please enter your name' },
+        { condition: !pitchInput.value, message: 'Please enter your pitch template' }
+    ];
+
+    for (const validation of validations) {
+        if (validation.condition) {
+            showToast(validation.message, 'error');
+            return;
+        }
+    }
+
+    // Validate file type
+    const file = fileInput.files[0];
+    if (!file.name.toLowerCase().endsWith('.csv')) {
+        showToast('Please select a valid CSV file', 'error');
+        return;
+    }
+
+    const formData = {
+        csvFile: file,
+        cookie: cookieInput.value,
+        name: nameInput.value,
+        pitch: pitchInput.value
+    };
+
+    // Update UI
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+    </svg> Processing...`;
+
+    try {
+        showProgressBar();
+        console.log("Processing CSV file...");
+        const leads = await processCSVFile(formData.csvFile);
+        
+        console.log(`Found ${leads.length} valid leads, starting processing...`);
+        await processLeads(leads, formData);
+        
+        showToast('Campaign completed successfully', 'success');
+    } catch (error) {
+        console.error("Error:", error);
+        showToast(error.message, 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Start Campaign';
+        hideProgressBar();
+    }
+}
+
+// Utility Functions
+function showProgressBar() {
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressContainer').classList.remove('hidden');
+}
+
+function hideProgressBar() {
+    document.getElementById('progressContainer').classList.add('hidden');
+}
+
+function updateProgressBar(percent) {
+    document.getElementById('progressBar').style.width = `${percent}%`;
+    document.getElementById('progressText').textContent = `Processing: ${percent}%`;
+}
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+    } text-white`;
+    toast.textContent = message;
+    
+    const container = document.getElementById('toastContainer');
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function getLast7Days() {
+    const dates = [];
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        dates.push(date.toISOString().split('T')[0]);
+    }
+    return dates;
+}
+
+function daysSinceRegistration(createdAt) {
+    const created = new Date(createdAt);
+    const now = new Date();
+    return Math.floor((now - created) / (1000 * 60 * 60 * 24));
+}
+// Add this function for rendering results
+function renderResult(lead) {
+    const output = document.getElementById('output');
+    
+    // Create table if it doesn't exist
+    if (!document.getElementById('resultsTable')) {
+        const table = document.createElement('table');
+        table.id = 'resultsTable';
+        table.className = 'min-w-full border-separate border-spacing-0';
+        table.innerHTML = `
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="sticky top-0 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th class="sticky top-0 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="sticky top-0 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white"></tbody>
+        `;
+        output.appendChild(table);
+    }
+    
+    const tbody = document.getElementById('resultsTable').querySelector('tbody');
+    const row = document.createElement('tr');
+    row.className = 'hover:bg-gray-50 cursor-pointer';
+    
+    // Get the first sentence of the headline or truncate at 60 chars
+    const headlinePreview = (lead.headline || '').split('.')[0];
+    const truncatedHeadline = headlinePreview.length > 60 
+        ? headlinePreview.substring(0, 57) + '...' 
+        : headlinePreview;
+    
+    row.innerHTML = `
+        <td class="px-4 py-3 border-b border-gray-200">
+            <div class="text-sm font-medium text-gray-900">${lead.name}</div>
+            <div class="text-xs text-gray-500">${truncatedHeadline}</div>
+        </td>
+        <td class="px-4 py-3 border-b border-gray-200">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                ${lead.status === 'Success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                ${lead.status}
+            </span>
+        </td>
+        <td class="px-4 py-3 border-b border-gray-200">
+            <button onclick="showDetails('${encodeURIComponent(JSON.stringify(lead))}')" 
+                    class="text-blue-600 hover:text-blue-900 text-sm font-medium">
+                View Details
+            </button>
+        </td>
+    `;
+    
+    tbody.appendChild(row);
+}
+
+function showDetails(leadData) {
+    const lead = JSON.parse(decodeURIComponent(leadData));
+    const modal = document.getElementById('detailModal');
+    
+    // Populate modal content
+    document.getElementById('modalName').textContent = lead.name;
+    document.getElementById('modalHeadline').textContent = lead.headline || '';
+    document.getElementById('modalProfile').href = lead.url;
+    document.getElementById('modalProfile').textContent = lead.url;
+    document.getElementById('modalMessage').textContent = lead.message || '';
+    
+    // Handle error section
+    const errorContainer = document.getElementById('modalErrorContainer');
+    const modalError = document.getElementById('modalError');
+    if (lead.error) {
+        errorContainer.classList.remove('hidden');
+        modalError.textContent = lead.error;
+    } else {
+        errorContainer.classList.add('hidden');
+    }
+    
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('detailModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('detailModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Prevent modal close when clicking inside modal content
+document.querySelector('#detailModal > div').addEventListener('click', function(e) {
+    e.stopPropagation();
+});
+
+
+// Add the template submit handler
+async function template() {
+
+    
+    const name = document.getElementById('templateName').value;
+    const content = document.getElementById('templateContent').value;
+
+    try {
+        const response = await fetch(`${AUTH.API_URL}/templates`, {
+            method: 'POST',
+            headers: AUTH.getHeaders(),
+            body: JSON.stringify({ name, content })
+        });
+
+        await AUTH.handleResponse(response);
+        showToast('Template saved successfully', 'success');
+        closeTemplateModal();
+        loadTemplates();
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+// Tutorial System
+const TUTORIAL_STEPS = [
+    {
+        element: '#csvFile',
+        title: 'Upload CSV',
+        content: 'Start by uploading your LinkedIn leads CSV file. Make sure it contains profile URLs and other lead information.'
+    },
+    {
+        element: '#cookie',
+        title: 'LinkedIn Authentication',
+        content: 'Enter your LinkedIn cookie here. Click "How to get this?" for detailed instructions on finding your cookie.'
+    },
+    {
+        element: '#savedTemplates',
+        title: 'Message Templates',
+        content: 'Create and manage your message templates. You can save multiple templates and reuse them later.'
+    },
+    {
+        element: '#pitch',
+        title: 'Customize Message',
+        content: 'Write your message or select a template. Use variables like {name}, {company}, etc. for personalization.'
+    },
+    {
+        element: '#submitBtn',
+        title: 'Start Campaign',
+        content: 'Click here to start sending personalized messages to your leads.'
+    }
+];
+
+// function startTutorial() {
+//     let currentStep = 0;
+//     const overlay = document.createElement('div');
+//     overlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-40';
+//     document.body.appendChild(overlay);
+
+//     function showStep() {
+//         if (currentStep >= TUTORIAL_STEPS.length) {
+//             overlay.remove();
+//             showToast('Tutorial completed!', 'success');
+//             return;
+//         }
+
+//         const step = TUTORIAL_STEPS[currentStep];
+//         const element = document.querySelector(step.element);
+        
+//         // Remove previous highlights
+//         document.querySelectorAll('.tutorial-highlight').forEach(el => {
+//             el.classList.remove('tutorial-highlight', 'relative', 'z-50', 'ring-2', 'ring-blue-500', 'ring-offset-2');
+//         });
+
+//         // Highlight current element
+//         element.classList.add('tutorial-highlight', 'relative', 'z-50', 'ring-2', 'ring-blue-500', 'ring-offset-2');
+
+//         // Create tooltip
+//         const tooltip = document.createElement('div');
+//         tooltip.className = 'fixed bg-white p-4 rounded-lg shadow-lg max-w-xs z-50';
+//         tooltip.innerHTML = `
+//             <h4 class="font-medium text-gray-900 mb-2">${step.title}</h4>
+//             <p class="text-sm text-gray-600 mb-4">${step.content}</p>
+//             <div class="flex justify-between">
+//                 ${currentStep > 0 ? `
+//                     <button class="text-blue-600 text-sm" onclick="previousStep()">Previous</button>
+//                 ` : '<div></div>'}
+//                 <button class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+//                     ${currentStep < TUTORIAL_STEPS.length - 1 ? 'Next' : 'Finish'}
+//                 </button>
+//             </div>
+//         `;
+
+//         // Position tooltip
+//         const rect = element.getBoundingClientRect();
+//         tooltip.style.top = `${rect.bottom + 8}px`;
+//         tooltip.style.left = `${rect.left}px`;
+
+//         // Remove any existing tooltips
+//         document.querySelectorAll('.tutorial-tooltip').forEach(el => el.remove());
+//         tooltip.classList.add('tutorial-tooltip');
+//         document.body.appendChild(tooltip);
+
+//         // Handle next step
+//         tooltip.querySelector('button:last-child').addEventListener('click', () => {
+//             currentStep++;
+//             showStep();
+//         });
+//     }
+
+//     showStep();
+// }
+
+function startTutorial() {
+    let currentStep = 0;
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-40';
+    document.body.appendChild(overlay);
+
+    function showStep() {
+        if (currentStep >= TUTORIAL_STEPS.length) {
+            // Clean up the overlay and tooltips
+            document.querySelectorAll('.tutorial-tooltip').forEach(el => el.remove());
+            overlay.remove(); // Ensure the overlay is removed
+            showToast('Tutorial completed!', 'success');
+            return;
+        }
+
+        const step = TUTORIAL_STEPS[currentStep];
+        const element = document.querySelector(step.element);
+
+        // Ensure the element exists before proceeding
+        if (!element) {
+            console.error(`Element not found: ${step.element}`);
+            overlay.remove();
+            return;
+        }
+
+        // Highlight the current element
+        document.querySelectorAll('.tutorial-highlight').forEach(el => {
+            el.classList.remove('tutorial-highlight', 'relative', 'z-50', 'ring-2', 'ring-blue-500', 'ring-offset-2');
+        });
+        element.classList.add('tutorial-highlight', 'relative', 'z-50', 'ring-2', 'ring-blue-500', 'ring-offset-2');
+
+        // Create the tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'fixed bg-white p-4 rounded-lg shadow-lg max-w-xs z-50';
+        tooltip.innerHTML = `
+            <h4 class="font-medium text-gray-900 mb-2">${step.title}</h4>
+            <p class="text-sm text-gray-600 mb-4">${step.content}</p>
+            <div class="flex justify-between">
+                ${currentStep > 0 ? `
+                    <button class="text-blue-600 text-sm previous-btn">Previous</button>
+                ` : '<div></div>'}
+                <button class="bg-blue-600 text-white px-4 py-2 rounded text-sm next-btn">
+                    ${currentStep < TUTORIAL_STEPS.length - 1 ? 'Next' : 'Finish'}
+                </button>
+            </div>
+        `;
+
+        const rect = element.getBoundingClientRect();
+        tooltip.style.top = `${rect.bottom + 8}px`;
+        tooltip.style.left = `${Math.min(rect.left, window.innerWidth - 200)}px`;
+
+        document.querySelectorAll('.tutorial-tooltip').forEach(el => el.remove());
+        tooltip.classList.add('tutorial-tooltip');
+        document.body.appendChild(tooltip);
+
+        // Add event listeners for navigation
+        tooltip.querySelector('.next-btn').addEventListener('click', () => {
+            currentStep++;
+            showStep();
+        });
+
+        const previousButton = tooltip.querySelector('.previous-btn');
+        if (previousButton) {
+            previousButton.addEventListener('click', () => {
+                currentStep--;
+                showStep();
+            });
+        }
+    }
+
+    // Initialize the tutorial
+    try {
+        showStep();
+    } catch (error) {
+        console.error('Tutorial encountered an error:', error);
+        overlay.remove();
+    }
+}
+
+
+// Add tutorial button to navigation
+// function addTutorialButton() {
+//     const navItems = document.querySelector('#navItems');
+//     const tutorialButton = document.createElement('button');
+//     tutorialButton.className = 'text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium flex items-center';
+//     tutorialButton.innerHTML = `
+//         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+//                   d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+//             </path>
+//         </svg>
+//         Tutorial
+//     `;
+//     tutorialButton.onclick = startTutorial;
+//     navItems.insertBefore(tutorialButton, navItems.firstChild);
+// }
+
+// // Add to your initialization
+// document.addEventListener('DOMContentLoaded', () => {
+//     // ... existing initialization code ...
+//     addTutorialButton();
+// });
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    if (!AUTH.isAuthenticated()) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    setupEventListeners();
+    updateUIWithUserData();
+    loadAnalytics();
+    initializeEventListeners();
+    loadTemplates();
+    loadProfile();
+    showTab('dashboard');
+});
+
+// Replace your showTab function with this:
+
+
+
+
+// Initialize the dashboard tab as active on page load
+document.addEventListener('DOMContentLoaded', () => {
+    if (!AUTH.isAuthenticated()) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    // Set initial active tab
+    
+
+    // Setup other initializations
+    setupEventListeners();
+    updateUIWithUserData();
+    loadAnalytics();
+    initializeEventListeners();
+    loadTemplates();
+});
+
+// Initialize event listeners
+function initializeEventListeners() {
+    // CSV file handling
+    const csvInput = document.getElementById('csvFile');
+    if (csvInput) {
+        csvInput.addEventListener('change', handleCSVFile);
+    }
+
+    // // Template form handling
+    // const templateForm = document.getElementById('templateForm');
+    // if (templateForm) {
+    //     templateForm.addEventListener('submit', handleTemplateSubmit);
+    // }
+
+    // // Campaign form handling
+    // const campaignForm = document.getElementById('personalization-form');
+    // if (campaignForm) {
+    //     campaignForm.addEventListener('submit', handleCampaignSubmit);
+    // }
+}
+
+// Load initial data
+
+
+// Export for use in other files if needed
+window.AUTH = AUTH;
     </script>
 </body>
 </html>
