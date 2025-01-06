@@ -18,6 +18,9 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
+.hidden{
+    display: none;
+}
 
 @media (max-width: 640px) {
     th, td {
@@ -102,7 +105,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
-                        <span class="text-sm text-gray-600" id="messageCounter">0/100</span>
+                        <span class="text-sm text-gray-600" id="messageCounter">0/5</span>
                         <div class="h-2 w-20 bg-gray-200 rounded-full">
                             <div id="messageProgressBar" class="h-2 bg-blue-600 rounded-full transition-all duration-300" style="width: 0%"></div>
                         </div>
@@ -430,7 +433,7 @@
                         </form>
                     </div>
 
-                    <div class="border-t border-gray-200">
+                    <div class="border-t border-gray-200 hidden">
                         <div class="p-6 space-y-6">
                             <h3 class="text-lg font-medium text-gray-900">Current Plan</h3>
                             <div class="bg-gray-50 p-4 rounded-lg">
@@ -510,22 +513,22 @@
     <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
     <script>
-        document.getElementById('csvFile').addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const preview = document.getElementById('filePreview');
-        preview.classList.remove('hidden');
-        preview.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span class="font-medium">${file.name}</span>
-                <span class="text-gray-500">(${(file.size / 1024).toFixed(1)} KB)</span>
-            </div>
-        `;
-    }
-});
+//         document.getElementById('csvFile').addEventListener('change', (event) => {
+//     const file = event.target.files[0];
+//     if (file) {
+//         const preview = document.getElementById('filePreview');
+//         preview.classList.remove('hidden');
+//         preview.innerHTML = `
+//             <div class="flex items-center space-x-2">
+//                 <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+//                 </svg>
+//                 <span class="font-medium">${file.name}</span>
+//                 <span class="text-gray-500">(${(file.size / 1024).toFixed(1)} KB)</span>
+//             </div>
+//         `;
+//     }
+// });
 // Template Card Rendering (continued)
 function renderTemplateCard(template) {
     return `
@@ -1820,7 +1823,7 @@ function renderResult(lead) {
             </span>
         </td>
         <td class="px-4 py-3 border-b border-gray-200">
-            <button onclick="showDetails('${encodeURIComponent(JSON.stringify(lead))}')" 
+            <button onclick="showDetails(${JSON.stringify(lead).replace(/"/g, '&quot;')})" 
                     class="text-blue-600 hover:text-blue-900 text-sm font-medium">
                 View Details
             </button>
@@ -1831,27 +1834,61 @@ function renderResult(lead) {
 }
 
 function showDetails(leadData) {
-    const lead = JSON.parse(decodeURIComponent(leadData));
-    const modal = document.getElementById('detailModal');
-    
-    // Populate modal content
-    document.getElementById('modalName').textContent = lead.name;
-    document.getElementById('modalHeadline').textContent = lead.headline || '';
-    document.getElementById('modalProfile').href = lead.url;
-    document.getElementById('modalProfile').textContent = lead.url;
-    document.getElementById('modalMessage').textContent = lead.message || '';
-    
-    // Handle error section
-    const errorContainer = document.getElementById('modalErrorContainer');
-    const modalError = document.getElementById('modalError');
-    if (lead.error) {
-        errorContainer.classList.remove('hidden');
-        modalError.textContent = lead.error;
-    } else {
-        errorContainer.classList.add('hidden');
+    try {
+        // Parse the lead data safely
+        const lead = typeof leadData === 'string' ? JSON.parse(decodeURIComponent(leadData)) : leadData;
+        
+        // Get modal and modal elements
+        const modal = document.getElementById('detailModal');
+        if (!modal) {
+            console.error('Modal element not found');
+            return;
+        }
+
+        // Safely update modal content with null checks
+        const elements = {
+            'modalName': lead.name || '',
+            'modalHeadline': lead.headline || '',
+            'modalProfile': {
+                href: lead.url || '#',
+                text: lead.url || ''
+            },
+            'modalMessage': lead.message || ''
+        };
+
+        // Update each element safely
+        Object.entries(elements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                if (typeof value === 'object') {
+                    // Handle link elements
+                    element.href = value.href;
+                    element.textContent = value.text;
+                } else {
+                    element.textContent = value;
+                }
+            }
+        });
+
+        // Handle error container
+        const errorContainer = document.getElementById('modalErrorContainer');
+        const modalError = document.getElementById('modalError');
+        if (errorContainer && modalError) {
+            if (lead.error) {
+                errorContainer.classList.remove('hidden');
+                modalError.textContent = lead.error;
+            } else {
+                errorContainer.classList.add('hidden');
+            }
+        }
+
+        // Show modal
+        modal.classList.remove('hidden');
+
+    } catch (error) {
+        console.error('Error showing details:', error);
+        showToast('Error displaying lead details', 'error');
     }
-    
-    modal.classList.remove('hidden');
 }
 
 function closeModal() {
