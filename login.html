@@ -127,7 +127,7 @@
                     localStorage.setItem('currentUser', JSON.stringify(data.user));
                     
                     // Redirect to main application
-                    window.location.href = '/linkedinnew.html';
+                    window.location.href = '/linkedin.html';
                 } else {
                     showToast(data.error, 'error');
                 }
@@ -160,7 +160,7 @@
                     localStorage.setItem('currentUser', JSON.stringify(data.user));
                     
                     // Redirect to main application
-                    window.location.href = '/linkedinnew.html';
+                    window.location.href = '/linkedin.html';
                 } else {
                     showToast(data.error, 'error');
                 }
@@ -191,7 +191,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('authToken');
             if (token) {
-                window.location.href = '/linkedinnew.html';
+                window.location.href = '/linkedin.html';
             }
         });
     </script>
