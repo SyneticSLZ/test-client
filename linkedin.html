@@ -469,14 +469,14 @@
                                 <h4 class="text-sm font-medium text-gray-500">Total Messages Sent</h4>
                                 <p class="mt-2 text-3xl font-semibold text-gray-900" id="totalMessagesSent">0</p>
                             </div>
-                            <div class="bg-gray-50 p-4 rounded-lg">
+                            <!-- <div class="bg-gray-50 p-4 rounded-lg">
                                 <h4 class="text-sm font-medium text-gray-500">Success Rate</h4>
                                 <p class="mt-2 text-3xl font-semibold text-gray-900" id="successRate">0%</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <h4 class="text-sm font-medium text-gray-500">Daily Average</h4>
                                 <p class="mt-2 text-3xl font-semibold text-gray-900" id="dailyAverage">0</p>
-                            </div>
+                            </div> -->
                         </div>
 
                         <!-- Usage Chart -->
@@ -982,10 +982,10 @@ async function loadAnalytics() {
         
         // Update stats cards
         document.getElementById('totalMessagesSent').textContent = stats.messagesSent || '0';
-        document.getElementById('successRate').textContent = 
-            `${((stats.stats.success || 0) / (stats.messagesSent || 1) * 100).toFixed(1)}%`;
-        document.getElementById('dailyAverage').textContent = 
-            Math.round(stats.messagesSent / (1 + daysSinceRegistration(AUTH.user.createdAt))) || '0';
+        // document.getElementById('successRate').textContent = 
+        //     `${((stats.stats.success || 0) / (stats.messagesSent || 1) * 100).toFixed(1)}%`;
+        // document.getElementById('dailyAverage').textContent = 
+        //     Math.round(stats.messagesSent / (1 + daysSinceRegistration(AUTH.user.createdAt))) || '0';
 
         // Load activity history
         await loadActivityHistory();
@@ -1004,10 +1004,10 @@ async function loadAnalytics() {
 
 function updateAnalyticsUI(stats) {
     document.getElementById('totalMessagesSent').textContent = stats.messagesSent;
-    document.getElementById('successRate').textContent = 
-        `${((stats.stats.success || 0) / (stats.messagesSent || 1) * 100).toFixed(1)}%`;
-    document.getElementById('dailyAverage').textContent = 
-        Math.round(stats.messagesSent / (1 + daysSinceRegistration(AUTH.user.createdAt)));
+    // document.getElementById('successRate').textContent = 
+    //     `${((stats.stats.success || 0) / (stats.messagesSent || 1) * 100).toFixed(1)}%`;
+    // document.getElementById('dailyAverage').textContent = 
+    //     Math.round(stats.messagesSent / (1 + daysSinceRegistration(AUTH.user.createdAt)));
 }
 
 async function loadActivityHistory() {
@@ -1335,7 +1335,7 @@ async function processLeads(leads, formData) {
         updateProgressBar((processed / totalLeads) * 100);
         renderResult(lead);
         
-        // await new Promise(resolve => setTimeout(resolve, 1000));
+        // await new Promise(resolve => setTimeout(res   olve, 1000));
         const delay = Math.floor(Math.random() * (10000 - 1000 + 1)) + 2000; // Random delay between min and max
         await new Promise(resolve => setTimeout(resolve, delay));
         console.log(`Waited for ${delay} milliseconds`);

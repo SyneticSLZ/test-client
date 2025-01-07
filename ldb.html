@@ -744,7 +744,7 @@ const form = document.getElementById('personalization-form');
 
     return rows.slice(1).map(row => {
         const values = row.match(/(?:[^,"]+|"[^"]*")+/g).map(value => value.trim());
-        console.log(values)
+        console.log(values[20])
         return {
             name: values[0], // Adjust based on your header order
             url: values[8],
