@@ -5290,9 +5290,9 @@ function showNotification(message) {
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-semibold">Your Mailboxes</h3>
                         
-                        <!-- <button onclick="openModalmail()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"> -->
-
-                        <button onclick="showAddMailboxModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                        <button id="gmail-option-new"  class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                            <!-- onclick="openModalmail()" -->
+                        <!-- <button onclick="showAddMailboxModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"> -->
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                             </svg>
@@ -5339,8 +5339,8 @@ function showNotification(message) {
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Add New Gmail Mailbox</h2>
-                <button class="close-button" onclick="initiateGoogleOAuth()">
-                    <!-- <button class="close-button" onclick="hideAddMailboxModal()"> -->
+                <!-- <button class="close-button" onclick="initiateGoogleOAuth()"> -->
+                    <button class="close-button" onclick="hideAddMailboxModal()">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -7145,7 +7145,7 @@ async function selectMailboxForEmail() {
 
 const modalmail = document.getElementById('mailbox-mailbox-modal');
         const closeBtnmail = document.getElementById('close-modal');
-        const gmailOption = document.getElementById('gmail-option');
+        const gmailOption = document.getElementById('gmail-option-new');
         const manualOption = document.getElementById('manual-option');
 
         // Close modal functionality
