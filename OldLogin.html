@@ -569,7 +569,64 @@ if (action === 'login') {
 
 
 
-           function signUp() {
+        //    function signUp() {
+        //     console.log("signing in");
+        //     var checkbox = document.getElementById("user-agreement");
+        //     var email = document.getElementById('signupEmail').value;
+        //     var userName = document.getElementById('signupFullName').value;
+        //     var password = document.getElementById('signupPassword').value;
+        //     var confirmPassword = document.getElementById('signupConfirmPassword').value;
+        //     var signupError = document.getElementById('signupError');
+        //     const urlParams = new URLSearchParams(window.location.search); 
+        //     const plan = urlParams.get('plan'); 
+
+        //         // Check for empty fields
+        //     if (!email || !userName || !password || !confirmPassword) {
+        //         signupError.textContent = "Please fill in all fields.";
+        //         return;
+        //     }
+
+        //     if (!checkbox.checked) {
+        //         signupError.textContent = "You must agree to the User Agreement and Privacy Policy to proceed.";
+        //         return false; // Prevent form submission
+        //     }
+
+        //     // Check if passwords match
+        //     if (password !== confirmPassword) {
+        //         signupError.textContent = "Passwords do not match.";
+        //         return;
+        //     }
+
+
+        //     // Final validation before sending data to the server
+        //     if (signupError.textContent === "") {
+        //         fetch('https://server.voltmailer.com/signup-customer', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify({
+        //                 email: email,
+        //                 password: password,
+        //                 userName: userName,
+        //                 plan: plan
+        //             })
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 window.location.href = data.redirectUrl;
+        //             } else if (data.error) {
+        //                 signupError.textContent = data.error;
+        //             }
+        //         })
+        //         .catch(error => {
+        //             signupError.textContent = "An error occurred. Please try again.";
+        //         });
+        //     }
+        // }
+
+        async function signUp() {
             console.log("signing in");
             var checkbox = document.getElementById("user-agreement");
             var email = document.getElementById('signupEmail').value;
@@ -577,6 +634,7 @@ if (action === 'login') {
             var password = document.getElementById('signupPassword').value;
             var confirmPassword = document.getElementById('signupConfirmPassword').value;
             var signupError = document.getElementById('signupError');
+            const affiliate = localStorage.getItem('affiliate');
             const urlParams = new URLSearchParams(window.location.search); 
             const plan = urlParams.get('plan'); 
 
@@ -600,31 +658,65 @@ if (action === 'login') {
 
             // Final validation before sending data to the server
             if (signupError.textContent === "") {
-                fetch('https://server.voltmailer.com/signup-customer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password,
-                        userName: userName,
-                        plan: plan
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = data.redirectUrl;
-                    } else if (data.error) {
-                        signupError.textContent = data.error;
-                    }
-                })
-                .catch(error => {
+
+
+                const customerData = {
+                            stripeID: 'stripeid',
+                            email: email,
+                            plan: 'Starter',
+                            total_emails: 0,
+                            priceID: "price_1PdqxCKJeZAyw8f44eTYC7Rw",
+                            password: password,
+                            name: userName,
+                            plan_emails: 20,
+                            affiliate: affiliate
+                        };
+                        
+                        console.log(customerData)
+                        // Send customer data to your backend to add to the database
+                        const addCustomerResponse = await fetch('https://server.voltmailer.com/add-customer-to-db', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(customerData)
+                        }).catch(error => {
                     signupError.textContent = "An error occurred. Please try again.";
                 });
+        
+                        const addCustomerResult = await addCustomerResponse.json();
+                        console.log(addCustomerResult)
+                        // Redirect to dashboard with token
+                        if (addCustomerResult.redirectUrl) {
+                            window.location.href = addCustomerResult.redirectUrl;
+                        }
+
+
+
             }
         }
+
+        // async function addFreeCustomer(){
+
+            
+        //     // let plan = params.get('plan')
+        // try {
+        
+        //                 // Determine plan and total_emails based on price ID
+        //                 let plan, plan_emails;
+        //                     plan = 'Free';
+        //                     plan_emails = 20;
+
+        
+
+        
+        //                 // Optionally, show success message or redirect to another page
+        //                 document.getElementById('accountTick').style.display = "block";
+        //             } catch (error) {
+        //                 console.error('Error handling checkout session:', error);
+        //             }
+        
+        // }
 
       function signUptoFreeTrial() {
         console.log("signing in");
