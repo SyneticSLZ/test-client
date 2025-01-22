@@ -1056,7 +1056,7 @@ const setinActiveMailbox = async (email) => {
         console.log("email : ", email, "u_UEMAIL : ", U_MyEmail)
         // Backend deletion not implemented in your example, assume a DELETE endpoint exists
         const response = await fetch('https://server.voltmailer.com/api/mailboxes/delete', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
