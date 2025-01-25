@@ -3991,7 +3991,11 @@ async function sendAllEmails() {
         // const delay = calculateDelay(cappedEmailsPerHour);
         // console.log(`Delaying next email by ${Math.round(delay)} ms`);
 
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        const minDelay = 120000; // 2 minutes
+        const maxDelay = 240000; // 4 minutes
+        const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1) + minDelay);
+        console.log(`Waiting ${randomDelay/1000} seconds before next send`);
+        await new Promise(resolve => setTimeout(resolve, randomDelay));
 
         const data = generatedData[index];
         const selectedEmail = emails[index % emails.length]; // Distribute emails across mailboxes
