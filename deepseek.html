@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced Water Simulation</title>
+    <style>body { margin: 0; }</style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        let scene, camera, renderer, water;
+        
+        init();
+        animate();
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.body.appendChild(renderer.domElement);
+
+            // Camera controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            camera.position.set(15, 10, 15);
+            controls.update();
+
+            // Add skybox
+            const loader = new THREE.CubeTextureLoader();
+            const textureCube = loader.load([
+                'https://threejs.org/examples/textures/px.jpg',
+                'https://threejs.org/examples/textures/nx.jpg',
+                'https://threejs.org/examples/textures/py.jpg',
+                'https://threejs.org/examples/textures/ny.jpg',
+                'https://threejs.org/examples/textures/pz.jpg',
+                'https://threejs.org/examples/textures/nz.jpg'
+            ]);
+            scene.background = textureCube;
+
+            // Water geometry
+            const geometry = new THREE.PlaneGeometry(30, 30, 512, 512);
+
+            // Advanced water material
+            const waterMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    waterColor: { value: new THREE.Color(0x0064b4) },
+                    skyColor: { value: new THREE.Color(0x87CEEB) },
+                    lightDir: { value: new THREE.Vector3(-1, 1, 0).normalize() },
+                    textureNormal: { value: new THREE.TextureLoader().load(
+                        'https://threejs.org/examples/textures/waternormals.jpg') 
+                    },
+                    textureCube: { value: textureCube },
+                    distortionScale: { value: 4.0 }
+                },
+                vertexShader: `
+                    varying vec3 vWorldPos;
+                    varying vec3 vNormal;
+                    varying vec2 vUv;
+                    uniform float time;
+                    uniform sampler2D textureNormal;
+
+                    // Gerstner wave function
+                    vec3 gerstnerWave(vec4 wave, vec3 p, inout vec3 tangent, inout vec3 binormal) {
+                        float steepness = wave.z;
+                        float wavelength = wave.w;
+                        float k = 2.0 * 3.141592653589793 / wavelength;
+                        float c = sqrt(9.8 / k);
+                        vec2 d = normalize(wave.xy);
+                        float f = k * (dot(d, p.xz) - c * time);
+                        float a = steepness / k;
+                        
+                        tangent += vec3(
+                            -d.x * d.x * (steepness * sin(f)),
+                            d.x * (steepness * cos(f)),
+                            -d.x * d.y * (steepness * sin(f))
+                        );
+                        binormal += vec3(
+                            -d.x * d.y * (steepness * sin(f)),
+                            d.y * (steepness * cos(f)),
+                            -d.y * d.y * (steepness * sin(f))
+                        );
+                        return vec3(
+                            d.x * (a * cos(f)),
+                            a * sin(f),
+                            d.y * (a * cos(f))
+                        );
+                    }
+
+                    void main() {
+                        vUv = uv;
+                        
+                        // Combine multiple waves
+                        vec3 tangent = vec3(1.0, 0.0, 0.0);
+                        vec3 binormal = vec3(0.0, 0.0, 1.0);
+                        vec3 worldPos = position;
+                        
+                        // Wave parameters (direction, steepness, wavelength)
+                        worldPos += gerstnerWave(vec4(1.0, 1.0, 0.25, 8.0), worldPos, tangent, binormal);
+                        worldPos += gerstnerWave(vec4(-1.0, 0.5, 0.2, 5.0), worldPos, tangent, binormal);
+                        worldPos += gerstnerWave(vec4(0.5, -0.7, 0.15, 3.0), worldPos, tangent, binormal);
+                        
+                        // Calculate normal from tangent and binormal
+                        vNormal = normalize(cross(binormal, tangent));
+                        
+                        // Apply normal map
+                        vec3 normalMap = texture2D(textureNormal, vUv * 2.0 + time * 0.05).xyz * 2.0 - 1.0;
+                        vNormal = normalize(vNormal + normalMap * 0.5);
+                        
+                        vWorldPos = (modelMatrix * vec4(worldPos, 1.0)).xyz;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(worldPos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vWorldPos;
+                    varying vec3 vNormal;
+                    varying vec2 vUv;
+                    uniform vec3 waterColor;
+                    uniform vec3 skyColor;
+                    uniform vec3 lightDir;
+                    uniform samplerCube textureCube;
+                    uniform float distortionScale;
+
+                    const float FresnelPower = 5.0;
+                    const float Reflectivity = 0.5;
+                    const float SpecularPower = 256.0;
+
+                    void main() {
+                        vec3 normal = normalize(vNormal);
+                        vec3 viewDir = normalize(cameraPosition - vWorldPos);
+                        
+                        // Fresnel effect
+                        float fresnel = pow(1.0 - dot(normal, viewDir), FresnelPower);
+                        
+                        // Reflection
+                        vec3 reflectVec = reflect(-viewDir, normal);
+                        vec3 reflection = textureCube(textureCube, reflectVec).rgb;
+                        
+                        // Refraction
+                        vec3 refractVec = refract(-viewDir, normal, 0.9);
+                        vec3 refraction = textureCube(textureCube, refractVec).rgb * waterColor;
+                        
+                        // Combine reflection and refraction
+                        vec3 color = mix(refraction, reflection, fresnel * Reflectivity);
+                        
+                        // Specular highlight
+                        vec3 halfDir = normalize(viewDir + lightDir);
+                        float specular = pow(max(dot(normal, halfDir), 0.0), SpecularPower);
+                        color += vec3(0.8) * specular * 0.5;
+                        
+                        // Depth attenuation
+                        float depth = 1.0 - smoothstep(0.0, 30.0, length(vWorldPos - cameraPosition));
+                        color *= mix(vec3(1.0), waterColor * 0.5, 1.0 - depth);
+                        
+                        gl_FragColor = vec4(color, 0.9);
+                    }
+                `,
+                transparent: true,
+                wireframe: false
+            });
+
+            water = new THREE.Mesh(geometry, waterMaterial);
+            water.rotation.x = -Math.PI / 2;
+            scene.add(water);
+
+            // Add directional light
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(-1, 1, 0);
+            scene.add(light);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            water.material.uniforms.time.value = performance.now() / 1000;
+            
+            // Update light direction
+            const time = performance.now() / 1000;
+            water.material.uniforms.lightDir.value.set(
+                Math.cos(time * 0.5),
+                1.0,
+                Math.sin(time * 0.5)
+            ).normalize();
+            
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

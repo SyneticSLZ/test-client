@@ -1556,10 +1556,18 @@ async function RenderHtml(data){
     //     }
     // });
 
-
+    const billingElement = document.getElementById('3');
+    billingElement.onclick = function() {
+        if (userData && userData.id && userData.email) {
+            billing(data.stripeID, data.email);
+        } else {
+            console.warn('User data not yet loaded');
+            // Optionally redirect to login or show error message
+        }
+    };
     
     document.getElementById('h2name').innerHTML=`${name}`;
-    // document.getElementById('metric-label-plan').innerHTML = `${plan}`;
+    document.getElementById('metric-label-plan').innerHTML = `${plan}`;
     // document.getElementById('metric-label-total').innerHTML = `${UsedEmails}`;
     document.getElementById('plan-usage-detail').innerHTML = `${UsedEmails} of ${planEmails} emails used this month`;
     // document.getElementById('metric-label-br').innerHTML = `${data.bounceRate}`;
@@ -4713,7 +4721,7 @@ function showNotification(message) {
             <div class="menu-item" id="2"> <i class="fi fi-tr-rocket-lunch"></i>New Campaign</div>
             <div class="menu-item" id="5"> <i class="fi fi-tr-envelope-plus"></i>Mailboxes</div>
             <div class="menu-item" id="6"> <i class="fi fi-tr-inbox-in"></i>Sent Emails</div>
-            <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
+            <div class="menu-item" id="3" > <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
             <!-- <div class="menu-item tools">Tools</div> -->
             <!-- <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Account</div> -->
             <!-- <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div> -->
@@ -5171,11 +5179,11 @@ function showNotification(message) {
                               </div>
                               </div>
                         <div class="plan-usage">
-                            <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e" id="metric-label-plan">Premium</b></h2>
-                            <p class="plan-usage-detail" id="plan-usage-detail">6,547 of 10,000 emails used this month</p>
+                            <h2 style="margin-bottom: 5px; color: #000;">Plan: <b style="color: #5e5e5e" id="metric-label-plan">-</b></h2>
+                            <p class="plan-usage-detail" id="plan-usage-detail">- of - emails used this month</p>
                             <div class="progress-text" id="progress-text">
-                              <p>Current: 6,547</p>
-                              <p>Total: 1000</p>
+                              <p>Current: -</p>
+                              <p>Total: -</p>
                             </div>
                             <div class="progress-barx">
                                 <div id="progressx" style="width: 57.3%;"></div>
