@@ -1558,12 +1558,9 @@ async function RenderHtml(data){
 
     const billingElement = document.getElementById('3');
     billingElement.onclick = function() {
-        if (userData && userData.id && userData.email) {
+
             billing(data.stripeID, data.email);
-        } else {
-            console.warn('User data not yet loaded');
-            // Optionally redirect to login or show error message
-        }
+
     };
     
     document.getElementById('h2name').innerHTML=`${name}`;
