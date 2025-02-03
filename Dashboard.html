@@ -4713,7 +4713,7 @@ function showNotification(message) {
             <div class="menu-item" id="2"> <i class="fi fi-tr-rocket-lunch"></i>New Campaign</div>
             <div class="menu-item" id="5"> <i class="fi fi-tr-envelope-plus"></i>Mailboxes</div>
             <div class="menu-item" id="6"> <i class="fi fi-tr-inbox-in"></i>Sent Emails</div>
-            <!-- <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div> -->
+            <div class="menu-item" id="3" onclick="billing()"> <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
             <!-- <div class="menu-item tools">Tools</div> -->
             <!-- <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Account</div> -->
             <!-- <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div> -->
@@ -5487,7 +5487,7 @@ function showNotification(message) {
                             <span class="block text-sm font-medium">Total Emails</span>
                             <span id="totalEmailsMetric" class="text-xl font-bold">0</span>
                         </div>
-                        <div class="rounded-md p-2 text-center">
+                        <div class="rounded-md p-2 text-center"> 
                             <span class="block text-sm font-medium">Delivered</span>
                             <span id="deliveredEmailsMetric" class="text-xl font-bold">0</span>
                         </div>
@@ -6704,8 +6704,8 @@ async function initiateGoogleOAuth() {
       var token = urlParams.get('token');
       if(!authCode){
       if(!token){
-            token = localStorage.getItem('token', token);
-      window.location.href = `https://www.voltmailer.com/Dashboard?token=${token}&code=${authCode}`;
+    //         token = localStorage.getItem('token', token);
+    //   window.location.href = `https://www.voltmailer.com/Dashboard?token=${token}&code=${authCode}`;
       }
       }
 
