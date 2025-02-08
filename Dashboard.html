@@ -1953,31 +1953,76 @@ const UNSUBSCRIBED_EMAILS = []; // Placeholder for unsubscribed emails list
 const ColumnDetector = {
     // Comprehensive pattern matching for various column names
     emailPatterns: [
-        /^email$/i, 
-        /contact.*email/i, 
-        /^e-?mail$/i, 
-        /primary.*email/i,
-        /work.*email/i,
-        /personal.*email/i
+        // Basic patterns
+        /^email$/i,
+        /^e-?mail$/i,
+        // CRM specific patterns
+        /^(primary|work|personal|business|contact|lead|customer|client).*email/i,
+        /^email.*(primary|work|personal|business|contact|lead|customer|client)/i,
+        /^contact.*e-?mail/i,
+        /^e-?mail.*address/i,
+        // Common CRM field names
+        /^email_1$/i,
+        /^email1$/i,
+        /^emailaddress1$/i, // Dynamics CRM
+        /^emailaddress$/i,
+        /^email_primary$/i,
+        /^contact_email$/i,
+        /^lead_email$/i
     ],
+    
     namePatterns: [
-        /^name$/i, 
-        /full.*name/i, 
-        /contact.*name/i,
+        // Basic patterns
+        /^name$/i,
+        /^full.*name$/i,
+        // CRM specific patterns
+        /^(contact|lead|customer|client|person).*name$/i,
+        /^name.*(contact|lead|customer|client|person)$/i,
+        /^(first|last).*name$/i,
+        /^name.*(first|last)$/i,
+        // Multiple word variations
+        /^full\s*name$/i,
+        /^display.*name$/i,
+        /^contact.*name$/i,
+        // International variations
         /^nom$/i, // French
         /^nombre$/i, // Spanish
-        /first.*name/i,
-        /last.*name/i,
-        /full\s*name/i,
-        /display.*name/i
+        /^nome$/i, // Portuguese/Italian
+        // Common CRM field names
+        /^lead_name$/i,
+        /^contact_name$/i,
+        /^customer_name$/i,
+        /^fullname$/i,
+        /^accountname$/i, // Salesforce
+        /^company_contact$/i
     ],
+    
     websitePatterns: [
-        /^website$/i, 
-        /company.*website/i, 
-        /^domain$/i,
+        // Basic patterns
+        /^website$/i,
+        /^web$/i,
         /^url$/i,
-        /corporate.*site/i,
-        /^web$/i
+        // CRM specific patterns
+        /^(company|business|corporate|org).*website$/i,
+        /^website.*(company|business|corporate|org)$/i,
+        /^(company|business|corporate|org).*url$/i,
+        /^url.*(company|business|corporate|org)$/i,
+        // Domain variations
+        /^domain$/i,
+        /^domain.*name$/i,
+        /^website.*domain$/i,
+        /^web.*address$/i,
+        // Common CRM field names
+        /^websiteurl$/i, // Dynamics CRM
+        /^website_url$/i,
+        /^company_website$/i,
+        /^company_url$/i,
+        /^web_site$/i,
+        /^site_url$/i,
+        /^homepage$/i,
+        /^homepage_url$/i,
+        /^company_domain$/i,
+        /^website_domain$/i
     ],
 
     // Advanced regex for email validation
@@ -1994,61 +2039,75 @@ const ColumnDetector = {
         'pinterest.com', 'tiktok.com', 'youtube.com'
     ],
 
+    // emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    // websiteRegex: /^(https?:\/\/)?([\w-]+\.)+[\w]{2,}/,
+    
+    // socialMediaDomains: [
+    //     'facebook.com', 'twitter.com', 'linkedin.com', 'instagram.com', 
+    //     'pinterest.com', 'tiktok.com', 'youtube.com'
+    // ],
+
     detectColumn(headers, patterns) {
-        // Prioritize exact matches, then partial matches
+        // Convert headers to strings and clean them
+        const cleanHeaders = headers.map(header => 
+            String(header).trim().toLowerCase().replace(/[_\s-]+/g, ' ')
+        );
+
+        // First try exact matches
         for (let pattern of patterns) {
-            // First, try exact match
-            const exactMatch = headers.find(header => 
+            const exactMatch = headers.findIndex(header => 
                 pattern.test(String(header).trim()) && 
-                String(header).trim().match(pattern)[0] === String(header).trim()
+                String(header).trim().match(pattern)[0].length === String(header).trim().length
             );
-            if (exactMatch) return exactMatch;
+            if (exactMatch !== -1) return headers[exactMatch];
         }
 
         // Then try partial matches
         for (let pattern of patterns) {
-            const partialMatch = headers.find(header => 
+            const partialMatch = headers.findIndex(header => 
                 pattern.test(String(header).trim())
             );
-            if (partialMatch) return partialMatch;
+            if (partialMatch !== -1) return headers[partialMatch];
+        }
+
+        // Finally try fuzzy matching for common variations
+        const fuzzyMatches = {
+            email: ['mail', 'e mail', 'contact', 'email address'],
+            name: ['contact person', 'lead contact', 'person name', 'contact'],
+            website: ['web link', 'site', 'homepage', 'domain', 'web address']
+        };
+
+        for (const [type, matches] of Object.entries(fuzzyMatches)) {
+            const foundIndex = cleanHeaders.findIndex(header =>
+                matches.some(match => header.includes(match))
+            );
+            if (foundIndex !== -1) return headers[foundIndex];
         }
 
         return null;
     },
 
     validateEmail(email) {
-        // Comprehensive email validation
         return this.emailRegex.test(email) && 
                !UNSUBSCRIBED_EMAILS.includes(email.toLowerCase());
     },
 
     validateWebsite(website) {
-        // Comprehensive website validation
         if (!this.websiteRegex.test(website)) return false;
-        
-        // Extract domain and check against social media domains
         const domain = website.replace(/^https?:\/\//, '').split('/')[0];
         return !this.socialMediaDomains.some(socialDomain => 
             domain.includes(socialDomain)
         );
     },
 
-    // Enhanced website normalization
     normalizeWebsite(website) {
-        // Remove any leading/trailing whitespace
         website = website.trim();
-        
-        // Replace http with https
         if (website.startsWith('http://')) {
             website = 'https://' + website.slice(7);
         } else if (!website.startsWith('https://')) {
             website = 'https://' + website;
         }
-
-        // Remove trailing slashes
-        website = website.replace(/\/+$/, '');
-
-        return website;
+        return website.replace(/\/+$/, '');
     }
 };
 
