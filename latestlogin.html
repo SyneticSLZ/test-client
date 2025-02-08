@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <title>Login | Voltmailer</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            /* background: rgb(5, 1, 24); */
+            background: linear-gradient(to bottom right, #011831, #1e021d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: "Open Sans", sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            /* margin: 1em; */
+            display: flex;
+            /* width: 90%; */
+            /* height: 90px; */
+            /* border-radius: 10px; */
+            /* background-color: #02021E; */
+            /* background-color: #fff; */
+            /* background-color: #02021E; */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* color: white; */
+            /* margin-block: 22em; */
+        }
+        .form-container {
+            width: 50%;
+            /* padding: 2em; */
+            background-color: #fff; 
+            border-bottom-left-radius:10px;
+            border-top-left-radius:10px;
+
+        }
+        .form-container img{
+            padding: 10px;
+        }
+        .right-container {
+            width: 50%;
+            background-color: #02021E;
+            /* border-radius: 10px; */
+            border-bottom-right-radius:10px;
+            border-top-right-radius:10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2em;
+        }
+        .nav {
+            font-weight: 800;
+            font-size: 20px;
+            color: rgba(2, 0, 27, 0.562);
+            margin-bottom: 2em;
+        }
+        .login-form, .signup-form, .forgot-form, .Reset-form {
+            display: none;
+            flex-direction: column;
+            margin-bottom: 4em;
+            margin-top: 1em;
+            margin-left: 5em;
+            height: 100%;
+
+        }
+        .active {
+            display: flex;
+        }
+        h1, h4 {
+            margin: 0.5em 0;
+        }
+        h4 {
+            font-weight: 500;
+        }
+        input {
+           
+            margin: 0.5em 0;
+            /* margin-block: 30px; */
+            padding: 1em;
+            margin-right: 10em;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+            border: 1.5px solid #000;
+    border-radius: 0.5rem;
+    box-shadow: 2.5px 3px 0 #000;
+    outline: none;
+    transition: ease 0.25s;
+    text-align: left;
+    background-color: #fff;
+    /* background-color: #fff;
+    -webkit-border-radius: 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  -webkit-box-shadow: 12px 12px 4px #cccccc, -12px -12px 33px #ffffff;
+  box-shadow: 12px 12px 33px #cccccc, -12px -12px 33px #ffffff; */
+        }
+
+
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 2.5px 3px 0 #007bff;
+        }
+        button:hover {
+
+            transition: background-color 0.3s;
+            background-color: #530388;
+            border: 1.5px solid #000;
+    border-radius: 0.5rem;
+    box-shadow: 2.5px 3px 0 #000;
+        }
+        button {
+            padding: 1em ;
+            font-size: 1em;
+            /* background-color: #000; */
+           
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            margin: 0.5em 0;
+            margin-top: 20px;
+            margin-right: 10em;
+            background-color: rgb(5, 1, 24);
+
+    outline: none;
+    transition: ease 0.25s;
+
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.12), 
+        0 1px 2px rgba(0, 0, 0, 0.24), 
+        0 5px 15px rgba(0, 255, 255, 0.5), 
+        0 10px 20px rgba(255, 0, 255, 0.5);
+            /* width:80%/; */
+            
+        }
+
+
+
+        
+        a {
+            margin-top: 10px;
+            text-decoration: none;
+            color: #a70dcead;
+            font-weight: 200;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .right-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            align-self: start;
+            margin-left: 4.5em;
+        }
+        .right-container h1 {
+            margin: 0.5em 0;
+            margin-left: 2.25em;
+            align-self: start;
+            color: white;
+        }
+        .right-container h4 {
+            color: white;
+            margin: 0.5em 0;
+            margin-left: 4.5em;
+            align-self: start;
+            margin-bottom: 1em;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 0.5em;
+        }
+    .google-login-button {
+        /* margin-right: 10em; */
+        border-radius: 20px;
+  /* box-sizing: border-box; */
+  /* padding: 10px 15px; */
+  border: solid 1px rgb(5, 1, 24);
+  /* box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+        rgba(0, 0, 0, 0.06) 0px 0px 0px 1px; */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  /* font-size: 11px; */
+  gap: 15px;
+  font-weight: 400;
+  /* margin-right: 10em; */
+  border: 1.5px solid #000;
+    border-radius: 0.5rem;
+    box-shadow: 2.5px 3px 0 #000;
+    outline: none;
+    transition: ease 0.25s;
+    text-align: left;
+    background-color: #fff;
+}
+.google-login-button:hover{
+    /* padding: 1em ; */
+            /* font-size: 1em; */
+            /* background-color: #000; */
+            background-color: rgb(5, 1, 24);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            /* margin: 0.5em 0; */
+            /* margin-right: 10em; */
+            transition: background-color 0.3s;
+            /* width:80%/; */
+}
+
+.google-login-button {
+  /* border: 2px solid #747474; */
+  /* background-color: #fff; */
+  color: rgb(5, 1, 24);
+  font-weight: 100;
+  margin-right: 10em;
+  
+}
+
+.apple-icon,
+    .google-icon {
+  font-size: 18px;
+  font-weight:700;
+  /* margin-bottom: 1px; */
+
+}
+
+@media (max-width: 768px) {
+    body{
+        background-color: #ffffff;
+        background: white;
+    }
+    input{
+        width: 80%;
+    }
+    button{
+        width: 90%;
+    } 
+    .form-container img{
+            padding: 1px;
+            margin-left: 0;
+            padding-left: 0;
+            /* align-self: center; */
+        }
+    .container {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+            flex-direction: column;
+        }
+        .form-container {
+            width: 100%;
+            /* padding-inline: 2em; */
+        }
+        .right-container {
+            display: none;
+        }
+
+        .login-form, .signup-form, .forgot-form, .Reset-form {
+            /* display: none; */
+            /* flex-direction: column; */
+            /* margin-bottom: 4em; */
+            /* margin-top: 1em; */
+            margin-left: 10px;
+            /* height: 100%; */
+
+        }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <!-- <div class="nav">VoltMail</div> -->
+            <img  src='vmb.png' alt="google" style="width: 200px; height: 120px;">
+            <div id="loginForm" class="login-form active">
+                <h1>Login</h1>
+                <h4>Enter your email and password</h4>
+                <input type="text" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPassword" placeholder="Password">
+                <button onclick="login()">Continue</button>
+                <div id="loginError" class="error"></div>
+                <h4><a id="forgotLink">Forgot Password</a></h4>
+                <h3>Don't have an account? <a id="signupLink">Sign Up</a></h3>
+                 <button onclick="loginWithGoogle()"  class="google-login-button"><svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" x="0px" y="0px" class="google-icon" viewBox="0 0 48 48" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12
+            c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24
+            c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657
+            C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36
+            c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571
+            c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                  </svg><span 
+                  >Log in with Google</span></button> 
+            </div>
+            <div id="signupForm" class="signup-form">
+                <h1>Sign Up</h1>
+                <h4>Create your account</h4>
+                <input type="text" id="signupFullName" placeholder="Full Name">
+                <input type="text" id="signupEmail" placeholder="Email">
+                <input type="password" id="signupPassword" placeholder="Password">
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
+                <label>
+                    <input type="checkbox" id="user-agreement" name="agreement" style="font-size: smaller;">
+                    I've read and agreed to the <a href="./TOS.html" target="_blank" style="font-size: smaller;">Terms of service</a> and 
+                    <a href="./Privacy.html" target="_blank" style="font-size: smaller;">Privacy Policy</a>.
+                </label>
+                <button onclick="signUp()">Sign Up</button>
+                <div id="signupError" class="error"></div>
+                <h4>Already have an account? <a id="loginLinkFromSignup">Login</a></h4>
+                <button onclick="loginWithGoogle()"  class="google-login-button"><svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" x="0px" y="0px" class="google-icon" viewBox="0 0 48 48" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12
+            c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24
+            c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657
+            C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36
+            c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571
+            c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                  </svg><span 
+                  >Sign up with Google</span></button> 
+            </div>
+            <div id="forgotForm" class="forgot-form">
+                <h1>Forgot Password</h1>
+                <h4>Enter your email to reset your password</h4>
+                <input type="text" id="forgotEmail" placeholder="Email">
+                <button onclick="forgotPassword()">Reset Password</button>
+                <div id="forgotError" class="error"></div>
+                <h4>Remembered your password? <a id="loginLinkFromForgot">Login</a></h4>
+            </div>
+
+            <div id="usernameForm" class="forgot-form">
+                <h1>Lets get you set up</h1>
+                <h4>Please enter your Full Name</h4>
+                <input type="text" id="UserNameHolder" placeholder="James Smith">
+                <button onclick="letsGo()">Continue</button>
+            </div>
+
+
+            <div id="ResetForm" class="Reset-form ">
+                <h1>Reset your Password</h1>
+                <h4>This link will self-destruct in 15 minutes</h4>
+                <input type="text" id="newPassword" placeholder="New Password">
+                <input type="password" id="confirmPassword" placeholder="Confirm Password">
+                <button onclick="ResetPassword()">Continue</button>
+                <div id="resetError" class="error"></div>
+                <!-- <h4>Remembered your Password? <a id="forgotLink">Login Now</a></h4> -->
+                <h3>Remembered your Password? <a id="loginLinkFromReset">Log In</a></h3>
+            </div>
+        </div>
+
+        <div class="right-container">
+            <h1>Hi, I'm your AI powered sales assistant, Volt!</h1>
+            <h4>Volt can automate and personalize all of your cold email outreach for you... Crafting unique emails for all your potential clients.</h4>
+            <!-- <img src="volt.png" alt="Dashboard Screenshot"> -->
+            <!-- <img src="{{ url_for('static', filename='./volt.png') }}" alt="Volt Image"> -->
+
+        </div>
+    </div>
+
+    <script>
+
+
+
+function displayMessage() {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+
+
+            // Display the message
+            document.getElementById('message').innerText = message;
+        }
+
+        // Run the displayMessage function when the page loads
+        window.onload = displayMessage;
+
+function parseJWT(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    
+    return JSON.parse(jsonPayload);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("running")
+    const urlParams = new URLSearchParams(window.location.search); 
+    const action = urlParams.get('action'); 
+    var token  = urlParams.get('token');  
+    var Google = urlParams.get('google');  
+    var plan = urlParams.get('plan');
+    console.log("plan is : ", plan)
+    // res.redirect(`https://voltmailer.com/Oldlogin.html?email=${encodeURIComponent(userInfo.data.email)}&password=null&google=${jwtToken}`);
+
+    if (Google) {
+        localStorage.setItem('authToken', Google);
+        document.getElementById('loginForm').classList.remove('active');
+        document.getElementById('usernameForm').classList.add('active');
+        let data = parseJWT(Google)
+        console.log("email recived in headers  : ", decodeURIComponent( urlParams.get('email')), "email decoded : ", data.email )
+    }
+
+    if (token) {
+        document.getElementById('loginForm').classList.remove('active');
+        document.getElementById('ResetForm').classList.add('active');
+    }
+
+if (action === 'login') {
+    document.getElementById('signupForm').classList.remove('active');
+    document.getElementById('loginForm').classList.add('active');
+} else if (action === 'signup') {
+    document.getElementById('loginForm').classList.remove('active');
+    document.getElementById('signupForm').classList.add('active');
+} else if (action === 'signup-freeTrial') {
+    document.getElementById('loginForm').classList.remove('active');
+    document.getElementById('signupForm').classList.add('active');
+    document.getElementById('signupForm').innerHTML = `
+    
+                    <h1>30 Day Free Trial | No credit card info Required</h1>
+                <h4>First, Create your account</h4>
+                <input type="text" id="signupFullName" placeholder="Full Name">
+                <input type="text" id="signupEmail" placeholder="Email">
+                <input type="password" id="signupPassword" placeholder="Password">
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
+                <button onclick="signUptoFreeTrial()">Start your Trial Now</button>
+                <div id="signupError" class="error"></div>
+                <h4>Already have an account? <a id="loginLinkFromSignup">Login</a></h4>    
+    `
+}
+
+
+
+})
+
+        document.getElementById('signupLink').addEventListener('click', function() {
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('signupForm').classList.add('active');
+        });
+
+        document.getElementById('loginLinkFromSignup').addEventListener('click', function() {
+            document.getElementById('signupForm').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        document.getElementById('forgotLink').addEventListener('click', function() {
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('forgotForm').classList.add('active');
+        });
+
+        document.getElementById('loginLinkFromForgot').addEventListener('click', function() {
+            document.getElementById('forgotForm').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        document.getElementById('loginLinkFromReset').addEventListener('click', function() {
+            document.getElementById('ResetForm').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+        });
+
+        function login() {
+            console.log("loggin in")
+            var email = document.getElementById('loginEmail').value;
+            const login_Email = email
+            var password = document.getElementById('loginPassword').value;
+            var loginError = document.getElementById('loginError');
+
+            fetch('https://server.voltmailer.com/login-customer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        })
+        .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log(login_Email, 'rallybeacon@gmail.com')
+            if (login_Email === 'rallybeacon@gmail.com'){
+                window.location.href = `https://voltmailer.com/Rally-Beacon-Dashboard?token=${data.token}`;
+            }else{
+                window.location.href = `https://voltmailer.com/Dashboard?token=${data.token}`;
+            }
+            
+        } else if (data.error) {
+            loginError.textContent = data.error;
+        }
+    })
+    .catch(error => {
+        loginError.textContent = "An error occurred. Please try again.";
+    });
+}
+
+        function loginWithGoogle() {
+            // Placeholder for Google login logic
+            // alert("Login with Google clicked");
+            window.location.href = 'https://server.voltmailer.com/auth/google';
+        }
+
+        document.getElementById('signupEmail').addEventListener('input', validateEmail);
+        document.getElementById('signupPassword').addEventListener('input', validatePassword);
+        document.getElementById('signupConfirmPassword').addEventListener('input', validateConfirmPassword);
+
+        function validateEmail() {
+            const email = document.getElementById('signupEmail').value;
+            const signupError = document.getElementById('signupError');
+            const emailPattern = /^[^\s@]+@[^\s@]+\.(com|net|org|edu|gov|mil|co\.uk|org\.uk|ac\.uk|co|io)$/;
+
+            if (!emailPattern.test(email)) {
+                signupError.textContent = "Please enter a valid email address.";
+            } else if (email === "existing@example.com") {
+                signupError.textContent = "User already has an account.";
+            } else if (email === "google@example.com") {
+                signupError.textContent = "This email is linked to a Google account.";
+            } else {
+                signupError.textContent = "";
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('signupPassword').value;
+            const signupError = document.getElementById('signupError');
+            const passwordCriteria = [
+                { regex: /.{6,15}/, message: "Password must be between 6 and 15 characters." },
+                { regex: /[A-Z]/, message: "Password must contain at least one uppercase letter." },
+                { regex: /[a-z]/, message: "Password must contain at least one lowercase letter." },
+                { regex: /[0-9]/, message: "Password must contain at least one number." }
+            ];
+
+            for (let criterion of passwordCriteria) {
+                if (!criterion.regex.test(password)) {
+                    signupError.textContent = criterion.message;
+                    return;
+                }
+            }
+            signupError.textContent = "";
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const signupError = document.getElementById('signupError');
+
+            if (password !== confirmPassword) {
+                signupError.textContent = "Passwords do not match.";
+            } else {
+                signupError.textContent = "";
+            }
+        }
+
+
+
+
+        //    function signUp() {
+        //     console.log("signing in");
+        //     var checkbox = document.getElementById("user-agreement");
+        //     var email = document.getElementById('signupEmail').value;
+        //     var userName = document.getElementById('signupFullName').value;
+        //     var password = document.getElementById('signupPassword').value;
+        //     var confirmPassword = document.getElementById('signupConfirmPassword').value;
+        //     var signupError = document.getElementById('signupError');
+        //     const urlParams = new URLSearchParams(window.location.search); 
+        //     const plan = urlParams.get('plan'); 
+
+        //         // Check for empty fields
+        //     if (!email || !userName || !password || !confirmPassword) {
+        //         signupError.textContent = "Please fill in all fields.";
+        //         return;
+        //     }
+
+        //     if (!checkbox.checked) {
+        //         signupError.textContent = "You must agree to the User Agreement and Privacy Policy to proceed.";
+        //         return false; // Prevent form submission
+        //     }
+
+        //     // Check if passwords match
+        //     if (password !== confirmPassword) {
+        //         signupError.textContent = "Passwords do not match.";
+        //         return;
+        //     }
+
+
+        //     // Final validation before sending data to the server
+        //     if (signupError.textContent === "") {
+        //         fetch('https://server.voltmailer.com/signup-customer', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify({
+        //                 email: email,
+        //                 password: password,
+        //                 userName: userName,
+        //                 plan: plan
+        //             })
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 window.location.href = data.redirectUrl;
+        //             } else if (data.error) {
+        //                 signupError.textContent = data.error;
+        //             }
+        //         })
+        //         .catch(error => {
+        //             signupError.textContent = "An error occurred. Please try again.";
+        //         });
+        //     }
+        // }
+
+        async function signUp() {
+            console.log("signing in");
+            var checkbox = document.getElementById("user-agreement");
+            var email = document.getElementById('signupEmail').value;
+            var userName = document.getElementById('signupFullName').value;
+            var password = document.getElementById('signupPassword').value;
+            var confirmPassword = document.getElementById('signupConfirmPassword').value;
+            var signupError = document.getElementById('signupError');
+            const affiliate = localStorage.getItem('affiliate');
+            const urlParams = new URLSearchParams(window.location.search); 
+            const plan = urlParams.get('plan'); 
+
+                // Check for empty fields
+            if (!email || !userName || !password || !confirmPassword) {
+                signupError.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            if (!checkbox.checked) {
+                signupError.textContent = "You must agree to the User Agreement and Privacy Policy to proceed.";
+                return false; // Prevent form submission
+            }
+
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                signupError.textContent = "Passwords do not match.";
+                return;
+            }
+
+
+            // Final validation before sending data to the server
+            if (signupError.textContent === "") {
+
+
+                const customerData = {
+                            stripeID: 'stripeid',
+                            email: email,
+                            plan: 'Starter',
+                            total_emails: 0,
+                            priceID: "price_1PdqxCKJeZAyw8f44eTYC7Rw",
+                            password: password,
+                            name: userName,
+                            plan_emails: 20,
+                            affiliate: affiliate
+                        };
+                        
+                        console.log(customerData)
+                        // Send customer data to your backend to add to the database
+                        const addCustomerResponse = await fetch('https://server.voltmailer.com/add-customer-to-db', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(customerData)
+                        }).catch(error => {
+                    signupError.textContent = "An error occurred. Please try again.";
+                });
+        
+                        const addCustomerResult = await addCustomerResponse.json();
+                        console.log(addCustomerResult)
+                        // Redirect to dashboard with token
+                        if (addCustomerResult.redirectUrl) {
+                            window.location.href = addCustomerResult.redirectUrl;
+                        }
+
+
+
+            }
+        }
+
+        // async function addFreeCustomer(){
+
+            
+        //     // let plan = params.get('plan')
+        // try {
+        
+        //                 // Determine plan and total_emails based on price ID
+        //                 let plan, plan_emails;
+        //                     plan = 'Free';
+        //                     plan_emails = 20;
+
+        
+
+        
+        //                 // Optionally, show success message or redirect to another page
+        //                 document.getElementById('accountTick').style.display = "block";
+        //             } catch (error) {
+        //                 console.error('Error handling checkout session:', error);
+        //             }
+        
+        // }
+
+      function signUptoFreeTrial() {
+        console.log("signing in");
+            var email = document.getElementById('signupEmail').value;
+            var userName = document.getElementById('signupFullName').value;
+            var password = document.getElementById('signupPassword').value;
+            var confirmPassword = document.getElementById('signupConfirmPassword').value;
+            var signupError = document.getElementById('signupError');
+
+            // Final validation before sending data to the server
+            if (signupError.textContent === "") {
+                fetch('https://server.voltmailer.com/signup-customer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        userName: userName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        
+// logic to call the add subscription here 
+
+                        // window.location.href = data.redirectUrl;
+                        createFreeSubscription(email, userName, password)
+                    } else if (data.error) {
+                        signupError.textContent = data.error;
+                    }
+                })
+                .catch(error => {
+                    signupError.textContent = "An error occurred. Please try again.";
+                });
+            }
+        }
+
+        async function createFreeSubscription(email, userName, password) {
+
+
+            try {
+                const response = await fetch('https://server.voltmailer.com/start-stripe-free-trial', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userName, email, password })
+                });
+
+                if (response.ok) {
+                    // Assuming the subscription creation is successful and the server returns a relevant success message or data
+                    const data = await response.json();
+                    
+                    // Redirect to payment page with query params
+                    window.location.href = `/payment.html?trial=${data.customerId}&email=${email}&password=${password}&name=${userName}`;
+
+            let stripeid = params.get('trial')
+
+
+                } else {
+                    // Handle error
+                    alert('Failed to start free trial. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // alert('An error occurred. Please try again.');
+            }
+        };
+
+
+        function letsGo() {
+            const urlParams = new URLSearchParams(window.location.search);  
+            var Google = urlParams.get('google');  
+            let data = parseJWT(Google)
+            let email = decodeURIComponent( urlParams.get('email'))
+            var userName = document.getElementById('UserNameHolder').value;
+        console.log("email recived in headers  : ", decodeURIComponent( urlParams.get('email')), "email decoded : ", data.email )
+    // res.redirect(`https://voltmailer.com/OldLogin.html?email=${encodeURIComponent(userInfo.data.email)}&password=null&google=${jwtToken}`);
+    window.location.href =  `https://voltmailer.com/pricing.html?email=${encodeURIComponent(data.email)}&password=null&userName=${encodeURIComponent(userName)}` 
+}
+
+
+        // function forgotPassword() {
+        //     var email = document.getElementById('forgotEmail').value;
+        //     var forgotError = document.getElementById('forgotError');
+
+        //     // Placeholder logic for forgot password validation
+        //     if (email === "test@example.com") {
+        //         forgotError.textContent = "";
+        //         alert("Password reset link sent!");
+        //     } else {
+        //         forgotError.textContent = "Email not found.";
+        //     }
+        // }
+
+
+
+      async function forgotPassword() {
+
+      const email = document.getElementById('forgotEmail').value;
+      const responseMessage = document.getElementById('forgotError');
+
+      try {
+        const response = await fetch('https://server.voltmailer.com/request-password-reset', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+
+        if (response.ok) {
+          const result = await response.text();
+          responseMessage.style.color = 'green';
+          responseMessage.textContent = result;
+        } else {
+          const errorText = await response.text();
+          responseMessage.textContent = errorText;
+        }
+      } catch (error) {
+        responseMessage.textContent = 'An error occurred. Please try again later.';
+      }
+    };
+
+
+    async function ResetPassword() {
+
+        const password = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const responseMessage = document.getElementById('resetError');
+
+      if (password !== confirmPassword) {
+        responseMessage.textContent = 'Passwords do not match!';
+        return;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+
+      if (!token) {
+        responseMessage.textContent = 'Invalid or missing token!';
+        return;
+      }
+
+      try {
+        const response = await fetch('https://server.voltmailer.com/reset-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token, newPassword: password })
+        });
+
+        if (response.ok) {
+          const result = await response.text();
+          responseMessage.textContent = result;
+          responseMessage.style.color = 'green';
+        //   responseMessage.className = 'message success';
+        } else {
+          const errorText = await response.text();
+          responseMessage.textContent = errorText;
+        }
+      } catch (error) {
+        responseMessage.textContent = 'An error occurred. Please try again later.';
+      }
+    };
+
+
+
+    </script>
+</body>
+</html>
