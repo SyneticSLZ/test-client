@@ -6209,6 +6209,7 @@ function handleMediaUpload(event) {
         
         function renderMediaItems() {
             console.log("rendering media")
+            const mediaItems = JSON.parse(localStorage.getItem('mediaItems') || '[]');
            const container = document.getElementById('media-list');
            container.innerHTML = mediaItems.map(item => `
                <div class="border border-gray-200 rounded-lg p-4">
