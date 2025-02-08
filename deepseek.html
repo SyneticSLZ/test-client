@@ -1,198 +1,772 @@
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en" class="h-full">
 <head>
-    <title>Advanced Water Simulation</title>
-    <style>body { margin: 0; }</style>
-</head>
-<body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voltmailer - AI Powered Sales Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
 
+        @keyframes blink {
+            50% { border-color: transparent }
+        }
+
+        .matrix-code {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            animation: matrix 40s linear infinite;
+            white-space: pre-wrap;
+            user-select: none;
+            width: 300px;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .matrix-code .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 2px solid rgba(255,255,255,0.5);
+            white-space: nowrap;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink 0.75s step-end infinite;
+            margin: 5px 0;
+            color: aliceblue;
+        }
+
+        @keyframes matrix {
+            0% { transform: translateY(-100%); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        @keyframes floatingIcon {
+            0% { 
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            50% { 
+                transform: translate(var(--tx), calc(var(--ty) - 200px)) rotate(var(--rot)) scale(1.1);
+            }
+            90% { opacity: 0.8; }
+            100% { 
+                transform: translate(calc(var(--tx) * 2), calc(var(--ty) - 400px)) rotate(calc(var(--rot) * 2)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .floating-icon {
+            position: absolute;
+            bottom: -50px;
+            width: 32px;
+            height: 32px;
+            animation: floatingIcon 8s infinite linear;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .background-gradient {
+            background: linear-gradient(125deg, 
+                #4F46E5 0%, 
+                #9333EA 50%, 
+                #4F46E5 100%);
+            background-size: 200% 200%;
+            animation: gradientMovement 15s ease infinite;
+        }
+
+        @keyframes gradientMovement {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
     <script>
-        let scene, camera, renderer, water;
-        
-        init();
-        animate();
-
-        function init() {
-            // Scene setup
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            document.body.appendChild(renderer.domElement);
-
-            // Camera controls
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            camera.position.set(15, 10, 15);
-            controls.update();
-
-            // Add skybox
-            const loader = new THREE.CubeTextureLoader();
-            const textureCube = loader.load([
-                'https://threejs.org/examples/textures/px.jpg',
-                'https://threejs.org/examples/textures/nx.jpg',
-                'https://threejs.org/examples/textures/py.jpg',
-                'https://threejs.org/examples/textures/ny.jpg',
-                'https://threejs.org/examples/textures/pz.jpg',
-                'https://threejs.org/examples/textures/nz.jpg'
-            ]);
-            scene.background = textureCube;
-
-            // Water geometry
-            const geometry = new THREE.PlaneGeometry(30, 30, 512, 512);
-
-            // Advanced water material
-            const waterMaterial = new THREE.ShaderMaterial({
-                uniforms: {
-                    time: { value: 0 },
-                    waterColor: { value: new THREE.Color(0x0064b4) },
-                    skyColor: { value: new THREE.Color(0x87CEEB) },
-                    lightDir: { value: new THREE.Vector3(-1, 1, 0).normalize() },
-                    textureNormal: { value: new THREE.TextureLoader().load(
-                        'https://threejs.org/examples/textures/waternormals.jpg') 
-                    },
-                    textureCube: { value: textureCube },
-                    distortionScale: { value: 4.0 }
-                },
-                vertexShader: `
-                    varying vec3 vWorldPos;
-                    varying vec3 vNormal;
-                    varying vec2 vUv;
-                    uniform float time;
-                    uniform sampler2D textureNormal;
-
-                    // Gerstner wave function
-                    vec3 gerstnerWave(vec4 wave, vec3 p, inout vec3 tangent, inout vec3 binormal) {
-                        float steepness = wave.z;
-                        float wavelength = wave.w;
-                        float k = 2.0 * 3.141592653589793 / wavelength;
-                        float c = sqrt(9.8 / k);
-                        vec2 d = normalize(wave.xy);
-                        float f = k * (dot(d, p.xz) - c * time);
-                        float a = steepness / k;
-                        
-                        tangent += vec3(
-                            -d.x * d.x * (steepness * sin(f)),
-                            d.x * (steepness * cos(f)),
-                            -d.x * d.y * (steepness * sin(f))
-                        );
-                        binormal += vec3(
-                            -d.x * d.y * (steepness * sin(f)),
-                            d.y * (steepness * cos(f)),
-                            -d.y * d.y * (steepness * sin(f))
-                        );
-                        return vec3(
-                            d.x * (a * cos(f)),
-                            a * sin(f),
-                            d.y * (a * cos(f))
-                        );
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9333EA',
+                        secondary: '#4F46E5'
                     }
-
-                    void main() {
-                        vUv = uv;
-                        
-                        // Combine multiple waves
-                        vec3 tangent = vec3(1.0, 0.0, 0.0);
-                        vec3 binormal = vec3(0.0, 0.0, 1.0);
-                        vec3 worldPos = position;
-                        
-                        // Wave parameters (direction, steepness, wavelength)
-                        worldPos += gerstnerWave(vec4(1.0, 1.0, 0.25, 8.0), worldPos, tangent, binormal);
-                        worldPos += gerstnerWave(vec4(-1.0, 0.5, 0.2, 5.0), worldPos, tangent, binormal);
-                        worldPos += gerstnerWave(vec4(0.5, -0.7, 0.15, 3.0), worldPos, tangent, binormal);
-                        
-                        // Calculate normal from tangent and binormal
-                        vNormal = normalize(cross(binormal, tangent));
-                        
-                        // Apply normal map
-                        vec3 normalMap = texture2D(textureNormal, vUv * 2.0 + time * 0.05).xyz * 2.0 - 1.0;
-                        vNormal = normalize(vNormal + normalMap * 0.5);
-                        
-                        vWorldPos = (modelMatrix * vec4(worldPos, 1.0)).xyz;
-                        gl_Position = projectionMatrix * modelViewMatrix * vec4(worldPos, 1.0);
-                    }
-                `,
-                fragmentShader: `
-                    varying vec3 vWorldPos;
-                    varying vec3 vNormal;
-                    varying vec2 vUv;
-                    uniform vec3 waterColor;
-                    uniform vec3 skyColor;
-                    uniform vec3 lightDir;
-                    uniform samplerCube textureCube;
-                    uniform float distortionScale;
-
-                    const float FresnelPower = 5.0;
-                    const float Reflectivity = 0.5;
-                    const float SpecularPower = 256.0;
-
-                    void main() {
-                        vec3 normal = normalize(vNormal);
-                        vec3 viewDir = normalize(cameraPosition - vWorldPos);
-                        
-                        // Fresnel effect
-                        float fresnel = pow(1.0 - dot(normal, viewDir), FresnelPower);
-                        
-                        // Reflection
-                        vec3 reflectVec = reflect(-viewDir, normal);
-                        vec3 reflection = textureCube(textureCube, reflectVec).rgb;
-                        
-                        // Refraction
-                        vec3 refractVec = refract(-viewDir, normal, 0.9);
-                        vec3 refraction = textureCube(textureCube, refractVec).rgb * waterColor;
-                        
-                        // Combine reflection and refraction
-                        vec3 color = mix(refraction, reflection, fresnel * Reflectivity);
-                        
-                        // Specular highlight
-                        vec3 halfDir = normalize(viewDir + lightDir);
-                        float specular = pow(max(dot(normal, halfDir), 0.0), SpecularPower);
-                        color += vec3(0.8) * specular * 0.5;
-                        
-                        // Depth attenuation
-                        float depth = 1.0 - smoothstep(0.0, 30.0, length(vWorldPos - cameraPosition));
-                        color *= mix(vec3(1.0), waterColor * 0.5, 1.0 - depth);
-                        
-                        gl_FragColor = vec4(color, 0.9);
-                    }
-                `,
-                transparent: true,
-                wireframe: false
-            });
-
-            water = new THREE.Mesh(geometry, waterMaterial);
-            water.rotation.x = -Math.PI / 2;
-            scene.add(water);
-
-            // Add directional light
-            const light = new THREE.DirectionalLight(0xffffff, 1);
-            light.position.set(-1, 1, 0);
-            scene.add(light);
+                }
+            }
         }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            water.material.uniforms.time.value = performance.now() / 1000;
-            
-            // Update light direction
-            const time = performance.now() / 1000;
-            water.material.uniforms.lightDir.value.set(
-                Math.cos(time * 0.5),
-                1.0,
-                Math.sin(time * 0.5)
-            ).normalize();
-            
-            renderer.render(scene, camera);
-        }
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setupFormTransitions();
+            handleURLParameters();
+        });
+        function setupFormTransitions() {
+    // Hide all forms initially except login
+    const forms = ['signupForm', 'forgotForm', 'ResetForm'];
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) form.style.display = 'none';
+    });
+    document.getElementById('loginForm').style.display = 'block';
+
+    // Set up click handlers
+    const transitions = {
+        'signupLink': ['loginForm', 'signupForm'],
+        'loginLinkFromSignup': ['signupForm', 'loginForm'],
+        'forgotLink': ['loginForm', 'forgotForm'],
+        'loginLinkFromForgot': ['forgotForm', 'loginForm'],
+        'loginLinkFromReset': ['ResetForm', 'loginForm']
+    };
+
+    Object.entries(transitions).forEach(([triggerId, [fromForm, toForm]]) => {
+        const trigger = document.getElementById(triggerId);
+        if (trigger) {
+            trigger.addEventListener('click', () => {
+                document.getElementById(fromForm).style.display = 'none';
+                document.getElementById(toForm).style.display = 'block';
+            });
+        }
+    });
+}
+
+// Call this when the page loads
+document.addEventListener('DOMContentLoaded', setupFormTransitions);
+
+        function handleURLParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+            const token = urlParams.get('token');
+            const googleToken = urlParams.get('google');
+            const plan = urlParams.get('plan');
+
+            if (googleToken) {
+                handleGoogleAuth(googleToken, urlParams);
+            } else if (token) {
+                showResetForm();
+            } else if (action) {
+                handleActionParameter(action);
+            }
+        }
+
+        function handleGoogleAuth(token, urlParams) {
+            localStorage.setItem('authToken', token);
+            showForm('usernameForm');
+            const data = parseJWT(token);
+            console.log("Email received:", decodeURIComponent(urlParams.get('email')));
+        }
+
+        function showForm(formId) {
+    document.querySelectorAll('#loginForm, #signupForm, #forgotForm').forEach(form => {
+        form.classList.add('hidden');
+        form.classList.remove('active');
+    });
+    document.getElementById(formId)?.classList.remove('hidden');
+    document.getElementById(formId)?.classList.add('active');
+}
+
+        function showResetForm() {
+            document.getElementById('loginForm')?.classList.remove('active');
+            document.getElementById('ResetForm')?.classList.add('active');
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginError = document.getElementById('loginError');
+
+            try {
+                const response = await fetch('https://server.voltmailer.com/login-customer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    const dashboardUrl = email === 'rallybeacon@gmail.com' 
+                        ? 'Rally-Beacon-Dashboard' 
+                        : 'Dashboard';
+                    window.location.href = `https://voltmailer.com/${dashboardUrl}?token=${data.token}`;
+                } else {
+                    loginError.textContent = data.error || "Login failed. Please try again.";
+                }
+            } catch (error) {
+                loginError.textContent = "An error occurred. Please try again.";
+            }
+        }
+
+        async function signUp() {
+            const formData = {
+                email: document.getElementById('signupEmail').value,
+                userName: document.getElementById('signupFullName').value,
+                password: document.getElementById('signupPassword').value,
+                confirmPassword: document.getElementById('signupConfirmPassword').value
+            };
+
+            const signupError = document.getElementById('signupError');
+            const agreement = document.getElementById('user-agreement');
+
+            if (!validateSignupForm(formData, agreement, signupError)) return;
+
+            try {
+                const customerData = {
+                    stripeID: 'stripeid',
+                    ...formData,
+                    plan: 'Starter',
+                    total_emails: 0,
+                    priceID: "price_1PdqxCKJeZAyw8f44eTYC7Rw",
+                    plan_emails: 20,
+                    affiliate: localStorage.getItem('affiliate')
+                };
+
+                const response = await fetch('https://server.voltmailer.com/add-customer-to-db', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(customerData)
+                });
+
+                const result = await response.json();
+                if (result.redirectUrl) {
+                    window.location.href = result.redirectUrl;
+                }
+            } catch (error) {
+                signupError.textContent = "An error occurred. Please try again.";
+            }
+        }
+
+        function validateSignupForm(formData, agreement, errorElement) {
+            if (Object.values(formData).some(value => !value)) {
+                errorElement.textContent = "Please fill in all fields.";
+                return false;
+            }
+
+            if (!agreement.checked) {
+                errorElement.textContent = "You must agree to the Terms and Privacy Policy.";
+                return false;
+            }
+
+            if (formData.password !== formData.confirmPassword) {
+                errorElement.textContent = "Passwords do not match.";
+                return false;
+            }
+
+            return true;
+        }
+
+        async function forgotPassword() {
+            const email = document.getElementById('forgotEmail').value;
+            const message = document.getElementById('forgotError');
+
+            try {
+                const response = await fetch('https://server.voltmailer.com/request-password-reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const result = await response.text();
+                message.style.color = response.ok ? 'green' : 'red';
+                message.textContent = result;
+            } catch (error) {
+                message.textContent = 'An error occurred. Please try again later.';
+            }
+        }
+
+        async function ResetPassword() {
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const message = document.getElementById('resetError');
+            const token = new URLSearchParams(window.location.search).get('token');
+
+            if (password !== confirmPassword) {
+                message.textContent = 'Passwords do not match!';
+                return;
+            }
+
+            if (!token) {
+                message.textContent = 'Invalid or missing token!';
+                return;
+            }
+
+            try {
+                const response = await fetch('https://server.voltmailer.com/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, newPassword: password })
+                });
+
+                const result = await response.text();
+                message.style.color = response.ok ? 'green' : 'red';
+                message.textContent = result;
+            } catch (error) {
+                message.textContent = 'An error occurred. Please try again later.';
+            }
+        }
+
+        function parseJWT(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(decodeURIComponent(atob(base64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join('')));
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <style>
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent }
+        }
+
+        .matrix-code {
+            position: absolute;
+            color: rgba(255,255,255,0.2);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            animation: matrix var(--duration, 40s) linear infinite;
+            animation-delay: var(--delay, 0s);
+            white-space: pre-wrap;
+            user-select: none;
+            width: 300px;
+            text-align: left;
+            padding: 10px;
+            left: var(--left-pos);
+        }
+
+        .matrix-code .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 2px solid rgba(255,255,255,0.5);
+            white-space: nowrap;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink 0.75s step-end infinite;
+            margin: 5px 0;
+        }
+
+        @keyframes matrix {
+            0% { transform: translateY(-100%); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        @keyframes floatingIcon {
+            0% { 
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            25% {
+                transform: translate(var(--tx1), var(--ty1)) rotate(var(--rot1)) scale(1.1);
+            }
+            50% { 
+                transform: translate(var(--tx2), var(--ty2)) rotate(var(--rot2)) scale(0.9);
+            }
+            75% {
+                transform: translate(var(--tx3), var(--ty3)) rotate(var(--rot3)) scale(1.2);
+            }
+            90% { opacity: 0.8; }
+            100% { 
+                transform: translate(var(--tx4), var(--ty4)) rotate(var(--rot4)) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .floating-icon {
+            --duration: calc(8s + (random(8) * 1s));
+            --tx1: calc(-100px + (random(200) * 1px));
+            --ty1: calc(-100px + (random(100) * 1px));
+            --rot1: calc(-180deg + (random(360) * 1deg));
+            --tx2: calc(-200px + (random(400) * 1px));
+            --ty2: calc(-200px + (random(200) * 1px));
+            --rot2: calc(-360deg + (random(720) * 1deg));
+            --tx3: calc(-300px + (random(600) * 1px));
+            --ty3: calc(-300px + (random(300) * 1px));
+            --rot3: calc(-540deg + (random(1080) * 1deg));
+            --tx4: calc(-400px + (random(800) * 1px));
+            --ty4: calc(-400px + (random(400) * 1px));
+            --rot4: calc(-720deg + (random(1440) * 1deg));
+        }
+
+        .floating-icon {
+            position: absolute;
+            bottom: -50px;
+            width: 32px;
+            height: 32px;
+            animation: floatingIcon 8s infinite linear;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .background-gradient {
+            background: linear-gradient(125deg, 
+                #4F46E5 0%, 
+                #9333EA 50%, 
+                #4F46E5 100%);
+            background-size: 200% 200%;
+            animation: gradientMovement 15s ease infinite;
+        }
+
+        @keyframes gradientMovement {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+
+<body class="h-full">
+    <!-- Animated background -->
+    <div class="fixed inset-0 background-gradient overflow-hidden">
+        <!-- Matrix-style email content with random positioning -->
+        <script>
+            function createMatrixEmails() {
+                const emails = [
+                    {
+                        subject: "Transform Your Workflow",
+                        greeting: "Hi [Name],",
+                        body: "I noticed your recent project..."
+                    },
+                    {
+                        subject: "Boost Your Sales Pipeline",
+                        greeting: "Dear [Name],",
+                        body: "Your company's growth caught my eye..."
+                    },
+                    {
+                        subject: "AI Integration Solutions",
+                        greeting: "Hello [Name],",
+                        body: "Based on your LinkedIn post..."
+                    },
+                    {
+                        subject: "Scale Your Impact",
+                        greeting: "Hi there [Name],",
+                        body: "Your recent achievements..."
+                    },
+                    {
+                        subject: "Innovation Partnership",
+                        greeting: "Dear [Name],",
+                        body: "I was impressed by your work..."
+                    },
+                    {
+                        subject: "Optimize Your Process",
+                        greeting: "Hello [Name],",
+                        body: "After reviewing your workflow..."
+                    },
+                    {
+                        subject: "Enhance Team Productivity",
+                        greeting: "Hi [Name],",
+                        body: "Saw your post about team challenges..."
+                    }
+                ];
+
+                const container = document.querySelector('.background-gradient');
+                
+                // Create 12 randomly positioned email streams
+                for (let i = 0; i < 12; i++) {
+                    const email = emails[Math.floor(Math.random() * emails.length)];
+                    const div = document.createElement('div');
+                    div.className = 'matrix-code';
+                    div.style.setProperty('--left-pos', `${Math.random() * 85}%`);
+                    div.style.setProperty('--duration', `${30 + Math.random() * 20}s`);
+                    div.style.setProperty('--delay', `-${Math.random() * 30}s`);
+                    
+                    div.innerHTML = `
+                        <div class="typing-text">${email.subject}</div>
+                        <div class="typing-text">${email.greeting}</div>
+                        <div class="typing-text">${email.body}</div>
+                    `;
+                    
+                    container.appendChild(div);
+                }
+            }
+
+            // Create floating icons with random paths
+            function createFloatingIcons() {
+                const container = document.querySelector('.background-gradient');
+                const icons = ['mail', 'mail-plus', 'mail-check'];
+                
+                for (let i = 0; i < 15; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'floating-icon';
+                    div.style.left = `${Math.random() * 90}%`;
+                    div.style.animationDelay = `-${Math.random() * 8}s`;
+                    
+                    const icon = document.createElement('i');
+                    icon.setAttribute('data-lucide', icons[Math.floor(Math.random() * icons.length)]);
+                    div.appendChild(icon);
+                    
+                    container.appendChild(div);
+                }
+            }
+
+            // Initialize animations after DOM load
+            document.addEventListener('DOMContentLoaded', () => {
+                createMatrixEmails();
+                createFloatingIcons();
+                lucide.createIcons();
+            });
+        </script>
+    </div>
+
+    <!-- Centered form container -->
+    <div class="min-h-screen relative z-10 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Logo -->
+            <div class="flex justify-center">
+                <img src="./vmb.png" alt="Voltmailer" class="h-20 w-auto">
+            </div>
+
+
+            <!-- Login Form -->
+            <div id="loginForm" class="active bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-xl shadow-lg p-8 space-y-6">
+                <div id="loginError" class="text-red-500 text-sm mt-2"></div>
+                <div class="space-y-2 text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome back</h2>
+                    <p class="text-gray-500 dark:text-gray-400">Enter your credentials to continue</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                        <input type="email" id="loginEmail" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                        <input type="password" id="loginPassword" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                </div>
+
+                <div>
+                    <button onclick="login()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                        Sign in
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <a id="forgotLink" class="text-sm text-primary hover:text-purple-700 cursor-pointer">Forgot password?</a>
+                    <a id="signupLink" class="text-sm text-primary hover:text-purple-700 cursor-pointer">Create account</a>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signupForm" class="hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-xl shadow-lg p-8 space-y-6">
+                <div id="signupError" class="text-red-500 text-sm mt-2"></div>
+                    <div class="space-y-2 text-center">
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Create account</h2>
+                        <p class="text-gray-500 dark:text-gray-400">Get started with Voltmailer</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                            <input type="text" id="signupFullName" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                            <input type="email" id="signupEmail" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                            <input type="password" id="signupPassword" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                            <input type="password" id="signupConfirmPassword" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="user-agreement" class="mt-1 h-4 w-4 text-primary border-gray-300 rounded">
+                            <label class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                I agree to the <a href="./TOS.html" class="text-primary hover:text-purple-700">Terms of Service</a> and
+                                <a href="./Privacy.html" class="text-primary hover:text-purple-700">Privacy Policy</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button onclick="signUp()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                            Create account
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <a id="loginLinkFromSignup" class="text-sm text-primary hover:text-purple-700 cursor-pointer">Already have an account? Sign in</a>
+                    </div>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgotForm" class="hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-xl shadow-lg p-8 space-y-6">
+                <div class="space-y-2 text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Reset Password</h2>
+                    <p class="text-gray-500 dark:text-gray-400">Enter your email to reset password</p>
+                </div>
+                <div>
+                    <input type="email" id="forgotEmail" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div>
+                    <button onclick="forgotPassword()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                        Reset Password
+                    </button>
+                </div>
+                <div id="forgotError" class="text-red-500 text-sm mt-2"></div>
+                <div class="text-center">
+                    <a id="loginLinkFromForgot" class="text-sm text-primary hover:text-purple-700 cursor-pointer">Back to login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating email cards -->
+    <div class="fixed inset-0 pointer-events-none">
+        <style>
+            @keyframes matrix {
+                0% { transform: translateY(-100%); }
+                100% { transform: translateY(100vh); }
+            }
+            .matrix-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 60%;
+                background: linear-gradient(180deg, rgba(0,255,0,0.1) 0%, transparent 100%);
+                pointer-events: none;
+            }
+            .matrix-code {
+                position: absolute;
+                top: 0;
+                color: rgba(0,255,0,0.3);
+                font-family: monospace;
+                font-size: 14px;
+                line-height: 1;
+                animation: matrix 15s linear infinite;
+                white-space: pre;
+                user-select: none;
+            }
+            @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.8; }
+        90% { opacity: 0.8; }
+        100% { transform: translateY(-600px) rotate(8deg); opacity: 0; }
+    }
+    .email-card {
+        animation: float 8s infinite;
+        position: absolute;
+        width: 200px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        background-color: rgba(255,255,255,0.9);
+        bottom: -20px;
+    }
+    .email-card:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .email-card:nth-child(2) { left: 30%; animation-delay: 1s; }
+    .email-card:nth-child(3) { left: 50%; animation-delay: 2s; }
+    .email-card:nth-child(4) { left: 70%; animation-delay: 3s; }
+    .email-card:nth-child(5) { left: 90%; animation-delay: 4s; }
+    .email-card:nth-child(6) { left: 20%; animation-delay: 5s; }
+    .email-card:nth-child(7) { left: 40%; animation-delay: 6s; }
+    .email-card:nth-child(8) { left: 60%; animation-delay: 7s; }
+        </style>
+        
+        <!-- Matrix Code Background -->
+        <div class="matrix-background"></div>
+        <div class="matrix-code left-[5%]">01 10 11 ∆ † ‡ ¶ § 10 01</div>
+        <div class="matrix-code left-[25%]" style="animation-delay: -3s;">10 01 † ‡ ¶ § 11 01 10</div>
+        <div class="matrix-code left-[45%]" style="animation-delay: -6s;">11 01 ∆ § ¶ 10 01 11</div>
+        <div class="matrix-code left-[65%]" style="animation-delay: -9s;">01 11 † ‡ ∆ 10 11 01</div>
+        <div class="matrix-code left-[85%]" style="animation-delay: -12s;">10 01 ¶ § ‡ 11 01 10</div>
+
+        <!-- Animated Email Cards -->
+        <div class="email-card rounded-lg p-4">
+          <div class="flex items-center mb-3">
+              <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+              <div class="h-3 w-24 bg-gray-200 rounded"></div>
+          </div>
+          <div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+          <div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+          <div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+      </div>
+      <div class="email-card rounded-lg p-4">
+        <div class="flex items-center mb-3">
+            <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+            <div class="h-3 w-24 bg-gray-200 rounded"></div>
+        </div>
+        <div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+        <div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+        <div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+    </div>
+    <div class="email-card rounded-lg p-4">
+      <div class="flex items-center mb-3">
+          <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+          <div class="h-3 w-24 bg-gray-200 rounded"></div>
+      </div>
+      <div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+      <div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+      <div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+  </div>
+  <div class="email-card rounded-lg p-4">
+    <div class="flex items-center mb-3">
+        <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+        <div class="h-3 w-24 bg-gray-200 rounded"></div>
+    </div>
+    <div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+    <div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+    <div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+</div>
+<div class="email-card rounded-lg p-4">
+  <div class="flex items-center mb-3">
+      <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+      <div class="h-3 w-24 bg-gray-200 rounded"></div>
+  </div>
+  <div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+  <div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+  <div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+</div>
+<div class="email-card rounded-lg p-4">
+<div class="flex items-center mb-3">
+    <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+    <div class="h-3 w-24 bg-gray-200 rounded"></div>
+</div>
+<div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+<div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+<div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+</div>
+<div class="email-card rounded-lg p-4">
+<div class="flex items-center mb-3">
+  <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+  <div class="h-3 w-24 bg-gray-200 rounded"></div>
+</div>
+<div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+<div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+<div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+</div>
+<div class="email-card rounded-lg p-4">
+<div class="flex items-center mb-3">
+  <div class="w-6 h-6 rounded-full bg-purple-200 mr-2"></div>
+  <div class="h-3 w-24 bg-gray-200 rounded"></div>
+</div>
+<div class="h-2 w-full bg-gray-200 rounded mb-2"></div>
+<div class="h-2 w-5/6 bg-gray-200 rounded mb-2"></div>
+<div class="h-2 w-4/6 bg-gray-200 rounded"></div>
+</div>
+
+
+    </div>
+
+    <!-- Previous scripts remain the same -->
+     <script>
+        lucide.createIcons();
+     </script>
 </body>
 </html>

@@ -3219,6 +3219,12 @@ campaignId = await Campaign(campaignDetails);
 
 console.log(campaignId)
 localStorage.setItem('currentCampaignId', campaignId);
+const emailAssets = getCurrentEmailAssets();
+
+
+console.log(emailAssets)
+
+
 let requestBody = {
                 submittedData: submittedData,
                 userPitch: userPitch,
@@ -3226,6 +3232,8 @@ let requestBody = {
                 token: token,
                 myemail: U_MyEmail,
                 campaignId: campaignId,
+                signature: emailAssets.signature, // Add signature
+                mediaAttachments: emailAssets.mediaAttachments // Add media
             }
 if(UserSubject) {
      requestBody = {
@@ -3235,7 +3243,9 @@ if(UserSubject) {
                 token: token,
                 myemail: U_MyEmail,
                 campaignId: campaignId,
-                UserSubject: UserSubject
+                UserSubject: UserSubject,
+                signature: emailAssets.signature, // Add signature
+        mediaAttachments: emailAssets.mediaAttachments // Add media
             }
 }else {
     requestBody = {
@@ -3245,6 +3255,8 @@ if(UserSubject) {
                 token: token,
                 myemail: U_MyEmail,
                 campaignId: campaignId,
+                signature: emailAssets.signature, // Add signature
+        mediaAttachments: emailAssets.mediaAttachments // Add media
             }
 }
 
@@ -4303,7 +4315,8 @@ async function CallThisWhenAutosend() {
 async function sendMessage(sender, to, subject, messageText, campaignId, selectedMailbox) {
 
     campaignid = localStorage.getItem('currentCampaignId', campaignId);
-
+    const addedData = getCurrentEmailAssets();
+    console.log(addedData)
     // const token = localStorage.getItem('authToken');  https://server.voltmailer.com/send-bulk-manual 
     const response = await fetch('https://server.voltmailer.com/api/mailboxes/send', {
         method: 'POST',
@@ -4720,7 +4733,7 @@ function showNotification(message) {
             <div class="menu-item" id="6"> <i class="fi fi-tr-inbox-in"></i>Sent Emails</div>
             <div class="menu-item" id="3" > <i class="fi fi-tr-credit-card-eye"></i> Billing</div>
             <!-- <div class="menu-item tools">Tools</div> -->
-            <!-- <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Account</div> -->
+            <div class="menu-item" id="4" style="border-top: 1px solid #0000003a;"><i class="fi fi-tr-user-pen"></i>Signatures</div>
             <!-- <div class="menu-item end" id="5"><i class="fi fi-rr-customer-service"></i>Help</div> -->
         </div>
     </div>
@@ -4743,7 +4756,7 @@ function showNotification(message) {
     </div>
 
 
-    <div class="dashboard">
+<div class="dashboard">
 
 
         <div class="navtop" id="mobile-nav">
@@ -5651,210 +5664,171 @@ function showNotification(message) {
           </div>
   </div>
 
+<!-- Profile Section -->
+<div class="contentf" id="myAccount-content" style="display: none;">
+<!-- Profile Section -->
 
+<div class="container mx-auto p-6 max-w-20xl" style="height: 85vh;">
+        <div class="max-w-7xl mx-auto space-y-6">
 
-    <div class="contentf"  id="myAccount-content"  style="display: none;">
+            <!-- Signatures -->
+<!-- Signatures Section -->
+<div class="bg-white rounded-lg shadow-sm p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800">Email Signatures</h2>
+        <button onclick="addNewSignature()" class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all">
+            Add New
+        </button>
+    </div>
 
-        <div class="bg-gray-50" style="
-            width: 100%; 
-    height: 85vh;
-    width: 100%;
+    <div id="signatures-list" class="space-y-4">
+        <!-- Signatures will be rendered here -->
+    </div>
+</div>
 
+<!-- Media Section -->
+<div class="bg-white rounded-lg shadow-sm p-6 mt-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800">Email Media</h2>
+        <label class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all cursor-pointer">
+            Add Media
+            <input type="file" id="media-upload" class="hidden" multiple onchange="handleMediaUpload(event)">
+        </label>
+    </div>
+ 
+    <div id="media-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+ </div>
+</div>
+</div>
+</div>
 
-            
-            " >
-            <div class="container mx-auto py-10 px-4 max-w-4xl bg-gray-50">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-bold">Account Settings</h2>
-                    <p class="text-gray-600">Manage your account settings and preferences</p>
-                </div>
-        
-                <!-- Tabs -->
-                <div class="mb-6">
-                    <div class="flex space-x-4 border-b">
-                        <button class="tab active px-4 py-2 rounded-t-lg" data-tab="profile">Profile</button>
-                        <button class="tab px-4 py-2 rounded-t-lg" data-tab="notifications">Notifications</button>
-                        <button class="tab px-4 py-2 rounded-t-lg" data-tab="billing">Billing</button>
-                    </div>
-                </div>
-        
-                <!-- Profile Tab -->
-                <div id="profile" class="tab-content active space-y-6">
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
-                        <form id="profileForm" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">First Name</label>
-                                    <input type="text" class="w-full p-2 border rounded" name="firstName">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-1">Last Name</label>
-                                    <input type="text" class="w-full p-2 border rounded" name="lastName">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Email</label>
-                                <input type="email" class="w-full p-2 border rounded" name="email">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Sending Name</label>
-                                <input type="text" class="w-full p-2 border rounded" name="sendingName">
-                            </div>
-                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                                Save Changes
-                            </button>
-                        </form>
-                    </div>
-        
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <h3 class="text-xl font-semibold mb-4">Change Password</h3>
-                        <form id="passwordForm" class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Current Password</label>
-                                <input type="password" class="w-full p-2 border rounded" name="currentPassword">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">New Password</label>
-                                <input type="password" class="w-full p-2 border rounded" name="newPassword">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Confirm Password</label>
-                                <input type="password" class="w-full p-2 border rounded" name="confirmPassword">
-                            </div>
-                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                                Update Password
-                            </button>
-                        </form>
-                    </div>
-                </div>
-        
-                <!-- Notifications Tab -->
-                <div id="notifications" class="tab-content bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-4">Notification Preferences</h3>
-                    <div class="space-y-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h4 class="font-medium">Email Notifications</h4>
-                                <p class="text-sm text-gray-600">Receive emails about your account activity</p>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h4 class="font-medium">Marketing Emails</h4>
-                                <p class="text-sm text-gray-600">Receive emails about new features and updates</p>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveNotifications()">
-                            Save Preferences
-                        </button>
-                    </div>
-                </div>
-        
-                <!-- Billing Tab -->
-                <div id="billing" class="tab-content bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-4">Billing Information</h3>
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="font-medium mb-2">Payment Method</h4>
-                            <div class="border p-4 rounded flex items-center justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                    </svg>
-                                    <div>
-                                        <p>•••• •••• •••• 4242</p>
-                                        <p class="text-sm text-gray-600">Expires 12/24</p>
-                                    </div>
-                                </div>
-                                <button class="border px-4 py-2 rounded hover:bg-gray-50">Update</button>
-                            </div>
-                        </div>
-        
-                        <div>
-                            <h4 class="font-medium mb-2">Billing Address</h4>
-                            <form id="billingForm" class="space-y-4">
-                                <input type="text" class="w-full p-2 border rounded" placeholder="Street Address">
-                                <div class="grid grid-cols-3 gap-4">
-                                    <input type="text" class="p-2 border rounded" placeholder="City">
-                                    <input type="text" class="p-2 border rounded" placeholder="State">
-                                    <input type="text" class="p-2 border rounded" placeholder="ZIP">
-                                </div>
-                                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                                    Save Billing Info
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-        
-                <!-- Notification Toast -->
-                <!-- <div id="notification" class="notification"></div> -->
-            </div>
-   
+<!-- Signature Modal -->
+<div id="signature-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-5xl mx-4 overflow-hidden">
+<!-- Header -->
+<div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-purple-600 to-purple-700">
+<h3 class="text-xl font-semibold text-white">Create Email Signature</h3>
+<div onclick="closeSignatureModal()" class="text-white hover:text-purple-800 transition-colors hover:mouse-pointer">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+</div>
+</div>
 
+<div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6 max-h-[80vh] overflow-y-auto">
+<!-- Editor Side -->
+<div class="space-y-4">
+    <!-- Signature Name -->
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Signature Name</label>
+        <input type="text" id="signature-name" 
+               class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-400"
+               placeholder="e.g., Professional Signature">
+    </div>
+
+    <!-- Template Selector -->
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Template</label>
+        <select onchange="loadTemplate(this.value)" 
+                class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+            <option value="">Custom</option>
+            <option value="professional">Professional</option>
+            <option value="minimal">Minimal</option>
+            <option value="startup">Startup</option>
+            <option value="detailed">Detailed</option>
+        </select>
+    </div>
+
+    <!-- Editor -->
+    <div class="relative">
+
+        <textarea id="signature-editor" 
+                  class="w-full h-[300px] px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  spellcheck="false"
+                  placeholder="Enter your signature HTML here..."></textarea>
+        <div class="absolute bottom-2 right-2 px-2 py-1 bg-gray-200 rounded text-xs text-gray-600">
+            HTML enabled
         </div>
-<!-- 
-        <div class="ACC_dashboard-usage" style="overflow-y: scroll;">
-
-            <div class="welcome-content-row">
-            <div class="welcome">
-              
-              <h1 style="color: black; font-size: 40px; margin-bottom: 10px; margin-left: 20px;">Account Settings</h1>
-              
-              </div>
-              </div>
-
-    <div style="" class="cool-cont ">
-        <h2 style="padding-left: 20px; padding-top: 20px;">Name</h2>
-        <h4 style="padding-left: 20px;">This is the name your emails are sent from.</h4>
-         <div class="coolinput" style="padding-left: 20px;">
-            <input type="text" placeholder="Joe Smith" name="input" class="input" id="UPDATE_name">
-        </div> 
-        <h5 id="errorMessagename" style="padding-left: 10px;"></h5>
-        <button class="button-man" onclick="updateNameForm()" style="margin-left: 20px;">Save</button>
-        <br>
     </div>
+</div>
 
-    <div class="cool-cont">
-
-        <h2 style="padding-left: 20px; padding-top: 20px;">Email</h2>
-        <h4 style="padding-left: 20px;">The email associated with your account.</h4>
-        <div class="coolinput" style="padding-left: 20px;">
-            <input type="text" placeholder="Name@email.com" name="input" class="input" id="emailinput">
-        </div>     
-        <h5 id="errorMessageemail" style="padding-left: 20px;"></h5>         
-        <button class="button-man" style="padding-left: 20px;">Save</button>
-        <br>
-    </div>
-
-
-<div class="cool-cont">
-
-              <h2 class="password-reset" style="margin: 20px; margin-top: 30px;">Reset Password</h2>
-  
-              <div class="coolinput" style="margin: 20px;">
-                  <input type="text" placeholder="New Password" name="input" class="input" id="newPassword" >
-              </div>
-  
-              <div class="coolinput" style="margin: 20px;">
-
-                  <input type="text" placeholder="Confirm Password" name="input" class="input" id="confirmPassword" >
-              </div>
-              <h5 id="errorMessage"></h5>
-              <button class="button-man" style="margin: 20px;">Save</button>
-              <br>
+<!-- Preview Side -->
+<div class="bg-gray-50 rounded-lg p-4">
+    <div class="bg-white rounded-lg shadow-sm">
+        <!-- Email Header -->
+        <div class="border-b border-gray-100 p-4">
+            <div class="space-y-2 text-sm text-gray-600">
+                <div class="flex gap-2">
+                    <span class="w-16 text-gray-400">From:</span>
+                    <span>john.doe@company.com</span>
+                </div>
+                <div class="flex gap-2">
+                    <span class="w-16 text-gray-400">To:</span>
+                    <span>recipient@example.com</span>
+                </div>
+                <div class="flex gap-2">
+                    <span class="w-16 text-gray-400">Subject:</span>
+                    <span>Email Preview</span>
+                </div>
             </div>
-        </div> -->
-  </div>
+        </div>
+
+        <!-- Email Body -->
+        <div class="p-4">
+            <p class="text-gray-600 mb-4">Best regards,</p>
+            <div id="signature-preview" class="border-t border-gray-100 pt-4">
+                <!-- Signature preview appears here -->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+<button onclick="closeSignatureModal()" 
+        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+    Cancel
+</button>
+<button onclick="saveSignature()" 
+        class="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all">
+    Save Signature
+</button>
+</div>
+</div>
+</div>
+
+
+
+<style>
+#myAccount-content {
+overflow-x: auto;
+min-width: 100%;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+color: #1a1a1a !important;
+background-color: white !important;
+}
+
+#signature-modal, #fullscreen-editor {
+animation: modalFade 0.2s ease-out;
+}
+
+@keyframes modalFade {
+from { opacity: 0; transform: scale(0.95); }
+to { opacity: 1; transform: scale(1); }
+}
+
+</style>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <div id="myAccount-contentx" style="display: none;" class="contentf">
@@ -5896,7 +5870,362 @@ function showNotification(message) {
 
     <div id="notification-container-pop"></div>
     <script>
+        let mediaItems = JSON.parse(localStorage.getItem('mediaItems') || '[]');
+        
+        function handleMediaUpload(event) {
+           const files = event.target.files;
+           
+           for (let file of files) {
+               const reader = new FileReader();
+               reader.onload = function(e) {
+                   mediaItems.push({
+                       id: Date.now().toString(),
+                       name: file.name,
+                       type: file.type.split('/')[0],
+                       url: e.target.result,
+                       size: file.size,
+                       lastModified: file.lastModified
+                   });
+                   
+                   localStorage.setItem('mediaItems', JSON.stringify(mediaItems));
+                   renderMediaItems();
+               };
+               reader.readAsDataURL(file);
+           }
+        }
+        
+        function renderMediaItems() {
+           const container = document.getElementById('media-list');
+           container.innerHTML = mediaItems.map(item => `
+               <div class="border border-gray-200 rounded-lg p-4">
+                   <div class="flex justify-between items-start mb-2">
+                       <div>
+                           <h4 class="font-medium text-gray-900">${item.name}</h4>
+                           <p class="text-sm text-gray-500">${item.type}</p>
+                       </div>
+                       <button onclick="deleteMedia('${item.id}')" class="text-red-600 hover:text-red-800">
+                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                           </svg>
+                       </button>
+                   </div>
+                   ${item.type === 'image' ? `
+                       <img src="${item.url}" alt="${item.name}" class="w-full h-32 object-cover rounded mb-2">
+                   ` : `
+                       <div class="w-full h-32 bg-gray-100 rounded flex items-center justify-center mb-2">
+                           <span class="text-gray-500">${item.type.toUpperCase()}</span>
+                       </div>
+                   `}
+                   <div class="text-sm text-gray-500">
+                       ${formatFileSize(item.size)}
+                   </div>
+               </div>
+           `).join('') || '<p class="text-center text-gray-500 col-span-3 py-8">No media items yet. Click "Add Media" to upload files.</p>';
+        }
+        
+        function formatFileSize(bytes) {
+           if (bytes === 0) return '0 Bytes';
+           const k = 1024;
+           const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+           const i = Math.floor(Math.log(bytes) / Math.log(k));
+           return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function deleteMedia(id) {
+           if (confirm('Delete this media item?')) {
+               mediaItems = mediaItems.filter(item => item.id !== id);
+               localStorage.setItem('mediaItems', JSON.stringify(mediaItems));
+               renderMediaItems();
+           }
+        }
+        
+        renderMediaItems();
 
+        function getCurrentEmailAssets() {
+    const activeSignature = signatures.find(sig => sig.isActive);
+    const mediaItems = JSON.parse(localStorage.getItem('mediaItems') || '[]');
+
+    // Define size limits
+    const MAX_TOTAL_SIZE = 25 * 1024 * 1024; // 25MB total
+    const MAX_SINGLE_FILE = 10 * 1024 * 1024; // 10MB per file
+
+    // Filter and validate attachments
+    const validAttachments = mediaItems.filter(item => {
+        // Check individual file size
+        if (getBase64Size(item.url) > MAX_SINGLE_FILE) {
+            console.warn(`File ${item.name} exceeds maximum size limit of 10MB`);
+            return false;
+        }
+        return true;
+    });
+
+    // Check total size
+    let totalSize = 0;
+    const finalAttachments = [];
+    
+    for (const item of validAttachments) {
+        const fileSize = getBase64Size(item.url);
+        if (totalSize + fileSize <= MAX_TOTAL_SIZE) {
+            totalSize += fileSize;
+            finalAttachments.push({
+                id: item.id,
+                name: item.name,
+                type: getMimeType(item.name),
+                data: item.url,
+                size: fileSize
+            });
+        } else {
+            console.warn(`Skipping ${item.name}: would exceed total size limit`);
+        }
+    }
+
+    return {
+        signature: activeSignature?.content || '',
+        mediaAttachments: finalAttachments
+    };
+}
+
+// Helper functions
+function getBase64Size(base64String) {
+    const padding = base64String.endsWith('==') ? 2 : 1;
+    return (base64String.length * 3) / 4 - padding;
+}
+
+function getMimeType(filename) {
+    const ext = filename.split('.').pop().toLowerCase();
+    const mimeTypes = {
+        'pdf': 'application/pdf',
+        'doc': 'application/msword',
+        'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'xls': 'application/vnd.ms-excel',
+        'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'png': 'image/png',
+        'jpg': 'image/jpeg',
+        'jpeg': 'image/jpeg',
+        'gif': 'image/gif',
+        'mp4': 'video/mp4',
+        'mp3': 'audio/mpeg',
+        'wav': 'audio/wav',
+        'txt': 'text/plain'
+    };
+    return mimeTypes[ext] || 'application/octet-stream';
+}
+
+        </script>
+    <script>
+
+// Signature templates
+const templates = {
+    professional: `<table style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; line-height: 1.5; border-collapse: collapse;">
+   <tr>
+       <td style="padding: 15px; vertical-align: middle;">
+           <img src="https://api.dicebear.com/7.x/initials/svg?seed=JD&backgroundColor=4f46e5" alt="Logo" style="width: 80px; height: 80px; border-radius: 10px;">
+       </td>
+       <td style="padding: 15px; vertical-align: middle;">
+           <div style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 4px;">John Doe</div>
+           <div style="font-size: 14px; color: #4f46e5; margin-bottom: 8px;">Senior Product Manager</div>
+           <div style="font-size: 13px; color: #6b7280;">
+               <a href="tel:+1234567890" style="color: #4f46e5; text-decoration: none; display: block; margin-bottom: 2px;">📱 (123) 456-7890</a>
+               <a href="mailto:john@company.com" style="color: #4f46e5; text-decoration: none; display: block; margin-bottom: 2px;">✉️ john@company.com</a>
+               <a href="https://company.com" style="color: #4f46e5; text-decoration: none;">🌐 company.com</a>
+           </div>
+       </td>
+   </tr>
+</table>`,
+minimal:`<table style="font-family: 'Inter', system-ui, sans-serif; color: #111827; line-height: 1.5; border-collapse: collapse;">
+   <tr>
+       <td style="padding: 12px;">
+           <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">John Doe</div>
+           <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Product Design @ Company</div>
+           <div style="font-size: 13px;">
+               <a href="https://company.com" style="color: #111827; text-decoration: none;">company.com</a>
+           </div>
+       </td>
+   </tr>
+</table>`,
+   startup: `<table style="font-family: 'SF Pro Display', Arial, sans-serif; line-height: 1.6; border-collapse: collapse; background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%); border-radius: 12px;">
+   <tr>
+       <td style="padding: 20px; color: white;">
+           <div style="margin-bottom: 15px;">
+               <img src="https://api.dicebear.com/7.x/shapes/svg?seed=startup" alt="Logo" style="width: 50px; height: 50px;">
+           </div>
+           <div style="font-size: 20px; font-weight: 600; margin-bottom: 4px;">John Doe</div>
+           <div style="font-size: 14px; opacity: 0.9; margin-bottom: 12px;">Co-founder & CEO</div>
+           <div style="font-size: 13px;">
+               <a href="mailto:john@startup.com" style="color: white; text-decoration: none; display: block; margin-bottom: 2px;">john@startup.com</a>
+               <a href="https://startup.com" style="color: white; text-decoration: none;">startup.com</a>
+           </div>
+       </td>
+   </tr>
+</table>`,
+    detailed: `<table style="font-family: Georgia, serif; color: #333; line-height: 1.5; border-collapse: collapse;">
+   <tr>
+       <td style="padding: 20px; border-left: 3px solid #4f46e5;">
+           <div style="font-size: 20px; color: #111827; margin-bottom: 4px;">John Doe</div>
+           <div style="font-size: 14px; color: #6b7280; font-style: italic; margin-bottom: 12px;">Business Strategy Consultant</div>
+           <div style="font-size: 13px; line-height: 1.6;">
+               <a href="tel:+1234567890" style="color: #4f46e5; text-decoration: none; display: block;">+1 (123) 456-7890</a>
+               <a href="mailto:john@consulting.com" style="color: #4f46e5; text-decoration: none; display: block;">john@consulting.com</a>
+               <div style="margin-top: 8px;">
+                   <a href="https://linkedin.com/in/johndoe" style="text-decoration: none; margin-right: 8px;">
+                       <img src="https://api.dicebear.com/7.x/icons/svg?seed=linkedin" alt="LinkedIn" style="width: 20px; height: 20px;">
+                   </a>
+                   <a href="https://twitter.com/johndoe" style="text-decoration: none;">
+                       <img src="https://api.dicebear.com/7.x/icons/svg?seed=twitter" alt="Twitter" style="width: 20px; height: 20px;">
+                   </a>
+               </div>
+           </div>
+       </td>
+   </tr>
+</table>`
+};
+
+
+// Main functionality
+let signatures = JSON.parse(localStorage.getItem('signatures') || '[]');
+let currentSignatureId = null;
+
+function updatePreview() {
+    const content = document.getElementById('signature-editor').value;
+    document.getElementById('signature-preview').innerHTML = content;
+}
+
+function renderSignatures() {
+    console.log(getCurrentEmailAssets())
+    const container = document.getElementById('signatures-list');
+    container.innerHTML = signatures.length === 0 ? 
+        '<div class="text-center text-gray-500 py-8">No signatures yet. Click "Add New" to create one.</div>' :
+        signatures.map(sig => `
+            <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center space-x-3">
+                        <input type="radio" name="active-signature" ${sig.isActive ? 'checked' : ''}
+                               onchange="setActiveSignature('${sig.id}')">
+                        <h4 class="font-medium">${sig.name}</h4>
+                    </div>
+                    <div class="space-x-2">
+                        <button onclick="editSignature('${sig.id}')" 
+                                class="text-gray-600 hover:text-gray-800">Edit</button>
+                        <button onclick="deleteSignature('${sig.id}')"
+                                class="text-red-600 hover:text-red-800">Delete</button>
+                    </div>
+                </div>
+                <div class="border border-gray-100 rounded p-3 bg-gray-50">
+                    ${sig.content}
+                </div>
+            </div>
+        `).join('');
+
+}
+
+function addNewSignature() {
+    currentSignatureId = null;
+    document.getElementById('signature-name').value = '';
+    document.getElementById('signature-editor').value = '';
+    document.getElementById('signature-preview').innerHTML = '';
+    document.getElementById('signature-modal').classList.remove('hidden');
+}
+
+function editSignature(id) {
+    const signature = signatures.find(s => s.id === id);
+    if (signature) {
+        currentSignatureId = id;
+        document.getElementById('signature-name').value = signature.name;
+        document.getElementById('signature-editor').value = signature.content;
+        document.getElementById('signature-preview').innerHTML = signature.content;
+        document.getElementById('signature-modal').classList.remove('hidden');
+    }
+}
+
+function closeSignatureModal() {
+    document.getElementById('signature-modal').classList.add('hidden');
+}
+
+function openFullscreenEditor() {
+    const content = document.getElementById('signature-editor').value;
+    document.getElementById('fullscreen-signature-editor').value = content;
+    document.getElementById('fullscreen-editor').classList.remove('hidden');
+}
+
+function closeFullscreenEditor() {
+    document.getElementById('fullscreen-editor').classList.add('hidden');
+}
+
+function applyFullscreenChanges() {
+    const content = document.getElementById('fullscreen-signature-editor').value;
+    document.getElementById('signature-editor').value = content;
+    updatePreview();
+    closeFullscreenEditor();
+}
+
+function loadTemplate(template) {
+    if (template && templates[template]) {
+        document.getElementById('signature-editor').value = templates[template];
+        updatePreview();
+    }
+}
+
+function saveSignature() {
+    const name = document.getElementById('signature-name').value;
+    const content = document.getElementById('signature-editor').value;
+
+    if (!name || !content) {
+        alert('Please fill in both name and content');
+        return;
+    }
+
+    if (currentSignatureId) {
+        const index = signatures.findIndex(s => s.id === currentSignatureId);
+        if (index !== -1) {
+            signatures[index] = { ...signatures[index], name, content };
+        }
+    } else {
+        signatures.push({
+            id: Date.now().toString(),
+            name,
+            content,
+            isActive: signatures.length === 0,
+            createdAt: new Date().toISOString()
+        });
+    }
+
+    localStorage.setItem('signatures', JSON.stringify(signatures));
+    renderSignatures();
+    closeSignatureModal();
+}
+
+function deleteSignature(id) {
+    if (confirm('Are you sure you want to delete this signature?')) {
+        signatures = signatures.filter(s => s.id !== id);
+        localStorage.setItem('signatures', JSON.stringify(signatures));
+        renderSignatures();
+    }
+}
+
+function setActiveSignature(id) {
+    signatures = signatures.map(sig => ({
+        ...sig,
+        isActive: sig.id === id
+    }));
+    localStorage.setItem('signatures', JSON.stringify(signatures));
+    renderSignatures();
+}
+
+// Event Listeners
+document.getElementById('signature-editor')?.addEventListener('input', updatePreview);
+document.getElementById('fullscreen-signature-editor')?.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        applyFullscreenChanges();
+    }
+});
+
+// Initialize
+renderSignatures();
+ 
+
+</script>
+<script>
 
         // document.getElementById('fileInput').addEventListener('change', handleFile, false);
 
@@ -7390,7 +7719,7 @@ modalmail.style.display = 'none';
     // }
     //     });
 
-            </script>
+</script>
 
 
 </body>
