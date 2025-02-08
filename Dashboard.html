@@ -7413,49 +7413,49 @@ const formatMailboxData = (formData) => {
                 //     sNotification('Profile updated successfully');
                 // });
         
-                document.getElementById('passwordForm').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const newPassword = e.target.newPassword.value;
-                    const confirmPassword = e.target.confirmPassword.value;
+                // document.getElementById('passwordForm').addEventListener('submit', (e) => {
+                //     e.preventDefault();
+                //     const newPassword = e.target.newPassword.value;
+                //     const confirmPassword = e.target.confirmPassword.value;
         
-                    if (newPassword !== confirmPassword) {
-                        sNotification('Passwords do not match');
-                        return;
-                    }
-                    // Add your API call here
-                    sNotification('Password updated successfully');
-                });
+                //     if (newPassword !== confirmPassword) {
+                //         sNotification('Passwords do not match');
+                //         return;
+                //     }
+                //     // Add your API call here
+                //     sNotification('Password updated successfully');
+                // });
         
-                document.getElementById('billingForm').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    // Add your API call here
-                    sNotification('Billing information updated successfully');
-                });
+                // document.getElementById('billingForm').addEventListener('submit', (e) => {
+                //     e.preventDefault();
+                //     // Add your API call here
+                //     sNotification('Billing information updated successfully');
+                // });
         
-                const saveNotifications = () => {
-                    // Add your API call here
-                    sNotification('Notification preferences saved');
-                };
+                // const saveNotifications = () => {
+                //     // Add your API call here
+                //     sNotification('Notification preferences saved');
+                // };
         
-                // Initial form population (simulate fetching user data)
-                const populateUserData = () => {
-                    // Simulate API call to get user data
-                    const userData = {
-                        firstName: 'John',
-                        lastName: 'Doe',
-                        email: 'john@example.com',
-                        sendingName: 'John Doe (Company)'
-                    };
+                // // Initial form population (simulate fetching user data)
+                // const populateUserData = () => {
+                //     // Simulate API call to get user data
+                //     const userData = {
+                //         firstName: 'John',
+                //         lastName: 'Doe',
+                //         email: 'john@example.com',
+                //         sendingName: 'John Doe (Company)'
+                //     };
         
-                    const profileForm = document.getElementById('profileForm');
-                    Object.keys(userData).forEach(key => {
-                        const input = profileForm.querySelector(`[name="${key}"]`);
-                        if (input) input.value = userData[key];
-                    });
-                };
+                //     const profileForm = document.getElementById('profileForm');
+                //     Object.keys(userData).forEach(key => {
+                //         const input = profileForm.querySelector(`[name="${key}"]`);
+                //         if (input) input.value = userData[key];
+                //     });
+                // };
         
-                // Call on page load
-                populateUserData();
+                // // Call on page load
+                // populateUserData();
 
         //         const MAILBOXES = [
         //     { id: 'work', name: 'Work Email', email: 'john.doe@company.com' },
