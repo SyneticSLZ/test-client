@@ -7762,9 +7762,9 @@ async function selectMailboxForEmail() {
 
         const emailsfound = await response.json();
         if (response.ok) {
-            console.log("found them", emailsfound)
+            // console.log("found them", emailsfound)
             sampleEmails = emailsfound
-            console.log(sampleEmails)
+            // console.log(sampleEmails)
             const sentEmailsContainer = document.getElementById('sentEmailsContainer');
             const sentEmailsManager = new SentEmailsManager(sentEmailsContainer, sampleEmails);
             window.sentEmailsManager = sentEmailsManager;
