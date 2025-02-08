@@ -4433,8 +4433,9 @@ async function CallThisWhenAutosend() {
 async function sendMessage(sender, to, subject, messageText, campaignId, selectedMailbox) {
 
     campaignid = localStorage.getItem('currentCampaignId', campaignId);
-    const addedData = getCurrentEmailAssets();
-    console.log(addedData)
+    const emailAssets = getCurrentEmailAssets();
+    console.log('Email assets for single send:', emailAssets);
+
     // const token = localStorage.getItem('authToken');  https://server.voltmailer.com/send-bulk-manual 
     const response = await fetch('https://server.voltmailer.com/api/mailboxes/send', {
         method: 'POST',
@@ -4442,7 +4443,16 @@ async function sendMessage(sender, to, subject, messageText, campaignId, selecte
             'Content-Type': 'application/json'
         },
         // body: JSON.stringify({ to: email, email: to, subject: subject, content: messageText, myemail: U_MyEmail, campaignId: campaignId, selectedMailbox: selectedMailbox })
-        body: JSON.stringify({ email: U_MyEmail, to: to, subject: subject, text: messageText,  mailbox: selectedMailbox, campaignId: campaignid })
+         body: JSON.stringify({ 
+            email: U_MyEmail, 
+            to: to, 
+            subject: subject, 
+            text: messageText,  
+            mailbox: selectedMailbox, 
+            campaignId: campaignid,
+            signature: emailAssets.signature,
+            mediaAttachments: emailAssets.mediaAttachments
+        })
     });
 
 
