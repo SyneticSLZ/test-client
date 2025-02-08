@@ -3220,6 +3220,25 @@ campaignId = await Campaign(campaignDetails);
 console.log(campaignId)
 localStorage.setItem('currentCampaignId', campaignId);
 const emailAssets = getCurrentEmailAssets();
+    const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
+
+    // Split large attachments into chunks
+    const chunks = [];
+    emailAssets.mediaAttachments.forEach(attachment => {
+        const totalChunks = Math.ceil(attachment.data.length / CHUNK_SIZE);
+        for(let i = 0; i < totalChunks; i++) {
+            const start = i * CHUNK_SIZE;
+            const end = Math.min(start + CHUNK_SIZE, attachment.data.length);
+            chunks.push({
+                attachmentId: attachment.id,
+                name: attachment.name,
+                type: attachment.type,
+                chunkIndex: i,
+                totalChunks,
+                data: attachment.data.slice(start, end)
+            });
+        }
+    });
 
 
 console.log(emailAssets)
@@ -3233,8 +3252,10 @@ let requestBody = {
                 myemail: U_MyEmail,
                 campaignId: campaignId,
                 signature: emailAssets.signature, // Add signature
-                mediaAttachments: emailAssets.mediaAttachments // Add media
-            }
+                mediaAttachments: emailAssets.mediaAttachments.map(({id, name, type, size}) => ({
+            id, name, type, size
+        }))
+    };
 if(UserSubject) {
      requestBody = {
                 submittedData: submittedData,
@@ -3245,8 +3266,10 @@ if(UserSubject) {
                 campaignId: campaignId,
                 UserSubject: UserSubject,
                 signature: emailAssets.signature, // Add signature
-        mediaAttachments: emailAssets.mediaAttachments // Add media
-            }
+        mediaAttachments: emailAssets.mediaAttachments.map(({id, name, type, size}) => ({
+            id, name, type, size
+        }))
+    };
 }else {
     requestBody = {
                 submittedData: submittedData,
@@ -3256,8 +3279,10 @@ if(UserSubject) {
                 myemail: U_MyEmail,
                 campaignId: campaignId,
                 signature: emailAssets.signature, // Add signature
-        mediaAttachments: emailAssets.mediaAttachments // Add media
-            }
+        mediaAttachments: emailAssets.mediaAttachments.map(({id, name, type, size}) => ({
+            id, name, type, size
+        }))
+    };
 }
 
             
@@ -3278,6 +3303,29 @@ if(UserSubject) {
                 });
 
                 if (response.ok) {
+
+                    const { uploadUrl } = await response.json();
+        
+        // Upload attachment chunks
+        for(const chunk of chunks) {
+            await fetch(`${uploadUrl}/chunk`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(chunk)
+            });
+        }
+
+        // Signal upload complete
+        await fetch(`${uploadUrl}/complete`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
 
                     NewCampaign()
                     sNotification('Emails are sending in background');
@@ -5945,43 +5993,21 @@ to { opacity: 1; transform: scale(1); }
     const activeSignature = signatures.find(sig => sig.isActive);
     const mediaItems = JSON.parse(localStorage.getItem('mediaItems') || '[]');
 
-    // Define size limits
-    const MAX_TOTAL_SIZE = 25 * 1024 * 1024; // 25MB total
-    const MAX_SINGLE_FILE = 10 * 1024 * 1024; // 10MB per file
-
-    // Filter and validate attachments
-    const validAttachments = mediaItems.filter(item => {
-        // Check individual file size
-        if (getBase64Size(item.url) > MAX_SINGLE_FILE) {
-            console.warn(`File ${item.name} exceeds maximum size limit of 10MB`);
-            return false;
-        }
-        return true;
+    // Compress and validate attachments
+    const processedAttachments = mediaItems.map(item => {
+        const base64Data = item.url.split(',')[1]; // Remove data:image/jpeg;base64,
+        return {
+            id: item.id,
+            name: item.name,
+            type: item.type,
+            size: Math.round(base64Data.length * 0.75), // Approximate size in bytes
+            data: base64Data
+        };
     });
-
-    // Check total size
-    let totalSize = 0;
-    const finalAttachments = [];
-    
-    for (const item of validAttachments) {
-        const fileSize = getBase64Size(item.url);
-        if (totalSize + fileSize <= MAX_TOTAL_SIZE) {
-            totalSize += fileSize;
-            finalAttachments.push({
-                id: item.id,
-                name: item.name,
-                type: getMimeType(item.name),
-                data: item.url,
-                size: fileSize
-            });
-        } else {
-            console.warn(`Skipping ${item.name}: would exceed total size limit`);
-        }
-    }
 
     return {
         signature: activeSignature?.content || '',
-        mediaAttachments: finalAttachments
+        mediaAttachments: processedAttachments
     };
 }
 
