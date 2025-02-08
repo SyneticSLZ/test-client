@@ -3308,7 +3308,7 @@ if(UserSubject) {
         
         // Upload attachment chunks
         for(const chunk of chunks) {
-            await fetch(`${uploadUrl}/chunk`, {
+            await fetch(`https://server.voltmailer.com${uploadUrl}/chunk`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3319,7 +3319,7 @@ if(UserSubject) {
         }
 
         // Signal upload complete
-        await fetch(`${uploadUrl}/complete`, {
+        await fetch(`https://server.voltmailer.com${uploadUrl}/complete`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
