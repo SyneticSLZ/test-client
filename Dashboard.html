@@ -3220,6 +3220,15 @@ campaignId = await Campaign(campaignDetails);
 console.log(campaignId)
 localStorage.setItem('currentCampaignId', campaignId);
 const emailAssets = getCurrentEmailAssets();
+    console.log('Email assets:', {
+        hasSignature: !!emailAssets.signature,
+        attachmentsCount: emailAssets.mediaAttachments.length,
+        attachments: emailAssets.mediaAttachments.map(att => ({
+            name: att.name,
+            type: att.type,
+            hasData: !!att.data
+        }))
+    });
     const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
 
     // Split large attachments into chunks
@@ -3241,7 +3250,7 @@ const emailAssets = getCurrentEmailAssets();
     });
 
 
-console.log(emailAssets)
+// console.log(emailAssets)
 
 
 let requestBody = {
@@ -3252,9 +3261,7 @@ let requestBody = {
                 myemail: U_MyEmail,
                 campaignId: campaignId,
                 signature: emailAssets.signature, // Add signature
-                mediaAttachments: emailAssets.mediaAttachments.map(({id, name, type, size}) => ({
-            id, name, type, size
-        }))
+                mediaAttachments: emailAssets.mediaAttachments
     };
 if(UserSubject) {
      requestBody = {
@@ -3266,9 +3273,7 @@ if(UserSubject) {
                 campaignId: campaignId,
                 UserSubject: UserSubject,
                 signature: emailAssets.signature, // Add signature
-        mediaAttachments: emailAssets.mediaAttachments.map(({id, name, type, size}) => ({
-            id, name, type, size
-        }))
+                mediaAttachments: emailAssets.mediaAttachments
     };
 }else {
     requestBody = {
@@ -3279,9 +3284,7 @@ if(UserSubject) {
                 myemail: U_MyEmail,
                 campaignId: campaignId,
                 signature: emailAssets.signature, // Add signature
-        mediaAttachments: emailAssets.mediaAttachments.map(({id, name, type, size}) => ({
-            id, name, type, size
-        }))
+                mediaAttachments: emailAssets.mediaAttachments
     };
 }
 
@@ -5740,7 +5743,12 @@ function showNotification(message) {
         <h2 class="text-2xl font-semibold text-gray-800">Email Media</h2>
         <label class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all cursor-pointer">
             Add Media
-            <input type="file" id="media-upload" class="hidden" multiple onchange="handleMediaUpload(event)">
+            <input type="file" 
+           id="media-upload" 
+           class="hidden" 
+           multiple 
+           accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
+           onchange="handleMediaUpload(event)">
         </label>
     </div>
  
@@ -5920,27 +5928,37 @@ to { opacity: 1; transform: scale(1); }
     <script>
         let mediaItems = JSON.parse(localStorage.getItem('mediaItems') || '[]');
         
-        function handleMediaUpload(event) {
-           const files = event.target.files;
-           
-           for (let file of files) {
-               const reader = new FileReader();
-               reader.onload = function(e) {
-                   mediaItems.push({
-                       id: Date.now().toString(),
-                       name: file.name,
-                       type: file.type.split('/')[0],
-                       url: e.target.result,
-                       size: file.size,
-                       lastModified: file.lastModified
-                   });
-                   
-                   localStorage.setItem('mediaItems', JSON.stringify(mediaItems));
-                   renderMediaItems();
-               };
-               reader.readAsDataURL(file);
-           }
-        }
+        // When saving media items:
+function handleMediaUpload(event) {
+    const files = event.target.files;
+    console.log('Files selected:', files.length);
+    
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const mediaItem = {
+                id: Date.now().toString(),
+                name: file.name,
+                type: file.type,
+                url: e.target.result, // This will be the base64 data URL
+                size: file.size
+            };
+            
+            console.log('Created media item:', {
+                name: mediaItem.name,
+                type: mediaItem.type,
+                size: mediaItem.size,
+                hasData: !!mediaItem.url
+            });
+
+            const mediaItems = JSON.parse(localStorage.getItem('mediaItems') || '[]');
+            mediaItems.push(mediaItem);
+            localStorage.setItem('mediaItems', JSON.stringify(mediaItems));
+            renderMediaItems();
+        };
+        reader.readAsDataURL(file);
+    });
+}
         
         function renderMediaItems() {
            const container = document.getElementById('media-list');
@@ -5990,20 +6008,28 @@ to { opacity: 1; transform: scale(1); }
         renderMediaItems();
 
         function getCurrentEmailAssets() {
+    console.log('=== Getting Email Assets ===');
     const activeSignature = signatures.find(sig => sig.isActive);
     const mediaItems = JSON.parse(localStorage.getItem('mediaItems') || '[]');
 
-    // Compress and validate attachments
+    console.log('Found media items:', mediaItems.length);
+
     const processedAttachments = mediaItems.map(item => {
-        const base64Data = item.url.split(',')[1]; // Remove data:image/jpeg;base64,
+        console.log('Processing item:', {
+            name: item.name,
+            type: item.type,
+            hasData: !!item.url
+        });
+
         return {
             id: item.id,
             name: item.name,
-            type: item.type,
-            size: Math.round(base64Data.length * 0.75), // Approximate size in bytes
-            data: base64Data
+            type: item.type || getMimeType(item.name),
+            data: item.url // This should be the base64 data
         };
     });
+
+    console.log('Processed attachments:', processedAttachments.length);
 
     return {
         signature: activeSignature?.content || '',
