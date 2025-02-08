@@ -2462,6 +2462,14 @@ document.addEventListener('DOMContentLoaded', () => {
             fileInput.addEventListener('change', handleFile, false);
         }
 
+        if (uploadLabel) {
+            uploadLabel.accept = '.csv, .xlsx, .xls, .ods, .numbers';
+            
+            // Remove any existing listeners first to prevent multiple bindings
+            uploadLabel.removeEventListener('change', handleFile);
+            uploadLabel.addEventListener('change', handleFile, false);
+        }
+
         if (fileMIDDLE) {
             fileMIDDLE.accept = '.csv, .xlsx, .xls, .ods, .numbers';
             
