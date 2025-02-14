@@ -3028,7 +3028,7 @@ function Submitandcheckautosend(){
             console.log('The array is not empty');
             const userPitch = document.getElementById('userPitch').value;
             const UserSubject = document.getElementById('UserSubject').value;
-            const userTemplate = document.getElementById('userTemplate').value;
+            // const userTemplate = document.getElementById('userTemplate').value;
             console.log(U_MyEmail)
 
             if (U_MyEmail === 'Test@gmail.com'){
@@ -3037,12 +3037,12 @@ function Submitandcheckautosend(){
                     sNotification(`Please submit a subject`);
                 }
                 else {
-                    if(userTemplate.trim() === ''){
-                        sNotification(`Please submit a body`);
-                    }   
-                    else{
-                        sendForIndianGuy(userTemplate, UserSubject)
-                    }
+                    // if(userTemplate.trim() === ''){
+                    //     sNotification(`Please submit a body`);
+                    // }   
+                    // else{
+                    //     sendForIndianGuy(userTemplate, UserSubject)
+                    // }
                 }
                 
 
@@ -3067,37 +3067,37 @@ function Submitandcheckautosend(){
         }
 
 
-    async function sendForIndianGuy(userTemplate, UserSubject){
-    const emails = await fetchActiveMailbox(U_MyEmail);
-    console.log(emails, submittedData);
-    let errorOccurred = false;
+//     async function sendForIndianGuy(userTemplate, UserSubject){
+//     const emails = await fetchActiveMailbox(U_MyEmail);
+//     console.log(emails, submittedData);
+//     let errorOccurred = false;
 
-    for (let index = 0; index < submittedData.length; index++) {
+//     for (let index = 0; index < submittedData.length; index++) {
 
-        // const data = generatedData[index];
-        const selectedEmail = emails[index % emails.length];
-        let email = submittedData[index].email
-        console.log(UserSubject, userTemplate, email)
+//         // const data = generatedData[index];
+//         const selectedEmail = emails[index % emails.length];
+//         let email = submittedData[index].email
+//         console.log(UserSubject, userTemplate, email)
         
-        try {
-            console.log(`Sending email #${index + 1} using ${selectedEmail}`);
-            await sendEmailsmtp(index, UserSubject, userTemplate, email, selectedEmail); // Send email
-        } catch (error) {
-            console.error(`Failed to send email for index ${index}:`, error);
-            errorOccurred = true;
-        }
-    }
+//         try {
+//             console.log(`Sending email #${index + 1} using ${selectedEmail}`);
+//             await sendEmailsmtp(index, UserSubject, userTemplate, email, selectedEmail); // Send email
+//         } catch (error) {
+//             console.error(`Failed to send email for index ${index}:`, error);
+//             errorOccurred = true;
+//         }
+//     }
 
-    // Handle notifications after all emails are processed
-    if (errorOccurred) {
-        showNotification('Error sending one or more emails');
-    } else {
-        showNotification('All emails sent successfully');
-    }
-    NewCampaign()
-    sNotification('Emails are sending in background');
-    console.log('All emails processed.');
-}
+//     // Handle notifications after all emails are processed
+//     if (errorOccurred) {
+//         showNotification('Error sending one or more emails');
+//     } else {
+//         showNotification('All emails sent successfully');
+//     }
+//     NewCampaign()
+//     sNotification('Emails are sending in background');
+//     console.log('All emails processed.');
+// }
 
 // SENDING THE EMAILS AUTOMATED (TAB CAN BE CLOSED)
 // async function Autosend() {
@@ -3271,14 +3271,14 @@ async function Autosend_new(){
             const userPitch = document.getElementById('userPitch').value; 
             // const token = 'YOUR_JWT_TOKEN'; // Replace with your actual JWT token
             const token = localStorage.getItem('authToken');
-            const userTemplate = document.getElementById('userTemplate').value;
+            // const userTemplate = document.getElementById('userTemplate').value;
     const campaignName = generateUniqueCampaignName();
     const UserSubject = document.getElementById('UserSubject').value;
     // Example usage:
 const campaignDetails = {
     email: U_MyEmail,
     campaignName: campaignName,
-    template:userTemplate,
+    template:'',
     pitch:userPitch
 };
 
@@ -3587,7 +3587,7 @@ async function manualSend() {
     const userPitch = document.getElementById('userPitch').value; // Get user pitch from textarea
     // const userPitch = document.getElementById('userPitch').value;
             const UserSubject = document.getElementById('UserSubject').value;
-            const userTemplate = document.getElementById('userTemplate').value;
+            // const userTemplate = document.getElementById('userTemplate').value;
 
     document.getElementById('customLoader').style.display = 'flex';
     const textarea = document.getElementById('userPitch');
@@ -3615,7 +3615,7 @@ async function manualSend() {
 const campaignDetails = {
     email: U_MyEmail,
     campaignName: campaignName,
-    template:userTemplate,
+    template:'',
     pitch:userPitch
 };
 
@@ -3652,7 +3652,7 @@ localStorage.setItem('currentCampaignId', campaignId);
                         userPitch: userPitch, 
                         Uname: U_Username,
                         To: sddata.name,
-                    Template : userTemplate
+                    Template : ''
                 })
                 });
 
