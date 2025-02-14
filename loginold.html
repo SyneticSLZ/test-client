@@ -27,7 +27,63 @@
         .tab-content.active {
             display: block;
         }
-    </style>
+        
+.fade-enter {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.fade-exit {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-exit-active {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+</style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <!-- Sidebar -->
@@ -44,6 +100,10 @@
                     <span class="material-icons mr-3">dashboard</span>
                     Dashboard
                 </a>
+                <a href="#" data-tab="create-campaign" class="nav-link flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-150">
+                    <span class="material-icons mr-3">add_circle</span>
+                    Create Campaign
+                </a>
                 <a href="#" data-tab="campaigns" class="nav-link flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-150">
                     <span class="material-icons mr-3">campaign</span>
                     Campaigns
@@ -59,6 +119,10 @@
                 <a href="#" data-tab="templates" class="nav-link flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-150">
                     <span class="material-icons mr-3">description</span>
                     Templates
+                </a>
+                <a href="#" data-tab="sequences" class="nav-link flex items-center px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-150">
+                    <span class="material-icons mr-3">timeline</span>
+                    Sequences
                 </a>
             </nav>
             
@@ -150,6 +214,423 @@
                 </div>
             </div>
         </div>
+
+<!-- Add this to your tab contents section -->
+<div id="create-campaign" class="tab-content">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow transition-colors duration-200">
+        <div class="p-6">
+            <!-- Campaign Creation Steps -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex space-x-4">
+                        <div id="step1" class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">1</div>
+                            <span class="ml-2 text-gray-700 dark:text-gray-300">Campaign Details</span>
+                        </div>
+                        <div class="w-16 h-1 bg-gray-200 dark:bg-gray-700 self-center"></div>
+                        <div id="step2" class="flex items-center opacity-50">
+                            <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-medium">2</div>
+                            <span class="ml-2 text-gray-700 dark:text-gray-300">Select Leads</span>
+                        </div>
+                        <div class="w-16 h-1 bg-gray-200 dark:bg-gray-700 self-center"></div>
+                        <div id="step3" class="flex items-center opacity-50">
+                            <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-medium">3</div>
+                            <span class="ml-2 text-gray-700 dark:text-gray-300">Review & Send</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Campaign Details -->
+            <div id="campaignStep1" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Campaign Name</label>
+                            <input type="text" class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200" placeholder="Enter campaign name">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Template</label>
+                            <select class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                                <option value="">Select a template</option>
+                                <option value="template1">Welcome Sequence</option>
+                                <option value="template2">Follow-up Email</option>
+                                <option value="template3">Product Launch</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Signature</label>
+                            <select class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                                <option value="">Select a signature</option>
+                                <option value="sig1">Professional</option>
+                                <option value="sig2">Casual</option>
+                                <option value="sig3">Minimal</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject Line</label>
+                            <input type="text" class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200" placeholder="Enter subject line">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pitch</label>
+                            <textarea class="w-full h-32 px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200" placeholder="Enter your pitch"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Media Attachments</label>
+                            <div class="border-2 border-dashed dark:border-gray-700 rounded-lg p-4 text-center">
+                                <span class="material-icons text-gray-400 text-3xl mb-2">cloud_upload</span>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Drag and drop files here or</p>
+                                <button class="text-blue-500 hover:text-blue-600 text-sm font-medium">browse files</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-6">
+                    <button id="nextToStep2" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                        Next: Select Leads
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Lead Selection -->
+            <div id="campaignStep2" class="hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Existing Lead Lists -->
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                        <h4 class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">Existing Lead Lists</h4>
+                        <select class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                            <option value="">Select a list</option>
+                            <option value="list1">Tech Companies (150 leads)</option>
+                            <option value="list2">Startups (75 leads)</option>
+                            <option value="list3">Enterprise (50 leads)</option>
+                        </select>
+                        <button class="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                            Use Selected List
+                        </button>
+                    </div>
+
+                    <!-- Import from File -->
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                        <h4 class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">Import from File</h4>
+                        <div class="border-2 border-dashed dark:border-gray-700 rounded-lg p-4 text-center">
+                            <span class="material-icons text-gray-400 text-3xl mb-2">description</span>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Drop your CSV file here or</p>
+                            <button class="text-blue-500 hover:text-blue-600 text-sm font-medium">browse files</button>
+                        </div>
+                        <button class="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200" disabled>
+                            Import Leads
+                        </button>
+                    </div>
+
+                    <!-- Domain Search -->
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                        <h4 class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">Domain Search</h4>
+                        <input type="text" class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200" placeholder="Enter domain name">
+                        <button class="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                            Search Domain
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Selected Leads Table -->
+                <div class="mt-8">
+                    <h4 class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">Selected Leads</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="border-b dark:border-gray-700">
+                                    <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Name</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Email</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Company</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Position</th>
+                                    <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="selectedLeadsTable">
+                                <!-- Leads will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <button id="backToStep1" class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                        Back
+                    </button>
+                    <button id="nextToStep3" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                        Next: Review & Send
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Review & Send -->
+            <div id="campaignStep3" class="hidden space-y-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h4 class="text-lg font-medium text-gray-800 dark:text-gray-200">Campaign Preview</h4>
+                    <div class="flex space-x-4">
+                        <button id="generateEmails" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200">
+                            Generate Emails
+                        </button>
+                        <select class="px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                            <option value="manual">Manual Send</option>
+                            <option value="auto">Auto Send</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Generated Emails Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b dark:border-gray-700">
+                                <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Recipient</th>
+                                <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Subject</th>
+                                <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Preview</th>
+                                <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Status</th>
+                                <th class="text-left py-3 px-4 text-gray-600 dark:text-gray-400">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="generatedEmailsTable">
+                            <!-- Generated emails will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <div class="flex space-x-4">
+                        <button id="backToStep2" class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                            Back
+                        </button>
+                        <button id="exportEmails" class="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                            Export
+                        </button>
+                        <button id="resetCampaign" class="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                            Reset
+                        </button>
+                    </div>
+                    <button id="sendAllEmails" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                        Send All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="sequences" class="tab-content">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow transition-colors duration-200">
+        <div class="p-6">
+            <!-- Header with Actions -->
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Email Sequences</h3>
+                <button id="createSequence" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center">
+                    <span class="material-icons mr-2">add</span>
+                    New Sequence
+                </button>
+            </div>
+
+            <!-- Sequence List -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sequencesList">
+                <!-- Active Sequence Card -->
+                <div class="border dark:border-gray-700 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="text-gray-800 dark:text-white font-medium">Welcome Sequence</h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">5 emails over 14 days</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</span>
+                            <button class="ml-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                                <span class="material-icons">more_vert</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm">
+                            <span class="material-icons text-gray-400 mr-2 text-base">people</span>
+                            <span class="text-gray-600 dark:text-gray-400">245 contacts</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <span class="material-icons text-gray-400 mr-2 text-base">email</span>
+                            <span class="text-gray-600 dark:text-gray-400">1,225 emails sent</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <span class="material-icons text-gray-400 mr-2 text-base">analytics</span>
+                            <span class="text-gray-600 dark:text-gray-400">48% open rate</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button class="text-blue-500 hover:text-blue-600 text-sm font-medium">Edit Sequence</button>
+                        <button class="text-gray-500 hover:text-gray-600 text-sm font-medium">View Analytics</button>
+                    </div>
+                </div>
+
+                <!-- Draft Sequence Card -->
+                <div class="border dark:border-gray-700 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="text-gray-800 dark:text-white font-medium">Follow-up Sequence</h4>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">3 emails over 7 days</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Draft</span>
+                            <button class="ml-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                                <span class="material-icons">more_vert</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm">
+                            <span class="material-icons text-gray-400 mr-2 text-base">schedule</span>
+                            <span class="text-gray-600 dark:text-gray-400">Last edited 2 hours ago</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button class="text-blue-500 hover:text-blue-600 text-sm font-medium">Continue Editing</button>
+                        <button class="text-green-500 hover:text-green-600 text-sm font-medium">Activate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sequence Editor Modal -->
+            <div id="sequenceEditor" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+                <div class="absolute inset-x-4 top-4 bottom-4 md:inset-x-auto md:left-1/2 md:transform md:-translate-x-1/2 md:w-3/4 bg-white dark:bg-gray-800 rounded-lg shadow-xl flex flex-col">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center p-6 border-b dark:border-gray-700">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Edit Sequence</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Configure your email sequence</p>
+                        </div>
+                        <button id="closeSequenceEditor" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal Content -->
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <!-- Sequence Details -->
+                        <div class="mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sequence Name</label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200" placeholder="Enter sequence name">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200" placeholder="Brief description">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email Steps Timeline -->
+                        <div class="space-y-6">
+                            <div class="flex justify-between items-center">
+                                <h4 class="text-lg font-medium text-gray-800 dark:text-white">Email Steps</h4>
+                                <button id="addStep" class="text-blue-500 hover:text-blue-600 flex items-center">
+                                    <span class="material-icons mr-1">add_circle</span>
+                                    Add Step
+                                </button>
+                            </div>
+
+                            <!-- Timeline -->
+                            <div class="relative">
+                                <!-- Step 1 -->
+                                <div class="flex items-start mb-8">
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium relative">
+                                        1
+                                        <div class="absolute top-8 bottom-0 left-1/2 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Template</label>
+                                                    <select class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                                                        <option value="">Select template</option>
+                                                        <option value="welcome">Welcome Email</option>
+                                                        <option value="followup">Follow-up</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wait Duration</label>
+                                                    <div class="flex space-x-2">
+                                                        <input type="number" class="w-20 px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200" value="0">
+                                                        <select class="px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                                                            <option value="hours">Hours</option>
+                                                            <option value="days">Days</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Conditions</label>
+                                                    <button class="w-full px-4 py-2 border border-dashed dark:border-gray-700 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200">
+                                                        Add Condition
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-end space-x-2">
+                                                <button class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                                    <span class="material-icons">content_copy</span>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-600">
+                                                    <span class="material-icons">delete</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
+                                        2
+                                    </div>
+                                    <div class="ml-4 flex-1">
+                                        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border-2 border-dashed dark:border-gray-700">
+                                            <button class="w-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                                                <span class="material-icons text-2xl">add_circle_outline</span>
+                                                <span class="block mt-1">Add Email Step</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="border-t dark:border-gray-700 p-6">
+                        <div class="flex justify-between">
+                            <button class="px-4 py-2 border dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                Save as Draft
+                            </button>
+                            <div class="space-x-4">
+                                <button class="px-4 py-2 border dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                    Preview
+                                </button>
+                                <button class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:opacity-90 transition-opacity">
+                                    Activate Sequence
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
         <!-- Campaigns Tab -->
         <div id="campaigns" class="tab-content">
@@ -401,6 +882,202 @@
                 </tr>
             `).join('');
         }
+
+        // Campaign Creator functionality
+document.addEventListener('DOMContentLoaded', () => {
+    // Step navigation elements
+    const steps = ['campaignStep1', 'campaignStep2', 'campaignStep3'];
+    const stepIndicators = ['step1', 'step2', 'step3'];
+    let currentStep = 0;
+
+
+    // Navigation functions
+    function showStep(stepIndex) {
+        steps.forEach((step, index) => {
+            const element = document.getElementById(step);
+            if (index === stepIndex) {
+                element.classList.remove('hidden');
+                element.classList.add('slide-in');
+            } else {
+                element.classList.add('hidden');
+                element.classList.remove('slide-in');
+            }
+        });
+
+        // Update step indicators
+        stepIndicators.forEach((indicator, index) => {
+            const element = document.getElementById(indicator);
+            if (index === stepIndex) {
+                element.classList.remove('opacity-50');
+                element.querySelector('div').classList.add('bg-blue-500');
+                element.querySelector('div').classList.remove('bg-gray-400');
+            } else if (index < stepIndex) {
+                element.classList.remove('opacity-50');
+                element.querySelector('div').classList.add('bg-green-500');
+                element.querySelector('div').classList.remove('bg-gray-400', 'bg-blue-500');
+            } else {
+                element.classList.add('opacity-50');
+                element.querySelector('div').classList.add('bg-gray-400');
+                element.querySelector('div').classList.remove('bg-blue-500', 'bg-green-500');
+            }
+        });
+    }
+
+    // Button event listeners
+    document.getElementById('nextToStep2')?.addEventListener('click', () => {
+        currentStep = 1;
+        showStep(currentStep);
+    });
+
+    document.getElementById('backToStep1')?.addEventListener('click', () => {
+        currentStep = 0;
+        showStep(currentStep);
+    });
+
+    document.getElementById('nextToStep3')?.addEventListener('click', () => {
+        currentStep = 2;
+        showStep(currentStep);
+    });
+
+    document.getElementById('backToStep2')?.addEventListener('click', () => {
+        currentStep = 1;
+        showStep(currentStep);
+    });
+
+    // Sample data for demonstration
+    const sampleLeads = [
+        { name: 'John Smith', email: 'john@company.com', company: 'Tech Corp', position: 'CEO' },
+        { name: 'Sarah Johnson', email: 'sarah@startup.io', company: 'Startup.io', position: 'CTO' },
+        { name: 'Mike Williams', email: 'mike@enterprise.com', company: 'Enterprise Ltd', position: 'Director' }
+    ];
+
+    // Function to populate leads table
+    function populateLeadsTable(leads) {
+        const tableBody = document.getElementById('selectedLeadsTable');
+        if (!tableBody) return;
+
+        tableBody.innerHTML = leads.map(lead => `
+            <tr class="border-b dark:border-gray-700 slide-in">
+                <td class="py-3 px-4 text-gray-800 dark:text-gray-300">${lead.name}</td>
+                <td class="py-3 px-4 text-gray-800 dark:text-gray-300">${lead.email}</td>
+                <td class="py-3 px-4 text-gray-800 dark:text-gray-300">${lead.company}</td>
+                <td class="py-3 px-4 text-gray-800 dark:text-gray-300">${lead.position}</td>
+                <td class="py-3 px-4">
+                    <button class="text-red-500 hover:text-red-600 transition-colors duration-200">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Function to generate email previews
+    function generateEmailPreviews() {
+        const tableBody = document.getElementById('generatedEmailsTable');
+        if (!tableBody) return;
+
+        const statuses = ['Pending', 'Ready', 'Failed'];
+        const animations = ['fade-enter', 'slide-in'];
+
+        tableBody.innerHTML = sampleLeads.map(lead => {
+            const status = statuses[Math.floor(Math.random() * statuses.length)];
+            const animation = animations[Math.floor(Math.random() * animations.length)];
+            
+            return `
+                <tr class="border-b dark:border-gray-700 ${animation}">
+                    <td class="py-3 px-4 text-gray-800 dark:text-gray-300">${lead.email}</td>
+                    <td class="py-3 px-4 text-gray-800 dark:text-gray-300">Welcome to Our Platform</td>
+                    <td class="py-3 px-4 text-gray-800 dark:text-gray-300">Hi ${lead.name}, we noticed your great work at ${lead.company}...</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 rounded-full text-xs ${
+                            status === 'Ready' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                            status === 'Failed' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                        }">${status}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="flex space-x-2">
+                            <button class="text-blue-500 hover:text-blue-600 transition-colors duration-200">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="text-green-500 hover:text-green-600 transition-colors duration-200">
+                                <span class="material-icons">send</span>
+                            </button>
+                            <button class="text-red-500 hover:text-red-600 transition-colors duration-200">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Event listeners for campaign actions
+    document.getElementById('generateEmails')?.addEventListener('click', () => {
+        generateEmailPreviews();
+    });
+
+    document.getElementById('sendAllEmails')?.addEventListener('click', () => {
+        const button = document.getElementById('sendAllEmails');
+        button.classList.add('shake');
+        setTimeout(() => button.classList.remove('shake'), 500);
+        
+        // Simulate sending emails
+        const rows = document.querySelectorAll('#generatedEmailsTable tr');
+        rows.forEach((row, index) => {
+            setTimeout(() => {
+                const statusCell = row.querySelector('td:nth-child(4) span');
+                statusCell.className = 'px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+                statusCell.textContent = 'Sent';
+            }, index * 500);
+        });
+    });
+
+    document.getElementById('resetCampaign')?.addEventListener('click', () => {
+        currentStep = 0;
+        showStep(currentStep);
+        // Reset all forms and tables
+        document.querySelectorAll('input, textarea, select').forEach(element => {
+            element.value = '';
+        });
+        document.getElementById('selectedLeadsTable').innerHTML = '';
+        document.getElementById('generatedEmailsTable').innerHTML = '';
+    });
+
+    // Simulate file drop functionality
+    const dropZones = document.querySelectorAll('.border-dashed');
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('border-blue-500');
+        });
+
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('border-blue-500');
+        });
+
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('border-blue-500');
+            // Handle file drop
+            if (e.dataTransfer.files.length > 0) {
+                populateLeadsTable(sampleLeads);
+            }
+        });
+    });
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (link.dataset.tab === 'create-campaign') {
+                currentStep = 0;
+                showStep(currentStep);
+            }
+        });
+    });
+});
+
 
         // Load initial data for dashboard
         document.addEventListener('DOMContentLoaded', () => {
