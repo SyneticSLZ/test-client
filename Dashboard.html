@@ -8652,7 +8652,7 @@ if (header) {
 }
 
         try {
-            const params = new URLSearchParams({ email: 'jjj@gmail.com' });
+            const params = new URLSearchParams({ email: U_MyEmail });
             const response = await fetch(`https://server.voltmailer.com/api/campaigns?${params}`);
 
             // const response = await fetch(`https://server.voltmailer.com/api/campaigns?email=${U_MyEmail}`);
