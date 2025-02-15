@@ -5450,6 +5450,12 @@ Manage Email Sequences
 
         <div class="contentf" id="campaignTab" style="display: none;">
             <div class="container mx-auto p-6 max-w-20xl" style="height: 85vh; overflow-y: scroll;">
+                <!-- Modal Container -->
+<div id="recipientModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div id="recipientModalContent"></div>
+    </div>
+</div>
                 <!-- Header -->
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">Your Campaigns</h2>
@@ -8376,27 +8382,398 @@ modalmail.style.display = 'none';
         // Campaign Manager JavaScript
 const CampaignManager = {
     campaigns: [], // Will store campaign data
+    recipientPagination: {}, // Stores current page for each campaign
+    recipientFilters: {}, // Stores current filter for each campaign
+    recipientsPerPage: 10,
+    isLoading: true,
+    
 
     init() {
         this.loadCampaigns();
         this.bindEvents();
     },
 
+    updateRecipientsFilter(select, campaignId) {
+        const status = select.value;
+        this.recipientFilters[campaignId] = status;
+        this.recipientPagination[campaignId] = 0; // Reset to first page
+        this.renderRecipients(campaignId);
+    },
+
+    showModal(content) {
+        const modal = document.getElementById('recipientModal');
+        const modalContent = document.getElementById('recipientModalContent');
+        modalContent.innerHTML = content;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                this.closeModal();
+            }
+        });
+
+        // Add keyboard event listener for Escape key
+        document.addEventListener('keydown', this.handleEscapeKey);
+    },
+
+    closeModal() {
+        const modal = document.getElementById('recipientModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.removeEventListener('keydown', this.handleEscapeKey);
+    },
+
+    handleEscapeKey(e) {
+        if (e.key === 'Escape') {
+            CampaignManager.closeModal();
+        }
+    },
+
+    async viewRecipientDetails(campaignId, recipientEmail) {
+        const campaign = this.campaigns.find(c => c._id === campaignId);
+        const recipient = campaign?.targetRecipients?.find(r => r.email === recipientEmail);
+        
+        if (!recipient) return;
+
+        const modalContent = `
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-semibold">Recipient Details</h3>
+                    <button onclick="CampaignManager.closeModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fi fi-rr-cross"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Name</p>
+                            <p class="font-medium">${recipient.name || '-'}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Email</p>
+                            <p class="font-medium">${recipient.email}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Website</p>
+                            <p class="font-medium">
+                                ${recipient.website ? `
+                                    <a href="${recipient.website}" target="_blank" class="text-purple-600 hover:text-purple-700">
+                                        ${recipient.website}
+                                    </a>
+                                ` : '-'}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Status</p>
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${this.getRecipientStatusColor(recipient.status)}">
+                                ${recipient.status}
+                            </span>
+                        </div>
+                    </div>
+
+                    ${recipient.error ? `
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                            <p class="text-sm text-gray-500">Error</p>
+                            <p class="text-sm text-red-600">${recipient.error}</p>
+                        </div>
+                    ` : ''}
+
+                    <div>
+                        <p class="text-sm text-gray-500 mb-2">Follow-up Status</p>
+                        <div class="space-y-2">
+                            ${recipient.followUpStatus?.length ? 
+                                recipient.followUpStatus.map(followUp => `
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <p class="font-medium">Follow-up ${followUp.followUpId}</p>
+                                                <p class="text-sm text-gray-500">
+                                                    Status: 
+                                                    <span class="${this.getRecipientStatusColor(followUp.status)}">
+                                                        ${followUp.status}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            ${followUp.sentTime ? `
+                                                <p class="text-sm text-gray-500">
+                                                    Sent: ${this.formatDate(followUp.sentTime)}
+                                                </p>
+                                            ` : ''}
+                                        </div>
+                                        ${followUp.error ? `
+                                            <p class="text-sm text-red-600 mt-2">${followUp.error}</p>
+                                        ` : ''}
+                                    </div>
+                                `).join('') : 
+                                '<p class="text-sm text-gray-500">No follow-ups scheduled</p>'
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.showModal(modalContent);
+        
+       
+    },
+
+    changePage(campaignId, direction) {
+        const campaign = this.campaigns.find(c => c._id === campaignId);
+        if (!campaign) return;
+
+        const currentPage = this.recipientPagination[campaignId] || 0;
+        const totalPages = Math.ceil(this.getFilteredRecipients(campaign).length / this.recipientsPerPage);
+
+        if (direction === 'prev' && currentPage > 0) {
+            this.recipientPagination[campaignId] = currentPage - 1;
+        } else if (direction === 'next' && currentPage < totalPages - 1) {
+            this.recipientPagination[campaignId] = currentPage + 1;
+        }
+
+        this.renderRecipients(campaignId);
+    },
+
+    getFilteredRecipients(campaign) {
+        const filter = this.recipientFilters[campaign._id];
+        if (!filter || filter === 'all') return campaign.targetRecipients || [];
+        
+        return (campaign.targetRecipients || []).filter(recipient => 
+            recipient.status === filter
+        );
+    },
+    renderRecipients(campaignId) {
+        const campaign = this.campaigns.find(c => c._id === campaignId);
+        if (!campaign) return;
+
+        const filteredRecipients = this.getFilteredRecipients(campaign);
+        const currentPage = this.recipientPagination[campaignId] || 0;
+        const start = currentPage * this.recipientsPerPage;
+        const end = start + this.recipientsPerPage;
+        const paginatedRecipients = filteredRecipients.slice(start, end);
+
+        // Update the recipients table in the campaign card
+        const card = document.querySelector(`.campaign-card[data-id="${campaignId}"]`);
+        const tableBody = card.querySelector('tbody');
+        
+        tableBody.innerHTML = this.generateRecipientsTableRows(paginatedRecipients, campaignId);
+
+        // Update pagination info
+        const paginationInfo = card.querySelector('.flex.justify-between.items-center.px-4.py-3');
+        if (paginationInfo) {
+            paginationInfo.innerHTML = this.generatePaginationControls(
+                start + 1,
+                Math.min(end, filteredRecipients.length),
+                filteredRecipients.length,
+                campaignId
+            );
+        }
+    },
+
+    generateRecipientsTableRows(recipients, campaignId) {
+        return recipients.map(recipient => `
+            <tr>
+                <td class="px-4 py-3 text-sm">${recipient.name || '-'}</td>
+                <td class="px-4 py-3 text-sm">${recipient.email}</td>
+                <td class="px-4 py-3 text-sm">
+                    ${recipient.website ? `
+                        <a href="${recipient.website}" target="_blank" class="text-purple-600 hover:text-purple-700">
+                            ${recipient.website}
+                        </a>
+                    ` : '-'}
+                </td>
+                <td class="px-4 py-3">
+                    <span class="px-2 py-1 text-xs font-medium rounded-full ${this.getRecipientStatusColor(recipient.status)}">
+                        ${recipient.status}
+                    </span>
+                    ${recipient.error ? `
+                        <div class="text-xs text-red-600 mt-1">${recipient.error}</div>
+                    ` : ''}
+                </td>
+                <td class="px-4 py-3">
+                    <div class="space-y-1">
+                        ${recipient.followUpStatus?.map(followUp => `
+                            <div class="text-xs">
+                                <span class="font-medium">Follow-up ${followUp.followUpId}:</span>
+                                <span class="${this.getRecipientStatusColor(followUp.status)}">
+                                    ${followUp.status}
+                                </span>
+                                ${followUp.sentTime ? `
+                                    <span class="text-gray-500">
+                                        (${this.formatDate(followUp.sentTime)})
+                                    </span>
+                                ` : ''}
+                            </div>
+                        `).join('') || '-'}
+                    </div>
+                </td>
+                <!-- <td class="px-4 py-3">
+                    <button class="p-1 hover:bg-gray-100 rounded-full" 
+                            onclick="CampaignManager.viewRecipientDetails('${campaignId}', '${recipient.email}')">
+                        <i class="fi fi-rr-eye text-gray-600"></i>
+                    </button>
+                </td> -->
+            </tr>
+        `).join('');
+    },
+
+    generatePaginationControls(start, end, total, campaignId) {
+        return `
+            <div class="text-sm text-gray-500">
+                Showing ${start}-${end} of ${total} recipients
+            </div>
+            <div class="flex gap-2">
+                <button class="px-3 py-1 text-sm text-gray-700 bg-white border rounded hover:bg-gray-50"
+                        onclick="CampaignManager.changePage('${campaignId}', 'prev')"
+                        ${start <= 1 ? 'disabled' : ''}>
+                    Previous
+                </button>
+                <button class="px-3 py-1 text-sm text-gray-700 bg-white border rounded hover:bg-gray-50"
+                        onclick="CampaignManager.changePage('${campaignId}', 'next')"
+                        ${end >= total ? 'disabled' : ''}>
+                    Next
+                </button>
+            </div>
+        `;
+    },
+
+
+
     async loadCampaigns() {
+        this.isLoading = true;
+        this.renderSkeletons();
+        // Add this to your loadCampaigns method
+const header = document.querySelector('#campaignTab h2');
+if (header) {
+    header.classList.toggle('opacity-50', this.isLoading);
+}
+
         try {
-            const params = new URLSearchParams({ email: U_MyEmail });
+            const params = new URLSearchParams({ email: 'jjj@gmail.com' });
             const response = await fetch(`https://server.voltmailer.com/api/campaigns?${params}`);
 
             // const response = await fetch(`https://server.voltmailer.com/api/campaigns?email=${U_MyEmail}`);
             const data = await response.json();
             if (response.ok) {
                 this.campaigns = data;
+                this.isLoading = false;
                 this.renderCampaigns();
             }
         } catch (error) {
             console.error('Error loading campaigns:', error);
+            this.isLoading = false;
+            this.renderError();
         }
     },
+    renderSkeletons() {
+        const container = document.getElementById('campaignsContainer');
+        container.innerHTML = Array(3).fill().map(() => this.createSkeletonCard()).join('');
+    },
+
+    createSkeletonCard() {
+        return `
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 animate-pulse">
+                <!-- Header -->
+                <div class="p-4 flex justify-between items-center">
+                    <div class="space-y-2">
+                        <div class="h-6 w-48 bg-gray-200 rounded"></div>
+                        <div class="h-4 w-32 bg-gray-200 rounded"></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="h-6 w-24 bg-gray-200 rounded-full"></div>
+                        <div class="h-8 w-8 bg-gray-200 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="border-t border-gray-200 p-4 space-y-6">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-4 gap-4">
+                        ${Array(2).fill().map(() => `
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="h-4 w-20 bg-gray-200 rounded mb-2"></div>
+                                <div class="h-8 w-16 bg-gray-200 rounded"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Campaign Details -->
+                    <div class="space-y-4">
+                        <!-- Pitch -->
+                        <div>
+                            <div class="h-5 w-32 bg-gray-200 rounded mb-2"></div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="space-y-2">
+                                    ${Array(3).fill().map(() => `
+                                        <div class="h-4 bg-gray-200 rounded w-${Math.random() > 0.5 ? 'full' : '3/4'}"></div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recipients Table -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div class="h-5 w-32 bg-gray-200 rounded"></div>
+                                <div class="flex gap-2">
+                                    <div class="h-8 w-24 bg-gray-200 rounded"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            ${Array(6).fill().map(() => `
+                                                <th class="px-4 py-3">
+                                                    <div class="h-4 w-20 bg-gray-200 rounded"></div>
+                                                </th>
+                                            `).join('')}
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        ${Array(3).fill().map(() => `
+                                            <tr>
+                                                ${Array(6).fill().map((_, i) => `
+                                                    <td class="px-4 py-3">
+                                                        <div class="h-4 w-${i === 5 ? '8' : '24'} bg-gray-200 rounded"></div>
+                                                    </td>
+                                                `).join('')}
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                        <div class="h-10 w-32 bg-gray-200 rounded-lg"></div>
+                        <div class="h-10 w-36 bg-gray-200 rounded-lg"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    renderError() {
+        const container = document.getElementById('campaignsContainer');
+        container.innerHTML = `
+            <div class="text-center py-12">
+                <div class="text-red-500 mb-2">Error loading campaigns</div>
+                <button onclick="CampaignManager.loadCampaigns()" 
+                        class="px-4 py-2 text-sm text-white bg-purple-600 hover:bg-purple-700 rounded-lg">
+                    Try Again
+                </button>
+            </div>
+        `;
+    },
+
+    // Your existing re
 
     bindEvents() {
         // Filter change handler
@@ -8469,11 +8846,24 @@ const CampaignManager = {
     getStatusColor(status) {
         const colors = {
             in_progress: 'bg-blue-100 text-blue-800',
-            completed: 'bg-green-100 text-green-800',
+            success: 'bg-green-100 text-green-800',
             paused: 'bg-yellow-100 text-yellow-800'
         };
         return colors[status] || 'bg-gray-100 text-gray-800';
     },
+
+    getRecipientStatusColor(status) {
+    switch (status) {
+        case 'pending':
+            return 'bg-yellow-100 text-yellow-800';
+        case 'sent':
+            return 'bg-green-100 text-green-800';
+        case 'failed':
+            return 'bg-red-100 text-red-800';
+        default:
+            return 'bg-gray-100 text-gray-800';
+    }
+},
 
     createCampaignCard(campaign) {
         return `
@@ -8494,13 +8884,8 @@ const CampaignManager = {
                 </div>
 
                 <div class="campaign-content hidden border-t border-gray-200 p-4 space-y-6">
-                    <!-- Campaign Stats -->
-                    <div class="grid grid-cols-4 gap-4">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <p class="text-sm text-gray-500">Sent Emails</p>
-                            <p class="text-2xl font-semibold">${campaign.SENT_EMAILS || 0}</p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
+                    <!-- Campaign Stats
+                                                <div class="bg-gray-50 p-4 rounded-lg">
                             <p class="text-sm text-gray-500">Bounce Rate</p>
                             <p class="text-2xl font-semibold">${campaign.bounceRate || 0}%</p>
                         </div>
@@ -8508,6 +8893,14 @@ const CampaignManager = {
                             <p class="text-sm text-gray-500">Reply Rate</p>
                             <p class="text-2xl font-semibold">${campaign.replyRate || 0}%</p>
                         </div>
+                        
+                    -->
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-500">Sent Emails</p>
+                            <p class="text-2xl font-semibold">${campaign.SENT_EMAILS || 0}</p>
+                        </div>
+
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <p class="text-sm text-gray-500">Total Recipients</p>
                             <p class="text-2xl font-semibold">${campaign.targetRecipients?.length || 0}</p>
@@ -8545,6 +8938,103 @@ const CampaignManager = {
                             </div>
                         ` : ''}
                     </div>
+                    <!-- Recipients Section -->
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-medium">Target Recipients</h4>
+                            <div class="flex gap-2">
+                                <span class="text-sm text-gray-500">
+                                    Total: ${campaign.targetRecipients?.length || 0}
+                                </span>
+                                <select class="text-sm border rounded px-2 py-1" onchange="updateRecipientsFilter(this, '${campaign._id}')">
+                                    <option value="all">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="sent">Sent</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Website</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Follow-ups</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    ${campaign.targetRecipients?.slice(0, 10).map(recipient => `
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm">${recipient.name || '-'}</td>
+                                            <td class="px-4 py-3 text-sm">${recipient.email}</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                ${recipient.website ? `
+                                                    <a href="${recipient.website}" target="_blank" class="text-purple-600 hover:text-purple-700">
+                                                        ${recipient.website}
+                                                    </a>
+                                                ` : '-'}
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <span class="px-2 py-1 text-xs font-medium rounded-full ${this.getRecipientStatusColor(recipient.status)}">
+                                                    ${recipient.status}
+                                                </span>
+                                                ${recipient.error ? `
+                                                    <div class="text-xs text-red-600 mt-1">${recipient.error}</div>
+                                                ` : ''}
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <div class="space-y-1">
+                                                    ${recipient.followUpStatus?.map(followUp => `
+                                                        <div class="text-xs">
+                                                            <span class="font-medium">Follow-up ${followUp.followUpId}:</span>
+                                                            <span class="${this.getRecipientStatusColor(followUp.status)}">
+                                                                ${followUp.status}
+                                                            </span>
+                                                            ${followUp.sentTime ? `
+                                                                <span class="text-gray-500">
+                                                                    (${this.formatDate(followUp.sentTime)})
+                                                                </span>
+                                                            ` : ''}
+                                                        </div>
+                                                    `).join('') || '-'}
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <button class="p-1 hover:bg-gray-100 rounded-full" 
+                                                        onclick="CampaignManager.viewRecipientDetails('${campaign._id}', '${recipient.email}')">
+                                                    <i class="fi fi-rr-eye text-gray-600"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                            ${campaign.targetRecipients?.length > 10 ? `
+                                <div class="flex justify-between items-center px-4 py-3 bg-gray-50">
+                                    <div class="text-sm text-gray-500">
+                                        Showing 1-10 of ${campaign.targetRecipients.length} recipients
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="px-3 py-1 text-sm text-gray-700 bg-white border rounded hover:bg-gray-50"
+                                                onclick="changePage('${campaign._id}', 'prev')">
+                                            Previous
+                                        </button>
+                                        <button class="px-3 py-1 text-sm text-gray-700 bg-white border rounded hover:bg-gray-50"
+                                                onclick="changePage('${campaign._id}', 'next')">
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                
 
                     <!-- Follow-ups Section -->
                     ${campaign.followUps?.length ? `
@@ -8593,6 +9083,11 @@ const CampaignManager = {
     },
 
     renderCampaigns() {
+        if (this.isLoading) {
+            this.renderSkeletons();
+            return;
+        }
+        
         const container = document.getElementById('campaignsContainer');
         if (this.campaigns.length === 0) {
             container.innerHTML = `
