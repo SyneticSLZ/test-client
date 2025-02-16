@@ -3275,17 +3275,17 @@ async function Autosend_new(){
     const campaignName = generateUniqueCampaignName();
     const UserSubject = document.getElementById('UserSubject').value;
     // Example usage:
-const campaignDetails = {
-    email: U_MyEmail,
-    campaignName: campaignName,
-    template:'',
-    pitch:userPitch
-};
+// const campaignDetails = {
+//     email: U_MyEmail,
+//     campaignName: campaignName,
+//     template:'',
+//     pitch:userPitch
+// };
 
-campaignId = await Campaign(campaignDetails);
+// campaignId = await Campaign(campaignDetails);
 
-console.log(campaignId)
-localStorage.setItem('currentCampaignId', campaignId);
+// console.log(campaignId)
+// localStorage.setItem('currentCampaignId', campaignId);
 const emailAssets = getCurrentEmailAssets();
     console.log('Email assets:', {
         hasSignature: !!emailAssets.signature,
@@ -3319,6 +3319,8 @@ const emailAssets = getCurrentEmailAssets();
 
 // console.log(emailAssets)
 
+const followUps = activeSequence ? formatFollowUps(activeSequence.steps) : [];
+
 
 let requestBody = {
                 submittedData: submittedData,
@@ -3326,9 +3328,10 @@ let requestBody = {
                 Uname: U_Username,
                 token: token,
                 myemail: U_MyEmail,
-                campaignId: campaignId,
+                // campaignId: campaignId,
                 signature: emailAssets.signature, // Add signature
-                mediaAttachments: emailAssets.mediaAttachments
+                mediaAttachments: emailAssets.mediaAttachments,
+                followUps :  followUps
     };
 if(UserSubject) {
      requestBody = {
@@ -3337,10 +3340,11 @@ if(UserSubject) {
                 Uname: U_Username,
                 token: token,
                 myemail: U_MyEmail,
-                campaignId: campaignId,
+                // campaignId: campaignId,
                 UserSubject: UserSubject,
                 signature: emailAssets.signature, // Add signature
-                mediaAttachments: emailAssets.mediaAttachments
+                mediaAttachments: emailAssets.mediaAttachments,
+                followUps: followUps
     };
 }else {
     requestBody = {
@@ -3349,9 +3353,10 @@ if(UserSubject) {
                 Uname: U_Username,
                 token: token,
                 myemail: U_MyEmail,
-                campaignId: campaignId,
+                // campaignId: campaignId,
                 signature: emailAssets.signature, // Add signature
-                mediaAttachments: emailAssets.mediaAttachments
+                mediaAttachments: emailAssets.mediaAttachments,
+                followUps : followUps
     };
 }
 
@@ -5401,14 +5406,14 @@ function showNotification(message) {
 <h5>Optional</h5>
 <textarea id="UserSubject" class="pitch-text" name="user_pitch" placeholder="Enter a preferred subject line..." required></textarea>
 <!-- <textarea id="userTemplate" class="pitch-text" name="user_pitch" placeholder="Add an Email Template..." required></textarea> -->
-<!-- <button onclick="openSequenceManager()" 
+<button onclick="openSequenceManager()" 
 class="inline-flex items-center px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-150 shadow-sm"
 >
 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
 </svg>
 Manage Email Sequences
-</button> -->
+</button>
 
                     <!-- <span style="text-align: left; padding-left: 10px; color: #000;"> For best results provide: </span>
                     <span style="text-align: left; padding-left: 20px;"> - Clear offer to prospect or pain-point that you are solving for them. </span>
@@ -9220,6 +9225,7 @@ function loadSequence(sequence) {
     updateSequencesList();
 }
 
+
 function saveSequence() {
     if (!currentSequence) return;
 
@@ -9240,7 +9246,19 @@ function saveSequence() {
     // Update sequence data
     currentSequence.steps = steps;
     currentSequence.name = document.getElementById('sequenceName').value || 'Untitled Sequence';
-    currentSequence.active = document.getElementById('sequenceActive').checked;
+    
+    // Handle activation status
+    const newActiveStatus = document.getElementById('sequenceActive').checked;
+    if (newActiveStatus && !currentSequence.active) {
+        // Deactivate all other sequences first
+        sequences.forEach(seq => {
+            if (seq.id !== currentSequence.id) {
+                seq.active = false;
+            }
+        });
+    }
+    currentSequence.active = newActiveStatus;
+    
     currentSequence.lastModified = Date.now();
 
     // Save to storage
@@ -9255,6 +9273,68 @@ function saveSequence() {
     updateSequencesList();
     showToast('Sequence saved successfully', 'success');
 }
+
+function toggleSequenceActive(sequenceId) {
+    const sequence = sequences.find(seq => seq.id === sequenceId);
+    if (!sequence) return;
+
+    // If activating this sequence, deactivate all others
+    if (!sequence.active) {
+        sequences.forEach(seq => {
+            seq.active = (seq.id === sequenceId);
+        });
+    } else {
+        // If deactivating, just deactivate this one
+        sequence.active = false;
+    }
+
+    localStorage.setItem('emailSequences', JSON.stringify(sequences));
+    updateSequencesList();
+    
+    // If this is the current sequence being edited, update the checkbox
+    if (currentSequence && currentSequence.id === sequenceId) {
+        document.getElementById('sequenceActive').checked = sequence.active;
+    }
+}
+
+
+
+
+// function saveSequence() {
+//     if (!currentSequence) return;
+
+//     // Gather step data
+//     const steps = [];
+//     document.querySelectorAll('.email-step').forEach(stepEl => {
+//         const subjectInput = stepEl.querySelector('[data-input="subject"]');
+//         const bodyInput = stepEl.querySelector('[data-input="body"]');
+//         const daysInput = stepEl.querySelector('[data-input="days"]');
+        
+//         steps.push({
+//             subject: subjectInput.value,
+//             body: bodyInput.value,
+//             sendAfterDays: parseInt(daysInput.value) || 0
+//         });
+//     });
+
+//     // Update sequence data
+//     currentSequence.steps = steps;
+//     currentSequence.name = document.getElementById('sequenceName').value || 'Untitled Sequence';
+//     currentSequence.active = document.getElementById('sequenceActive').checked;
+//     currentSequence.lastModified = Date.now();
+
+//     // Save to storage
+//     const existingIndex = sequences.findIndex(seq => seq.id === currentSequence.id);
+//     if (existingIndex >= 0) {
+//         sequences[existingIndex] = { ...currentSequence };
+//     } else {
+//         sequences.push({ ...currentSequence });
+//     }
+    
+//     localStorage.setItem('emailSequences', JSON.stringify(sequences));
+//     updateSequencesList();
+//     showToast('Sequence saved successfully', 'success');
+// }
 
 function deleteSequence() {
     if (!currentSequence) return;
@@ -9381,6 +9461,25 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
+function getActiveSequence() {
+    const sequences = JSON.parse(localStorage.getItem('emailSequences')) || [];
+    return sequences.find(seq => seq.active);
+}
+
+// Function to format follow-ups for the backend
+function formatFollowUps(steps) {
+    return steps.map(step => ({
+        subject: step.subject,
+        body: step.body,
+        timeDelay: {
+            value: step.sendAfterDays,
+            unit: 'days'
+        }
+    }));
+}
+
+
+// Initialize event listeners
 // Initialize event listeners
 document.addEventListener('DOMContentLoaded', () => {
     const nameInput = document.getElementById('sequenceName');
@@ -9394,11 +9493,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeToggle = document.getElementById('sequenceActive');
     activeToggle.addEventListener('change', (e) => {
         if (currentSequence) {
-            currentSequence.active = e.target.checked;
-            updateSequencesList();
+            toggleSequenceActive(currentSequence.id);
         }
     });
 });
+
 
 // OLD SEQUENCE LOGIC
 // document.addEventListener('DOMContentLoaded', function() {
