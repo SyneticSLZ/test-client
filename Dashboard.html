@@ -8951,12 +8951,12 @@ if (header) {
                                 <span class="text-sm text-gray-500">
                                     Total: ${campaign.targetRecipients?.length || 0}
                                 </span>
-                                <select class="text-sm border rounded px-2 py-1" onchange="updateRecipientsFilter(this, '${campaign._id}')">
+                              <!--  <select class="text-sm border rounded px-2 py-1" onchange="updateRecipientsFilter(this, '${campaign._id}')">
                                     <option value="all">All Status</option>
                                     <option value="pending">Pending</option>
                                     <option value="sent">Sent</option>
                                     <option value="failed">Failed</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         
@@ -9076,11 +9076,11 @@ if (header) {
                         <button class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
                             <i class="fi fi-rr-envelope"></i> Export Data
                         </button>
-                        <button class="campaign-action px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg" 
+                       <!-- <button class="campaign-action px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-lg" 
                                 data-action="${campaign.status === 'paused' ? 'resume' : 'pause'}">
                             <i class="fi fi-rr-${campaign.status === 'paused' ? 'play' : 'pause'}"></i>
                             ${campaign.status === 'paused' ? 'Resume' : 'Pause'} Campaign
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </div>
