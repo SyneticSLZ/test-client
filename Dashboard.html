@@ -1097,23 +1097,53 @@ async function init() {
     var token  = urlParams.get('token');        
     var affiliate = urlParams.get('affiliate');  
     var connectedGoogle = urlParams.get('connectedgoogletoken');
-    
+    const storedToken = localStorage.getItem('voltmailerAuthToken');
+
     if (affiliate){
         localStorage.setItem('affiliate', affiliate);
     }
 
-    if(connectedGoogle) {
-        connectedgoogleAuth();
-    }else {
-            if (token) {
-                console.log("noraml running")
-                fetchUserData(token);
-            } else {
-                console.log("google running")
-                googleAuth();
-            }
+    // if(connectedGoogle) {
+    //     connectedgoogleAuth();
+    // }else {
+    //         if (token) {
+    //             console.log("noraml running")
+    //             fetchUserData(token);
+    //         } else {
+    //             console.log("google running")
+    //             googleAuth();
+    //         }
 
-        }
+
+    //     }
+
+// Check for stored token first (persistent login)
+if (storedToken && !token && !connectedGoogle) {
+    console.log("Using stored token");
+    fetchUserData(storedToken);
+  }
+  // New login via token
+  else if (token) {
+    console.log("New login with token");
+    handleLoginSuccess(token);
+  }
+  // Google OAuth for mailbox addition
+  else if (connectedGoogle) {
+    console.log("Handling Google mailbox addition");
+    if (!storedToken) {
+      // If no prior login, store this as the initial token
+      handleLoginSuccess(connectedGoogle);
+    } else {
+      // Already logged in, just add the mailbox
+      connectedgoogleAuth();
+    }
+  }
+  // No token, initiate Google OAuth for login
+  else {
+    console.log("Initiating Google OAuth for login");
+    googleAuth();
+  }
+
 }
 // Call fetchUserData on page load
 document.addEventListener("DOMContentLoaded", function() {
@@ -1307,14 +1337,24 @@ function fetchUserData(token) {
             }
         })
         .then(response => {
-            console.log("response : ", response)
-            if (response.status === 401) {
-                // Unauthorized error, redirect to expired session page
-                window.location.href = 'https://voltmailer.com/ExpiredSession.html';
-                return null; // Stop further processing
-            }
-            return response.json();
-        })
+      if (response.status === 401) {
+        console.error("Unauthorized, redirecting to expired session");
+        localStorage.removeItem('voltmailerAuthToken');
+        window.location.href = 'https://voltmailer.com/ExpiredSession.html';
+        return null;
+      }
+      return response.json();
+    })
+
+        // .then(response => {
+        //     console.log("response : ", response)
+        //     if (response.status === 401) {
+        //         // Unauthorized error, redirect to expired session page
+        //         window.location.href = 'https://voltmailer.com/ExpiredSession.html';
+        //         return null; // Stop further processing
+        //     }
+        //     return response.json();
+        // })
         .then(data => {
             if (data && data.error) {
                 console.error('Error fetching user data:', data.error);
@@ -1330,17 +1370,27 @@ function fetchUserData(token) {
             }
         })
         .catch(error => {
-            console.error('An error occurred:', error);
-        });
+      console.error('An error occurred:', error);
+      localStorage.removeItem('voltmailerAuthToken');
+      window.location.href = 'https://voltmailer.com/ExpiredSession.html';
+    });
     } else {
         console.error('Token not found in URL');
     }
 }
 
 
-function logout(){
-    localStorage.clear();
-    window.location.href='https://voltmailer.com/'
+function handleLoginSuccess(token) {
+  localStorage.setItem('voltmailerAuthToken', token);
+  U_MyEmail = decodeEmailJWT(token).email;
+  fetchUserData(token);
+}
+
+
+function logout() {
+  localStorage.removeItem('voltmailerAuthToken');
+  localStorage.clear(); // Clear other items as needed
+  window.location.href = 'https://voltmailer.com/';
 }
 function ConnectGoogle() {
     localStorage.setItem('connectedGoogle', 'False');
