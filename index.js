@@ -2843,44 +2843,92 @@ const UIService = {
           // Pre-populate follow-ups
           const followUpsContainer = document.getElementById('follow-ups-container');
           if (followUpsContainer.children.length === 0) {
+            // const followUps = [
+            //   {
+            //     subject: 'Strategic Insights for Selling Your Medical Device Business',
+            //     body: `
+            //       <p>Hello {first_name},</p>
+            //       <p>Following up on my previous message, I want to provide more clarity on how Cebron Group can drive value during the sale process of your home medical device business.</p>
+            //       <p>We specialize in designing tailored strategies based on your company's unique strengths, market trends, and competitive positioning. Our expertise in the healthcare sector allows us to identify high-value opportunities that align with seller demands, ensuring optimal pricing and terms.</p>
+            //       <p>If you’re interested in exploring this further, I’d be happy to discuss a more detailed plan during a brief call.</p>
+            //       <p>Sapna Ravula<br>Cebron Group</p>
+            //     `,
+            //     waitDuration: 1,
+            //     waitUnit: 'days'
+            //   },
+            //   {
+            //     subject: 'Ensuring Transaction Readiness for Your Medical Device Business',
+            //     body: `
+            //       <p>Hello {first_name},</p>
+            //       <p>I am following up to emphasize one of Cebron Group’s core capabilities: preparing businesses for a transaction-ready state. We conduct a comprehensive analysis to identify potential issues affecting valuation or deal success, allowing us to address these proactively.</p>
+            //       <p>By preparing your business thoroughly before engaging buyers, we ensure a smoother negotiation process and maximize competitive tension among potential acquirers.</p>
+            //       <p>If you would like to explore this process in more depth, please let me know when you’re available for a 10-minute call.</p>
+            //       <p>Sapna Ravula<br>Cebron Group</p>
+            //     `,
+            //     waitDuration: 2,
+            //     waitUnit: 'days'
+            //   },
+            //   {
+            //     subject: 'Using Cebron Group\'s M&A Expertise for Your Sale Process',
+            //     body: `
+            //       <p>Hello {first_name},</p>
+            //       <p>As a follow-up to our previous emails, I’d like to emphasize what differentiates Cebron in managing M&A transactions for medical device businesses.</p>
+            //       <p>Our team combines sector-specific insights with financial expertise, providing clients with a clear understanding of deal structures and valuation drivers. We secure offers and enhance terms that deliver higher seller value—whether through cash consideration, earnouts, or equity rollovers, depending on your strategic goals.</p>
+            //       <p>If you are interested in discussing our approach and how it can benefit your business, please let me know your availability for a brief call.</p>
+            //       <p>Sapna Ravula<br>Cebron Group</p>
+            //     `,
+            //     waitDuration: 3,
+            //     waitUnit: 'days'
+            //   }
+            // ];
+
             const followUps = [
-              {
-                subject: 'Strategic Insights for Selling Your Medical Device Business',
-                body: `
-                  <p>Hello {first_name},</p>
-                  <p>Following up on my previous message, I want to provide more clarity on how Cebron Group can drive value during the sale process of your home medical device business.</p>
-                  <p>We specialize in designing tailored strategies based on your company's unique strengths, market trends, and competitive positioning. Our expertise in the healthcare sector allows us to identify high-value opportunities that align with seller demands, ensuring optimal pricing and terms.</p>
-                  <p>If you’re interested in exploring this further, I’d be happy to discuss a more detailed plan during a brief call.</p>
-                  <p>Sapna Ravula<br>Cebron Group</p>
-                `,
-                waitDuration: 1,
-                waitUnit: 'days'
-              },
-              {
-                subject: 'Ensuring Transaction Readiness for Your Medical Device Business',
-                body: `
-                  <p>Hello {first_name},</p>
-                  <p>I am following up to emphasize one of Cebron Group’s core capabilities: preparing businesses for a transaction-ready state. We conduct a comprehensive analysis to identify potential issues affecting valuation or deal success, allowing us to address these proactively.</p>
-                  <p>By preparing your business thoroughly before engaging buyers, we ensure a smoother negotiation process and maximize competitive tension among potential acquirers.</p>
-                  <p>If you would like to explore this process in more depth, please let me know when you’re available for a 10-minute call.</p>
-                  <p>Sapna Ravula<br>Cebron Group</p>
-                `,
-                waitDuration: 2,
-                waitUnit: 'days'
-              },
-              {
-                subject: 'Using Cebron Group\'s M&A Expertise for Your Sale Process',
-                body: `
-                  <p>Hello {first_name},</p>
-                  <p>As a follow-up to our previous emails, I’d like to emphasize what differentiates Cebron in managing M&A transactions for medical device businesses.</p>
-                  <p>Our team combines sector-specific insights with financial expertise, providing clients with a clear understanding of deal structures and valuation drivers. We secure offers and enhance terms that deliver higher seller value—whether through cash consideration, earnouts, or equity rollovers, depending on your strategic goals.</p>
-                  <p>If you are interested in discussing our approach and how it can benefit your business, please let me know your availability for a brief call.</p>
-                  <p>Sapna Ravula<br>Cebron Group</p>
-                `,
-                waitDuration: 3,
-                waitUnit: 'days'
-              }
-            ];
+                {
+                  subject: 'Strategic Insights for Selling Your Medical Device Business',
+                  body: `
+                    Hello {first_name},
+              
+                    Following up on my previous message, I want to provide more clarity on how Cebron Group can drive value during the sale process of your home medical device business. As {title} at {company} in {city}, your expertise in the {industry} sector aligns perfectly with our tailored approach. We specialize in designing tailored strategies based on your company's unique strengths, market trends, and competitive positioning. Our expertise in the healthcare sector allows us to identify high-value opportunities that align with seller demands, ensuring optimal pricing and terms.
+              
+                    If you’re interested in exploring this further, I’d be happy to discuss a more detailed plan during a brief call.
+              
+                    Sapna Ravula
+                    Cebron Group
+                  `,
+                  waitDuration: 1,
+                  waitUnit: 'days'
+                },
+                {
+                  subject: 'Ensuring Transaction Readiness for Your Medical Device Business',
+                  body: `
+                    Hello {first_name},
+              
+                    I am following up to emphasize one of Cebron Group’s core capabilities: preparing businesses for a transaction-ready state. Given your role as {title} at {company} in {city}, operating within the {industry} industry, we can ensure your business is optimally positioned for a successful sale. We conduct a comprehensive analysis to identify potential issues affecting valuation or deal success, allowing us to address these proactively. By preparing your business thoroughly before engaging buyers, we ensure a smoother negotiation process and maximize competitive tension among potential acquirers.
+              
+                    If you would like to explore this process in more depth, please let me know when you’re available for a 10-minute call.
+              
+                    Sapna Ravula
+                    Cebron Group
+                  `,
+                  waitDuration: 2,
+                  waitUnit: 'days'
+                },
+                {
+                  subject: 'Using Cebron Group\'s M&A Expertise for Your Sale Process',
+                  body: `
+                    Hello {first_name},
+              
+                    As a follow-up to our previous emails, I’d like to emphasize what differentiates Cebron in managing M&A transactions for medical device businesses. For someone like you, {first_name} {last_name}, leading {company} in {city} within the {industry} space, our sector-specific insights can unlock unique value. Our team combines sector-specific insights with financial expertise, providing clients with a clear understanding of deal structures and valuation drivers. We secure offers and enhance terms that deliver higher seller value—whether through cash consideration, earnouts, or equity rollovers, depending on your strategic goals.
+              
+                    If you are interested in discussing our approach and how it can benefit your business, please let me know your availability for a brief call.
+              
+                    Sapna Ravula
+                    Cebron Group
+                  `,
+                  waitDuration: 3,
+                  waitUnit: 'days'
+                }
+              ];
       
             followUps.forEach(followUp => {
               const followUpDiv = document.createElement('div');
