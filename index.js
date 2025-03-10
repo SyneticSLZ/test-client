@@ -1129,43 +1129,194 @@ const GmailService = {
 
 // Dashboard Service - Handle dashboard data
 const DashboardService = {
-    // Load dashboard data
-    async loadDashboardData() {
-        try {
-            // Get the stored user data
-            const userData = localStorage.getItem('email_campaign_user');
-            if (!userData) {
-                console.error("No user data found in local storage");
-                return false;
-            }
-    
-            // Parse stored user data
-            const user = JSON.parse(userData);
-            const userEmail = user.email; // Extract email
-    
-            // Send email as a query param or in the body
-            const response = await ApiService.call(`/dashboard?email=${encodeURIComponent(userEmail)}`);
-            console.log(response)
-            if (response && response.stats) {
-                const { stats, campaigns, leadsWithReplies } = response;
-    
-                document.getElementById('active-campaigns-count').textContent = stats.totalCampaigns || 0;
-                document.getElementById('emails-sent-count').textContent = stats.totalEmailsSent || 0;
-                document.getElementById('open-rate').textContent = `${stats.openRate || 0}%`;
-                document.getElementById('response-rate').textContent = `${((stats.totalReplies / stats.totalEmailsSent)*100) || 0}%`;
-    
-                this.renderRecentCampaigns(campaigns || []);
-                this.renderRecentActivity(leadsWithReplies || []);
-    
-                return true;
-            }
+
+        show() {
+          // Create overlay if it doesn't exist
+          if (!document.querySelector('.loading-overlay')) {
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
             
+            // Create pulse effect
+            const pulse = document.createElement('div');
+            pulse.className = 'loading-pulse';
+            
+            // Create spinner
+            const spinner = document.createElement('div');
+            spinner.className = 'loading-spinner';
+            
+            // Add loading text
+            const text = document.createElement('div');
+            text.className = 'absolute mt-24 text-indigo-600 font-semibold';
+            text.textContent = 'Loading dashboard...';
+            
+            // Append elements
+            overlay.appendChild(pulse);
+            overlay.appendChild(spinner);
+            overlay.appendChild(text);
+            document.body.appendChild(overlay);
+            
+            // Add styles inline if not already in stylesheet
+            if (!document.querySelector('style#loading-styles')) {
+              const style = document.createElement('style');
+              style.id = 'loading-styles';
+              style.textContent = `
+                .loading-overlay {
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background-color: rgba(255, 255, 255, 0.8);
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  z-index: 9999;
+                  backdrop-filter: blur(3px);
+                  transition: opacity 0.3s ease;
+                }
+                
+                .loading-spinner {
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 50%;
+                  border: 5px solid #f3f3f3;
+                  border-top-color: #6366f1;
+                  animation: spinner 1s linear infinite;
+                }
+                
+                .loading-pulse {
+                  position: absolute;
+                  width: 100px;
+                  height: 100px;
+                  background-color: rgba(99, 102, 241, 0.3);
+                  border-radius: 50%;
+                  transform: scale(0);
+                  animation: pulse 1.5s ease-in-out infinite;
+                }
+                
+                @keyframes spinner {
+                  to {
+                    transform: rotate(360deg);
+                  }
+                }
+                
+                @keyframes pulse {
+                  0% {
+                    transform: scale(0);
+                    opacity: 1;
+                  }
+                  100% {
+                    transform: scale(1.5);
+                    opacity: 0;
+                  }
+                }
+              `;
+              document.head.appendChild(style);
+            }
+          } else {
+            // If it exists, just display it
+            document.querySelector('.loading-overlay').style.display = 'flex';
+          }
+        },
+        
+         hide() {
+          const overlay = document.querySelector('.loading-overlay');
+          if (overlay) {
+            // Fade out effect
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+              overlay.style.display = 'none';
+              overlay.style.opacity = '1';
+            }, 300);
+          }
+        },
+      
+      // Modified loadDashboardData function with loading overlay
+      async loadDashboardData() {
+        // Show loading overlay
+        DashboardService.show();
+        
+        try {
+          // Get the stored user data
+          const userData = localStorage.getItem('email_campaign_user');
+          if (!userData) {
+            console.error("No user data found in local storage");
+            DashboardService.hide();
             return false;
+          }
+          
+          // Parse stored user data
+          const user = JSON.parse(userData);
+          const userEmail = user.email; // Extract email
+          
+          // Send email as a query param or in the body
+          const response = await ApiService.call(`/dashboard?email=${encodeURIComponent(userEmail)}`);
+          console.log(response);
+          
+          if (response && response.stats) {
+            const { stats, campaigns, leadsWithReplies } = response;
+            
+            document.getElementById('active-campaigns-count').textContent = stats.totalCampaigns || 0;
+            document.getElementById('emails-sent-count').textContent = stats.totalEmailsSent || 0;
+            document.getElementById('open-rate').textContent = `${stats.openRate || 0}%`;
+            document.getElementById('response-rate').textContent = `${((stats.totalReplies / stats.totalEmailsSent)*100).toFixed(1) || 0}%`;
+            
+            this.renderRecentCampaigns(campaigns || []);
+            this.renderRecentActivity(leadsWithReplies || []);
+            
+            // Add a small delay to make the loading feel more natural
+            setTimeout(() => {
+              DashboardService.hide();
+            }, 500);
+            
+            return true;
+          }
+          
+          DashboardService.hide();
+          return false;
         } catch (error) {
-            console.error('Error loading dashboard data:', error);
-            return false;
+          console.error('Error loading dashboard data:', error);
+          DashboardService.hide();
+          return false;
         }
-    },
+      },
+    // Load dashboard data
+    // async loadDashboardData() {
+    //     try {
+    //         // Get the stored user data
+    //         const userData = localStorage.getItem('email_campaign_user');
+    //         if (!userData) {
+    //             console.error("No user data found in local storage");
+    //             return false;
+    //         }
+    
+    //         // Parse stored user data
+    //         const user = JSON.parse(userData);
+    //         const userEmail = user.email; // Extract email
+    
+    //         // Send email as a query param or in the body
+    //         const response = await ApiService.call(`/dashboard?email=${encodeURIComponent(userEmail)}`);
+    //         console.log(response)
+    //         if (response && response.stats) {
+    //             const { stats, campaigns, leadsWithReplies } = response;
+    
+    //             document.getElementById('active-campaigns-count').textContent = stats.totalCampaigns || 0;
+    //             document.getElementById('emails-sent-count').textContent = stats.totalEmailsSent || 0;
+    //             document.getElementById('open-rate').textContent = `${stats.openRate || 0}%`;
+    //             document.getElementById('response-rate').textContent = `${((stats.totalReplies / stats.totalEmailsSent)*100) || 0}%`;
+    
+    //             this.renderRecentCampaigns(campaigns || []);
+    //             this.renderRecentActivity(leadsWithReplies || []);
+    
+    //             return true;
+    //         }
+            
+    //         return false;
+    //     } catch (error) {
+    //         console.error('Error loading dashboard data:', error);
+    //         return false;
+    //     }
+    // },
     
     
     // Render recent campaigns
@@ -1179,62 +1330,69 @@ const DashboardService = {
             return;
         }
         
-        container.innerHTML = campaigns.map(campaign => `
-<div class="rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden mb-3 last:mb-0">
-    <div class="flex justify-between items-center p-4">
-        <div class="flex-1 min-w-0">
-            <div class="flex items-center">
-                <h3 class="text-sm font-semibold text-gray-900 truncate">${campaign.name}</h3>
-                <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
-                    campaign.status === 'active' ? 'bg-green-100 text-green-800' : 
-                    campaign.status === 'paused' ? 'bg-yellow-100 text-yellow-800' : 
-                    campaign.status === 'completed' ? 'bg-blue-100 text-blue-800' : 
-                    'bg-gray-100 text-gray-800'
-                }">
-                    ${campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
-                </span>
-            </div>
+        container.innerHTML = campaigns.map(campaign => {
+            // Calculate progress percentage with upper limit of 100%
+            const progressPercentage = Math.min(
+                Math.round((campaign.sentCount / campaign.leadCount) * 100), 
+                100
+            );
             
-            <div class="mt-1 flex items-center">
-                <div class="w-full max-w-xs bg-gray-200 rounded-full h-2 mr-3">
-                    <div class="bg-indigo-600 h-2 rounded-full" style="width: ${Math.round((campaign.sentCount / campaign.leadCount) * 100)}%"></div>
+            return `
+    <div class="rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden mb-3 last:mb-0">
+        <div class="flex justify-between items-center p-4">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center">
+                    <h3 class="text-sm font-semibold text-gray-900 truncate">${campaign.name}</h3>
+                    <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
+                        campaign.status === 'active' ? 'bg-green-100 text-green-800' : 
+                        campaign.status === 'paused' ? 'bg-yellow-100 text-yellow-800' : 
+                        campaign.status === 'completed' ? 'bg-blue-100 text-blue-800' : 
+                        'bg-gray-100 text-gray-800'
+                    }">
+                        ${campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+                    </span>
                 </div>
-                <span class="text-xs text-gray-600 whitespace-nowrap">${campaign.sentCount}/${campaign.leadCount}</span>
+                
+                <div class="mt-1 flex items-center">
+                    <div class="w-full max-w-xs bg-gray-200 rounded-full h-2 mr-3 overflow-hidden">
+                        <div class="bg-indigo-600 h-2 rounded-full" style="width: ${progressPercentage}%"></div>
+                    </div>
+                    <span class="text-xs text-gray-600 whitespace-nowrap">${campaign.sentCount}/${campaign.leadCount}</span>
+                </div>
+                
+                <div class="mt-1 flex items-center text-xs text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Started ${new Date(campaign.startDate).toLocaleDateString()}</span>
+                    
+                    ${campaign.openRate ? `
+                    <span class="mx-2">•</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <span>${campaign.openRate}% open rate</span>
+                    ` : ''}
+                </div>
             </div>
             
-            <div class="mt-1 flex items-center text-xs text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>Started ${this.formatDate(campaign.startDate)}</span>
-                
-                ${campaign.openRate ? `
-                <span class="mx-2">•</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                <span>${campaign.openRate}% open rate</span>
-                ` : ''}
+            <div class="ml-4 flex-shrink-0 flex">
+              <!--  <button class="mr-2 p-1 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" title="Edit campaign">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button> -->
+                <button class="p-2 px-4 text-xs font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        onclick="CampaignService.getCampaignDetails('${campaign._id}'); UIService.switchTab('campaigns-tab');">
+                    View Details
+                </button>
             </div>
-        </div>
-        
-        <div class="ml-4 flex-shrink-0 flex">
-            <button class="mr-2 p-1 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" title="Edit campaign">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-            </button>
-            <button class="p-2 px-4 text-xs font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    onclick="CampaignService.getCampaignDetails('${campaign._id}'); UIService.switchTab('campaigns-tab');">
-                View Details
-            </button>
         </div>
     </div>
-</div>
-        `).join('');
+            `;
+        }).join('');
     },
-    
     // Render recent activity
     renderRecentActivity(leadsWithReplies) {
         const container = document.getElementById('recent-activity-list');
@@ -3733,6 +3891,59 @@ Cebron Group</p></textarea>
             return;
         }
       
+        // container.innerHTML = APP_STATE.campaigns.map(campaign => {
+        //     // Calculate leads progress (cap at 100%)
+        //     const leadSentCount = campaign.sentCount || 0;
+        //     const leadTotal = campaign.leadCount || 0;
+        //     const leadProgress = leadTotal > 0 ? Math.min(Math.round((Math.min(leadSentCount, leadTotal) / leadTotal) * 100), 100) : 0;
+    
+        //     // Calculate follow-up progress with excess sends
+        //     const followUpTotal = campaign.followUpEmails && Array.isArray(campaign.followUpEmails) ? campaign.followUpEmails.length : 0;
+        //     let followUpSentCount = campaign.followUpSentCount || 0;
+        //     // Add excess sends from leads to follow-up count if applicable
+        //     const excessSends = Math.max(leadSentCount - leadTotal, 0);
+        //     followUpSentCount += excessSends;
+        //     const followUpProgress = followUpTotal > 0 ? Math.min(Math.round((followUpSentCount / followUpTotal) * 100), 100) : 0;
+    
+        //     return `
+        //         <tr>
+        //             <td class="px-6 py-4 whitespace-nowrap">
+        //                 <div class="font-medium text-gray-900">${campaign.name}</div>
+        //             </td>
+        //             <td class="px-6 py-4 whitespace-nowrap">
+        //                 <span class="px-2 py-1 text-xs rounded-full ${this.getStatusBadgeClass(campaign.status)}">
+        //                     ${campaign.status}
+        //                 </span>
+        //             </td>
+        //             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        //                 ${leadTotal}
+        //             </td>
+        //             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        //                 <div class="flex flex-col items-start">
+        //                     <div class="w-full bg-gray-200 rounded-full h-2 mb-1">
+        //                         <div class="bg-indigo-600 h-2 rounded-full" style="width: ${leadProgress}%"></div>
+        //                     </div>
+        //                     <span class="ml-2 text-xs">Leads: ${Math.min(leadSentCount, leadTotal)}/${leadTotal} (${leadProgress}%)</span>
+        //                     <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+        //                         <div class="bg-purple-600 h-2 rounded-full" style="width: ${followUpProgress}%"></div>
+        //                     </div>
+        //                     <span class="ml-2 text-xs">Follow-ups: ${followUpSentCount}/${followUpTotal} (${followUpProgress}%)</span>
+        //                 </div>
+        //             </td>
+        //             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        //                 ${this.formatDate(campaign.createdAt)}
+        //             </td>
+        //             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        //                 ${followUpTotal}
+        //             </td>
+        //             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+        //                 <button onclick="CampaignService.getCampaignDetails('${campaign._id}')" class="text-indigo-600 hover:text-indigo-900">
+        //                     View
+        //                 </button>
+        //             </td>
+        //         </tr>
+        //     `;
+        // }).join('');
         container.innerHTML = APP_STATE.campaigns.map(campaign => {
             // Calculate leads progress (cap at 100%)
             const leadSentCount = campaign.sentCount || 0;
@@ -3769,7 +3980,7 @@ Cebron Group</p></textarea>
                             <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
                                 <div class="bg-purple-600 h-2 rounded-full" style="width: ${followUpProgress}%"></div>
                             </div>
-                            <span class="ml-2 text-xs">Follow-ups: ${followUpSentCount}/${followUpTotal} (${followUpProgress}%)</span>
+                            <span class="ml-2 text-xs">Follow-ups: ${followUpSentCount}/${followUpTotal} (${followUpProgress}%)${excessSends > 0 ? ` <span class="text-purple-700 font-medium">(including ${excessSends} excess)</span>` : ''}</span>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
