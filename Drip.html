@@ -213,7 +213,7 @@
         <!-- Main Content -->
         <main class="flex-1 flex">
             <!-- Sidebar -->
-            <div class="w-64 bg-white shadow-md hidden md:block">
+            <!-- <div class="w-64 bg-white shadow-md hidden md:block">
                 <nav class="mt-5 px-2">
                     <a href="#" id="dashboard-link" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700">
                         <i class="fas fa-home mr-3 text-indigo-500"></i>
@@ -239,6 +239,44 @@
                         <i class="fas fa-cog mr-3 text-gray-400 group-hover:text-gray-500"></i>
                         Settings
                     </a>
+                </nav>
+            </div> -->
+            <div class="w-64 bg-white shadow-lg hidden md:block h-screen border-r border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">App Name</h2>
+                </div>
+                <nav class="mt-6 px-3">
+                    <div class="space-y-1">
+                        <!-- Active link has bg-indigo-100 and text-indigo-700 -->
+                        <a href="#" id="dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 transition duration-150">
+                            <i class="fas fa-home w-5 h-5 mr-3 text-indigo-500"></i>
+                            Dashboard
+                        </a>
+                        
+                        <a href="#" id="campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                            <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                            Campaigns
+                        </a>
+                        
+                        <!-- Leads tab is hidden as requested -->
+                        
+                        <a href="#" id="analytics-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                            <i class="fas fa-chart-bar w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                            Analytics
+                        </a>
+                        
+                        <a href="#" id="gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                            <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                            Gmail Integration
+                        </a>
+                    </div>
+                    
+                    <div class="mt-8 pt-4 border-t border-gray-200">
+                        <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                            <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                            Settings
+                        </a>
+                    </div>
                 </nav>
             </div>
 
