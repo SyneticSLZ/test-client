@@ -2795,6 +2795,17 @@ const UIService = {
             }
         });
     },
+    // Add this function before campaignWizardNextStep
+    createFormattedHTML: function(text) {
+    // Check if text is already HTML (contains HTML tags)
+    if (text.includes('<p>') || text.includes('<div>') || text.includes('<br>')) {
+      return text;
+    }
+    // Otherwise, format plain text with proper HTML
+    return text.split('\n\n')
+      .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+      .join('');
+  },
     
     // Campaign wizard next step
     campaignWizardNextStep: function(currentStep) {
@@ -2839,23 +2850,24 @@ const UIService = {
         //     <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
         //     <p>Sapna Ravula<br>Cebron Group</p>
         //   `;
-          quillEditor.root.innerText = `
-  Hello {first_name},
-
-  I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process. As {title} of {company} in {city}, your leadership in the {industry} industry makes Cebron’s expertise particularly relevant to your goals.
-
-  Our approach includes:
-
-  Extensive Market Access: We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
-  In-Depth Valuation and Strategic Positioning: We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
-  End-to-End Transaction Support: We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
-  Confidential and Efficient Process: We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
-
-  If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.
-
-  Sapna Ravula
-  Cebron Group
-`;
+            quillEditor.root.innerHTML = `
+            <p>Hello {first_name},</p>
+            
+            <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process. As {title} of {company} in {city}, your leadership in the {industry} industry makes Cebron's expertise particularly relevant to your goals.</p>
+            
+            <p>Our approach includes:</p>
+            <ul>
+              <li><strong>Extensive Market Access:</strong> We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.</li>
+              <li><strong>In-Depth Valuation and Strategic Positioning:</strong> We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.</li>
+              <li><strong>End-to-End Transaction Support:</strong> We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.</li>
+              <li><strong>Confidential and Efficient Process:</strong> We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.</li>
+            </ul>
+            
+            <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
+            
+            <p>Sapna Ravula<br>
+            Cebron Group</p>
+          `;
       
           // Pre-populate follow-ups
           const followUpsContainer = document.getElementById('follow-ups-container');
@@ -2899,53 +2911,61 @@ const UIService = {
             //   }
             // ];
 
-            const followUps = [
-                {
-                  subject: 'Strategic Insights for Selling Your Medical Device Business',
-                  body: `
-                    Hello {first_name},
-              
-                    Following up on my previous message, I want to provide more clarity on how Cebron Group can drive value during the sale process of your home medical device business. As {title} at {company} in {city}, your expertise in the {industry} sector aligns perfectly with our tailored approach. We specialize in designing tailored strategies based on your company's unique strengths, market trends, and competitive positioning. Our expertise in the healthcare sector allows us to identify high-value opportunities that align with seller demands, ensuring optimal pricing and terms.
-              
-                    If you’re interested in exploring this further, I’d be happy to discuss a more detailed plan during a brief call.
-              
-                    Sapna Ravula
-                    Cebron Group
-                  `,
-                  waitDuration: 1,
-                  waitUnit: 'days'
-                },
-                {
-                  subject: 'Ensuring Transaction Readiness for Your Medical Device Business',
-                  body: `
-                    Hello {first_name},
-              
-                    I am following up to emphasize one of Cebron Group’s core capabilities: preparing businesses for a transaction-ready state. Given your role as {title} at {company} in {city}, operating within the {industry} industry, we can ensure your business is optimally positioned for a successful sale. We conduct a comprehensive analysis to identify potential issues affecting valuation or deal success, allowing us to address these proactively. By preparing your business thoroughly before engaging buyers, we ensure a smoother negotiation process and maximize competitive tension among potential acquirers.
-              
-                    If you would like to explore this process in more depth, please let me know when you’re available for a 10-minute call.
-              
-                    Sapna Ravula
-                    Cebron Group
-                  `,
-                  waitDuration: 2,
-                  waitUnit: 'days'
-                },
-                {
-                  subject: 'Using Cebron Group\'s M&A Expertise for Your Sale Process',
-                  body: `
-                    Hello {first_name},
-              
-                    As a follow-up to our previous emails, I’d like to emphasize what differentiates Cebron in managing M&A transactions for medical device businesses. For someone like you, {first_name} {last_name}, leading {company} in {city} within the {industry} space, our sector-specific insights can unlock unique value. Our team combines sector-specific insights with financial expertise, providing clients with a clear understanding of deal structures and valuation drivers. We secure offers and enhance terms that deliver higher seller value—whether through cash consideration, earnouts, or equity rollovers, depending on your strategic goals.
-              
-                    If you are interested in discussing our approach and how it can benefit your business, please let me know your availability for a brief call.
-              
-                    Sapna Ravula
-                    Cebron Group
-                  `,
-                  waitDuration: 3,
-                  waitUnit: 'days'
-                }
-              ];
+// Update the follow-up emails to use proper HTML structure
+const followUps = [
+    {
+      subject: 'Strategic Insights for Selling Your Medical Device Business',
+      body: `
+        <p>Hello {first_name},</p>
+        
+        <p>Following up on my previous message, I want to provide more clarity on how Cebron Group can drive value during the sale process of your home medical device business. As {title} at {company} in {city}, your expertise in the {industry} sector aligns perfectly with our tailored approach.</p>
+        
+        <p>We specialize in designing tailored strategies based on your company's unique strengths, market trends, and competitive positioning. Our expertise in the healthcare sector allows us to identify high-value opportunities that align with seller demands, ensuring optimal pricing and terms.</p>
+        
+        <p>If you're interested in exploring this further, I'd be happy to discuss a more detailed plan during a brief call.</p>
+        
+        <p>Sapna Ravula<br>
+        Cebron Group</p>
+      `,
+      waitDuration: 1,
+      waitUnit: 'days'
+    },
+    {
+      subject: 'Ensuring Transaction Readiness for Your Medical Device Business',
+      body: `
+        <p>Hello {first_name},</p>
+        
+        <p>I am following up to emphasize one of Cebron Group's core capabilities: preparing businesses for a transaction-ready state. Given your role as {title} at {company} in {city}, operating within the {industry} industry, we can ensure your business is optimally positioned for a successful sale.</p>
+        
+        <p>We conduct a comprehensive analysis to identify potential issues affecting valuation or deal success, allowing us to address these proactively. By preparing your business thoroughly before engaging buyers, we ensure a smoother negotiation process and maximize competitive tension among potential acquirers.</p>
+        
+        <p>If you would like to explore this process in more depth, please let me know when you're available for a 10-minute call.</p>
+        
+        <p>Sapna Ravula<br>
+        Cebron Group</p>
+      `,
+      waitDuration: 2,
+      waitUnit: 'days'
+    },
+    {
+      subject: 'Using Cebron Group\'s M&A Expertise for Your Sale Process',
+      body: `
+        <p>Hello {first_name},</p>
+        
+        <p>As a follow-up to our previous emails, I'd like to emphasize what differentiates Cebron in managing M&A transactions for medical device businesses. For someone like you, {first_name} {last_name}, leading {company} in {city} within the {industry} space, our sector-specific insights can unlock unique value.</p>
+        
+        <p>Our team combines sector-specific insights with financial expertise, providing clients with a clear understanding of deal structures and valuation drivers. We secure offers and enhance terms that deliver higher seller value—whether through cash consideration, earnouts, or equity rollovers, depending on your strategic goals.</p>
+        
+        <p>If you are interested in discussing our approach and how it can benefit your business, please let me know your availability for a brief call.</p>
+        
+        <p>Sapna Ravula<br>
+        Cebron Group</p>
+      `,
+      waitDuration: 3,
+      waitUnit: 'days'
+    }
+  ];
+  
       
             followUps.forEach(followUp => {
               const followUpDiv = document.createElement('div');
@@ -3012,35 +3032,48 @@ const UIService = {
             //   <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
             //   <p>Sapna Ravula<br>Cebron Group</p>
             // `;
-            quillEditor.root.innerText = `
-            Hello {first_name},
-          
-            I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process. As {title} of {company} in {city}, your leadership in the {industry} industry makes Cebron’s expertise particularly relevant to your goals.
-          
-            Our approach includes:
-          
-            Extensive Market Access: We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
-            In-Depth Valuation and Strategic Positioning: We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
-            End-to-End Transaction Support: We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
-            Confidential and Efficient Process: We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
-          
-            If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.
-          
-            Sapna Ravula
-            Cebron Group
+            quillEditor.root.innerHTML = `
+            <p>Hello {first_name},</p>
+            
+            <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process. As {title} of {company} in {city}, your leadership in the {industry} industry makes Cebron's expertise particularly relevant to your goals.</p>
+            
+            <p>Our approach includes:</p>
+            <ul>
+              <li><strong>Extensive Market Access:</strong> We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.</li>
+              <li><strong>In-Depth Valuation and Strategic Positioning:</strong> We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.</li>
+              <li><strong>End-to-End Transaction Support:</strong> We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.</li>
+              <li><strong>Confidential and Efficient Process:</strong> We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.</li>
+            </ul>
+            
+            <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
+            
+            <p>Sapna Ravula<br>
+            Cebron Group</p>
           `;
-          }
+        }
       
           // Collect follow-ups
           const followUps = [];
-          document.querySelectorAll('.follow-up-email').forEach(followUpDiv => {
-            followUps.push({
-              subject: followUpDiv.querySelector('.follow-up-subject').value,
-              body: followUpDiv.querySelector('.follow-up-body').value,
-              waitDuration: parseInt(followUpDiv.querySelector('.follow-up-wait-duration').value),
-              waitUnit: followUpDiv.querySelector('.follow-up-wait-unit').value
-            });
-          });
+document.querySelectorAll('.follow-up-email').forEach(followUpDiv => {
+  const bodyTextarea = followUpDiv.querySelector('.follow-up-body');
+  // Use innerHTML if available, otherwise convert value to formatted HTML
+  const bodyContent = bodyTextarea.innerHTML || createFormattedHTML(bodyTextarea.value);
+  
+  followUps.push({
+    subject: followUpDiv.querySelector('.follow-up-subject').value,
+    body: bodyContent,
+    waitDuration: parseInt(followUpDiv.querySelector('.follow-up-wait-duration').value),
+    waitUnit: followUpDiv.querySelector('.follow-up-wait-unit').value
+  });
+});
+        //   document.querySelectorAll('.follow-up-email').forEach(followUpDiv => {
+        //     followUps.push({
+        //       subject: followUpDiv.querySelector('.follow-up-subject').value,
+        //       body: followUpDiv.querySelector('.follow-up-body').value,
+        //       waitDuration: parseInt(followUpDiv.querySelector('.follow-up-wait-duration').value),
+        //       waitUnit: followUpDiv.querySelector('.follow-up-wait-unit').value
+        //     });
+        //   });
           APP_STATE.campaignForm.followUps = followUps;
       
           // Update preview
@@ -3084,52 +3117,56 @@ const UIService = {
         }
     },
     
-    // Add follow-up email to campaign
-    addFollowUpEmail: function() {
-        const container = document.getElementById('follow-ups-container');
-        const count = container.children.length + 1;
-      
-        const followUp = document.createElement('div');
-        followUp.className = 'follow-up-email border border-gray-200 rounded-md p-4';
-        followUp.innerHTML = `
-          <div class="flex justify-between items-center mb-3">
-            <h4 class="text-sm font-medium text-gray-900">Follow-up #${count}</h4>
-            <button type="button" class="remove-follow-up text-red-600 hover:text-red-800">
-              <i class="fas fa-trash"></i>
-            </button>
+// Add follow-up email to campaign
+addFollowUpEmail: function() {
+    const container = document.getElementById('follow-ups-container');
+    const count = container.children.length + 1;
+    
+    const followUp = document.createElement('div');
+    followUp.className = 'follow-up-email border border-gray-200 rounded-md p-4';
+    followUp.innerHTML = `
+      <div class="flex justify-between items-center mb-3">
+        <h4 class="text-sm font-medium text-gray-900">Follow-up #${count}</h4>
+        <button type="button" class="remove-follow-up text-red-600 hover:text-red-800">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Subject</label>
+          <input type="text" class="follow-up-subject w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Follow-up subject" value="Re: ${document.getElementById('email-subject').value || '[Original Subject]'}" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Body</label>
+          <textarea class="follow-up-body w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows="5" placeholder="Follow-up message" required><p>Hello {first_name},</p>
+<p>I wanted to follow up on my previous email. Have you had a chance to consider my proposal?</p>
+<p>I'm available to answer any questions you might have about how Cebron Group can support your business goals.</p>
+<p>Sapna Ravula<br>
+Cebron Group</p></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Send after</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" class="follow-up-wait-duration w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" value="2" min="1" required>
+            <select class="follow-up-wait-unit w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+              <option value="minutes">Minutes</option>
+              <option value="hours">Hours</option>
+              <option value="days" selected>Days</option>
+              <option value="weeks">Weeks</option>
+            </select>
           </div>
-          <div class="space-y-4">
-            <div>
-              <label class="block text-xs font-medium text-gray-700 mb-1">Subject</label>
-              <input type="text" class="follow-up-subject w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Follow-up subject" value="Re: ${document.getElementById('email-subject').value || '[Original Subject]'}" required>
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-gray-700 mb-1">Body</label>
-              <textarea class="follow-up-body w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows="3" placeholder="Follow-up message" required>Hi {first_name},\n\nI wanted to follow up on my previous email. Have you had a chance to consider my proposal?</textarea>
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-gray-700 mb-1">Send after</label>
-              <div class="grid grid-cols-2 gap-2">
-                <input type="number" class="follow-up-wait-duration w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" value="1" min="1" required>
-                <select class="follow-up-wait-unit w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  <option value="minutes">Minutes</option>
-                  <option value="hours">Hours</option>
-                  <option value="days">Days</option>
-                  <option value="weeks">Weeks</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        `;
-      
-        container.appendChild(followUp);
-      
-        // Add click event for remove button
-        followUp.querySelector('.remove-follow-up').addEventListener('click', function() {
-          followUp.remove();
-          UIService.updateFollowUpNumbers();
-        });
-      },
+        </div>
+      </div>
+    `;
+    
+    container.appendChild(followUp);
+    
+    // Add click event for remove button
+    followUp.querySelector('.remove-follow-up').addEventListener('click', function() {
+      followUp.remove();
+      UIService.updateFollowUpNumbers();
+    });
+},
     // Update follow-up numbers after deletion
     updateFollowUpNumbers: function() {
         const followUps = document.querySelectorAll('.follow-up-email');
