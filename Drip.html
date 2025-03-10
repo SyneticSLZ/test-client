@@ -182,13 +182,13 @@
     <!-- Main App (initially hidden) -->
     <div id="app-page" class="page h-full flex flex-col">
         <!-- Header -->
-        <header class="bg-white shadow-sm">
+        <header class="bg-white shadow-sm z-40">
             <div class="mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 flex items-center">
-                            <!-- <h1 class="text-xl font-bold text-indigo-600">Email Campaign Manager</h1> -->
-                            <img  src='vmb.png' alt="google" style="width: 170px; height: 90px;">
+                            <!-- Replace with your logo or text -->
+                            <h1 class="text-xl font-bold text-indigo-600">Email Campaign Manager</h1>
                         </div>
                     </div>
                     <div class="flex items-center">
@@ -196,7 +196,7 @@
                             <button id="user-menu-button" class="flex items-center text-sm rounded-full focus:outline-none">
                                 <span class="sr-only">Open user menu</span>
                                 <span id="user-name" class="mr-2 font-medium text-gray-700">John Doe</span>
-                                <div class="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
+                                <div class="h-10 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
                                     <span id="user-initials">JD</span>
                                 </div>
                             </button>
@@ -210,836 +210,871 @@
                 </div>
             </div>
         </header>
-
-        <!-- Main Content -->
-        <main class="flex-1 flex">
+    
+        <!-- Main Content Area -->
+        <main class="flex-1 flex overflow-hidden">
             <!-- Sidebar -->
-            <!-- <div class="w-64 bg-white shadow-md hidden md:block">
-                <nav class="mt-5 px-2">
-                    <a href="#" id="dashboard-link" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700">
-                        <i class="fas fa-home mr-3 text-indigo-500"></i>
-                        Dashboard
-                    </a>
-                    <a href="#" id="campaigns-link" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                        <i class="fas fa-paper-plane mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                        Campaigns
-                    </a>
-                    <a href="#" id="leads-link" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                        <i class="fas fa-users mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                        Leads Management
-                    </a>
-                    <a href="#" id="analytics-link" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                        <i class="fas fa-chart-bar mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                        Analytics
-                    </a>
-                    <a href="#" id="gmail-link" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                        <i class="fas fa-envelope mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                        Gmail Integration
-                    </a>
-                    <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                        <i class="fas fa-cog mr-3 text-gray-400 group-hover:text-gray-500"></i>
-                        Settings
-                    </a>
-                </nav>
-            </div> -->
-            <div class="w-64 bg-white shadow-lg hidden md:block h-screen border-r border-gray-200">
-                <!-- <div class="px-6 py-4 border-b border-gray-200">
-                    <h2 class="text-xl font-semibold text-gray-800">App Name</h2>
-                </div> -->
-                <nav class="mt-6 px-3">
-                    <div class="space-y-1">
-                        <!-- Active link has bg-indigo-100 and text-indigo-700 -->
-                        <a href="#" id="dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 transition duration-150">
-                            <i class="fas fa-home w-5 h-5 mr-3 text-indigo-500"></i>
-                            Dashboard
-                        </a>
-                        
-                        <a href="#" id="campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                            <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                            Campaigns
-                        </a>
-                        
-                        <!-- Leads tab is hidden as requested -->
-                        
-                        <a style="display: none;" href="#" id="analytics-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                            <i class="fas fa-chart-bar w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                            Analytics
-                        </a>
-                        
-                        <a href="#" id="gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                            <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                            Gmail Integration
-                        </a>
-                    </div>
-                    
-                    <div class="mt-8 pt-4 border-t border-gray-200">
-                        <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                            <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                            Settings
-                        </a>
-                    </div>
-                </nav>
-            </div>
-
-            <!-- Content Area -->
-            <div class="flex-1 overflow-auto p-6 bg-gray-50">
-                <!-- Dashboard Tab (default) -->
-                <div id="dashboard-tab" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <h1 class="text-2xl font-semibold text-gray-900 mb-6">Dashboard</h1>
-                    
-                    <!-- Stats Summary -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                        <i class="fas fa-paper-plane text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Active Campaigns</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="active-campaigns-count" class="text-2xl font-semibold text-gray-900">0</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                                        <i class="fas fa-envelope-open text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Total Emails Sent</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="emails-sent-count" class="text-2xl font-semibold text-gray-900">0</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                                        <i class="fas fa-eye text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Open Rate</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="open-rate" class="text-2xl font-semibold text-gray-900">0%</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
-                                        <i class="fas fa-reply text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Response Rate</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="response-rate" class="text-2xl font-semibold text-gray-900">0%</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Recent Campaigns & Activity -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Recent Campaigns -->
-                        <div class="bg-white shadow rounded-lg">
-                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                                <h3 class="text-lg font-medium text-gray-900">Recent Campaigns</h3>
-                            </div>
-                            <div class="px-4 py-3 sm:px-6">
-                                <div id="recent-campaigns-list" class="space-y-3">
-                                    <p class="text-gray-500 text-sm py-2">No recent campaigns</p>
-                                </div>
-                            </div>
-                            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                <button id="view-all-campaigns" class="text-sm text-indigo-600 hover:text-indigo-900">View all campaigns</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Recent Activity -->
-                        <div class="bg-white shadow rounded-lg">
-                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                                <h3 class="text-lg font-medium text-gray-900">Recent Activity</h3>
-                            </div>
-                            <div class="px-4 py-3 sm:px-6">
-                                <div id="recent-activity-list" class="space-y-3">
-                                    <p class="text-gray-500 text-sm py-2">No recent activity</p>
-                                </div>
-                            </div>
-                            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                                <button id="view-all-activity" class="text-sm text-indigo-600 hover:text-indigo-900">View all activity</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
-                        <div class="flex justify-center items-center">
-                          <!-- <span class="text-gray-700 text-sm mr-2">powered by</span> -->
-                          <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-8">
-                        </div>
-                      </div>
-                </div>
-                
-                <!-- Campaigns Tab -->
-                <div id="campaigns-tab" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-semibold text-gray-900">Campaigns</h1>
-                        <button id="create-campaign-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            <i class="fas fa-plus mr-2"></i>Create Campaign
+            <div class="md:w-64 flex-shrink-0 bg-white md:block">
+                <!-- Sidebar content -->
+                <div class="h-full flex flex-col relative">
+                    <!-- Collapse toggle button -->
+                    <div class="flex justify-end p-2">
+                        <button id="sidebar-collapse-btn" class="text-gray-500 hover:text-indigo-600 p-1 hidden md:block">
+                            <i id="sidebar-collapse-icon" class="fas fa-chevron-left"></i>
                         </button>
                     </div>
                     
-                    <!-- Campaigns Filter -->
-                    <div class="bg-white shadow rounded-lg mb-6">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div>
-                                    <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    <select id="status-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="all">All Status</option>
-                                        <option value="active">Active</option>
-                                        <option value="paused">Paused</option>
-                                        <option value="completed">Completed</option>
-                                        <option value="draft">Draft</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                                    <select id="date-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="all">All Time</option>
-                                        <option value="today">Today</option>
-                                        <option value="yesterday">Yesterday</option>
-                                        <option value="last7days">Last 7 days</option>
-                                        <option value="last30days">Last 30 days</option>
-                                        <option value="custom">Custom Range...</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="search-campaigns" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                                    <input type="text" id="search-campaigns" placeholder="Search campaigns..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div class="flex items-end">
-                                    <button id="apply-campaign-filters" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Apply Filters
-                                    </button>
-                                </div>
-                            </div>
+                    <!-- Navigation links - top section -->
+                    <div class="overflow-y-auto flex-grow px-3">
+                        <div class="space-y-1 mb-8">
+                            <a href="#" id="dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 transition duration-150">
+                                <i class="fas fa-home w-5 h-5 mr-3 text-indigo-500"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                            
+                            <a href="#" id="campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Campaigns</span>
+                            </a>
+                            
+                            <a href="#" id="gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Gmail Integration</span>
+                            </a>
                         </div>
                     </div>
                     
-                    <!-- Campaigns Table -->
-                    <div class="bg-white shadow rounded-lg overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leads</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Follow-up</th>
-                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="campaigns-table-body" class="bg-white divide-y divide-gray-200">
-                                    <!-- Campaigns will be inserted here dynamically -->
-                                    <tr>
-                                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Loading campaigns...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="campaigns-pagination" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                            <div class="flex-1 flex justify-between items-center">
-                                <div>
-                                    <p class="text-sm text-gray-700">
-                                        Showing <span id="campaigns-start">0</span> to <span id="campaigns-end">0</span> of <span id="campaigns-total">0</span> campaigns
-                                    </p>
-                                </div>
-                                <div>
-                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                        <button id="campaigns-prev-page" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                            <span class="sr-only">Previous</span>
-                                            <i class="fas fa-chevron-left"></i>
-                                        </button>
-                                        <button id="campaigns-next-page" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                            <span class="sr-only">Next</span>
-                                            <i class="fas fa-chevron-right"></i>
-                                        </button>
-                                    </nav>
-                                </div>
-                            </div>
+                    <!-- Bottom section with settings, profile and logout -->
+                    <div class="mt-auto border-t border-gray-200">
+                        <div class="px-3 py-3 space-y-1">
+                            <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-user w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                            
+                            <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Settings</span>
+                            </a>
+                            
+                            <a href="#" id="logout-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-red-700 hover:bg-red-50 transition duration-150">
+                                <i class="fas fa-sign-out-alt w-5 h-5 mr-3 text-red-400 group-hover:text-red-500"></i>
+                                <span class="nav-text">Logout</span>
+                            </a>
                         </div>
                     </div>
-                    <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
-                        <div class="flex justify-center items-center">
-                          <!-- <span class="text-gray-700 text-sm mr-2">powered by</span> -->
-                          <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-8">
-                        </div>
-                      </div>
-                </div>
-                
-                <!-- Leads Management Tab -->
-                <div id="leads-tab" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-semibold text-gray-900">Leads Management</h1>
-                        <div class="flex space-x-3">
-                            <button id="import-leads-btn" class="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                <i class="fas fa-file-import mr-2"></i>Import Leads
-                            </button>
-                            <button id="add-lead-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                <i class="fas fa-plus mr-2"></i>Add Lead
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Leads Filter -->
-                    <div class="bg-white shadow rounded-lg mb-6">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div>
-                                    <label for="lead-status-filter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    <select id="lead-status-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="all">All Status</option>
-                                        <option value="active">Active</option>
-                                        <option value="replied">Replied</option>
-                                        <option value="unsubscribed">Unsubscribed</option>
-                                        <option value="bounced">Bounced</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="lead-campaign-filter" class="block text-sm font-medium text-gray-700 mb-1">Campaign</label>
-                                    <select id="lead-campaign-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="all">All Campaigns</option>
-                                        <!-- Campaign options will be added dynamically -->
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="search-leads" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                                    <input type="text" id="search-leads" placeholder="Search by name, email, company..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                                <div class="flex items-end">
-                                    <button id="apply-lead-filters" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Apply Filters
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Leads Table -->
-                    <div class="bg-white shadow rounded-lg overflow-hidden">
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Activity</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign</th>
-                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="leads-table-body" class="bg-white divide-y divide-gray-200">
-                                    <!-- Leads will be inserted here dynamically -->
-                                    <tr>
-                                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Loading leads...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="leads-pagination" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                            <div class="flex-1 flex justify-between items-center">
-                                <div>
-                                    <p class="text-sm text-gray-700">
-                                        Showing <span id="leads-start">0</span> to <span id="leads-end">0</span> of <span id="leads-total">0</span> leads
-                                    </p>
-                                </div>
-                                <div>
-                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                        <button id="leads-prev-page" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                            <span class="sr-only">Previous</span>
-                                            <i class="fas fa-chevron-left"></i>
-                                        </button>
-                                        <button id="leads-next-page" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                            <span class="sr-only">Next</span>
-                                            <i class="fas fa-chevron-right"></i>
-                                        </button>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
-                        <div class="flex justify-center items-center">
-                          <!-- <span class="text-gray-700 text-sm mr-2">powered by</span> -->
-                          <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-8">
-                        </div>
-                      </div>
-                </div>
-                
-                <!-- Analytics Tab -->
-                <div id="analytics-tab" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <h1 class="text-2xl font-semibold text-gray-900 mb-6">Analytics</h1>
-                    
-                    <!-- Analytics Filter -->
-                    <div class="bg-white shadow rounded-lg mb-6">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div>
-                                    <label for="analytics-campaign-filter" class="block text-sm font-medium text-gray-700 mb-1">Campaign</label>
-                                    <select id="analytics-campaign-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="all">All Campaigns</option>
-                                        <!-- Campaign options will be added dynamically -->
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="analytics-date-filter" class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-                                    <select id="analytics-date-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="last7days">Last 7 days</option>
-                                        <option value="last30days">Last 30 days</option>
-                                        <option value="last90days">Last 90 days</option>
-                                        <option value="custom">Custom Range...</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="analytics-metric-filter" class="block text-sm font-medium text-gray-700 mb-1">Primary Metric</label>
-                                    <select id="analytics-metric-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="opens">Email Opens</option>
-                                        <option value="clicks">Link Clicks</option>
-                                        <option value="replies">Replies</option>
-                                        <option value="sendings">Sendings</option>
-                                    </select>
-                                </div>
-                                <div class="flex items-end">
-                                    <button id="apply-analytics-filters" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Apply Filters
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Analytics Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                        <i class="fas fa-envelope text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Emails Sent</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="analytics-emails-sent" class="text-2xl font-semibold text-gray-900">0</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                                        <i class="fas fa-eye text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Opens</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="analytics-opens" class="text-2xl font-semibold text-gray-900">0</div>
-                                                <div id="analytics-open-rate" class="ml-2 text-sm font-medium text-green-600">0%</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                                        <i class="fas fa-mouse-pointer text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Clicks</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="analytics-clicks" class="text-2xl font-semibold text-gray-900">0</div>
-                                                <div id="analytics-click-rate" class="ml-2 text-sm font-medium text-blue-600">0%</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
-                                        <i class="fas fa-reply text-white"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">Replies</dt>
-                                            <dd class="flex items-baseline">
-                                                <div id="analytics-replies" class="text-2xl font-semibold text-gray-900">0</div>
-                                                <div id="analytics-reply-rate" class="ml-2 text-sm font-medium text-purple-600">0%</div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Analytics Charts -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <!-- Main Activity Chart -->
-                        <div class="bg-white shadow rounded-lg col-span-1 lg:col-span-2">
-                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                                <h3 class="text-lg font-medium text-gray-900">Campaign Performance Over Time</h3>
-                            </div>
-                            <div class="px-4 py-5 sm:p-6">
-                                <canvas id="activity-chart" height="300"></canvas>
-                            </div>
-                        </div>
-                        
-                        <!-- Open Rate by Time of Day -->
-                        <div class="bg-white shadow rounded-lg">
-                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                                <h3 class="text-lg font-medium text-gray-900">Open Rate by Time of Day</h3>
-                            </div>
-                            <div class="px-4 py-5 sm:p-6">
-                                <canvas id="time-chart" height="250"></canvas>
-                            </div>
-                        </div>
-                        
-                        <!-- Performance by Campaign -->
-                        <div class="bg-white shadow rounded-lg">
-                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                                <h3 class="text-lg font-medium text-gray-900">Campaign Comparison</h3>
-                            </div>
-                            <div class="px-4 py-5 sm:p-6">
-                                <canvas id="campaign-comparison-chart" height="250"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Top Performing Emails -->
-                    <div class="bg-white shadow rounded-lg overflow-hidden">
-                        <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                            <h3 class="text-lg font-medium text-gray-900">Top Performing Emails</h3>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opens</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Replies</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="top-emails-table-body" class="bg-white divide-y divide-gray-200">
-                                    <!-- Top emails will be added dynamically -->
-                                    <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">Loading data...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
-                        <div class="flex justify-center items-center">
-                          <!-- <span class="text-gray-700 text-sm mr-2">powered by</span> -->
-                          <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-8">
-                        </div>
-                      </div>
-                </div>
-                
-                <!-- Gmail Integration Tab -->
-                <div id="gmail-tab" class="tab-content hidden">
-                    <h1 class="text-2xl font-semibold text-gray-900 mb-6">Gmail Integration</h1>
-                    
-                    <!-- Gmail Status Card -->
-                    <div class="bg-white shadow rounded-lg mb-6">
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="sm:flex sm:items-center sm:justify-between">
-                                <div>
-                                    <h3 class="text-lg leading-6 font-medium text-gray-900">Gmail Account Status</h3>
-                                    <div class="mt-2 max-w-xl text-sm text-gray-500">
-                                        <p id="gmail-status-message">You haven't connected any Gmail accounts yet.</p>
-                                    </div>
-                                </div>
-                                <div class="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
-                                    <button id="connect-gmail-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Connect Gmail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Connected Accounts -->
-                    <div class="bg-white shadow rounded-lg mb-6" id="gmail-accounts-container">
-                        <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Connected Accounts</h3>
-                        </div>
-                        <div class="px-4 py-5 sm:p-6">
-                            <div id="connected-accounts-list" class="space-y-4">
-                                <!-- Connected accounts will be added dynamically -->
-                                <p class="text-sm text-gray-500">No Gmail accounts are currently connected</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Test Connection -->
-                    <div class="bg-white shadow rounded-lg" id="test-connection-container">
-                        <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Test Connection</h3>
-                        </div>
-                        <div class="px-4 py-5 sm:p-6">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="col-span-2">
-                                    <label for="test-gmail-account" class="block text-sm font-medium text-gray-700 mb-1">Select Account</label>
-                                    <select id="test-gmail-account" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        <option value="">Select an account</option>
-                                        <!-- Options will be added dynamically -->
-                                    </select>
-                                </div>
-                                <div class="flex items-end">
-                                    <button id="test-gmail-connection" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                                        Test Connection
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="test-result" class="mt-4 p-4 rounded-md hidden">
-                                <!-- Test results will be shown here -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
-                        <div class="flex justify-center items-center">
-                          <!-- <span class="text-gray-700 text-sm mr-2">powered by</span> -->
-                          <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-8">
-                        </div>
-                      </div>
-                </div>
-                
-                <!-- Settings Tab -->
-                <div id="settings-nav-tab" class="tab-content hidden">
-                    <h1 class="text-2xl font-semibold text-gray-900 mb-6">Settings</h1>
-                    
-                    <!-- Settings Tabs -->
-                    <div class="bg-white shadow rounded-lg">
-                        <div class="border-b border-gray-200">
-                            <nav class="flex -mb-px">
-                                <button id="profile-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-indigo-500 font-medium text-sm text-indigo-600">
-                                    Profile
-                                </button>
-                                <button id="email-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                    Email Settings
-                                </button>
-                                <button id="notification-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                    Notifications
-                                </button>
-                                <button id="security-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                    Security
-                                </button>
-                            </nav>
-                        </div>
-                        
-                        <!-- Profile Settings Content -->
-                        <div id="profile-settings-content" class="settings-tab-content px-4 py-5 sm:p-6">
-                            <form id="profile-form">
-                                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                    <div>
-                                        <label for="profile-firstname" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                                        <input type="text" id="profile-firstname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                    </div>
-                                    <div>
-                                        <label for="profile-lastname" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                                        <input type="text" id="profile-lastname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                    </div>
-                                    <div>
-                                        <label for="profile-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                        <input type="email" id="profile-email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" readonly>
-                                    </div>
-                                    <div>
-                                        <label for="profile-phone" class="block text-sm font-medium text-gray-700 mb-1">Phone (optional)</label>
-                                        <input type="tel" id="profile-phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                    </div>
-                                </div>
-                                <div class="mt-6">
-                                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Save Changes
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Email Settings Content -->
-                        <div id="email-settings-content" class="settings-tab-content px-4 py-5 sm:p-6 hidden">
-                            <form id="email-settings-form">
-                                <div class="space-y-6">
-                                    <div>
-                                        <h3 class="text-md font-medium text-gray-900">Default Send Settings</h3>
-                                        <div class="mt-2 space-y-4">
-                                            <div>
-                                                <label for="default-send-speed" class="block text-sm font-medium text-gray-700 mb-1">Default Send Speed</label>
-                                                <select id="default-send-speed" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                                    <option value="slow">Slow (1 email per 2 min)</option>
-                                                    <option value="medium" selected>Medium (1 email per min)</option>
-                                                    <option value="fast">Fast (3 emails per min)</option>
-                                                </select>
-                                                <p class="mt-1 text-sm text-gray-500">Choose a slower speed for better deliverability</p>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input type="checkbox" id="track-email-opens" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" checked>
-                                                <label for="track-email-opens" class="ml-2 block text-sm text-gray-900">
-                                                    Track email opens by default
-                                                </label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input type="checkbox" id="track-link-clicks" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" checked>
-                                                <label for="track-link-clicks" class="ml-2 block text-sm text-gray-900">
-                                                    Track link clicks by default
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="border-t border-gray-200 pt-6">
-                                        <h3 class="text-md font-medium text-gray-900">Email Signature</h3>
-                                        <div class="mt-2">
-                                            <div id="signature-editor" class="mt-1"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-6">
-                                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Save Changes
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Notification Settings Content -->
-                        <div id="notification-settings-content" class="settings-tab-content px-4 py-5 sm:p-6 hidden">
-                            <form id="notification-settings-form">
-                                <div class="space-y-6">
-                                    <h3 class="text-md font-medium text-gray-900">Email Notifications</h3>
-                                    <div class="space-y-4">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <span class="text-sm font-medium text-gray-900">Campaign Completion</span>
-                                                <p class="text-sm text-gray-500">Get notified when a campaign completes</p>
-                                            </div>
-                                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                                <input type="checkbox" id="notify-campaign-completed" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer right-0" checked>
-                                                <label for="notify-campaign-completed" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <span class="text-sm font-medium text-gray-900">Lead Replies</span>
-                                                <p class="text-sm text-gray-500">Get notified when a lead replies to your campaign</p>
-                                            </div>
-                                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                                <input type="checkbox" id="notify-lead-replied" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer right-0" checked>
-                                                <label for="notify-lead-replied" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <span class="text-sm font-medium text-gray-900">Daily Reports</span>
-                                                <p class="text-sm text-gray-500">Receive daily summary of your campaign performance</p>
-                                            </div>
-                                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                                <input type="checkbox" id="notify-daily-reports" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer right-0">
-                                                <label for="notify-daily-reports" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-6">
-                                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Save Changes
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Security Settings Content -->
-                        <div id="security-settings-content" class="settings-tab-content px-4 py-5 sm:p-6 hidden">
-                            <form id="security-settings-form">
-                                <div class="space-y-6">
-                                    <h3 class="text-md font-medium text-gray-900">Change Password</h3>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label for="current-password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                                            <input type="password" id="current-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        </div>
-                                        <div>
-                                            <label for="new-password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                                            <input type="password" id="new-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        </div>
-                                        <div>
-                                            <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                                            <input type="password" id="confirm-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-6">
-                                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        Update Password
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
-                        <div class="flex justify-center items-center">
-                          <!-- <span class="text-gray-700 text-sm mr-2">powered by</span> -->
-                          <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-8">
-                        </div>
-                      </div>
                 </div>
             </div>
-        </main>
+            
+            <!-- Mobile sidebar backdrop (hidden by default) -->
+            <div id="sidebar-backdrop" class="fixed inset-0 bg-gray-800 bg-opacity-50 z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
+            
+            <!-- Mobile sidebar (hidden by default) -->
+            <div id="sidebar" class="fixed left-0 top-0 h-full bg-white shadow-lg z-30 transform transition-transform duration-300 -translate-x-full md:hidden w-64">
+                <div class="h-full flex flex-col">
+                    <!-- Navigation links - top section -->
+                    <div class="overflow-y-auto flex-grow px-3 pt-5">
+                        <div class="space-y-1 mb-8">
+                            <a href="#" id="mobile-dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 transition duration-150">
+                                <i class="fas fa-home w-5 h-5 mr-3 text-indigo-500"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                            
+                            <a href="#" id="mobile-campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Campaigns</span>
+                            </a>
+                            
+                            <a href="#" id="mobile-gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Gmail Integration</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom section with settings, profile and logout -->
+                    <div class="mt-auto border-t border-gray-200">
+                        <div class="px-3 py-3 space-y-1">
+                            <a href="#" id="mobile-profile-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-user w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Profile</span>
+                            </a>
+                            
+                            <a href="#" id="mobile-settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
+                                <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                                <span class="nav-text">Settings</span>
+                            </a>
+                            
+                            <a href="#" id="mobile-logout-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-red-700 hover:bg-red-50 transition duration-150">
+                                <i class="fas fa-sign-out-alt w-5 h-5 mr-3 text-red-400 group-hover:text-red-500"></i>
+                                <span class="nav-text">Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile sidebar toggle button -->
+            <button id="mobile-sidebar-toggle" class="fixed bottom-4 right-4 bg-indigo-600 text-white p-3 rounded-full shadow-lg md:hidden z-30">
+                <i class="fas fa-bars"></i>
+            </button>
+    
+            <!-- Content Area -->
+            <div class="flex-1 overflow-auto p-6 bg-gray-50">
+                    <!-- Dashboard Tab (default) -->
+                    <div id="dashboard-tab" class="tab-content">
+                        <h1 class="text-2xl font-semibold text-gray-900 mb-6">Dashboard</h1>
+                        
+                        <!-- Stats Summary -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                            <i class="fas fa-paper-plane text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Active Campaigns</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="active-campaigns-count" class="text-2xl font-semibold text-gray-900">0</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                            <i class="fas fa-envelope-open text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Total Emails Sent</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="emails-sent-count" class="text-2xl font-semibold text-gray-900">0</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                            <i class="fas fa-eye text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Open Rate</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="open-rate" class="text-2xl font-semibold text-gray-900">0%</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                                            <i class="fas fa-reply text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Response Rate</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="response-rate" class="text-2xl font-semibold text-gray-900">0%</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Campaigns & Activity -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Recent Campaigns -->
+                            <div class="bg-white shadow rounded-lg">
+                                <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                    <h3 class="text-lg font-medium text-gray-900">Recent Campaigns</h3>
+                                </div>
+                                <div class="px-4 py-3 sm:px-6">
+                                    <div id="recent-campaigns-list" class="space-y-3">
+                                        <p class="text-gray-500 text-sm py-2">No recent campaigns</p>
+                                    </div>
+                                </div>
+                                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                    <button id="view-all-campaigns" class="text-sm text-indigo-600 hover:text-indigo-900">View all campaigns</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Activity -->
+                            <div class="bg-white shadow rounded-lg">
+                                <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                    <h3 class="text-lg font-medium text-gray-900">Recent Activity</h3>
+                                </div>
+                                <div class="px-4 py-3 sm:px-6">
+                                    <div id="recent-activity-list" class="space-y-3">
+                                        <p class="text-gray-500 text-sm py-2">No recent activity</p>
+                                    </div>
+                                </div>
+                                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                    <button id="view-all-activity" class="text-sm text-indigo-600 hover:text-indigo-900">View all activity</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
+                            <div class="flex justify-center items-center">
+                                <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-10">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campaigns Tab -->
+                    <div id="campaigns-tab" class="tab-content hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-2xl font-semibold text-gray-900">Campaigns</h1>
+                            <button id="create-campaign-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                <i class="fas fa-plus mr-2"></i>Create Campaign
+                            </button>
+                        </div>
+                        
+                        <!-- Campaigns Filter -->
+                        <div class="bg-white shadow rounded-lg mb-6">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                        <select id="status-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="all">All Status</option>
+                                            <option value="active">Active</option>
+                                            <option value="paused">Paused</option>
+                                            <option value="completed">Completed</option>
+                                            <option value="draft">Draft</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                                        <select id="date-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="all">All Time</option>
+                                            <option value="today">Today</option>
+                                            <option value="yesterday">Yesterday</option>
+                                            <option value="last7days">Last 7 days</option>
+                                            <option value="last30days">Last 30 days</option>
+                                            <option value="custom">Custom Range...</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="search-campaigns" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                                        <input type="text" id="search-campaigns" placeholder="Search campaigns..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <button id="apply-campaign-filters" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Apply Filters
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Campaigns Table -->
+                        <div class="bg-white shadow rounded-lg overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign Name</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leads</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Follow-up</th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="campaigns-table-body" class="bg-white divide-y divide-gray-200">
+                                        <!-- Campaigns will be inserted here dynamically -->
+                                        <tr>
+                                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Loading campaigns...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="campaigns-pagination" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                                <div class="flex-1 flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-700">
+                                            Showing <span id="campaigns-start">0</span> to <span id="campaigns-end">0</span> of <span id="campaigns-total">0</span> campaigns
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                            <button id="campaigns-prev-page" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">Previous</span>
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button id="campaigns-next-page" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">Next</span>
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
+                            <div class="flex justify-center items-center">
+                                <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-10">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Leads Management Tab -->
+                    <div id="leads-tab" class="tab-content hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-2xl font-semibold text-gray-900">Leads Management</h1>
+                            <div class="flex space-x-3">
+                                <button id="import-leads-btn" class="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <i class="fas fa-file-import mr-2"></i>Import Leads
+                                </button>
+                                <button id="add-lead-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <i class="fas fa-plus mr-2"></i>Add Lead
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Leads Filter -->
+                        <div class="bg-white shadow rounded-lg mb-6">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <label for="lead-status-filter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                        <select id="lead-status-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="all">All Status</option>
+                                            <option value="active">Active</option>
+                                            <option value="replied">Replied</option>
+                                            <option value="unsubscribed">Unsubscribed</option>
+                                            <option value="bounced">Bounced</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="lead-campaign-filter" class="block text-sm font-medium text-gray-700 mb-1">Campaign</label>
+                                        <select id="lead-campaign-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="all">All Campaigns</option>
+                                            <!-- Campaign options will be added dynamically -->
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="search-leads" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                                        <input type="text" id="search-leads" placeholder="Search by name, email, company..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <button id="apply-lead-filters" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Apply Filters
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Leads Table -->
+                        <div class="bg-white shadow rounded-lg overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Activity</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign</th>
+                                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leads-table-body" class="bg-white divide-y divide-gray-200">
+                                        <!-- Leads will be inserted here dynamically -->
+                                        <tr>
+                                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Loading leads...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="leads-pagination" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                                <div class="flex-1 flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm text-gray-700">
+                                            Showing <span id="leads-start">0</span> to <span id="leads-end">0</span> of <span id="leads-total">0</span> leads
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                            <button id="leads-prev-page" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">Previous</span>
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button id="leads-next-page" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">Next</span>
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
+                            <div class="flex justify-center items-center">
+                                <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-10">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Tab -->
+                    <div id="analytics-tab" class="tab-content hidden">
+                        <h1 class="text-2xl font-semibold text-gray-900 mb-6">Analytics</h1>
+                        
+                        <!-- Analytics Filter -->
+                        <div class="bg-white shadow rounded-lg mb-6">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <label for="analytics-campaign-filter" class="block text-sm font-medium text-gray-700 mb-1">Campaign</label>
+                                        <select id="analytics-campaign-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="all">All Campaigns</option>
+                                            <!-- Campaign options will be added dynamically -->
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="analytics-date-filter" class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                                        <select id="analytics-date-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="last7days">Last 7 days</option>
+                                            <option value="last30days">Last 30 days</option>
+                                            <option value="last90days">Last 90 days</option>
+                                            <option value="custom">Custom Range...</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="analytics-metric-filter" class="block text-sm font-medium text-gray-700 mb-1">Primary Metric</label>
+                                        <select id="analytics-metric-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="opens">Email Opens</option>
+                                            <option value="clicks">Link Clicks</option>
+                                            <option value="replies">Replies</option>
+                                            <option value="sendings">Sendings</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex items-end">
+                                        <button id="apply-analytics-filters" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Apply Filters
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Analytics Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                                            <i class="fas fa-envelope text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Emails Sent</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="analytics-emails-sent" class="text-2xl font-semibold text-gray-900">0</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                            <i class="fas fa-eye text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Opens</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="analytics-opens" class="text-2xl font-semibold text-gray-900">0</div>
+                                                    <div id="analytics-open-rate" class="ml-2 text-sm font-medium text-green-600">0%</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                            <i class="fas fa-mouse-pointer text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Clicks</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="analytics-clicks" class="text-2xl font-semibold text-gray-900">0</div>
+                                                    <div id="analytics-click-rate" class="ml-2 text-sm font-medium text-blue-600">0%</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                                            <i class="fas fa-reply text-white"></i>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">Replies</dt>
+                                                <dd class="flex items-baseline">
+                                                    <div id="analytics-replies" class="text-2xl font-semibold text-gray-900">0</div>
+                                                    <div id="analytics-reply-rate" class="ml-2 text-sm font-medium text-purple-600">0%</div>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Analytics Charts -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                            <!-- Main Activity Chart -->
+                            <div class="bg-white shadow rounded-lg col-span-1 lg:col-span-2">
+                                <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                    <h3 class="text-lg font-medium text-gray-900">Campaign Performance Over Time</h3>
+                                </div>
+                                <div class="px-4 py-5 sm:p-6">
+                                    <canvas id="activity-chart" height="300"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Open Rate by Time of Day -->
+                            <div class="bg-white shadow rounded-lg">
+                                <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                    <h3 class="text-lg font-medium text-gray-900">Open Rate by Time of Day</h3>
+                                </div>
+                                <div class="px-4 py-5 sm:p-6">
+                                    <canvas id="time-chart" height="250"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Performance by Campaign -->
+                            <div class="bg-white shadow rounded-lg">
+                                <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                    <h3 class="text-lg font-medium text-gray-900">Campaign Comparison</h3>
+                                </div>
+                                <div class="px-4 py-5 sm:p-6">
+                                    <canvas id="campaign-comparison-chart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Top Performing Emails -->
+                        <div class="bg-white shadow rounded-lg overflow-hidden">
+                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                <h3 class="text-lg font-medium text-gray-900">Top Performing Emails</h3>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opens</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Replies</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="top-emails-table-body" class="bg-white divide-y divide-gray-200">
+                                        <!-- Top emails will be added dynamically -->
+                                        <tr>
+                                            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">Loading data...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
+                            <div class="flex justify-center items-center">
+                                <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-10">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gmail Integration Tab -->
+                    <div id="gmail-tab" class="tab-content hidden">
+                        <h1 class="text-2xl font-semibold text-gray-900 mb-6">Gmail Integration</h1>
+                        
+                        <!-- Gmail Status Card -->
+                        <div class="bg-white shadow rounded-lg mb-6">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="sm:flex sm:items-center sm:justify-between">
+                                    <div>
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900">Gmail Account Status</h3>
+                                        <div class="mt-2 max-w-xl text-sm text-gray-500">
+                                            <p id="gmail-status-message">You haven't connected any Gmail accounts yet.</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
+                                        <button id="connect-gmail-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Connect Gmail
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Connected Accounts -->
+                        <div class="bg-white shadow rounded-lg mb-6" id="gmail-accounts-container">
+                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Connected Accounts</h3>
+                            </div>
+                            <div class="px-4 py-5 sm:p-6">
+                                <div id="connected-accounts-list" class="space-y-4">
+                                    <!-- Connected accounts will be added dynamically -->
+                                    <p class="text-sm text-gray-500">No Gmail accounts are currently connected</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Test Connection -->
+                        <div class="bg-white shadow rounded-lg" id="test-connection-container">
+                            <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Test Connection</h3>
+                            </div>
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="col-span-2">
+                                        <label for="test-gmail-account" class="block text-sm font-medium text-gray-700 mb-1">Select Account</label>
+                                        <select id="test-gmail-account" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="">Select an account</option>
+                                            <!-- Options will be added dynamically -->
+                                        </select>
+                                    </div>
+                                    <div class="flex items-end">
+                                        <button id="test-gmail-connection" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                            Test Connection
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="test-result" class="mt-4 p-4 rounded-md hidden">
+                                    <!-- Test results will be shown here -->
+                                </div>
+                            </div
+                            >
+                        </div>
+                        <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
+                            <div class="flex justify-center items-center">
+                                <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-10">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Tab -->
+                    <div id="settings-nav-tab" class="tab-content hidden">
+                        <h1 class="text-2xl font-semibold text-gray-900 mb-6">Settings</h1>
+                        
+                        <!-- Settings Tabs -->
+                        <div class="bg-white shadow rounded-lg">
+                            <div class="border-b border-gray-200">
+                                <nav class="flex -mb-px">
+                                    <button id="profile-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-indigo-500 font-medium text-sm text-indigo-600">
+                                        Profile
+                                    </button>
+                                    <button id="email-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                        Email Settings
+                                    </button>
+                                    <button id="notification-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                        Notifications
+                                    </button>
+                                    <button id="security-settings-tab" class="settings-tab-btn py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                        Security
+                                    </button>
+                                </nav>
+                            </div>
+                            
+                            <!-- Profile Settings Content -->
+                            <div id="profile-settings-content" class="settings-tab-content px-4 py-5 sm:p-6">
+                                <form id="profile-form">
+                                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                        <div>
+                                            <label for="profile-firstname" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                            <input type="text" id="profile-firstname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div>
+                                            <label for="profile-lastname" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                            <input type="text" id="profile-lastname" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div>
+                                            <label for="profile-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                            <input type="email" id="profile-email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" readonly>
+                                        </div>
+                                        <div>
+                                            <label for="profile-phone" class="block text-sm font-medium text-gray-700 mb-1">Phone (optional)</label>
+                                            <input type="tel" id="profile-phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                    </div>
+                                    <div class="mt-6">
+                                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Email Settings Content -->
+                            <div id="email-settings-content" class="settings-tab-content px-4 py-5 sm:p-6 hidden">
+                                <form id="email-settings-form">
+                                    <div class="space-y-6">
+                                        <div>
+                                            <h3 class="text-md font-medium text-gray-900">Default Send Settings</h3>
+                                            <div class="mt-2 space-y-4">
+                                                <div>
+                                                    <label for="default-send-speed" class="block text-sm font-medium text-gray-700 mb-1">Default Send Speed</label>
+                                                    <select id="default-send-speed" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                                        <option value="slow">Slow (1 email per 2 min)</option>
+                                                        <option value="medium" selected>Medium (1 email per min)</option>
+                                                        <option value="fast">Fast (3 emails per min)</option>
+                                                    </select>
+                                                    <p class="mt-1 text-sm text-gray-500">Choose a slower speed for better deliverability</p>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" id="track-email-opens" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" checked>
+                                                    <label for="track-email-opens" class="ml-2 block text-sm text-gray-900">
+                                                        Track email opens by default
+                                                    </label>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" id="track-link-clicks" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" checked>
+                                                    <label for="track-link-clicks" class="ml-2 block text-sm text-gray-900">
+                                                        Track link clicks by default
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h3 class="text-md font-medium text-gray-900">Email Signature</h3>
+                                            <div class="mt-2">
+                                                <div id="signature-editor" class="mt-1"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6">
+                                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Notification Settings Content -->
+                            <div id="notification-settings-content" class="settings-tab-content px-4 py-5 sm:p-6 hidden">
+                                <form id="notification-settings-form">
+                                    <div class="space-y-6">
+                                        <h3 class="text-md font-medium text-gray-900">Email Notifications</h3>
+                                        <div class="space-y-4">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <span class="text-sm font-medium text-gray-900">Campaign Completion</span>
+                                                    <p class="text-sm text-gray-500">Get notified when a campaign completes</p>
+                                                </div>
+                                                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                                                    <input type="checkbox" id="notify-campaign-completed" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer right-0" checked>
+                                                    <label for="notify-campaign-completed" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <span class="text-sm font-medium text-gray-900">Lead Replies</span>
+                                                    <p class="text-sm text-gray-500">Get notified when a lead replies to your campaign</p>
+                                                </div>
+                                                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                                                    <input type="checkbox" id="notify-lead-replied" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer right-0" checked>
+                                                    <label for="notify-lead-replied" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <span class="text-sm font-medium text-gray-900">Daily Reports</span>
+                                                    <p class="text-sm text-gray-500">Receive daily summary of your campaign performance</p>
+                                                </div>
+                                                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                                                    <input type="checkbox" id="notify-daily-reports" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer right-0">
+                                                    <label for="notify-daily-reports" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6">
+                                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Security Settings Content -->
+                            <div id="security-settings-content" class="settings-tab-content px-4 py-5 sm:p-6 hidden">
+                                <form id="security-settings-form">
+                                    <div class="space-y-6">
+                                        <h3 class="text-md font-medium text-gray-900">Change Password</h3>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label for="current-password" class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                                                <input type="password" id="current-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            </div>
+                                            <div>
+                                                <label for="new-password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                                <input type="password" id="new-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            </div>
+                                            <div>
+                                                <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                                                <input type="password" id="confirm-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-6">
+                                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            Update Password
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-8 pb-4 text-center border-t border-gray-200">
+                            <div class="flex justify-center items-center">
+                                <img src="powered-by-syneticx.png" alt="powered by SyneticX" class="h-10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+
     </div>
 
     <!-- Modals -->
@@ -1750,5 +1785,204 @@
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
     <!-- Custom JavaScript -->
     <script src="index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Handle tab switching functionality
+    const tabLinks = document.querySelectorAll('[data-tab]');
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show the selected tab
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+            }
+            
+            // Close user dropdown if open
+            const userDropdown = document.getElementById('user-dropdown');
+            if (userDropdown && !userDropdown.classList.contains('hidden')) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+    });
+    
+    // Handle logout functionality
+    const logoutButtons = [
+        document.getElementById('logout-nav-link'),
+        document.getElementById('mobile-logout-nav-link'),
+        document.getElementById('logout-link')
+    ];
+    
+    logoutButtons.forEach(button => {
+        if (button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Clear all localStorage
+                localStorage.clear();
+                
+                // Show a brief message before reloading (optional)
+                const loaderOverlay = document.getElementById('loader-overlay');
+                const loaderText = document.getElementById('loader-text');
+                
+                if (loaderOverlay && loaderText) {
+                    loaderText.textContent = 'Logging out...';
+                    loaderOverlay.classList.remove('hidden');
+                }
+                
+                // Reload the page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            });
+        }
+    });
+    
+    // Toggle user dropdown when user menu button is clicked
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    
+    if (userMenuButton && userDropdown) {
+        userMenuButton.addEventListener('click', function() {
+            userDropdown.classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+    }
+});
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get sidebar elements
+            const sidebar = document.getElementById('sidebar');
+            const desktopSidebar = document.querySelector('.md\\:w-64');
+            const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+            const sidebarCollapseBtn = document.getElementById('sidebar-collapse-btn');
+            const sidebarCollapseIcon = document.getElementById('sidebar-collapse-icon');
+            const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const navTexts = document.querySelectorAll('.nav-text');
+            
+            // Set initial sidebar states
+            let sidebarCollapsed = false;
+            
+            // Function to toggle sidebar collapse state (desktop only)
+            function toggleCollapse() {
+                sidebarCollapsed = !sidebarCollapsed;
+                
+                if (sidebarCollapsed) {
+                    desktopSidebar.classList.remove('md:w-64');
+                    desktopSidebar.classList.add('md:w-16');
+                    sidebarCollapseIcon.classList.remove('fa-chevron-left');
+                    sidebarCollapseIcon.classList.add('fa-chevron-right');
+                    
+                    // Hide text labels
+                    const desktopNavTexts = desktopSidebar.querySelectorAll('.nav-text');
+                    desktopNavTexts.forEach(text => {
+                        text.classList.add('hidden');
+                    });
+                } else {
+                    desktopSidebar.classList.remove('md:w-16');
+                    desktopSidebar.classList.add('md:w-64');
+                    sidebarCollapseIcon.classList.remove('fa-chevron-right');
+                    sidebarCollapseIcon.classList.add('fa-chevron-left');
+                    
+                    // Show text labels
+                    const desktopNavTexts = desktopSidebar.querySelectorAll('.nav-text');
+                    desktopNavTexts.forEach(text => {
+                        text.classList.remove('hidden');
+                    });
+                }
+            }
+            
+            // Function to toggle mobile sidebar
+            function toggleMobileSidebar() {
+                const isMobileOpen = !sidebar.classList.contains('-translate-x-full');
+                
+                if (isMobileOpen) {
+                    // Close sidebar
+                    sidebar.classList.add('-translate-x-full');
+                    sidebarBackdrop.classList.add('hidden');
+                } else {
+                    // Open sidebar
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebarBackdrop.classList.remove('hidden');
+                }
+            }
+            
+            // Add click event listeners
+            if (sidebarCollapseBtn) {
+                sidebarCollapseBtn.addEventListener('click', toggleCollapse);
+            }
+            
+            if (mobileSidebarToggle) {
+                mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
+            }
+            
+            if (sidebarBackdrop) {
+                sidebarBackdrop.addEventListener('click', toggleMobileSidebar);
+            }
+            
+            // Handle active state for all navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Handle mobile sidebar closing
+                    if (window.innerWidth < 768 && this.id.includes('mobile')) {
+                        toggleMobileSidebar();
+                    }
+                    
+                    // Get the base ID without the mobile- prefix
+                    const baseId = this.id.replace('mobile-', '');
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(l => {
+                        const lBaseId = l.id.replace('mobile-', '');
+                        
+                        // Skip if this is the logout link
+                        if (lBaseId.includes('logout')) return;
+                        
+                        l.classList.remove('bg-indigo-100', 'text-indigo-700');
+                        l.classList.add('text-gray-700', 'hover:bg-gray-50', 'hover:text-indigo-600');
+                        
+                        // Reset icon colors
+                        const icon = l.querySelector('i');
+                        if (icon && !icon.classList.contains('fa-sign-out-alt')) {
+                            icon.classList.remove('text-indigo-500');
+                            icon.classList.add('text-gray-400', 'group-hover:text-indigo-500');
+                        }
+                    });
+                    
+                    // Don't highlight the logout link
+                    if (!baseId.includes('logout')) {
+                        // Get all links with this base ID (mobile and desktop versions)
+                        document.querySelectorAll(`[id$="${baseId}"], [id$="mobile-${baseId}"]`).forEach(activeLink => {
+                            activeLink.classList.remove('text-gray-700', 'hover:bg-gray-50', 'hover:text-indigo-600');
+                            activeLink.classList.add('bg-indigo-100', 'text-indigo-700');
+                            
+                            // Set icon color for active link
+                            const activeIcon = activeLink.querySelector('i');
+                            if (activeIcon) {
+                                activeIcon.classList.remove('text-gray-400', 'group-hover:text-indigo-500');
+                                activeIcon.classList.add('text-indigo-500');
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Make toggle function globally accessible
+            window.toggleSidebar = toggleMobileSidebar;
+        });
+        </script>
 </body>
 </html>
