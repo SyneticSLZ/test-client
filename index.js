@@ -1393,55 +1393,249 @@ const DashboardService = {
             `;
         }).join('');
     },
-    // Render recent activity
-    renderRecentActivity(leadsWithReplies) {
-        const container = document.getElementById('recent-activity-list');
-        
-        if (!container) return;
-        
-        if (!leadsWithReplies || !Array.isArray(leadsWithReplies)) {
-            container.innerHTML = '<p class="text-gray-500 text-sm py-2">No recent replies</p>';
-            return;
-        }
+// Render recent activity
+renderRecentActivity(leadsWithReplies) {
+    const container = document.getElementById('recent-activity-list');
     
-        const allReplies = leadsWithReplies
-            .flatMap(lead => lead.replies.map(reply => ({
-                email: lead.email,
-                content: reply.content,
-                timestamp: reply.date
-            })))
-            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    if (!container) return;
+    
+    if (!leadsWithReplies || !Array.isArray(leadsWithReplies)) {
+        container.innerHTML = '<p class="text-gray-500 text-sm py-2">No recent replies</p>';
+        return;
+    }
+    
+    const allReplies = leadsWithReplies
+        .flatMap(lead => lead.replies.map(reply => ({
+            email: lead.email,
+            content: reply.content,
+            timestamp: reply.date
+        })))
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         
-        if (allReplies.length === 0) {
-            container.innerHTML = '<p class="text-gray-500 text-sm py-2">No recent replies</p>';
-            return;
-        }
+    if (allReplies.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-sm py-2">No recent replies</p>';
+        return;
+    }
+    
+    console.log("All replies:", allReplies); // Debug: Check the full array
+    
+    // Add modal HTML to the page
+    this.addReplyModal();
+    
+    container.innerHTML = allReplies.map((reply, index) => {
+        // Ensure content is a string, default to "No content" if missing
+        const content = typeof reply.content === 'string' ? reply.content : 'No content';
+        const displayContent = content.length > 50 ? content.substring(0, 50) + '...' : content;
         
-        console.log("All replies:", allReplies); // Debug: Check the full array
-        
-        container.innerHTML = allReplies.map(reply => {
-            // Ensure content is a string, default to "No content" if missing
-            const content = typeof reply.content === 'string' ? reply.content : 'No content';
-            const displayContent = content.length > 50 ? content.substring(0, 50) + '...' : content;
-            
-            return `
-                <div class="border-b border-gray-200 pb-2 last:border-b-0 last:pb-0">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            ${this.getActivityIcon('Reply')}
+        return `
+            <div class="border-b border-gray-200 py-3 last:border-b-0 last:pb-0 hover:bg-gray-50 transition duration-150">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 mt-1">
+                        ${this.getActivityIcon('Reply')}
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <div class="flex justify-between items-start">
+                            <p class="text-sm font-medium text-gray-900">${reply.email}</p>
+                            <span class="text-xs text-gray-500">${this.formatDateTime(reply.timestamp)}</span>
                         </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-gray-900">
-                                Reply from <span class="font-medium">${reply.email}</span>: 
-                                "${displayContent}"
-                            </p>
-                            <p class="text-xs text-gray-500">${this.formatDateTime(reply.timestamp)}</p>
+                        <div class="mt-1">
+                            <p class="text-sm text-gray-700 line-clamp-2">"${displayContent}"</p>
                         </div>
+                        <button 
+                            class="mt-1 text-xs text-blue-600 hover:text-blue-800 focus:outline-none focus:underline" 
+                            onclick="window.viewFullReply(${index}, '${encodeURIComponent(reply.email)}', '${encodeURIComponent(content)}', '${encodeURIComponent(this.formatDateTime(reply.timestamp))}')"
+                        >
+                            View full reply
+                        </button>
                     </div>
                 </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Add the necessary JavaScript for modal functionality
+    this.setupModalFunctionality(allReplies);
+},
+
+// Add modal HTML to the page
+// Add reply modal to the page with improved UI
+addReplyModal() {
+    // Check if modal already exists
+    if (document.getElementById('reply-modal')) return;
+    
+    const modal = document.createElement('div');
+    modal.id = 'reply-modal';
+    modal.classList.add('fixed', 'inset-0', 'bg-black', 'bg-opacity-50', 'backdrop-blur-sm', 'flex', 'items-center', 'justify-center', 'z-50', 'hidden', 'transition-opacity', 'duration-300');
+    
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col transform transition-transform duration-300 scale-95">
+            <div class="px-6 pt-4 pb-3 border-b border-gray-200 flex justify-between items-start">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">Reply from <span id="modal-email" class="text-blue-600"></span></h3>
+                    <p class="text-sm text-gray-500 mt-1" id="modal-timestamp"></p>
+                </div>
+                <button id="close-modal" class="text-gray-400 hover:text-gray-500 focus:outline-none p-1 rounded-full hover:bg-gray-100">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="px-6 py-4 overflow-y-auto flex-1">
+                <div id="modal-content-wrapper" class="bg-gray-50 p-4 rounded-lg"></div>
+            </div>
+            <div class="px-6 py-3 bg-gray-50 flex justify-end rounded-b-lg border-t border-gray-200">
+                <button id="reply-btn" class="px-4 py-2 bg-blue-600 text-white rounded mr-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    Reply
+                </button>
+                <button id="close-modal-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+},
+
+// Set up modal functionality with improved handling
+setupModalFunctionality(allReplies) {
+    // Define the viewFullReply function globally with improved content formatting
+    window.viewFullReply = (index, encodedEmail, encodedContent, encodedTimestamp) => {
+        const email = decodeURIComponent(encodedEmail);
+        const content = decodeURIComponent(encodedContent);
+        const timestamp = decodeURIComponent(encodedTimestamp);
+        
+        document.getElementById('modal-email').textContent = email;
+        document.getElementById('modal-timestamp').textContent = timestamp;
+        
+        // Format the content with proper styling for quoted text
+        const contentWrapper = document.getElementById('modal-content-wrapper');
+        contentWrapper.innerHTML = this.formatEmailContent(content);
+        
+        // Show modal with animation
+        const modal = document.getElementById('reply-modal');
+        modal.classList.remove('hidden');
+        
+        // Trigger animation after a small delay
+        setTimeout(() => {
+            modal.querySelector('.scale-95').classList.remove('scale-95');
+            modal.querySelector('.transform').classList.add('scale-100');
+        }, 10);
+        
+        // Prevent scrolling of the background
+        document.body.style.overflow = 'hidden';
+    };
+    
+    // Setup close modal functionality with animations
+    const setupCloseModal = () => {
+        const closeModal = () => {
+            const modal = document.getElementById('reply-modal');
+            const modalContent = modal.querySelector('.transform');
+            
+            // Add exit animations
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            // Remove modal after animation
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 200);
+        };
+        
+        // Set up click handlers
+        document.getElementById('close-modal').addEventListener('click', closeModal);
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        
+        // Set up reply button functionality
+        document.getElementById('reply-btn').addEventListener('click', () => {
+            const email = document.getElementById('modal-email').textContent;
+            // Add your reply functionality here
+            console.log(`Replying to ${email}`);
+            // You could open your email compose form here
+        });
+        
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+        
+        // Close when clicking outside the modal content
+        document.getElementById('reply-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'reply-modal') closeModal();
+        });
+    };
+    
+    // Set up close functionality after a short delay to ensure elements are in the DOM
+    setTimeout(setupCloseModal, 100);
+},
+
+// Format email content with proper styling for quoted text
+formatEmailContent(content) {
+    if (!content) return '';
+    
+    // Split content into lines
+    const lines = content.split('\n');
+    let formattedHtml = '';
+    
+    let inQuote = false;
+    let quoteContent = '';
+    
+    for (const line of lines) {
+        if (line.startsWith('>')) {
+            // Start or continue quote
+            if (!inQuote) {
+                inQuote = true;
+                quoteContent = '';
+            }
+            // Add line to quote content (keep the '>' character for styling)
+            quoteContent += `<p class="mb-1">${this.escapeHtml(line)}</p>`;
+        } else {
+            // End quote if we were in one
+            if (inQuote) {
+                formattedHtml += `<div class="border-l-4 border-gray-300 pl-3 text-gray-600 my-2">${quoteContent}</div>`;
+                inQuote = false;
+            }
+            // Add regular line
+            formattedHtml += `<p class="mb-2">${this.escapeHtml(line)}</p>`;
+        }
+    }
+    
+    // Close any open quote
+    if (inQuote) {
+        formattedHtml += `<div class="border-l-4 border-gray-300 pl-3 text-gray-600 my-2">${quoteContent}</div>`;
+    }
+    
+    return formattedHtml;
+},
+
+// Helper function to escape HTML and prevent XSS
+escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+},
+// Optional: Improve activity icon method if you're using it
+getActivityIcon(type) {
+    switch (type) {
+        case 'Reply':
+            return `
+                <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <svg class="h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                    </svg>
+                </div>
             `;
-        }).join('');
-    },
+        default:
+            return `
+                <div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                    <svg class="h-4 w-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            `;
+    }
+},
     
     // Helper method for status badge
     getStatusBadge(status) {
