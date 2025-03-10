@@ -2827,7 +2827,7 @@ const UIService = {
           // Pre-populate initial email
           emailSubject.value = 'Strategic Support for Selling Your Medical Device Business';
           quillEditor.root.innerHTML = `
-            <p>Hello {Name},</p>
+            <p>Hello {first_name},</p>
             <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process.</p>
             <p>Our approach includes:</p>
             
@@ -2847,7 +2847,7 @@ const UIService = {
               {
                 subject: 'Strategic Insights for Selling Your Medical Device Business',
                 body: `
-                  <p>Hello {Name},</p>
+                  <p>Hello {first_name},</p>
                   <p>Following up on my previous message, I want to provide more clarity on how Cebron Group can drive value during the sale process of your home medical device business.</p>
                   <p>We specialize in designing tailored strategies based on your company's unique strengths, market trends, and competitive positioning. Our expertise in the healthcare sector allows us to identify high-value opportunities that align with seller demands, ensuring optimal pricing and terms.</p>
                   <p>If you’re interested in exploring this further, I’d be happy to discuss a more detailed plan during a brief call.</p>
@@ -2859,7 +2859,7 @@ const UIService = {
               {
                 subject: 'Ensuring Transaction Readiness for Your Medical Device Business',
                 body: `
-                  <p>Hello {Name},</p>
+                  <p>Hello {first_name},</p>
                   <p>I am following up to emphasize one of Cebron Group’s core capabilities: preparing businesses for a transaction-ready state. We conduct a comprehensive analysis to identify potential issues affecting valuation or deal success, allowing us to address these proactively.</p>
                   <p>By preparing your business thoroughly before engaging buyers, we ensure a smoother negotiation process and maximize competitive tension among potential acquirers.</p>
                   <p>If you would like to explore this process in more depth, please let me know when you’re available for a 10-minute call.</p>
@@ -2871,7 +2871,7 @@ const UIService = {
               {
                 subject: 'Using Cebron Group\'s M&A Expertise for Your Sale Process',
                 body: `
-                  <p>Hello {Name},</p>
+                  <p>Hello {first_name},</p>
                   <p>As a follow-up to our previous emails, I’d like to emphasize what differentiates Cebron in managing M&A transactions for medical device businesses.</p>
                   <p>Our team combines sector-specific insights with financial expertise, providing clients with a clear understanding of deal structures and valuation drivers. We secure offers and enhance terms that deliver higher seller value—whether through cash consideration, earnouts, or equity rollovers, depending on your strategic goals.</p>
                   <p>If you are interested in discussing our approach and how it can benefit your business, please let me know your availability for a brief call.</p>
@@ -2885,7 +2885,7 @@ const UIService = {
             followUps.forEach(followUp => {
               const followUpDiv = document.createElement('div');
               followUpDiv.className = 'follow-up-email border border-gray-200 rounded-md p-4';
-              followUpDiv.innerHTML = `
+              followUpDiv.root.innerHTML = `
                 <div class="flex justify-between items-center mb-3">
                   <h4 class="text-sm font-medium text-gray-900">Follow-up #${followUps.indexOf(followUp) + 1}</h4>
                   <button type="button" class="remove-follow-up text-red-600 hover:text-red-800">
@@ -2935,7 +2935,7 @@ const UIService = {
           }
           if (!quillEditor.root.innerHTML || quillEditor.root.innerHTML === '<p><br></p>') {
             quillEditor.root.innerHTML = `
-              <p>Hello {Name},</p>
+              <p>Hello{first_name},</p>
               <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process.</p>
               <p>Our approach includes:</p>
               
