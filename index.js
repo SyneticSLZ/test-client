@@ -2992,15 +2992,16 @@ const UIService = {
     },
     // Add this function before campaignWizardNextStep
     createFormattedHTML: function(text) {
-    // Check if text is already HTML (contains HTML tags)
-    if (text.includes('<p>') || text.includes('<div>') || text.includes('<br>')) {
-      return text;
-    }
-    // Otherwise, format plain text with proper HTML
-    return text.split('\n\n')
-      .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
-      .join('');
-  },
+        // Check if text is already HTML (contains HTML tags)
+        if (text.includes('<p>') || text.includes('<div>') || text.includes('<br>')) {
+          return text;
+        }
+        // Otherwise, format plain text with proper HTML
+        return text.split('\n\n')
+          .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+          .join('');
+      },
+      
     
     // Campaign wizard next step
     campaignWizardNextStep: function(currentStep) {
@@ -3249,18 +3250,18 @@ const followUps = [
       
           // Collect follow-ups
           const followUps = [];
-document.querySelectorAll('.follow-up-email').forEach(followUpDiv => {
-  const bodyTextarea = followUpDiv.querySelector('.follow-up-body');
-  // Use innerHTML if available, otherwise convert value to formatted HTML
-  const bodyContent = bodyTextarea.innerHTML || createFormattedHTML(bodyTextarea.value);
-  
-  followUps.push({
-    subject: followUpDiv.querySelector('.follow-up-subject').value,
-    body: bodyContent,
-    waitDuration: parseInt(followUpDiv.querySelector('.follow-up-wait-duration').value),
-    waitUnit: followUpDiv.querySelector('.follow-up-wait-unit').value
-  });
-});
+          document.querySelectorAll('.follow-up-email').forEach(followUpDiv => {
+            const bodyTextarea = followUpDiv.querySelector('.follow-up-body');
+            // Use the createFormattedHTML function to ensure proper HTML formatting
+            const bodyContent = this.createFormattedHTML(bodyTextarea.value);
+            
+            followUps.push({
+              subject: followUpDiv.querySelector('.follow-up-subject').value,
+              body: bodyContent,
+              waitDuration: parseInt(followUpDiv.querySelector('.follow-up-wait-duration').value),
+              waitUnit: followUpDiv.querySelector('.follow-up-wait-unit').value
+            });
+          });
         //   document.querySelectorAll('.follow-up-email').forEach(followUpDiv => {
         //     followUps.push({
         //       subject: followUpDiv.querySelector('.follow-up-subject').value,
@@ -3334,10 +3335,10 @@ addFollowUpEmail: function() {
         <div>
           <label class="block text-xs font-medium text-gray-700 mb-1">Body</label>
           <textarea class="follow-up-body w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows="5" placeholder="Follow-up message" required><p>Hello {first_name},</p>
-<p>I wanted to follow up on my previous email. Have you had a chance to consider my proposal?</p>
-<p>I'm available to answer any questions you might have about how Cebron Group can support your business goals.</p>
-<p>Sapna Ravula<br>
-Cebron Group</p></textarea>
+  <p>I wanted to follow up on my previous email. Have you had a chance to consider my proposal?</p>
+  <p>I'm available to answer any questions you might have about how Cebron Group can support your business goals.</p>
+  <p>Sapna Ravula<br>
+  Cebron Group</p></textarea>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-700 mb-1">Send after</label>
@@ -3361,7 +3362,7 @@ Cebron Group</p></textarea>
       followUp.remove();
       UIService.updateFollowUpNumbers();
     });
-},
+  },
     // Update follow-up numbers after deletion
     updateFollowUpNumbers: function() {
         const followUps = document.querySelectorAll('.follow-up-email');
