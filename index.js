@@ -1152,7 +1152,7 @@ const DashboardService = {
                 document.getElementById('active-campaigns-count').textContent = stats.totalCampaigns || 0;
                 document.getElementById('emails-sent-count').textContent = stats.totalEmailsSent || 0;
                 document.getElementById('open-rate').textContent = `${stats.openRate || 0}%`;
-                document.getElementById('response-rate').textContent = `${stats.totalReplies || 0}%`;
+                document.getElementById('response-rate').textContent = `${((stats.totalReplies / stats.totalEmailsSent)*100) || 0}%`;
     
                 this.renderRecentCampaigns(campaigns || []);
                 this.renderRecentActivity(leadsWithReplies || []);
