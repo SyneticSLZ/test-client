@@ -2885,7 +2885,7 @@ const UIService = {
             followUps.forEach(followUp => {
               const followUpDiv = document.createElement('div');
               followUpDiv.className = 'follow-up-email border border-gray-200 rounded-md p-4';
-              followUpDiv.root.innerHTML = `
+              followUpDiv.innerHTML = `
                 <div class="flex justify-between items-center mb-3">
                   <h4 class="text-sm font-medium text-gray-900">Follow-up #${followUps.indexOf(followUp) + 1}</h4>
                   <button type="button" class="remove-follow-up text-red-600 hover:text-red-800">
@@ -2895,11 +2895,11 @@ const UIService = {
                 <div class="space-y-4">
                   <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Subject</label>
-                    <input type="text" class="follow-up-subject w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" value="${followUp.subject}" required>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Body</label>
-                    <textarea class="follow-up-body w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows="5" required>${followUp.body}</textarea>
+<input type="text" class="follow-up-subject w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" value="${followUp.subject}" required>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1">Body</label>
+              <textarea class="follow-up-body w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows="5" required>${followUp.body.trim()}</textarea>
                   </div>
                   <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Send after</label>
