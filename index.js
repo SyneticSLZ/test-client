@@ -2826,19 +2826,36 @@ const UIService = {
       
           // Pre-populate initial email
           emailSubject.value = 'Strategic Support for Selling Your Medical Device Business';
-          quillEditor.root.innerHTML = `
-            <p>Hello {first_name},</p>
-            <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process.</p>
-            <p>Our approach includes:</p>
+        //   quillEditor.root.innerHTML = `
+        //     <p>Hello {first_name},</p>
+        //     <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process.</p>
+        //     <p>Our approach includes:</p>
             
-              <strong>Extensive Market Access:</strong> We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
-              <strong>In-Depth Valuation and Strategic Positioning:</strong> We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
-              <strong>End-to-End Transaction Support:</strong> We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
-            <strong>Confidential and Efficient Process:</strong> We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
+        //       <strong>Extensive Market Access:</strong> We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
+        //       <strong>In-Depth Valuation and Strategic Positioning:</strong> We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
+        //       <strong>End-to-End Transaction Support:</strong> We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
+        //     <strong>Confidential and Efficient Process:</strong> We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
             
-            <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
-            <p>Sapna Ravula<br>Cebron Group</p>
-          `;
+        //     <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
+        //     <p>Sapna Ravula<br>Cebron Group</p>
+        //   `;
+          quillEditor.root.innerText = `
+  Hello {first_name},
+
+  I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process. As {title} of {company} in {city}, your leadership in the {industry} industry makes Cebron’s expertise particularly relevant to your goals.
+
+  Our approach includes:
+
+  Extensive Market Access: We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
+  In-Depth Valuation and Strategic Positioning: We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
+  End-to-End Transaction Support: We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
+  Confidential and Efficient Process: We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
+
+  If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.
+
+  Sapna Ravula
+  Cebron Group
+`;
       
           // Pre-populate follow-ups
           const followUpsContainer = document.getElementById('follow-ups-container');
@@ -2982,19 +2999,36 @@ const UIService = {
             emailSubject.value = 'Strategic Support for Selling Your Medical Device Business';
           }
           if (!quillEditor.root.innerHTML || quillEditor.root.innerHTML === '<p><br></p>') {
-            quillEditor.root.innerHTML = `
-              <p>Hello{first_name},</p>
-              <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process.</p>
-              <p>Our approach includes:</p>
+            // quillEditor.root.innerHTML = `
+            //   <p>Hello{first_name},</p>
+            //   <p>I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process.</p>
+            //   <p>Our approach includes:</p>
               
-                <strong>Extensive Market Access:</strong> We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
-                <strong>In-Depth Valuation and Strategic Positioning:</strong> We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
-                <strong>End-to-End Transaction Support:</strong> We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
-                <strong>Confidential and Efficient Process:</strong> We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
+            //     <strong>Extensive Market Access:</strong> We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
+            //     <strong>In-Depth Valuation and Strategic Positioning:</strong> We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
+            //     <strong>End-to-End Transaction Support:</strong> We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
+            //     <strong>Confidential and Efficient Process:</strong> We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
               
-              <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
-              <p>Sapna Ravula<br>Cebron Group</p>
-            `;
+            //   <p>If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.</p>
+            //   <p>Sapna Ravula<br>Cebron Group</p>
+            // `;
+            quillEditor.root.innerText = `
+            Hello {first_name},
+          
+            I would like to introduce our firm, Cebron Group. We are an investment banking firm specializing in healthcare M&A, with a focus on medical devices, medical device distribution and manufacturing, and medical equipment. We offer comprehensive advisory services tailored to maximize value for our clients during the sale process. As {title} of {company} in {city}, your leadership in the {industry} industry makes Cebron’s expertise particularly relevant to your goals.
+          
+            Our approach includes:
+          
+            Extensive Market Access: We leverage our network of strategic buyers, private equity firms, and industry investors to ensure your business is presented to a broad range of qualified buyers.
+            In-Depth Valuation and Strategic Positioning: We conduct a detailed analysis to determine your business's optimal valuation and position it to attract competitive offers. This includes assessing growth potential, market position, and operational efficiencies.
+            End-to-End Transaction Support: We manage every step of the transaction, from initial preparation to buyer identification, due diligence, and negotiation. Our team is experienced in structuring complex deals to achieve favorable terms for sellers.
+            Confidential and Efficient Process: We prioritize discretion and efficiency, ensuring that your business operations remain unaffected during the sale process while expediting timelines to closure.
+          
+            If you are considering selling your business, I would be glad to discuss how Cebron can deliver value and secure the best outcome for you. Please let me know if you are available for a 10-minute call.
+          
+            Sapna Ravula
+            Cebron Group
+          `;
           }
       
           // Collect follow-ups
