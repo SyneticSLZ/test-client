@@ -180,144 +180,161 @@
     </div>
 
     <!-- Main App (initially hidden) -->
-    <div id="app-page" class="page h-full flex flex-col">
-        <!-- Header -->
-        <header class="bg-white shadow-sm z-40">
-            <div class="mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 flex items-center">
-                            <!-- Replace with your logo or text -->
-                            <h1 class="text-xl font-bold text-indigo-600">Email Campaign Manager</h1>
-                        </div>
+    <div id="app-page" class="page h-full flex">
+        <!-- Sidebar -->
+        <div id="desktop-sidebar" class="h-screen fixed left-0 top-0 md:relative z-40 bg-white shadow-lg transition-all duration-300 md:flex hidden flex-col">
+            <!-- Sidebar Logo Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <!-- Full Logo - shown when sidebar is expanded -->
+                <div id="full-logo" class="flex items-center">
+                    <!-- Fixed size container for consistent icon display -->
+                    <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center">
+                        <img src="volt.png" alt="Voltmailer" class="max-h-full max-w-full object-contain">
                     </div>
-                    <div class="flex items-center">
-                        <div class="dropdown relative">
-                            <button id="user-menu-button" class="flex items-center text-sm rounded-full focus:outline-none">
-                                <span class="sr-only">Open user menu</span>
-                                <span id="user-name" class="mr-2 font-medium text-gray-700">John Doe</span>
-                                <div class="h-10 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
-                                    <span id="user-initials">JD</span>
+                    <span class="ml-3 text-base font-semibold text-indigo-600">Voltmailer</span>
+                </div>
+                
+                <!-- Small Logo - shown when sidebar is collapsed -->
+                <div id="small-logo" class="hidden w-8 h-8 mx-auto flex items-center justify-center">
+                    <img src="volt.png" alt="VM" class="max-h-full max-w-full object-contain">
+                </div>
+                
+                <!-- Collapse toggle button -->
+                <button id="sidebar-collapse-btn" class="text-gray-500 hover:text-indigo-600 p-1">
+                    <i id="sidebar-collapse-icon" class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            
+            <!-- Navigation links - top section -->
+            <div class="overflow-y-auto flex-grow px-3 py-4">
+                <div class="space-y-1 mb-8">
+                    <a href="#" id="dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 transition duration-150" data-tab="dashboard-tab">
+                        <i class="fas fa-home w-5 h-5 mr-3 text-indigo-500"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    
+                    <a href="#" id="campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="campaigns-tab">
+                        <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Campaigns</span>
+                    </a>
+                    
+                    <a href="#" id="gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="gmail-tab">
+                        <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Gmail Integration</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Bottom section with settings, profile and logout -->
+            <div class="mt-auto border-t border-gray-200">
+                <div class="px-3 py-3 space-y-1">
+                    <a href="#" id="profile-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="settings-nav-tab">
+                        <i class="fas fa-user w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Profile</span>
+                    </a>
+                    
+                    <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="settings-nav-tab">
+                        <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                    
+                    <a href="#" id="logout-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-red-700 hover:bg-red-50 transition duration-150">
+                        <i class="fas fa-sign-out-alt w-5 h-5 mr-3 text-red-400 group-hover:text-red-500"></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile sidebar backdrop -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-gray-800 bg-opacity-50 z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
+        
+        <!-- Mobile sidebar -->
+        <div id="mobile-sidebar" class="fixed left-0 top-0 h-full bg-white shadow-lg z-30 transform transition-transform duration-300 -translate-x-full md:hidden w-64">
+            <!-- Mobile Sidebar Logo Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <div class="flex items-center">
+                    <img src="vmb.png" alt="Voltmailer" class="h-10">
+                </div>
+                <button id="close-mobile-sidebar" class="text-gray-500 hover:text-indigo-600 p-1">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Navigation links - top section -->
+            <div class="overflow-y-auto flex-grow px-3 py-4">
+                <div class="space-y-1 mb-8">
+                    <a href="#" id="mobile-dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="dashboard-tab">
+                        <i class="fas fa-home w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    
+                    <a href="#" id="mobile-campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="campaigns-tab">
+                        <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Campaigns</span>
+                    </a>
+                    
+                    <a href="#" id="mobile-gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="gmail-tab">
+                        <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Gmail Integration</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Bottom section with settings, profile and logout -->
+            <div class="mt-auto border-t border-gray-200">
+                <div class="px-3 py-3 space-y-1">
+                    <a href="#" id="mobile-profile-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="settings-nav-tab">
+                        <i class="fas fa-user w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Profile</span>
+                    </a>
+                    
+                    <a href="#" id="mobile-settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150" data-tab="settings-nav-tab">
+                        <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                    
+                    <a href="#" id="mobile-logout-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-red-700 hover:bg-red-50 transition duration-150">
+                        <i class="fas fa-sign-out-alt w-5 h-5 mr-3 text-red-400 group-hover:text-red-500"></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile sidebar toggle button -->
+        <button id="mobile-sidebar-toggle" class="fixed bottom-4 right-4 bg-indigo-600 text-white p-3 rounded-full shadow-lg md:hidden z-30">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Content wrapper -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white shadow-sm z-40">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-end h-16">
+                        <div class="flex items-center">
+                            <div class="dropdown relative">
+                                <button id="user-menu-button" class="flex items-center text-sm rounded-full focus:outline-none">
+                                    <span class="sr-only">Open user menu</span>
+                                    <span id="user-name" class="mr-2 font-medium text-gray-700">John Doe</span>
+                                    <div class="h-8 w-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
+                                        <span id="user-initials">JD</span>
+                                    </div>
+                                </button>
+                                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                                    <a href="#" id="profile-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-tab="settings-nav-tab">Your Profile</a>
+                                    <a href="#" id="settings-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-tab="settings-nav-tab">Settings</a>
+                                    <a href="#" id="logout-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                                 </div>
-                            </button>
-                            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                <a href="#" id="profile-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
-                                <a href="#" id="settings-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                                <a href="#" id="logout-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
-    
+            </header>
         <!-- Main Content Area -->
         <main class="flex-1 flex overflow-hidden">
-            <!-- Sidebar -->
-            <div class="md:w-64 flex-shrink-0 bg-white md:block">
-                <!-- Sidebar content -->
-                <div class="h-full flex flex-col relative">
-                    <!-- Collapse toggle button -->
-                    <div class="flex justify-end p-2">
-                        <button id="sidebar-collapse-btn" class="text-gray-500 hover:text-indigo-600 p-1 hidden md:block">
-                            <i id="sidebar-collapse-icon" class="fas fa-chevron-left"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- Navigation links - top section -->
-                    <div class="overflow-y-auto flex-grow px-3">
-                        <div class="space-y-1 mb-8">
-                            <a href="#" id="dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 transition duration-150">
-                                <i class="fas fa-home w-5 h-5 mr-3 text-indigo-500"></i>
-                                <span class="nav-text">Dashboard</span>
-                            </a>
-                            
-                            <a href="#" id="campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Campaigns</span>
-                            </a>
-                            
-                            <a href="#" id="gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Gmail Integration</span>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Bottom section with settings, profile and logout -->
-                    <div class="mt-auto border-t border-gray-200">
-                        <div class="px-3 py-3 space-y-1">
-                            <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-user w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Profile</span>
-                            </a>
-                            
-                            <a href="#" id="settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Settings</span>
-                            </a>
-                            
-                            <a href="#" id="logout-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-red-700 hover:bg-red-50 transition duration-150">
-                                <i class="fas fa-sign-out-alt w-5 h-5 mr-3 text-red-400 group-hover:text-red-500"></i>
-                                <span class="nav-text">Logout</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Mobile sidebar backdrop (hidden by default) -->
-            <div id="sidebar-backdrop" class="fixed inset-0 bg-gray-800 bg-opacity-50 z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
-            
-            <!-- Mobile sidebar (hidden by default) -->
-            <div id="sidebar" class="fixed left-0 top-0 h-full bg-white shadow-lg z-30 transform transition-transform duration-300 -translate-x-full md:hidden w-64">
-                <div class="h-full flex flex-col">
-                    <!-- Navigation links - top section -->
-                    <div class="overflow-y-auto flex-grow px-3 pt-5">
-                        <div class="space-y-1 mb-8">
-                            <a href="#" id="mobile-dashboard-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md bg-indigo-100 text-indigo-700 transition duration-150">
-                                <i class="fas fa-home w-5 h-5 mr-3 text-indigo-500"></i>
-                                <span class="nav-text">Dashboard</span>
-                            </a>
-                            
-                            <a href="#" id="mobile-campaigns-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-paper-plane w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Campaigns</span>
-                            </a>
-                            
-                            <a href="#" id="mobile-gmail-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-envelope w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Gmail Integration</span>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Bottom section with settings, profile and logout -->
-                    <div class="mt-auto border-t border-gray-200">
-                        <div class="px-3 py-3 space-y-1">
-                            <a href="#" id="mobile-profile-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-user w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Profile</span>
-                            </a>
-                            
-                            <a href="#" id="mobile-settings-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition duration-150">
-                                <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400 group-hover:text-indigo-500"></i>
-                                <span class="nav-text">Settings</span>
-                            </a>
-                            
-                            <a href="#" id="mobile-logout-nav-link" class="nav-link group flex items-center px-3 py-2.5 text-sm font-medium rounded-md text-red-700 hover:bg-red-50 transition duration-150">
-                                <i class="fas fa-sign-out-alt w-5 h-5 mr-3 text-red-400 group-hover:text-red-500"></i>
-                                <span class="nav-text">Logout</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Mobile sidebar toggle button -->
-            <button id="mobile-sidebar-toggle" class="fixed bottom-4 right-4 bg-indigo-600 text-white p-3 rounded-full shadow-lg md:hidden z-30">
-                <i class="fas fa-bars"></i>
-            </button>
+
     
             <!-- Content Area -->
             <div class="flex-1 overflow-auto p-6 bg-gray-50">
@@ -1787,137 +1804,60 @@
     <script src="index.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Handle tab switching functionality
-    const tabLinks = document.querySelectorAll('[data-tab]');
-    tabLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const tabId = this.getAttribute('data-tab');
-            
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            
-            // Show the selected tab
-            const selectedTab = document.getElementById(tabId);
-            if (selectedTab) {
-                selectedTab.classList.remove('hidden');
-            }
-            
-            // Close user dropdown if open
-            const userDropdown = document.getElementById('user-dropdown');
-            if (userDropdown && !userDropdown.classList.contains('hidden')) {
-                userDropdown.classList.add('hidden');
-            }
-        });
-    });
-    
-    // Handle logout functionality
-    const logoutButtons = [
-        document.getElementById('logout-nav-link'),
-        document.getElementById('mobile-logout-nav-link'),
-        document.getElementById('logout-link')
-    ];
-    
-    logoutButtons.forEach(button => {
-        if (button) {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Clear all localStorage
-                localStorage.clear();
-                
-                // Show a brief message before reloading (optional)
-                const loaderOverlay = document.getElementById('loader-overlay');
-                const loaderText = document.getElementById('loader-text');
-                
-                if (loaderOverlay && loaderText) {
-                    loaderText.textContent = 'Logging out...';
-                    loaderOverlay.classList.remove('hidden');
-                }
-                
-                // Reload the page after a short delay
-                setTimeout(() => {
-                    window.location.reload();
-                }, 500);
-            });
-        }
-    });
-    
-    // Toggle user dropdown when user menu button is clicked
-    const userMenuButton = document.getElementById('user-menu-button');
-    const userDropdown = document.getElementById('user-dropdown');
-    
-    if (userMenuButton && userDropdown) {
-        userMenuButton.addEventListener('click', function() {
-            userDropdown.classList.toggle('hidden');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
-                userDropdown.classList.add('hidden');
-            }
-        });
-    }
-});
-        document.addEventListener('DOMContentLoaded', function() {
             // Get sidebar elements
-            const sidebar = document.getElementById('sidebar');
-            const desktopSidebar = document.querySelector('.md\\:w-64');
+            const desktopSidebar = document.getElementById('desktop-sidebar');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
             const sidebarBackdrop = document.getElementById('sidebar-backdrop');
             const sidebarCollapseBtn = document.getElementById('sidebar-collapse-btn');
             const sidebarCollapseIcon = document.getElementById('sidebar-collapse-icon');
             const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+            const closeMobileSidebar = document.getElementById('close-mobile-sidebar');
+            const fullLogo = document.getElementById('full-logo');
+            const smallLogo = document.getElementById('small-logo');
             const navLinks = document.querySelectorAll('.nav-link');
             const navTexts = document.querySelectorAll('.nav-text');
             
-            // Set initial sidebar states
+            // Set initial sidebar width
             let sidebarCollapsed = false;
+            desktopSidebar.style.width = '240px';
             
-            // Function to toggle sidebar collapse state (desktop only)
+            // Function to toggle sidebar collapse state
             function toggleCollapse() {
                 sidebarCollapsed = !sidebarCollapsed;
                 
                 if (sidebarCollapsed) {
-                    desktopSidebar.classList.remove('md:w-64');
-                    desktopSidebar.classList.add('md:w-16');
+                    desktopSidebar.style.width = '64px';
                     sidebarCollapseIcon.classList.remove('fa-chevron-left');
                     sidebarCollapseIcon.classList.add('fa-chevron-right');
+                    fullLogo.classList.add('hidden');
+                    smallLogo.classList.remove('hidden');
                     
                     // Hide text labels
-                    const desktopNavTexts = desktopSidebar.querySelectorAll('.nav-text');
-                    desktopNavTexts.forEach(text => {
-                        text.classList.add('hidden');
+                    navTexts.forEach(text => {
+                        if (desktopSidebar.contains(text)) {
+                            text.classList.add('hidden');
+                        }
                     });
                 } else {
-                    desktopSidebar.classList.remove('md:w-16');
-                    desktopSidebar.classList.add('md:w-64');
+                    desktopSidebar.style.width = '240px';
                     sidebarCollapseIcon.classList.remove('fa-chevron-right');
                     sidebarCollapseIcon.classList.add('fa-chevron-left');
+                    fullLogo.classList.remove('hidden');
+                    smallLogo.classList.add('hidden');
                     
                     // Show text labels
-                    const desktopNavTexts = desktopSidebar.querySelectorAll('.nav-text');
-                    desktopNavTexts.forEach(text => {
-                        text.classList.remove('hidden');
+                    navTexts.forEach(text => {
+                        if (desktopSidebar.contains(text)) {
+                            text.classList.remove('hidden');
+                        }
                     });
                 }
             }
             
             // Function to toggle mobile sidebar
             function toggleMobileSidebar() {
-                const isMobileOpen = !sidebar.classList.contains('-translate-x-full');
-                
-                if (isMobileOpen) {
-                    // Close sidebar
-                    sidebar.classList.add('-translate-x-full');
-                    sidebarBackdrop.classList.add('hidden');
-                } else {
-                    // Open sidebar
-                    sidebar.classList.remove('-translate-x-full');
-                    sidebarBackdrop.classList.remove('hidden');
-                }
+                mobileSidebar.classList.toggle('-translate-x-full');
+                sidebarBackdrop.classList.toggle('hidden');
             }
             
             // Add click event listeners
@@ -1929,60 +1869,168 @@
                 mobileSidebarToggle.addEventListener('click', toggleMobileSidebar);
             }
             
+            if (closeMobileSidebar) {
+                closeMobileSidebar.addEventListener('click', toggleMobileSidebar);
+            }
+            
             if (sidebarBackdrop) {
                 sidebarBackdrop.addEventListener('click', toggleMobileSidebar);
             }
             
-            // Handle active state for all navigation links
+            // Handle tab navigation
             navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    // Handle mobile sidebar closing
-                    if (window.innerWidth < 768 && this.id.includes('mobile')) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get tab ID
+                    const tabId = this.getAttribute('data-tab');
+                    if (!tabId) return;
+                    
+                    // Close mobile sidebar if open
+                    if (window.innerWidth < 768 && !mobileSidebar.classList.contains('-translate-x-full')) {
                         toggleMobileSidebar();
                     }
                     
-                    // Get the base ID without the mobile- prefix
+                    // Hide all tabs
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.add('hidden');
+                    });
+                    
+                    // Show selected tab
+                    const selectedTab = document.getElementById(tabId);
+                    if (selectedTab) {
+                        selectedTab.classList.remove('hidden');
+                    }
+                    
+                    // Update active state for all links with same destination
                     const baseId = this.id.replace('mobile-', '');
+                    
+                    // Don't update if it's a logout link
+                    if (baseId.includes('logout')) return;
                     
                     // Remove active class from all links
                     navLinks.forEach(l => {
                         const lBaseId = l.id.replace('mobile-', '');
-                        
-                        // Skip if this is the logout link
-                        if (lBaseId.includes('logout')) return;
-                        
-                        l.classList.remove('bg-indigo-100', 'text-indigo-700');
-                        l.classList.add('text-gray-700', 'hover:bg-gray-50', 'hover:text-indigo-600');
-                        
-                        // Reset icon colors
-                        const icon = l.querySelector('i');
-                        if (icon && !icon.classList.contains('fa-sign-out-alt')) {
-                            icon.classList.remove('text-indigo-500');
-                            icon.classList.add('text-gray-400', 'group-hover:text-indigo-500');
+                        if (!lBaseId.includes('logout')) {
+                            l.classList.remove('bg-indigo-100', 'text-indigo-700');
+                            l.classList.add('text-gray-700', 'hover:bg-gray-50', 'hover:text-indigo-600');
+                            
+                            // Reset icon colors
+                            const icon = l.querySelector('i');
+                            if (icon && !icon.classList.contains('fa-sign-out-alt')) {
+                                icon.classList.remove('text-indigo-500');
+                                icon.classList.add('text-gray-400', 'group-hover:text-indigo-500');
+                            }
                         }
                     });
                     
-                    // Don't highlight the logout link
-                    if (!baseId.includes('logout')) {
-                        // Get all links with this base ID (mobile and desktop versions)
-                        document.querySelectorAll(`[id$="${baseId}"], [id$="mobile-${baseId}"]`).forEach(activeLink => {
-                            activeLink.classList.remove('text-gray-700', 'hover:bg-gray-50', 'hover:text-indigo-600');
-                            activeLink.classList.add('bg-indigo-100', 'text-indigo-700');
-                            
-                            // Set icon color for active link
-                            const activeIcon = activeLink.querySelector('i');
-                            if (activeIcon) {
-                                activeIcon.classList.remove('text-gray-400', 'group-hover:text-indigo-500');
-                                activeIcon.classList.add('text-indigo-500');
-                            }
-                        });
-                    }
+                    // Add active class to all links with same destination
+                    document.querySelectorAll(`[id="${baseId}"], [id="mobile-${baseId}"]`).forEach(activeLink => {
+                        activeLink.classList.remove('text-gray-700', 'hover:bg-gray-50', 'hover:text-indigo-600');
+                        activeLink.classList.add('bg-indigo-100', 'text-indigo-700');
+                        
+                        // Set icon color for active link
+                        const activeIcon = activeLink.querySelector('i');
+                        if (activeIcon) {
+                            activeIcon.classList.remove('text-gray-400', 'group-hover:text-indigo-500');
+                            activeIcon.classList.add('text-indigo-500');
+                        }
+                    });
                 });
             });
             
-            // Make toggle function globally accessible
+            // Handle logout functionality
+            const logoutLinks = document.querySelectorAll('#logout-nav-link, #mobile-logout-nav-link, #logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Clear localStorage
+                    localStorage.clear();
+                    
+                    // Show a brief message before reloading
+                    const loaderOverlay = document.getElementById('loader-overlay');
+                    const loaderText = document.getElementById('loader-text');
+                    
+                    if (loaderOverlay && loaderText) {
+                        loaderText.textContent = 'Logging out...';
+                        loaderOverlay.classList.remove('hidden');
+                    }
+                    
+                    // Reload the page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                });
+            });
+            
+            // Toggle user dropdown when user menu button is clicked
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', function() {
+                    userDropdown.classList.toggle('hidden');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Make toggleMobileSidebar globally accessible
             window.toggleSidebar = toggleMobileSidebar;
         });
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Toggle user dropdown when user menu button is clicked
+                const userMenuButton = document.getElementById('user-menu-button');
+                const userDropdown = document.getElementById('user-dropdown');
+                
+                if (userMenuButton && userDropdown) {
+                    userMenuButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        userDropdown.classList.toggle('hidden');
+                    });
+                    
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                            userDropdown.classList.add('hidden');
+                        }
+                    });
+                }
+                
+                // Make the dropdown links work with tab navigation
+                const dropdownLinks = userDropdown.querySelectorAll('[data-tab]');
+                dropdownLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Get tab ID
+                        const tabId = this.getAttribute('data-tab');
+                        if (!tabId) return;
+                        
+                        // Hide all tabs
+                        document.querySelectorAll('.tab-content').forEach(tab => {
+                            tab.classList.add('hidden');
+                        });
+                        
+                        // Show selected tab
+                        const selectedTab = document.getElementById(tabId);
+                        if (selectedTab) {
+                            selectedTab.classList.remove('hidden');
+                        }
+                        
+                        // Hide dropdown
+                        userDropdown.classList.add('hidden');
+                    });
+                });
+            });
+            </script>
 </body>
 </html>
