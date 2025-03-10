@@ -1180,21 +1180,58 @@ const DashboardService = {
         }
         
         container.innerHTML = campaigns.map(campaign => `
-            <div class="border-b border-gray-200 pb-2 last:border-b-0 last:pb-0">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">${campaign.name}</p>
-                        <p class="text-xs text-gray-500">
-                            ${this.getStatusBadge(campaign.status)}
-                            <span class="ml-2">${campaign.sentCount}/${campaign.leadCount} sent</span>
-                        </p>
-                    </div>
-                    <button class="text-xs text-indigo-600 hover:text-indigo-800" 
-                            onclick="CampaignService.getCampaignDetails('${campaign._id}'); UIService.switchTab('campaigns-tab');">
-                        View
-                    </button>
-                </div>
+<div class="rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden mb-3 last:mb-0">
+    <div class="flex justify-between items-center p-4">
+        <div class="flex-1 min-w-0">
+            <div class="flex items-center">
+                <h3 class="text-sm font-semibold text-gray-900 truncate">${campaign.name}</h3>
+                <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
+                    campaign.status === 'active' ? 'bg-green-100 text-green-800' : 
+                    campaign.status === 'paused' ? 'bg-yellow-100 text-yellow-800' : 
+                    campaign.status === 'completed' ? 'bg-blue-100 text-blue-800' : 
+                    'bg-gray-100 text-gray-800'
+                }">
+                    ${campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+                </span>
             </div>
+            
+            <div class="mt-1 flex items-center">
+                <div class="w-full max-w-xs bg-gray-200 rounded-full h-2 mr-3">
+                    <div class="bg-indigo-600 h-2 rounded-full" style="width: ${Math.round((campaign.sentCount / campaign.leadCount) * 100)}%"></div>
+                </div>
+                <span class="text-xs text-gray-600 whitespace-nowrap">${campaign.sentCount}/${campaign.leadCount}</span>
+            </div>
+            
+            <div class="mt-1 flex items-center text-xs text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>Started ${this.formatDate(campaign.startDate)}</span>
+                
+                ${campaign.openRate ? `
+                <span class="mx-2">•</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span>${campaign.openRate}% open rate</span>
+                ` : ''}
+            </div>
+        </div>
+        
+        <div class="ml-4 flex-shrink-0 flex">
+            <button class="mr-2 p-1 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" title="Edit campaign">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+            </button>
+            <button class="p-2 px-4 text-xs font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onclick="CampaignService.getCampaignDetails('${campaign._id}'); UIService.switchTab('campaigns-tab');">
+                View Details
+            </button>
+        </div>
+    </div>
+</div>
         `).join('');
     },
     
